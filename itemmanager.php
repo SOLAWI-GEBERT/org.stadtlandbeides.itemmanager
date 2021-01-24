@@ -170,3 +170,19 @@ function itemmanager_civicrm_themes(&$themes) {
 //  ));
 //  _itemmanager_civix_navigationMenu($menu);
 //}
+
+/**
+ * Implements hook_civicrm_tabset()
+ *
+ * Will inject the Itemmanager Dashboard tab
+ */
+function itemmanager_civicrm_tabset($tabsetName, &$tabs, $context) {
+    if ($tabsetName == 'civicrm/contact/view' && !empty($context['contact_id'])) {
+        $tabs[] = [
+            'id'     => 'itemmanager',
+            'url'    => CRM_Utils_System::url('civicrm/items/tab', "reset=1&snippet=1&force=1&cid={$context['contact_id']}"),
+            'title'  => E::ts('Items Dashboard'),
+            'weight' => 20
+        ];
+    }
+}

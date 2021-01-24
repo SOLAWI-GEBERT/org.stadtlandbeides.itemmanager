@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <extension key="org.stadtlandbeides.itemmanager" type="module">
   <file>itemmanager</file>
-  <name>FIXME</name>
-  <description>FIXME</description>
+  <name>Itemmanager</name>
+  <description>Manager to renew and update items booked by memberships</description>
   <license>AGPL-3.0</license>
   <maintainer>
     <author>Andreas Gebert</author>
