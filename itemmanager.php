@@ -150,26 +150,26 @@ function itemmanager_civicrm_themes(&$themes) {
  *
  * @link https://docs.civicrm.org/dev/en/latest/hooks/hook_civicrm_preProcess
  */
-//function itemmanager_civicrm_preProcess($formName, &$form) {
-//
-//}
+function itemmanager_civicrm_preProcess($formName, &$form) {
+
+}
 
 /**
  * Implements hook_civicrm_navigationMenu().
  *
  * @link https://docs.civicrm.org/dev/en/latest/hooks/hook_civicrm_navigationMenu
  */
-//function itemmanager_civicrm_navigationMenu(&$menu) {
-//  _itemmanager_civix_insert_navigation_menu($menu, 'Mailings', array(
-//    'label' => E::ts('New subliminal message'),
-//    'name' => 'mailing_subliminal_message',
-//    'url' => 'civicrm/mailing/subliminal',
-//    'permission' => 'access CiviMail',
-//    'operator' => 'OR',
-//    'separator' => 0,
-//  ));
-//  _itemmanager_civix_navigationMenu($menu);
-//}
+function itemmanager_civicrm_navigationMenu(&$menu) {
+  _itemmanager_civix_insert_navigation_menu($menu, 'Mailings', array(
+    'label' => E::ts('New subliminal message'),
+    'name' => 'mailing_subliminal_message',
+    'url' => 'civicrm/mailing/subliminal',
+    'permission' => 'access CiviMail',
+    'operator' => 'OR',
+    'separator' => 0,
+  ));
+  _itemmanager_civix_navigationMenu($menu);
+}
 
 /**
  * Implements hook_civicrm_tabset()
@@ -180,7 +180,7 @@ function itemmanager_civicrm_tabset($tabsetName, &$tabs, $context) {
     if ($tabsetName == 'civicrm/contact/view' && !empty($context['contact_id'])) {
         $tabs[] = [
             'id'     => 'itemmanager',
-            'url'    => CRM_Utils_System::url('civicrm/items/tab', "reset=1&snippet=1&force=1&cid={$context['contact_id']}"),
+            'url'    => CRM_Utils_System::url('civicrm/items/tab', "reset=1&force=1&cid={$context['contact_id']}&backtrace=1&smartyDebug=1"),
             'title'  => E::ts('Items Dashboard'),
             'weight' => 20
         ];
