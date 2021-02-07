@@ -8,11 +8,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8a4e2072-c43d-4029-bc01-730e5001dde6" name="Default Changelist" comment="FIX Missing folder">
-      <change beforePath="$PROJECT_DIR$/.idea/copyright/Civi.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/copyright/Civi.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/org.stadtlandbeides.itemmanager.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/org.stadtlandbeides.itemmanager.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/php.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/php.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CRM/Itemmanager/Page/Dashboard.php" beforeDir="false" afterPath="$PROJECT_DIR$/CRM/Itemmanager/Page/Dashboard.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/itemmanager.php" beforeDir="false" afterPath="$PROJECT_DIR$/itemmanager.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/CRM/Itemmanager/Page/Dashboard.tpl" beforeDir="false" afterPath="$PROJECT_DIR$/templates/CRM/Itemmanager/Page/Dashboard.tpl" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -26,10 +24,19 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="JoomlaConfiguration" enabled="true">
+    <joomlaConfigPath>$PROJECT_DIR$/../Stadt-Land-Beides/JML3/configuration.php</joomlaConfigPath>
+    <joomlaPath>$PROJECT_DIR$/../Stadt-Land-Beides/JML3</joomlaPath>
+  </component>
   <component name="PhpServers">
     <servers>
       <server host="localhost" id="803f8716-bd15-4fed-9bc9-04d846abe046" name="localhost" />
     </servers>
+  </component>
+  <component name="PhpWorkspaceProjectConfiguration">
+    <include_path>
+      <path value="$PROJECT_DIR$/../Stadt-Land-Beides/JML3" />
+    </include_path>
   </component>
   <component name="ProjectId" id="1nHU4mDVc2YJb5lNXcZZ8fcmlRB" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
@@ -73,6 +80,7 @@
       <workItem from="1611485878921" duration="8563000" />
       <workItem from="1612605733232" duration="19919000" />
       <workItem from="1612646718759" duration="1942000" />
+      <workItem from="1612687539271" duration="4954000" />
     </task>
     <servers />
   </component>

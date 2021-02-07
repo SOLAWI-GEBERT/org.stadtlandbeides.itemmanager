@@ -13,6 +13,7 @@
         <thead>
         <tr class="columnheader">
             <td>{ts domain="org.stadtlandbeides.itemmanager"}Item{/ts}</td>
+            <td>{ts domain="org.stadtlandbeides.itemmanager"}Amount{/ts}</td>
             <td>{ts domain="org.stadtlandbeides.itemmanager"}Referred to{/ts}</td>
             <td></td>
         </tr>
@@ -22,6 +23,7 @@
         {foreach from=$item_bases item=ritem}
             <tr class="{cycle values="odd-row,even-row"}">
                 <td>{$ritem.item_label}</td>
+                <td>{$ritem.item_quantity}</td>
                 <td>{$ritem.member_name}</td>
             </tr>
         {/foreach}

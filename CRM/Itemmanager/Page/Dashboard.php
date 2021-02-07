@@ -33,53 +33,62 @@ class CRM_Itemmanager_Page_Dashboard extends CRM_Core_Page {
 
 
     $base_list = array();
+    //Here we just collect the memberships
     $base_query = "
         SELECT
-            line_item.label AS item_label,
-            member_type.name AS member_name
-            FROM civicrm_line_item line_item
-                LEFT JOIN civicrm_price_field_value price_field_value ON line_item.price_field_value_id = price_field_value.id
-                LEFT JOIN civicrm_price_field price_field ON line_item.price_field_id = price_field.id
-                LEFT JOIN civicrm_membership membership ON line_item.entity_id = membership.id AND membership.contact_id = %1
-                LEFT JOIN civicrm_membership_type member_type ON member_type.id = membership.membership_type_id
-                LEFT JOIN civicrm_membership_payment member_pay ON member_pay.membership_id = membership.id
-                LEFT JOIN civicrm_contact civicrm_contact ON membership.contact_id = civicrm_contact.id AND civicrm_contact.id = %1
-                LEFT JOIN civicrm_contribution as contribution ON line_item.contribution_id = contribution.id and contribution.contact_id = %1 and member_pay.contribution_id = contribution.id 
+            member_type.name AS member_name,
+            contribution.id AS contrib_id,
+            membership.start_date as member_start,
+            membership.end_date as member_end,
+            membership.status_id as member_status
+        FROM civicrm_membership membership
+         LEFT JOIN civicrm_membership_payment member_pay ON member_pay.membership_id = membership.id
+         LEFT JOIN civicrm_contribution as contribution ON contribution.contact_id = %1 and member_pay.contribution_id = contribution.id
+         LEFT JOIN civicrm_membership_type member_type ON member_type.id = membership.membership_type_id
+        WHERE membership.contact_id = %1
                 ";
 
-
-      /*SELECT
-      *
-      FROM civicrm_membership membership
-                LEFT JOIN civicrm_line_item line_item ON line_item.entity_id = membership.id AND line_item.entity_table = 'civicrm_membership'
-                LEFT JOIN civicrm_contact civicrm_contact ON membership.contact_id = civicrm_contact.id AND civicrm_contact.id = 3
-                LEFT JOIN civicrm_contribution as contribution ON line_item.contribution_id = contribution.id
-                LEFT JOIN civicrm_price_field_value price_field_value ON line_item.price_field_value_id = price_field_value.id
-                LEFT JOIN civicrm_price_field price_field ON line_item.price_field_id = price_field.id
-                WHERE membership.contact_id = 3 and civicrm_membership
-ORDER BY `civicrm_contact`.`sort_name`  DESC
-
-      SELECT
-            *
-            FROM civicrm_membership membership
-            LEFT JOIN civicrm_contact civicrm_contact ON membership.contact_id = civicrm_contact.id AND civicrm_contact.id = 3
-            LEFT JOIN civicrm_contribution as contribution ON contribution.
-            WHERE membership.contact_id = 3
-
-
-      */
+     //Later we compound all line items belonging to the contribution
+     $item_query = "
+        SELECT
+            line_item.label As item_label,
+            line_item.qty As item_quantity,
+            price_field.is_active As item_active,
+            price_field.active_on As item_startdate,
+            price_field.expire_on As item_enddate,
+            price_field.help_pre As item_help,
+            price_set.name As set_name,
+            price_set.is_active As set_active,
+            price_set.help_pre As set_help
+        FROM civicrm_line_item line_item
+             LEFT JOIN civicrm_price_field_value price_field_value ON line_item.price_field_value_id = price_field_value.id
+             LEFT JOIN civicrm_price_field price_field ON line_item.price_field_id = price_field.id
+             LEFT JOIN civicrm_price_set price_set ON price_field.price_set_id = price_set.id
+        WHERE line_item.contribution_id = %1
+     ";
 
 
     $base_items = CRM_Core_DAO::executeQuery($base_query,
           array( 1 => array($contact_id, 'Integer')));
 
+    //compound both queries together
     while ($base_items->fetch()) {
-      $base = array(
-          'item_label'  => $base_items->item_label,
-          'member_name' => $base_items->member_name,
-      );
+        $line_items = CRM_Core_DAO::executeQuery($item_query,
+            array( 1 => array($base_items->contrib_id, 'Integer')));
 
-      $base_list[] = $base;
+        while ($line_items->fetch()) {
+
+            $base = array(
+                'member_name' => $base_items->member_name,
+                'item_label'  => $line_items->item_label,
+                'item_quantity' => $line_items->item_quantity,
+            );
+
+            $base_list[] = $base;
+
+        }
+
+
 
     }
     $this->assign('item_bases', $base_list);
