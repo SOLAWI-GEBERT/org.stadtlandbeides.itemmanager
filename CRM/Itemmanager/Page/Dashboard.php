@@ -56,7 +56,7 @@ class CRM_Itemmanager_Page_Dashboard extends CRM_Core_Page {
       $old_field = -1;
       $old_date = "";
 
-    // Example: Assign a variable for use in a template
+
     $this->assign('currentTime', date('Y-m-d H:i:s'));
     $contact_id = CRM_Utils_Request::retrieve('cid', 'Integer');
     $this->assign('contact_id', $contact_id);
