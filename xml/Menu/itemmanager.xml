@@ -6,4 +6,10 @@
     <title>Items Dashboard</title>
     <access_arguments>access CiviCRM</access_arguments>
   </item>
+  <item>
+    <path>civicrm/items/update</path>
+    <page_callback>CRM_Itemmanager_Page_UpdateItems</page_callback>
+    <title>UpdateItems</title>
+    <access_arguments>access CiviCRM</access_arguments>
+  </item>
 </menu>
