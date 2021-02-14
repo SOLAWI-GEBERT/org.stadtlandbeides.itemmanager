@@ -20,6 +20,28 @@ use CRM_Itemmanager_ExtensionUtil as E;
 
 class CRM_Itemmanager_Page_Dashboard extends CRM_Core_Page {
 
+    //results for array1 (when it is in more, it is in array1 and not in array2. same for less)
+    public static function compare_multi_Arrays($array1, $array2){
+
+        foreach($array1 as $k => $v) {
+            if(!array_key_exists($k,$array2))
+                return False;
+
+            if(!is_array($v) && !is_array($array2[$k]))
+                if($v !== $array2[$k])
+                    return False;
+
+            if(is_array($v) && is_array($array2[$k]))
+                if(!self::compare_multi_Arrays($v, $array2[$k]))
+                    return False;
+        }
+        foreach($array2 as $k => $v)
+            if(!array_key_exists($k,$array1))
+                return False;
+
+        return True;
+    }
+
   public function run() {
     // Example: Set the page-title dynamically; alternatively, declare a static title in xml/Menu/*.xml
     CRM_Utils_System::setTitle(E::ts('Items Dashboard'));
@@ -30,15 +52,14 @@ class CRM_Itemmanager_Page_Dashboard extends CRM_Core_Page {
       $field_list = array();
       $group_sets = array();
       $group_dates = array();
-      $old_set = 0;
+      $old_set = -1;
+      $old_field = -1;
       $old_date = "";
 
     // Example: Assign a variable for use in a template
     $this->assign('currentTime', date('Y-m-d H:i:s'));
     $contact_id = CRM_Utils_Request::retrieve('cid', 'Integer');
     $this->assign('contact_id', $contact_id);
-
-
 
 
 
@@ -126,47 +147,62 @@ class CRM_Itemmanager_Page_Dashboard extends CRM_Core_Page {
 
     }//while ($base_items->fetch())
 
-      $test = array();
+
+      $current_sets = array();
+      $current_index = 0;
+      $group_sets = array();
+      $_group_sets = array();
+      $current_datelist = array();
+
     //dig into Date Groups and find different sets
     foreach ($group_dates As $date_set)
     {
 
         foreach ($date_set['group_data'] as $group_data)
         {
-            $test[] = $group_data;
-            //Trigger new sets
-            $set = $group_data['set_id'];
-            $new_set = $set != $old_set;
-            $old_set = $set;
+            $current_datelist[] = $group_data['contrib_date'];
+            if(!array_key_exists($group_data['set_id'],$_group_sets))
+                $_group_sets[$group_data['set_id']] = array();
 
-            $field = array(
-                'id' => $group_data['field_id'],
-                'quantity' => $group_data['item_quantity'],
-            );
-
-            $field_list[] = $field;
-
-            if($new_set)
+            $_group_set = &$_group_sets[$group_data['set_id']];
+            if(!array_key_exists($group_data['field_id'],$_group_set))
             {
-                $current_set = array(
-                    'set' => $set,
-                    'fields' => $field_list,
+                $_details = array(
+                    'item_quantity' => (string)$group_data['item_quantity'],
+                    'item_label' => (string)$group_data['item_label'],
+                    'member_name' => (string)$group_data['member_name'],
                 );
+                $_group_set[$group_data['field_id']] = $_details;
 
-                $field_list = array();
-                $group_sets[] = $current_set;
             }
 
 
+        }//foreach ($date_set['group_data'] as $group_data)
 
+        $diffresult = self::compare_multi_Arrays($current_sets,$_group_sets);
+        $current_sets = $_group_sets;
+        if(!$diffresult){
+            if(!array_key_exists($current_index,$group_sets)){
+                $details = array();
+                foreach($_group_sets As $set)
+                    foreach ($set As $fields)
+                            $details[] = $fields;
 
+                $group_sets[$current_index]['list'] = $details;
+                $group_sets[$current_index]['raw'] = $_group_sets;
+                $group_sets[$current_index]['date_max'] = max($current_datelist)->format('Y-M');
+                $group_sets[$current_index]['date_min'] = min($current_datelist)->format('Y-M');
+            }
+
+            $current_index +=1;
+            $_group_sets = array();
+            $current_datelist = array();
         }
 
-    }
+    }//foreach ($group_dates As $date_set)
 
-    $this->assign('group_bases',$group_dates);
-    $this->assign('item_bases', $base_list);
-    $this->assign('test_items', $group_sets);
+    $this->assign('group_sets',$group_sets);
+
 
     parent::run();
   }
