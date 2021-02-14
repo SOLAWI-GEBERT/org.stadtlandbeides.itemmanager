@@ -160,14 +160,20 @@ function itemmanager_civicrm_preProcess($formName, &$form) {
  * @link https://docs.civicrm.org/dev/en/latest/hooks/hook_civicrm_navigationMenu
  */
 function itemmanager_civicrm_navigationMenu(&$menu) {
-  _itemmanager_civix_insert_navigation_menu($menu, 'Mailings', array(
-    'label' => E::ts('New subliminal message'),
-    'name' => 'mailing_subliminal_message',
-    'url' => 'civicrm/mailing/subliminal',
-    'permission' => 'access CiviMail',
-    'operator' => 'OR',
-    'separator' => 0,
-  ));
+
+    //add menu entry for Itemmanager settings to Administer>CiviContribute menu
+    $items_settings_url = 'civicrm/admin/setting/itemmanager';
+
+    _sepa_civix_insert_navigation_menu($menu, 'Administer/CiviContribute',array (
+        'label' => ts('Itemmanager Settings',array('domain' => 'org.stadtlandbeides.itemmanager')),
+        'name' => 'Itemmanager Settings',
+        'url' => $items_settings_url,
+        'permission' => 'administer CiviCRM',
+        'operator' => NULL,
+        'separator' => 2,
+        'active' => 1
+    ));
+
   _itemmanager_civix_navigationMenu($menu);
 }
 
