@@ -21,4 +21,10 @@
     <access_arguments>administer CiviCRM</access_arguments>
     <icon>admin/small/online_contribution_pages.png</icon>
   </item>
+  <item>
+    <path>civicrm/items/maintenance</path>
+    <page_callback>CRM_Itemmanager_Page_ItemMaintenance</page_callback>
+    <title>ItemMaintenance</title>
+    <access_arguments>access CiviCRM</access_arguments>
+  </item>
 </menu>
