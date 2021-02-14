@@ -1,4 +1,4 @@
-<h3>Dashboard</h3>
+<h2>Item Dashboard</h2>
 
 {* add new mandate button *}
 <div>
@@ -19,8 +19,8 @@
         <thead>
             <tr class="columnheader">
                 <td width="45%">{ts domain="org.stadtlandbeides.itemmanager"}Referred to{/ts}</td>
+                <td width="5%">{ts domain="org.stadtlandbeides.itemmanager"}Quantity{/ts}</td>
                 <td width="40%">{ts domain="org.stadtlandbeides.itemmanager"}Item{/ts}</td>
-                <td width="5%">{ts domain="org.stadtlandbeides.itemmanager"}Amount{/ts}</td>
             </tr>
         </thead>
 
@@ -28,8 +28,8 @@
         {foreach from=$group.list item=ritem}
             <tr class="{cycle values="odd-row,even-row"}">
                 <td width="45%">{$ritem.member_name}</td>
-                <td width="40%">{$ritem.item_label}</td>
                 <td width="5%">{$ritem.item_quantity}</td>
+                <td width="40%">{$ritem.item_label}</td>
 
             </tr>
         {/foreach}
@@ -42,3 +42,17 @@
     </div>
 {/if}
 
+
+<script type="application/javascript">
+    {literal}
+    // trigger reload of tab
+    // || cj(event.target).attr('href').includes('civicrm/sepa/xmandate')
+    cj(document).ready(function() {
+        cj(document).on('crmPopupClose', function(event) {
+            if(cj(event.target).attr('href').includes('civicrm/items/update')) {
+                cj("#items_update_extra_button").closest("div.crm-ajax-container").crmSnippet('refresh');
+            }
+        });
+    });
+    {/literal}
+</script>
