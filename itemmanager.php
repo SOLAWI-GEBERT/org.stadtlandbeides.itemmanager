@@ -176,7 +176,7 @@ function itemmanager_civicrm_navigationMenu(&$menu) {
     //add menu entry for Itemmanager settings to Administer>CiviContribute menu
     $items_settings_url = 'civicrm/admin/setting/itemmanager';
 
-    _sepa_civix_insert_navigation_menu($menu, 'Administer/CiviContribute',array (
+    _sepa_civix_insert_navigation_menu($menu, 'Administer/CiviMember',array (
         'label' => ts('Itemmanager Settings',array('domain' => 'org.stadtlandbeides.itemmanager')),
         'name' => 'Itemmanager Settings',
         'url' => $items_settings_url,

@@ -1,11 +1,16 @@
 <h3>{ts domain="org.stadtlandbeides.itemmanager"}Item Dashboard{/ts}</h3>
 
-{* add new mandate button *}
 <div>
     <a id="items_update_extra_button" class="button crm-popup" href="{crmURL p="civicrm/items/update" q="action=update&cid=$contact_id&backtrace=1&smartyDebug=1"}">
         <span>
             <div class="icon add-icon edit-icon"></div>{ts domain="org.stadtlandbeides.itemmanager"}Update Items{/ts}
         </span>
+    </a>
+    <a title="{ts domain="org.project60.sepa"}Refresh{/ts}" id="refresh_dashboard" class="refresh button" >
+                    <span>
+                      <div class="icon refresh-icon ui-icon-refresh"></div>
+                      {ts domain="org.stadtlandbeides.itemmanager"}Refresh{/ts}
+                    </span>
     </a>
     <br/>
     <br/>
@@ -57,14 +62,21 @@
 
 <script type="application/javascript">
     {literal}
-    // trigger reload of tab
-    // || cj(event.target).attr('href').includes('civicrm/sepa/xmandate')
-    cj(document).ready(function() {
-        cj(document).on('crmPopupClose', function(event) {
-            if(cj(event.target).attr('href').includes('civicrm/items/update')) {
-                cj("#items_update_extra_button").closest("div.crm-ajax-container").crmSnippet('refresh');
-            }
+        // trigger reload of tab
+        // || cj(event.target).attr('href').includes('civicrm/sepa/xmandate')
+        cj(document).ready(function() {
+            cj(document).on('crmPopupClose', function(event) {
+                if(cj(event.target).attr('href').includes('civicrm/items/update')) {
+                    cj("#items_update_extra_button").closest("div.crm-ajax-container").crmSnippet('refresh');
+                }
+            });
+
+            cj(document).on('crmPopupClose', .on('click', 'a', function(event){
+                cj("#refresh_dashboard").closest("div.crm-ajax-container").crmSnippet('refresh');
+            });
+
         });
-    });
+
+
     {/literal}
 </script>

@@ -202,6 +202,7 @@ class CRM_Itemmanager_Page_Dashboard extends CRM_Core_Page {
     }//foreach ($group_dates As $date_set)
 
     $this->assign('group_sets',$group_sets);
+    $this->assign("group_refresh", CRM_Utils_System::url('civicrm/items/tab', "reset=1&force=1&cid={$contact_id}"));
 
 
     parent::run();
