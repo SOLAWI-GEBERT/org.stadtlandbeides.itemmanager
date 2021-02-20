@@ -1,5 +1,6 @@
+<div class="crm-block crm-form-block">
 <div class="crm-actions-ribbon">
-    <fieldset>
+    <fieldset class "crm-">
         <span>
             <input type="checkbox" name="optionlist"/>
             {ts domain="org.stadtlandbeides.itemmanager"}Sync price items{/ts}
@@ -9,7 +10,7 @@
             {ts domain="org.stadtlandbeides.itemmanager"}Harmonize date{/ts}
         </span>
 
-        <a title="{ts domain="org.project60.sepa"}Preview{/ts}" class="refresh button" >
+        <a title="{ts domain="org.project60.sepa"}Preview{/ts}" class="refresh button" href="{crmURL p="civicrm/items/update" q="action=update&cid=$contact_id&backtrace=1&smartyDebug=1"}">
             <span>
               <div class="icon refresh-icon  ui-icon-refresh"></div>
               {ts domain="org.stadtlandbeides.itemmanager"}Preview{/ts}
@@ -33,10 +34,10 @@
 
 
 {if $submit_url}
-<form id='new_sepa_mandate' action="{$submit_url}" method="post">
+<form id='item_update_list' action="{$submit_url}" method="post">
     <input type="hidden" name="contact_id" value="{$contact_id}" />
     <fieldset>
-    <table>
+    <table class="crm-content-block">
         <thead>
         <tr class="columnheader">
             <td width="5%"><input type="checkbox" name="viewlist" value="select_all"/></td>
@@ -63,3 +64,19 @@
 </form>
 
 {/if}
+</div>
+
+{literal}
+<script type="text/javascript">
+    (function($) {
+
+        $('#crm-actions-ribbon')
+            .on('click', 'a.button, a.action-item[href*="action=update"], a.action-item[href*="action=delete"]', CRM.popup)
+            .on('crmPopupFormSuccess', 'a.button, a.action-item[href*="action=update"], a.action-item[href*="action=delete"]', function() {
+                // Refresh datatable when form completes
+                $('#crm-block').crmSnippet('refresh');
+            });
+
+    })(CRM.$);
+</script>
+{/literal}

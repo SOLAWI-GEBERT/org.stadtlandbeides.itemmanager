@@ -1,3 +1,5 @@
+<div class="crm-content">
+
 <h3>{ts domain="org.stadtlandbeides.itemmanager"}Item Dashboard{/ts}</h3>
 
 <div>
@@ -6,7 +8,10 @@
             <div class="icon add-icon edit-icon"></div>{ts domain="org.stadtlandbeides.itemmanager"}Update Items{/ts}
         </span>
     </a>
-    <a title="{ts domain="org.project60.sepa"}Refresh{/ts}" id="refresh_dashboard" class="refresh button" >
+    <a title="{ts domain="org.project60.sepa"}Refresh{/ts}"
+       id="refresh_dashboard"
+       class="refresh button"
+       href="{crmURL p="civicrm/contact/view" q="action=refresh&reset=1&cid=$contact_id"}">
                     <span>
                       <div class="icon refresh-icon ui-icon-refresh"></div>
                       {ts domain="org.stadtlandbeides.itemmanager"}Refresh{/ts}
@@ -71,12 +76,16 @@
                 }
             });
 
-            cj(document).on('crmPopupClose', .on('click', 'a', function(event){
-                cj("#refresh_dashboard").closest("div.crm-ajax-container").crmSnippet('refresh');
-            });
+            $('#crm-content')
+                .on('click', 'a.button, a.action-item[href*="action=refresh"]', CRM.popup)
+                .on('crmPopupFormSuccess', 'a.button, a.action-item[href*="action=refresh"], function() {
+                    // Refresh datatable when form completes
+                    $('#crm-ajax-container').crmSnippet('refresh');
+                });
 
         });
 
 
     {/literal}
 </script>
+</div>
