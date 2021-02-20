@@ -3,7 +3,7 @@
 <h3>{ts domain="org.stadtlandbeides.itemmanager"}Item Dashboard{/ts}</h3>
 
 <div>
-    <a id="items_update_extra_button" class="button crm-popup" href="{crmURL p="civicrm/items/update" q="action=update&cid=$contact_id&backtrace=1&smartyDebug=1"}">
+    <a id="items_update_extra_button" class="button crm-popup" href="{crmURL p="civicrm/items/update" q="action=update&cid=$contact_id&harm=0&sync=0&backtrace=1&smartyDebug=1"}">
         <span>
             <div class="icon add-icon edit-icon"></div>{ts domain="org.stadtlandbeides.itemmanager"}Update Items{/ts}
         </span>
@@ -11,7 +11,7 @@
     <a title="{ts domain="org.project60.sepa"}Refresh{/ts}"
        id="refresh_dashboard"
        class="refresh button"
-       href="{crmURL p="civicrm/contact/view" q="action=refresh&reset=1&cid=$contact_id"}">
+       href="{crmURL p="civicrm/contact/view" q="action=refresh&reset=1&cid=$contact_id&selectedChild=itemmanager"}">
                     <span>
                       <div class="icon refresh-icon ui-icon-refresh"></div>
                       {ts domain="org.stadtlandbeides.itemmanager"}Refresh{/ts}

@@ -198,7 +198,7 @@ function itemmanager_civicrm_tabset($tabsetName, &$tabs, $context) {
     if ($tabsetName == 'civicrm/contact/view' && !empty($context['contact_id'])) {
         $tabs[] = [
             'id'     => 'itemmanager',
-            'url'    => CRM_Utils_System::url('civicrm/items/tab', "reset=1&force=1&cid={$context['contact_id']}&backtrace=1&smartyDebug=1"),
+            'url'    => CRM_Utils_System::url('civicrm/items/tab', "reset=1&force=1&cid={$context['contact_id']}"),
             'title'  => E::ts('Items Dashboard'),
             'weight' => 20
         ];

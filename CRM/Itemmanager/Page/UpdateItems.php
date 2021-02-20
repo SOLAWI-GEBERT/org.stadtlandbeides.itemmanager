@@ -10,6 +10,8 @@ class CRM_Itemmanager_Page_UpdateItems extends CRM_Core_Page {
       //Deklaration
       $base_list = array();
       $status ='open';
+      $filter_sync = 0;
+      $filter_harmonize = 0;
       $collect_list = array();
       $field_list = array();
       $group_sets = array();
@@ -99,7 +101,9 @@ class CRM_Itemmanager_Page_UpdateItems extends CRM_Core_Page {
 
       $this->assign('base_list',$base_list);
       $this->assign("status", $status);
-      $this->prepareCreateForm($_REQUEST['cid']);
+      $this->assign("filter_sync",$filter_sync);
+      $this->assign("filter_harmonize",$filter_harmonize);
+      $this->prepareCreateForm($_REQUEST['cid'],$_REQUEST['sync'],$_REQUEST['harm']);
     parent::run();
   }
 
@@ -107,7 +111,7 @@ class CRM_Itemmanager_Page_UpdateItems extends CRM_Core_Page {
     /**
      * Will prepare the form and look up all necessary data
      */
-    function prepareCreateForm($contact_id)
+    function prepareCreateForm($contact_id,$filter_harmonize,$filter_sync)
     {
         // load financial types
 
@@ -128,6 +132,8 @@ class CRM_Itemmanager_Page_UpdateItems extends CRM_Core_Page {
 
         // all seems to be ok.
         $this->assign("submit_url", CRM_Utils_System::url('civicrm/items/update'));
+        $this->assign("filter_url", CRM_Utils_System::url('civicrm/items/update',"action=update&cid=$contact_id"));
+
     }
 
     /**
