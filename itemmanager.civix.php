@@ -473,5 +473,11 @@ function _itemmanager_civix_civicrm_alterSettingsFolders(&$metaDataFolders = NUL
  * @link https://docs.civicrm.org/dev/en/latest/hooks/hook_civicrm_entityTypes
  */
 function _itemmanager_civix_civicrm_entityTypes(&$entityTypes) {
-  $entityTypes = array_merge($entityTypes, []);
+  $entityTypes = array_merge($entityTypes, [
+    'CRM_Itemmanager_DAO_ItemmanagerSettings' => [
+      'name' => 'ItemmanagerSettings',
+      'class' => 'CRM_Itemmanager_DAO_ItemmanagerSettings',
+      'table' => 'civicrm_itemmanager_settings',
+    ],
+  ]);
 }
