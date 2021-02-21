@@ -3,32 +3,118 @@ use CRM_Itemmanager_ExtensionUtil as E;
 
 class CRM_Itemmanager_Page_UpdateItems extends CRM_Core_Page {
 
+    var $base_list = array();
+    var $old_backid = 0;
+
   public function run() {
     // Example: Set the page-title dynamically; alternatively, declare a static title in xml/Menu/*.xml
-    CRM_Utils_System::setTitle(E::ts('UpdateItems'));
+    CRM_Utils_System::setTitle(E::ts('Update Items'));
 
       //Deklaration
-      $base_list = array();
-      $status ='open';
-      $filter_sync = 0;
-      $filter_harmonize = 0;
-      $collect_list = array();
-      $field_list = array();
-      $group_sets = array();
-      $group_dates = array();
-      $old_set = -1;
-      $old_field = -1;
-      $old_date = "";
+      $reset = CRM_Utils_Request::retrieve('reset','Integer');
+      $doupdate = $_POST['items_update'];
 
 
-      $this->assign('currentTime', date('Y-m-d H:i:s'));
-      $contact_id = CRM_Utils_Request::retrieve('cid', 'Integer');
-      $this->assign('contact_id', $contact_id);
+      //Initialisierung
+      if( isset($reset))
+      {
+          $base_list = array();
+          $old_backid = 0;
+      }
+
+      if(!isset($doupdate))
+      {
+          $this->assign('currentTime', date('Y-m-d H:i:s'));
+          $contact_id = CRM_Utils_Request::retrieve('cid', 'Integer');
+          $loaded_action = $_REQUEST['action'];
+          if($old_backid != $contact_id)
+          {
+              $base_list = array();
+          }
+
+
+          $old_backid = $contact_id;
+          $filter_harmonize = CRM_Utils_Request::retrieve('harm', 'Integer');
+          $filter_sync = CRM_Utils_Request::retrieve('sync', 'Integer');
+          CRM_Core_Session::setStatus($loaded_action,"DEBUG",'info');
+          $this->assign("request",$_REQUEST);
+          $this->assign("action",$loaded_action);
+          if(isset($loaded_action) and $loaded_action == "update")
+            $this->prepareCreateForm($contact_id,$filter_sync,$filter_harmonize);
+          else
+              $this->prepareCreateForm($contact_id,$filter_sync,$filter_harmonize);
+
+      }
+      else
+      {
+
+          parent::run();
+          return;
+
+      }
+
+      //JUST TEST
+      if (isset($_POST['items_update']))
+      {
+
+          $this->assign('post', $_POST);
+
+          $message = "Ausgabe";
+          if (isset($_POST['viewlist'])){
+                foreach ($_POST['viewlist'] as $value)
+                {
+                    $message += "Wert:";
+                    $message += $value."<br>";
 
 
 
-      //Here we just collect the memberships
-      $base_query = "
+
+           }
+        }
+
+          CRM_Core_Session::setStatus($message,"DEBUG",'info');
+
+          parent::run();
+          return;
+      }
+
+
+
+
+
+
+    parent::run();
+  }
+
+    function updatePreviewForm($contact_id,$filter_harmonize,$filter_sync,$base_list)
+    {
+        $this->assign('base_list', $base_list);
+        $this->assign("contact_id", $contact_id);
+        $this->assign("submit_url", CRM_Utils_System::url('civicrm/items/update'));
+        $this->assign("filter_url", CRM_Utils_System::url('civicrm/items/update',"action=preview&cid=$contact_id"));
+        $this->assign("filter_sync",$filter_sync);
+        $this->assign("filter_harmonize",$filter_harmonize);
+
+    }
+
+
+    /**
+     * Will prepare the form and look up all necessary data
+     */
+    function prepareCreateForm($contact_id,$filter_harmonize,$filter_sync)
+    {
+
+        // first, try to load contact
+        $contact = civicrm_api('Contact', 'getsingle', array('version' => 3, 'id' => $contact_id));
+        if (isset($contact['is_error']) && $contact['is_error']) {
+            CRM_Core_Session::setStatus(sprintf(ts("Couldn't find contact #%s", array('domain' => 'org.stadtlandbeides.itemmanager')),
+                $contact_id), ts('Error', array('domain' => 'org.stadtlandbeides.itemmanager')), 'error');
+            $this->assign("display_name", "ERROR");
+            return;
+        }
+
+        //Here we just collect the memberships
+        $base_query = "
         SELECT
             member_type.name AS member_name,
             contribution.id AS contrib_id,
@@ -42,17 +128,23 @@ class CRM_Itemmanager_Page_UpdateItems extends CRM_Core_Page {
         WHERE membership.contact_id = %1
                 ";
 
-      //Later we compound all line items belonging to the contribution
-      $item_query = "
+        //Later we compound all line items belonging to the contribution
+        $item_query = "
         SELECT
             line_item.label As item_label,
             line_item.id As line_id,
             line_item.qty As item_quantity,
+            line_item.unit_price As item_price,
+            line_item.line_total As item_total,
+            line_item.tax_amount As item_tax,
+            line_item.financial_type_id As item_ftype,
             price_field.id As field_id,
             price_field.is_active As item_active,
             price_field.active_on As item_startdate,
             price_field.expire_on As item_enddate,
             price_field.help_pre As item_help,
+            price_field.label As field_label,
+            price_field_value.amount As field_amount,       
             contribution.receive_date As contrib_date,
             price_set.id As set_id,
             price_set.name As set_name,
@@ -69,71 +161,56 @@ class CRM_Itemmanager_Page_UpdateItems extends CRM_Core_Page {
      ";
 
 
-      $base_items = CRM_Core_DAO::executeQuery($base_query,
-          array( 1 => array($contact_id, 'Integer')));
+        $base_items = CRM_Core_DAO::executeQuery($base_query,
+            array( 1 => array($contact_id, 'Integer')));
 
-      //compound both queries together
-      while ($base_items->fetch()) {
-          $line_items = CRM_Core_DAO::executeQuery($item_query,
-              array( 1 => array($base_items->contrib_id, 'Integer')));
+        //compound both queries together
+        while ($base_items->fetch()) {
+            $line_items = CRM_Core_DAO::executeQuery($item_query,
+                array( 1 => array($base_items->contrib_id, 'Integer')));
 
-          while ($line_items->fetch()) {
+            while ($line_items->fetch()) {
 
-              $line_timestamp = date_create($line_items->contrib_date);
-              $line_date = $line_timestamp->format('Y-M');
+                $line_timestamp = date_create($line_items->contrib_date);
+                $line_date = $line_timestamp->format('Y-M');
 
-              $base = array(
-                  'line_id'  => $line_items-> line_id,
-                  'set_id'        => $line_items->set_id,
-                  'field_id'        => $line_items->field_id,
-                  'member_name'   => $base_items->member_name,
-                  'item_label'    => $line_items->item_label,
-                  'item_quantity' => $line_items->item_quantity,
-                  'contrib_date'  => $line_timestamp,
-              );
+                $base = array(
+                    'line_id'  => $line_items-> line_id,
+                    'set_id'        => $line_items->set_id,
+                    'field_id'        => $line_items->field_id,
+                    'member_name'   => $base_items->member_name,
+                    'item_label'    => $line_items->item_label,
+                    'item_quantity' => $line_items->item_quantity,
+                    'item_price' => $line_items-> item_price,
+                    'item_total' => $line_items-> item_total,
+                    'item_tax' => $line_items-> item_tax,
+                    'contrib_date'  => $line_timestamp,
+                    'update_date' => 1,
+                    'change_date' => $line_timestamp,
+                    'update_label' => 1,
+                    'change_label' => $line_items -> field_label,
+                    'update_price' => 1,
+                    'change_price' => 0,
+                    'change_total' => 0,
+                    'change_tax' => 0,
+                );
 
-              $base_list[] = $base;
-
-
-          }
-
-      }//while ($base_items->fetch())
-
-      $this->assign('base_list',$base_list);
-      $this->assign("status", $status);
-      $this->assign("filter_sync",$filter_sync);
-      $this->assign("filter_harmonize",$filter_harmonize);
-      $this->prepareCreateForm($_REQUEST['cid'],$_REQUEST['sync'],$_REQUEST['harm']);
-    parent::run();
-  }
+                $base_list[] = $base;
 
 
-    /**
-     * Will prepare the form and look up all necessary data
-     */
-    function prepareCreateForm($contact_id,$filter_harmonize,$filter_sync)
-    {
-        // load financial types
+            }
 
+        }//while ($base_items->fetch())
+
+        $this->assign('base_list',$base_list);
         $this->assign("date", date('Y-m-d'));
         $this->assign("start_date", date('Y-m-d'));
-
-
-        // first, try to load contact
-        $contact = civicrm_api('Contact', 'getsingle', array('version' => 3, 'id' => $contact_id));
-        if (isset($contact['is_error']) && $contact['is_error']) {
-            CRM_Core_Session::setStatus(sprintf(ts("Couldn't find contact #%s", array('domain' => 'org.stadtlandbeides.itemmanager')), $cid), ts('Error', array('domain' => 'org.stadtlandbeides.itemmanager')), 'error');
-            $this->assign("display_name", "ERROR");
-            return;
-        }
-
         $this->assign("contact_id", $contact_id);
         $this->assign("display_name", $contact['display_name']);
-
-        // all seems to be ok.
         $this->assign("submit_url", CRM_Utils_System::url('civicrm/items/update'));
-        $this->assign("filter_url", CRM_Utils_System::url('civicrm/items/update',"action=update&cid=$contact_id"));
-
+        $this->assign("filter_url", CRM_Utils_System::url('civicrm/items/update',"action=preview&cid=$contact_id"));
+        $this->assign("filter_sync",$filter_sync);
+        $this->assign("filter_harmonize",$filter_harmonize);
     }
 
     /**
@@ -148,6 +225,17 @@ class CRM_Itemmanager_Page_UpdateItems extends CRM_Core_Page {
      */
     protected function processError($status, $title, $message, $contact_id) {
         CRM_Core_Session::setStatus($status . "<br/>" . $message, ts('Error', array('domain' => 'org.stadtlandbeides.itemmanager')), 'error');
+        $this->assign("error_title",   $title);
+        $this->assign("error_message", $message);
+
+        if (!$this->isPopup()) {
+            $contact_url = CRM_Utils_System::url('civicrm/contact/view', "reset=1&cid={$contact_id}&selectedChild=itemmanager");
+            CRM_Utils_System::redirect($contact_url);
+        }
+    }
+
+    protected function processInfo($status, $title, $message, $contact_id) {
+        CRM_Core_Session::setStatus($status . "<br/>" . $message, ts('Info', array('domain' => 'org.stadtlandbeides.itemmanager')), 'info');
         $this->assign("error_title",   $title);
         $this->assign("error_message", $message);
 

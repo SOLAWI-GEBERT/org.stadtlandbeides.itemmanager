@@ -1,76 +1,85 @@
-<div class="crm-block crm-form-block">
-<div class="crm-actions-ribbon">
+
+{if $submit_url}
+<form class="crm-form-block" id='item_update_list' name="item_update_list" action="{$submit_url}" method="post">
     <input type="hidden" id="filter_sync" value="{$filter_sync}" />
     <input type="hidden" id="filter_harmonize" value="{$filter_harmonize}" />
     <input type="hidden" id="filter_url" value="{$filter_url}" />
-    <fieldset>
-        <span>
-            <input type="checkbox" id='sync_price' name="optionlist" onchange="SetFilter(CRM.$, CRM._)" />
-            {ts domain="org.stadtlandbeides.itemmanager"}Sync price items{/ts}
-        </span>
-        <span>
-            <input type="checkbox" id='harmonize_date' name="optionlist" onchange="SetFilter(CRM.$, CRM._)"/>
-            {ts domain="org.stadtlandbeides.itemmanager"}Harmonize date{/ts}
-        </span>
-
-        <a title="{ts domain="org.project60.sepa"}Preview{/ts}"
-           class="refresh button"
-           id="Preview_Button"
-           href="{$filter_url}&harm={$filter_harmonize}&sync={$filter_sync}">
-            <span>
-              <div class="icon refresh-icon  ui-icon-refresh"></div>
-              {ts domain="org.stadtlandbeides.itemmanager"}Preview{/ts}
-            </span>
-        </a>
-
-        <a title="{ts domain="org.project60.sepa"}Update Items{/ts}" class="refresh button" >
-            <span>
-              <div class="icon edit-icon ui-icon-pencil"></div>
-              {ts domain="org.stadtlandbeides.itemmanager"}Update Items{/ts}
-            </span>
-        </a>
-
-    </fieldset>
-
-
-    <div class="clear"></div>
-</div>
-<h3>{ts domain="org.stadtlandbeides.itemmanager"}Found items to be updated{/ts}</h3>
-
-
-
-{if $submit_url}
-<form id='item_update_list' action="{$submit_url}" method="post">
     <input type="hidden" name="contact_id" value="{$contact_id}" />
-    <fieldset>
-    <table class="crm-content-block">
-        <thead>
-        <tr class="columnheader">
-            <td width="5%"><input type="checkbox" name="all" id="select_all" onchange="SelectAll(CRM.$, CRM._)"/></td>
-            <td width="45%">{ts domain="org.stadtlandbeides.itemmanager"}Referred to{/ts}</td>
-            <td width="5%">{ts domain="org.stadtlandbeides.itemmanager"}Quantity{/ts}</td>
-            <td width="40%">{ts domain="org.stadtlandbeides.itemmanager"}Item{/ts}</td>
-        </tr>
-        </thead>
 
-        <tbody>
-        {foreach from=$base_list item=ritem}
-            <tr class="{cycle values="odd-row,even-row"}">
-                <td width="5%"><input type="checkbox" name="viewlist" id="{$ritem.line_id}"/></td>
-                <td width="45%">{$ritem.member_name}</td>
-                <td width="5%">{$ritem.item_quantity}</td>
-                <td width="40%">{$ritem.item_label}</td>
+    <div class="crm-actions-ribbon">
 
+            <span class="crm-checkbox-list">
+                <input type="checkbox" id='sync_price' name="optionlist" onchange="SetFilter(CRM.$, CRM._)"
+
+                {if $filter_sync}
+                    checked
+                {/if}
+
+                />
+                {ts domain="org.stadtlandbeides.itemmanager"}Sync price items{/ts}
+            </span>
+            <span class="crm-checkbox-list">
+                <input type="checkbox" id='harmonize_date' name="optionlist" onchange="SetFilter(CRM.$, CRM._)"
+                {if $filter_harmonize}
+                    checked
+                {/if}
+                />
+                {ts domain="org.stadtlandbeides.itemmanager"}Harmonize date{/ts}
+            </span>
+
+            <span class="refresh crm-button">
+                <a title="{ts domain="org.project60.sepa"}Preview{/ts}"
+                   id="Preview_Button"
+                   href="{$filter_url}&harm={$filter_harmonize}&sync={$filter_sync}">
+                    <span>
+                      <div class="icon refresh-icon  ui-icon-refresh"></div>
+                      {ts domain="org.stadtlandbeides.itemmanager"}Preview{/ts}
+                    </span>
+                </a>
+             </span>
+
+            <span class="refresh crm-button crm-submit-buttons">
+                <div class="icon edit-icon ui-icon-pencil"></div>
+                <input type="submit" name="items_update" value="{ts domain="org.stadtlandbeides.itemmanager"}Update Items{/ts}">
+            </span>
+
+
+        <div class="clear"></div>
+    </div>
+    <div class="crm-block">
+        <h3>{ts domain="org.stadtlandbeides.itemmanager"}Found items to be updated{/ts}</h3>
+
+        <table class="crm-content-block">
+            <thead>
+            <tr class="columnheader">
+                <td width="5%"><input type="checkbox" name="all" id="select_all" onchange="SelectAll(CRM.$, CRM._)"/></td>
+                <td width="45%">{ts domain="org.stadtlandbeides.itemmanager"}Referred to{/ts}</td>
+                <td width="5%">{ts domain="org.stadtlandbeides.itemmanager"}Quantity{/ts}</td>
+                <td width="40%">{ts domain="org.stadtlandbeides.itemmanager"}Item{/ts}</td>
             </tr>
-        {/foreach}
-        </tbody>
-    </table>
-    </fieldset>
+            </thead>
+
+            <tbody>
+
+                {foreach from=$base_list item=ritem}
+                    <tr class="{cycle values="odd-row,even-row"}">
+                        <td width="5%"><input type="checkbox" name="viewlist[]" value="{$ritem.line_id}"/></td>
+                        <td width="45%">{$ritem.member_name}</td>
+                        <td width="5%">{$ritem.item_quantity}</td>
+                        <td width="40%">{$ritem.item_label}</td>
+
+                    </tr>
+                {/foreach}
+
+            </tbody>
+        </table>
+    </div>
+
 
 </form>
 
 {/if}
-</div>
+
 
 {literal}
 <script type="text/javascript">
@@ -124,14 +133,29 @@
 
     (function($) {
 
+
+
         $('#crm-actions-ribbon')
-            .on('click', 'a.button, a.action-item[href*="action=update"]', CRM.popup)
-            .on('crmPopupFormSuccess', 'a.button, a.action-item[href*="action=update"]', function() {
+            .on('click', 'a.button, a.action-item[href*="action=preview"]', CRM.popup)
+            .on('crmPopupFormSuccess', 'a.button, a.action-item[href*="action=preview"]', function() {
+
                 // Refresh datatable when form completes
-                $('#crm-block').crmSnippet('refresh');
+                $('#crm-form-block').crmSnippet('refresh');
             });
 
 
     })(CRM.$);
+
+    $('#crm-actions-ribbon')
+        .on('click', function() {
+
+            alert("Ich bin hier");
+            // Refresh datatable when form completes
+            //$('#crm-form-block').crmSnippet('refresh');
+        });
+
+
+    })(CRM.$);
+
 </script>
 {/literal}
