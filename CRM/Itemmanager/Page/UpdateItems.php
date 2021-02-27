@@ -36,7 +36,6 @@ class CRM_Itemmanager_Page_UpdateItems extends CRM_Core_Page {
           $old_backid = $contact_id;
           $filter_harmonize = CRM_Utils_Request::retrieve('harm', 'Integer');
           $filter_sync = CRM_Utils_Request::retrieve('sync', 'Integer');
-          CRM_Core_Session::setStatus($loaded_action,"DEBUG",'info');
           $this->assign("request",$_REQUEST);
           $this->assign("action",$loaded_action);
           if(isset($loaded_action) and $loaded_action == "update")
@@ -48,39 +47,15 @@ class CRM_Itemmanager_Page_UpdateItems extends CRM_Core_Page {
       else
       {
 
+          $filter_sync = $_POST['filter_sync'];
+          $filter_harmonize = $_POST['filter_harmonize'];
+          $contact_id = $_POST['contact_id'];
+          $check_list = $_POST['viewlist'];
+          if(isset($check_list))
+            $this->updateData($contact_id,$filter_harmonize,$filter_sync,$check_list);
           parent::run();
-          return;
 
       }
-
-      //JUST TEST
-      if (isset($_POST['items_update']))
-      {
-
-          $this->assign('post', $_POST);
-
-          $message = "Ausgabe";
-          if (isset($_POST['viewlist'])){
-                foreach ($_POST['viewlist'] as $value)
-                {
-                    $message += "Wert:";
-                    $message += $value."<br>";
-
-
-
-
-           }
-        }
-
-          CRM_Core_Session::setStatus($message,"DEBUG",'info');
-
-          parent::run();
-          return;
-      }
-
-
-
-
 
 
     parent::run();
@@ -241,6 +216,151 @@ class CRM_Itemmanager_Page_UpdateItems extends CRM_Core_Page {
     }
 
 
+    function updateData($contact_id,$filter_harmonize,$filter_sync,$selected_items)
+    {
+
+        //Deklaration
+        $error = False;
+        $error_msg = "";
+        $contribution_table = CRM_Contribute_DAO_Contribution::getTableName();
+        $line_item_table = CRM_Price_DAO_LineItem::getTableName();
+        $update_date_query = "
+                UPDATE
+                    ". $contribution_table ."
+                SET receive_date = %1
+                WHERE id = %2
+                ";
+
+        $update_label_query = "
+                UPDATE
+                    ". $line_item_table ."
+                SET label = %1
+                WHERE id = %2
+                ";
+
+        // first, try to load contact
+        $contact = civicrm_api('Contact', 'getsingle', array('version' => 3, 'id' => $contact_id));
+        if (isset($contact['is_error']) && $contact['is_error']) {
+            CRM_Core_Session::setStatus(sprintf(ts("Couldn't find contact #%s", array('domain' => 'org.stadtlandbeides.itemmanager')),
+                $contact_id), ts('Error', array('domain' => 'org.stadtlandbeides.itemmanager')), 'error');
+            $this->assign("display_name", "ERROR");
+            return;
+        }
+
+        foreach ($selected_items As $line_item)
+        {
+            $update_contribution = False;
+            $update_label = False;
+            //get all nested data
+            $lineitemInfo = civicrm_api3('lineItem', 'getsingle', array('id' => (int) $line_item));
+            if(!isset($lineitemInfo)) continue;
+            $priceFieldInfo = civicrm_api3('PriceField', 'getsingle', array('id' => (int) $lineitemInfo['price_field_id']));
+            if(!isset($priceFieldInfo)) continue;
+            $priceFieldValueInfo = civicrm_api3('PriceFieldValue', 'getsingle', array('id' => (int) $lineitemInfo['price_field_value_id']));
+            if(!isset($priceFieldValueInfo)) continue;
+            $contributionInfo = civicrm_api3('Contribution', 'getsingle', array('id' => (int) $lineitemInfo['contribution_id']));
+            if(!isset($contributionInfo)) continue;
+
+            //update the data
+            $line_timestamp = date_create($contributionInfo['receive_date']);
+            $line_date = $line_timestamp->format('Y-m-d H:i:s');
+
+
+            $periods = CRM_Itemmanager_BAO_ItemmanagerSettings::getFieldValue('CRM_Itemmanager_DAO_ItemmanagerSettings',
+                (int) $lineitemInfo['price_field_id'] , 'periods','price_field_id',True);
+            if(!isset($periods) or $periods == 0) $periods =1 ;
+
+            $change_timestamp = CRM_Itemmanager_BAO_ItemmanagerSettings::getFieldValue('CRM_Itemmanager_DAO_ItemmanagerSettings',
+                (int) $lineitemInfo['price_field_id'] , 'period_start_on','price_field_id',True);
+            if(!isset($change_timestamp)) $change_timestamp = $contributionInfo['receive_date'];
+
+            //extract start date from month
+            $raw_date = date_create($change_timestamp);
+            $new_date = new DateTime($line_timestamp->format('Y-m') . $raw_date->format('-d'));
+            $new_date->setTime(0,0);
+
+            $changed_date = $new_date->format('Y-m-d H:i:s');
+
+
+            $change_unit_price = $priceFieldValueInfo['amount'] / $periods;
+            $tax = 1.0;
+            if($this->isTaxEnabledInFinancialType((int) $priceFieldValueInfo['financial_type_id'])) $tax = $this->getTaxRateInFinancialType((int) $priceFieldValueInfo['financial_type_id']);
+            $changed_total = $lineitemInfo['qty'] * $change_unit_price;
+            $changed_tax = $lineitemInfo['qty'] * $change_unit_price * $tax/100.0;
+
+
+            if($line_date != $changed_date and $filter_harmonize == 1)
+            {
+                $contributionInfo['receive_date'] =  $changed_date;
+                $update_contribution = True;
+            }
+            //change label
+            if($lineitemInfo['label'] != $priceFieldValueInfo['label'])
+            {
+                $update_label = True;
+                $lineitemInfo['label'] = $priceFieldValueInfo['label'];
+            }
+
+
+            //change price data
+            if(round($lineitemInfo['unit_price'], 2) != round($change_unit_price, 2)
+                and $filter_sync == 1)
+            {
+                $lineitemInfo['unit_price'] = round($change_unit_price,2);
+                $lineitemInfo['line_total'] = round($changed_total,2);
+                $lineitemInfo['tax_amount'] = round($changed_tax,2);
+            }
+
+
+            //Update Contribution
+            if($update_contribution)
+            {
+                try{
+                    $finalquery = CRM_Core_DAO::composeQuery($update_date_query,
+                        array( 1 => array($contributionInfo['receive_date'], 'String'),
+                            2 => array((int) $lineitemInfo['contribution_id'], 'Integer')));
+                    $this->assign("finalquery", $finalquery);
+                    CRM_Core_DAO::executeUnbufferedQuery($finalquery);
+
+                }
+                catch(exception $e){
+
+                    $error_msg .= E::ts("Error for updating contribution") . $lineitemInfo['contribution_id'] . "<br/>";
+                }
+
+            }
+
+            if($update_label)
+            {
+                try{
+                    $finalquery = CRM_Core_DAO::composeQuery($update_label_query,
+                        array( 1 => array($lineitemInfo['label'], 'String'),
+                            2 => array((int) (int) $line_item, 'Integer')));
+                    $this->assign("finalquery", $finalquery);
+                    CRM_Core_DAO::executeUnbufferedQuery($finalquery);
+
+                }
+                catch(exception $e){
+
+                    $error_msg .= E::ts("Error for label for ") . $line_item . "<br/>";
+                }
+            }
+
+        }
+
+        if($error)
+        {
+            $this->processError("ERROR",E::ts('Update Items'),$error_msg,$contact_id);
+            return;
+        }
+
+
+        $this->processSuccess(E::ts('Items updated'),$contact_id);
+
+
+    }
+
+
     /**
      * Check if there is tax value for selected financial type.
      * @param $financialTypeId
@@ -282,11 +402,8 @@ class CRM_Itemmanager_Page_UpdateItems extends CRM_Core_Page {
         }
     }
 
-    protected function processInfo($status, $title, $message, $contact_id) {
-        CRM_Core_Session::setStatus($status . "<br/>" . $message, ts('Info', array('domain' => 'org.stadtlandbeides.itemmanager')), 'info');
-        $this->assign("error_title",   $title);
-        $this->assign("error_message", $message);
-
+    protected function processSuccess($message, $contact_id) {
+        CRM_Core_Session::setStatus($message, ts('Success', array('domain' => 'org.stadtlandbeides.itemmanager')), 'success');
         if (!$this->isPopup()) {
             $contact_url = CRM_Utils_System::url('civicrm/contact/view', "reset=1&cid={$contact_id}&selectedChild=contribute");
             CRM_Utils_System::redirect($contact_url);

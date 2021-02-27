@@ -9,8 +9,8 @@
 
 {if $submit_url}
 <form class="crm-form-block" id='item_update_list' name="item_update_list" action="{$submit_url}" method="post">
-    <input type="hidden" id="filter_sync" value="{$filter_sync}" />
-    <input type="hidden" id="filter_harmonize" value="{$filter_harmonize}" />
+    <input type="hidden" id="filter_sync" name="filter_sync" value="{$filter_sync}" />
+    <input type="hidden" id="filter_harmonize" name="filter_harmonize" value="{$filter_harmonize}" />
     <input type="hidden" id="filter_url" value="{$filter_url}" />
     <input type="hidden" name="contact_id" value="{$contact_id}" />
 
@@ -122,10 +122,15 @@
 
             </tbody>
         </table>
+
     </div>
 
 
 </form>
+    {if !$base_list}
+        </br>
+        <div class="help">{ts domain="org.stadtlandbeides.itemmanager"}Nothing there for updating. Please use filter options to see more.{/ts}</div>
+    {/if}
 
 {/if}
 
@@ -174,10 +179,9 @@
     {
 
         var all=document.getElementById('select_all');
-        var inputs = document.getElementsByName('viewlist');
+        var inputs = document.getElementsByName('viewlist[]');
         // loop through all the inputs, skipping the first one
         for (var i = 0, input; input = inputs[i++]; ) {
-            alert(input.value);
            input.checked = all.checked;
         }
     }
