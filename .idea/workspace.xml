@@ -9,6 +9,11 @@
   <component name="ChangeListManager">
     <list default="true" id="8a4e2072-c43d-4029-bc01-730e5001dde6" name="Default Changelist" comment="ENH Intermittent changes to analyze the price items">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CRM/Itemmanager/BAO/ItemmanagerSettings.php" beforeDir="false" afterPath="$PROJECT_DIR$/CRM/Itemmanager/BAO/ItemmanagerSettings.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CRM/Itemmanager/DAO/ItemmanagerSettings.php" beforeDir="false" afterPath="$PROJECT_DIR$/CRM/Itemmanager/DAO/ItemmanagerSettings.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CRM/Itemmanager/Page/UpdateItems.php" beforeDir="false" afterPath="$PROJECT_DIR$/CRM/Itemmanager/Page/UpdateItems.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/itemmanager.php" beforeDir="false" afterPath="$PROJECT_DIR$/itemmanager.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/CRM/Itemmanager/Page/UpdateItems.tpl" beforeDir="false" afterPath="$PROJECT_DIR$/templates/CRM/Itemmanager/Page/UpdateItems.tpl" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -89,6 +94,8 @@
       <workItem from="1613915424763" duration="246000" />
       <workItem from="1613917411051" duration="144000" />
       <workItem from="1613920683507" duration="701000" />
+      <workItem from="1613921885051" duration="256000" />
+      <workItem from="1614422725186" duration="14055000" />
     </task>
     <task id="LOCAL-00001" summary="ENH Intermittent changes to analyze the price items">
       <created>1612779470217</created>

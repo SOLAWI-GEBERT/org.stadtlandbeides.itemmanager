@@ -8,7 +8,7 @@ class CRM_Itemmanager_BAO_ItemmanagerSettings extends CRM_Itemmanager_DAO_Itemma
    *
    * @param array $params key-value pairs
    * @return CRM_Itemmanager_DAO_ItemmanagerSettings|NULL
-   *
+   */
   public static function create($params) {
     $className = 'CRM_Itemmanager_DAO_ItemmanagerSettings';
     $entityName = 'ItemmanagerSettings';
@@ -21,6 +21,6 @@ class CRM_Itemmanager_BAO_ItemmanagerSettings extends CRM_Itemmanager_DAO_Itemma
     CRM_Utils_Hook::post($hook, $entityName, $instance->id, $instance);
 
     return $instance;
-  } */
+  }
 
 }

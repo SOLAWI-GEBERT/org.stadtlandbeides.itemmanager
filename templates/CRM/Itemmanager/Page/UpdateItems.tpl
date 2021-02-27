@@ -1,3 +1,14 @@
+{literal}
+    <style>
+        .changed_data td {
+            white-space: nowrap;
+            min-width: 20em;
+            vertical-align: middle;
+            color:red;
+        }
+    </style>
+{/literal}
+
 
 {if $submit_url}
 <form class="crm-form-block" id='item_update_list' name="item_update_list" action="{$submit_url}" method="post">
@@ -54,8 +65,8 @@
             <tr class="columnheader">
                 <td width="5%"><input type="checkbox" name="all" id="select_all" onchange="SelectAll(CRM.$, CRM._)"/></td>
                 <td width="45%">{ts domain="org.stadtlandbeides.itemmanager"}Referred to{/ts}</td>
-                <td width="5%">{ts domain="org.stadtlandbeides.itemmanager"}Quantity{/ts}</td>
                 <td width="40%">{ts domain="org.stadtlandbeides.itemmanager"}Item{/ts}</td>
+                <td width="5%">{ts domain="org.stadtlandbeides.itemmanager"}Quantity{/ts}</td>
             </tr>
             </thead>
 
@@ -65,8 +76,9 @@
                     <tr class="{cycle values="odd-row,even-row"}">
                         <td width="5%"><input type="checkbox" name="viewlist[]" value="{$ritem.line_id}"/></td>
                         <td width="45%">{$ritem.member_name}</td>
-                        <td width="5%">{$ritem.item_quantity}</td>
                         <td width="40%">{$ritem.item_label}</td>
+                        <td width="5%">{$ritem.item_quantity}</td>
+
 
                     </tr>
                 {/foreach}

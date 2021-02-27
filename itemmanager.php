@@ -161,6 +161,10 @@ function itemmanager_civicrm_preProcess($formName, &$form) {
  */
 function itemmanager_civicrm_navigationMenu(&$menu) {
 
+    _itemmanager_civix_navigationMenu($menu);
+
+    return;
+
     $item_maintenance_url = 'civicrm/items/maintenance';
 
     _sepa_civix_insert_navigation_menu($menu,'CiviMember',array(

@@ -144,7 +144,8 @@ class CRM_Itemmanager_Page_UpdateItems extends CRM_Core_Page {
             price_field.expire_on As item_enddate,
             price_field.help_pre As item_help,
             price_field.label As field_label,
-            price_field_value.amount As field_amount,       
+            price_field_value.amount As field_amount,  
+            price_field_value.financial_type_id As field_finance_type,
             contribution.receive_date As contrib_date,
             price_set.id As set_id,
             price_set.name As set_name,
@@ -174,6 +175,16 @@ class CRM_Itemmanager_Page_UpdateItems extends CRM_Core_Page {
                 $line_timestamp = date_create($line_items->contrib_date);
                 $line_date = $line_timestamp->format('Y-M');
 
+               $periods = CRM_Itemmanager_BAO_ItemmanagerSettings::getFieldValue('CRM_Itemmanager_DAO_ItemmanagerSettings',
+                    $line_items->field_id , 'periods','price_field_id',True);
+               if(!isset($periods) or $periods == 0) $periods =1 ;
+
+               $change_unit_price = $line_items ->field_amount / $periods;
+               $tax = 1.0;
+               if($this->isTaxEnabledInFinancialType($line_items->field_finance_type)) $tax = $this->getTaxRateInFinancialType($line_items->field_finance_type);
+               $changed_total = $line_items->item_quantity * $change_unit_price;
+               $changed_tax = $line_items->item_quantity * $change_unit_price * $tax/100.0;
+
                 $base = array(
                     'line_id'  => $line_items-> line_id,
                     'set_id'        => $line_items->set_id,
@@ -184,15 +195,16 @@ class CRM_Itemmanager_Page_UpdateItems extends CRM_Core_Page {
                     'item_price' => $line_items-> item_price,
                     'item_total' => $line_items-> item_total,
                     'item_tax' => $line_items-> item_tax,
+                    'periods' => $periods,
                     'contrib_date'  => $line_timestamp,
                     'update_date' => 1,
                     'change_date' => $line_timestamp,
                     'update_label' => 1,
                     'change_label' => $line_items -> field_label,
                     'update_price' => 1,
-                    'change_price' => 0,
-                    'change_total' => 0,
-                    'change_tax' => 0,
+                    'change_price' => $change_unit_price,
+                    'change_total' => $changed_total,
+                    'change_tax' => $changed_tax,
                 );
 
                 $base_list[] = $base;
@@ -211,6 +223,27 @@ class CRM_Itemmanager_Page_UpdateItems extends CRM_Core_Page {
         $this->assign("filter_url", CRM_Utils_System::url('civicrm/items/update',"action=preview&cid=$contact_id"));
         $this->assign("filter_sync",$filter_sync);
         $this->assign("filter_harmonize",$filter_harmonize);
+    }
+
+
+    /**
+     * Check if there is tax value for selected financial type.
+     * @param $financialTypeId
+     * @return bool
+     */
+    private function isTaxEnabledInFinancialType($financialTypeId) {
+        $taxRates = CRM_Core_PseudoConstant::getTaxRates();
+        return (isset($taxRates[$financialTypeId])) ? TRUE : FALSE;
+    }
+
+    /**
+     * get tax value for selected financial type.
+     * @param $financialTypeId
+     * @return Float
+     */
+    private function getTaxRateInFinancialType($financialTypeId) {
+        $taxRates = CRM_Core_PseudoConstant::getTaxRates();
+        return $taxRates[$financialTypeId];
     }
 
     /**
