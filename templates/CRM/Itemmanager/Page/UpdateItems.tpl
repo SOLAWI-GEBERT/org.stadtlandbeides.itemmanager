@@ -1,9 +1,6 @@
 {literal}
     <style>
-        .changed_data td {
-            white-space: nowrap;
-            min-width: 20em;
-            vertical-align: middle;
+        .changed_data{
             color:red;
         }
     </style>
@@ -64,9 +61,13 @@
             <thead>
             <tr class="columnheader">
                 <td width="5%"><input type="checkbox" name="all" id="select_all" onchange="SelectAll(CRM.$, CRM._)"/></td>
-                <td width="45%">{ts domain="org.stadtlandbeides.itemmanager"}Referred to{/ts}</td>
-                <td width="40%">{ts domain="org.stadtlandbeides.itemmanager"}Item{/ts}</td>
+                <td width="20%">{ts domain="org.stadtlandbeides.itemmanager"}Date{/ts}</td>
+                <td width="20%">{ts domain="org.stadtlandbeides.itemmanager"}Referred to{/ts}</td>
+                <td width="35%">{ts domain="org.stadtlandbeides.itemmanager"}Item{/ts}</td>
                 <td width="5%">{ts domain="org.stadtlandbeides.itemmanager"}Quantity{/ts}</td>
+                <td width="5%">{ts domain="org.stadtlandbeides.itemmanager"}Unit price{/ts}</td>
+                <td width="5%">{ts domain="org.stadtlandbeides.itemmanager"}Total{/ts}</td>
+                <td width="5%">{ts domain="org.stadtlandbeides.itemmanager"}Tax{/ts}</td>
             </tr>
             </thead>
 
@@ -75,9 +76,45 @@
                 {foreach from=$base_list item=ritem}
                     <tr class="{cycle values="odd-row,even-row"}">
                         <td width="5%"><input type="checkbox" name="viewlist[]" value="{$ritem.line_id}"/></td>
-                        <td width="45%">{$ritem.member_name}</td>
-                        <td width="40%">{$ritem.item_label}</td>
+                        {if $ritem.update_date}
+                            <td  width="10%"><span class="changed_data">{$ritem.contrib_date}
+                                    </br> {ts domain="org.stadtlandbeides.itemmanager"}change to{/ts}
+                                    </br> {$ritem.change_date}</span></td>
+                        {else}
+                            <td width="20%">{$ritem.contrib_date}</td>
+                        {/if}
+
+                        <td width="20%" >{$ritem.member_name}</td>
+
+                        {if $ritem.update_label}
+                            <td  width="35%"><span class="changed_data">{$ritem.item_label}
+                                    </br> {ts domain="org.stadtlandbeides.itemmanager"}change to{/ts}
+                                    </br> {$ritem.change_label}</span></td>
+
+                        {else}
+                            <td width="45%">{$ritem.item_label}</td>
+                        {/if}
+
+
                         <td width="5%">{$ritem.item_quantity}</td>
+
+                        <!-- Price block -->
+                        {if $ritem.update_price}
+                            <td  width="5%"><span class="changed_data">{$ritem.item_price}
+                                    </br> {ts domain="org.stadtlandbeides.itemmanager"}change to{/ts}
+                                    </br> {$ritem.change_price}</span></td>
+                            <td  width="5%"><span class="changed_data">{$ritem.item_total}
+                                    </br> {ts domain="org.stadtlandbeides.itemmanager"}change to{/ts}
+                                    </br> {$ritem.change_total}</span></td>
+                            <td  width="5%"><span class="changed_data">{$ritem.item_tax}
+                                    </br> {ts domain="org.stadtlandbeides.itemmanager"}change to{/ts}
+                                    </br> {$ritem.change_tax}</span></td>
+
+                        {else}
+                            <td width="5%">{$ritem.item_price}</td>
+                            <td width="5%">{$ritem.item_total}</td>
+                            <td width="5%">{$ritem.item_tax}</td>
+                        {/if}
 
 
                     </tr>
@@ -93,9 +130,9 @@
 {/if}
 
 
-{literal}
-<script type="text/javascript">
 
+<script type="text/javascript">
+{literal}
 
     //Set Filter
     function SetFilter($, _)
@@ -135,10 +172,12 @@
     //Select all
     function SelectAll($, _)
     {
+
         var all=document.getElementById('select_all');
         var inputs = document.getElementsByName('viewlist');
         // loop through all the inputs, skipping the first one
         for (var i = 0, input; input = inputs[i++]; ) {
+            alert(input.value);
            input.checked = all.checked;
         }
     }
@@ -158,16 +197,7 @@
 
     })(CRM.$);
 
-    $('#crm-actions-ribbon')
-        .on('click', function() {
 
-            alert("Ich bin hier");
-            // Refresh datatable when form completes
-            //$('#crm-form-block').crmSnippet('refresh');
-        });
-
-
-    })(CRM.$);
-
-</script>
 {/literal}
+</script>
+

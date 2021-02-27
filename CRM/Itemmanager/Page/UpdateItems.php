@@ -143,7 +143,7 @@ class CRM_Itemmanager_Page_UpdateItems extends CRM_Core_Page {
             price_field.active_on As item_startdate,
             price_field.expire_on As item_enddate,
             price_field.help_pre As item_help,
-            price_field.label As field_label,
+            price_field_value.label As field_label,
             price_field_value.amount As field_amount,  
             price_field_value.financial_type_id As field_finance_type,
             contribution.receive_date As contrib_date,
@@ -173,11 +173,24 @@ class CRM_Itemmanager_Page_UpdateItems extends CRM_Core_Page {
             while ($line_items->fetch()) {
 
                 $line_timestamp = date_create($line_items->contrib_date);
-                $line_date = $line_timestamp->format('Y-M');
+                $line_date = $line_timestamp->format('Y-m-d H:i:s');
+
 
                $periods = CRM_Itemmanager_BAO_ItemmanagerSettings::getFieldValue('CRM_Itemmanager_DAO_ItemmanagerSettings',
                     $line_items->field_id , 'periods','price_field_id',True);
                if(!isset($periods) or $periods == 0) $periods =1 ;
+
+                $change_timestamp = CRM_Itemmanager_BAO_ItemmanagerSettings::getFieldValue('CRM_Itemmanager_DAO_ItemmanagerSettings',
+                    $line_items->field_id , 'period_start_on','price_field_id',True);
+                if(!isset($change_timestamp)) $change_timestamp = $line_items->contrib_date;
+
+                //extract start date from month
+                $raw_date = date_create($change_timestamp);
+                $new_date = new DateTime($line_timestamp->format('Y-m') . $raw_date->format('-d'));
+                $new_date->setTime(0,0);
+
+                $changed_date = $new_date->format('Y-m-d H:i:s');
+
 
                $change_unit_price = $line_items ->field_amount / $periods;
                $tax = 1.0;
@@ -192,22 +205,24 @@ class CRM_Itemmanager_Page_UpdateItems extends CRM_Core_Page {
                     'member_name'   => $base_items->member_name,
                     'item_label'    => $line_items->item_label,
                     'item_quantity' => $line_items->item_quantity,
-                    'item_price' => $line_items-> item_price,
-                    'item_total' => $line_items-> item_total,
-                    'item_tax' => $line_items-> item_tax,
+                    'item_price' => round($line_items-> item_price, 2),
+                    'item_total' => round($line_items-> item_total,2),
+                    'item_tax' => round($line_items-> item_tax,2),
                     'periods' => $periods,
-                    'contrib_date'  => $line_timestamp,
-                    'update_date' => 1,
-                    'change_date' => $line_timestamp,
-                    'update_label' => 1,
+                    'contrib_date'  => $line_date,
+                    'update_date' => $line_date != $changed_date and $filter_harmonize == 1,
+                    'change_date' => $changed_date,
+                    'update_label' => $line_items->item_label != $line_items -> field_label,
                     'change_label' => $line_items -> field_label,
-                    'update_price' => 1,
-                    'change_price' => $change_unit_price,
-                    'change_total' => $changed_total,
-                    'change_tax' => $changed_tax,
+                    'update_price' => round($line_items-> item_price, 2) != round($change_unit_price, 2)
+                                            and $filter_sync == 1,
+                    'change_price' => round($change_unit_price,2),
+                    'change_total' => round($changed_total,2),
+                    'change_tax' => round($changed_tax,2),
                 );
 
-                $base_list[] = $base;
+                //just pickup items to be updated
+                if($base['update_date'] or $base['update_label'] or $base['update_price']) $base_list[] = $base;
 
 
             }
