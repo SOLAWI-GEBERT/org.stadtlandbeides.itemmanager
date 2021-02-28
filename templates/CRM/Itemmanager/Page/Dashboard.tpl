@@ -3,7 +3,7 @@
 <h3>{ts domain="org.stadtlandbeides.itemmanager"}Item Dashboard{/ts}</h3>
 
 <div>
-    <a id="items_update_extra_button" class="button crm-popup" href="{crmURL p="civicrm/items/update" q="action=update&cid=$contact_id&harm=1&sync=1&backtrace=1&smartyDebug=1"}">
+    <a id="items_update_extra_button" class="button crm-popup" href="{crmURL p="civicrm/items/update" q="action=update&cid=$contact_id&harm=1&sync=1"}">
         <span>
             <div class="icon add-icon edit-icon"></div>{ts domain="org.stadtlandbeides.itemmanager"}Update Items{/ts}
         </span>

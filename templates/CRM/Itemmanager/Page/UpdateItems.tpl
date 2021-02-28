@@ -36,7 +36,7 @@
             </span>
 
             <span class="refresh crm-button">
-                <a title="{ts domain="org.project60.sepa"}Preview{/ts}"
+                <a title="{ts domain="org.project60.sepa"}Preview{/ts}" name="preview_button"
                    id="Preview_Button"
                    href="{$filter_url}&harm={$filter_harmonize}&sync={$filter_sync}">
                     <span>
@@ -45,12 +45,12 @@
                     </span>
                 </a>
              </span>
-
+        {if $base_list}
             <span class="refresh crm-button crm-submit-buttons">
                 <div class="icon edit-icon ui-icon-pencil"></div>
                 <input type="submit" name="items_update" value="{ts domain="org.stadtlandbeides.itemmanager"}Update Items{/ts}">
             </span>
-
+        {/if}
 
         <div class="clear"></div>
     </div>
@@ -135,6 +135,14 @@
 {/if}
 
 
+{if $update_done}
+<script type="text/javascript">
+    {literal}
+    cj(".ui-dialog > [id^=crm-ajax-dialog-]").dialog("destroy");
+    {/literal}
+</script>
+{/if}
+
 
 <script type="text/javascript">
 {literal}
@@ -170,7 +178,6 @@
         var u=document.getElementById('filter_url');
         var URL = u.value
         URL += "&harm=" + d.value + "&sync=" + s.value;
-        URL += "&backtrace=1&smartyDebug=1";
         return URL;
     }
 
@@ -188,14 +195,13 @@
 
     (function($) {
 
-
-
-        $('#crm-actions-ribbon')
+        $('#item_update_list')
+            .crmSnippet()
             .on('click', 'a.button, a.action-item[href*="action=preview"]', CRM.popup)
             .on('crmPopupFormSuccess', 'a.button, a.action-item[href*="action=preview"]', function() {
-
+                alert("hier");
                 // Refresh datatable when form completes
-                $('#crm-form-block').crmSnippet('refresh');
+                $('#item_update_list').crmSnippet('refresh');
             });
 
 

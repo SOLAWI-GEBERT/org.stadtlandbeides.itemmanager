@@ -43,6 +43,8 @@ class CRM_Itemmanager_Page_UpdateItems extends CRM_Core_Page {
           else
               $this->prepareCreateForm($contact_id,$filter_sync,$filter_harmonize);
 
+          parent::run();
+
       }
       else
       {
@@ -51,14 +53,12 @@ class CRM_Itemmanager_Page_UpdateItems extends CRM_Core_Page {
           $filter_harmonize = $_POST['filter_harmonize'];
           $contact_id = $_POST['contact_id'];
           $check_list = $_POST['viewlist'];
+          $this->assign("update_done",  1);
           if(isset($check_list))
             $this->updateData($contact_id,$filter_harmonize,$filter_sync,$check_list);
           parent::run();
-
       }
 
-
-    parent::run();
   }
 
     function updatePreviewForm($contact_id,$filter_harmonize,$filter_sync,$base_list)
@@ -217,6 +217,16 @@ class CRM_Itemmanager_Page_UpdateItems extends CRM_Core_Page {
     }
 
 
+    /**
+     * Updates all related tables according to the line item
+     *
+     * @param $contact_id
+     * @param $filter_harmonize
+     * @param $filter_sync
+     * @param $selected_items
+     * @throws CRM_Core_Exception
+     * @throws CiviCRM_API3_Exception
+     */
     function updateData($contact_id,$filter_harmonize,$filter_sync,$selected_items)
     {
 
@@ -226,6 +236,7 @@ class CRM_Itemmanager_Page_UpdateItems extends CRM_Core_Page {
         $contribution_table = CRM_Contribute_DAO_Contribution::getTableName();
         $line_item_table = CRM_Price_DAO_LineItem::getTableName();
         $financial_item_table = CRM_Financial_DAO_FinancialItem::getTableName();
+        $financial_transaktion_table = CRM_Financial_DAO_EntityFinancialTrxn::getTableName();
 
         $update_date_query = "
                 UPDATE
@@ -241,13 +252,40 @@ class CRM_Itemmanager_Page_UpdateItems extends CRM_Core_Page {
                 WHERE id = %2
                 ";
 
-        $update_financial_tax ="
+        $update_financial_item ="
                 UPDATE
                     ". $financial_item_table ."
-                SET label = %1
+                SET amount = %1
                 WHERE id = %2
                 ";
+        $update_contribution_query = "
+                UPDATE
+                    ". $contribution_table ."
+                SET total_amount = %1,
+                    net_amount = %1
+                WHERE id = %2
         
+        ";
+
+        $update_lineitem_query = "
+                UPDATE
+                    ". $line_item_table ."
+                SET unit_price = %1,
+                    line_total = %2,
+                    tax_amount = %3
+                WHERE id = %4
+        
+        ";
+
+        $update_financial_transaktion_query = "
+
+                UPDATE
+                    ". $financial_transaktion_table ."
+                SET amount = %1
+                    
+                WHERE id = %2
+        
+        ";
 
         // first, try to load contact
         $contact = civicrm_api('Contact', 'getsingle', array('version' => 3, 'id' => $contact_id));
@@ -262,6 +300,7 @@ class CRM_Itemmanager_Page_UpdateItems extends CRM_Core_Page {
         {
             $update_contribution = False;
             $update_label = False;
+            $update_price = False;
             //get all nested data
             $lineitemInfo = civicrm_api3('lineItem', 'getsingle', array('id' => (int) $line_item));
             if(!isset($lineitemInfo)) continue;
@@ -276,7 +315,7 @@ class CRM_Itemmanager_Page_UpdateItems extends CRM_Core_Page {
             $line_timestamp = date_create($contributionInfo['receive_date']);
             $line_date = $line_timestamp->format('Y-m-d H:i:s');
 
-
+            //get itemmanager added informations
             $periods = CRM_Itemmanager_BAO_ItemmanagerSettings::getFieldValue('CRM_Itemmanager_DAO_ItemmanagerSettings',
                 (int) $lineitemInfo['price_field_id'] , 'periods','price_field_id',True);
             if(!isset($periods) or $periods == 0) $periods =1 ;
@@ -293,8 +332,9 @@ class CRM_Itemmanager_Page_UpdateItems extends CRM_Core_Page {
             $changed_date = $new_date->format('Y-m-d H:i:s');
 
 
+
             $change_unit_price = $priceFieldValueInfo['amount'] / $periods;
-            $tax = 1.0;
+            $tax = 0.0;
             if(CRM_Itemmanager_Util::isTaxEnabledInFinancialType((int) $priceFieldValueInfo['financial_type_id']))
                 $tax = CRM_Itemmanager_Util::getTaxRateInFinancialType((int) $priceFieldValueInfo['financial_type_id']);
             $changed_total = $lineitemInfo['qty'] * $change_unit_price;
@@ -318,9 +358,92 @@ class CRM_Itemmanager_Page_UpdateItems extends CRM_Core_Page {
             if(round($lineitemInfo['unit_price'], 2) != round($change_unit_price, 2)
                 and $filter_sync == 1)
             {
-                $lineitemInfo['unit_price'] = round($change_unit_price,2);
-                $lineitemInfo['line_total'] = round($changed_total,2);
-                $lineitemInfo['tax_amount'] = round($changed_tax,2);
+                $update_price = True;
+
+                $lineitemInfo['unit_price'] = CRM_Utils_Money::format($change_unit_price, NULL, NULL, TRUE);
+                $lineitemInfo['line_total'] = CRM_Utils_Money::format($changed_total, NULL, NULL, TRUE);
+                $lineitemInfo['tax_amount'] = CRM_Utils_Money::format($changed_tax, NULL, NULL, TRUE);
+
+                //update lineitem
+                try{
+                    $finalquery = CRM_Core_DAO::composeQuery($update_lineitem_query,
+                        array( 1 => array($lineitemInfo['unit_price'], 'Float'),
+                            2 => array($lineitemInfo['line_total'], 'Float'),
+                            3 => array($lineitemInfo['tax_amount'], 'Float'),
+                            4 => array((int) $line_item, 'Integer')));
+                    $this->assign("finalquery", $finalquery);
+                    CRM_Core_DAO::executeUnbufferedQuery($finalquery);
+
+                }
+                catch(exception $e){
+
+                    $error_msg .= E::ts("Error for updating line items") . $line_item . "<br/>";
+                }
+
+
+                //get financial relations
+                $financeitems = CRM_Itemmanager_Util::getFinancialFullRecordsByLineItemId((int) $line_item);
+                if($financeitems['is_error'])
+                {
+                    $this->processError("ERROR",E::ts('Retrieve financial infos'),$financeitems['error_message'],$contact_id);
+                    return;
+                }
+
+                //Update financial items
+                foreach ($financeitems['values'] As $financeitem)
+                {
+                    try {
+                        //decide tax or not
+                        $financeitem['financeitem']['amount'] = $financeitem['accountinfo']['is_tax'] ?
+                            CRM_Utils_Money::format($changed_tax, NULL, NULL, TRUE) : CRM_Utils_Money::format($changed_total, NULL, NULL, TRUE);
+
+                        $finalquery = CRM_Core_DAO::composeQuery($update_financial_item,
+                            array(1 => array($financeitem['financeitem']['amount'], 'Float'),
+                                2 => array((int)$financeitem['financeitem']['id'], 'Integer')));
+
+                        CRM_Core_DAO::executeUnbufferedQuery($finalquery);
+
+                        //update related transaktion
+                        $transaction = CRM_Itemmanager_Util::getFinancialEntityTrxnByFinancialItemId((int)$financeitem['financeitem']['id']);
+                        $finalquery = CRM_Core_DAO::composeQuery($update_financial_transaktion_query,
+                            array(1 => array($financeitem['financeitem']['amount'], 'Float'),
+                                2 => array((int)$transaction['id'], 'Integer')));
+
+                        CRM_Core_DAO::executeUnbufferedQuery($finalquery);
+
+                    }
+                    catch(exception $e){
+
+                        $error_msg .= E::ts("Error for updating financeitem") . $financeitem['financeitem']['id'] . "<br/>";
+                    }
+                }
+
+                //Update contribution
+                $tax_total = CRM_Itemmanager_Util::getTaxAmountTotalFromContributionID((int) $lineitemInfo['contribution_id']);
+                $total = CRM_Itemmanager_Util::getAmountTotalFromContributionID((int) $lineitemInfo['contribution_id']);
+
+                try{
+                    $finalquery = CRM_Core_DAO::composeQuery($update_contribution_query,
+                        array( 1 => array($tax_total + $total, 'Float'),
+                            2 => array((int) $lineitemInfo['contribution_id'], 'Integer')));
+                    $this->assign("finalquery", $finalquery);
+                    CRM_Core_DAO::executeUnbufferedQuery($finalquery);
+
+                    //update related transaktion
+                    $transaction = CRM_Itemmanager_Util::getFinancialEntityIdTrxnByContributionId((int) $lineitemInfo['contribution_id']);
+                    $finalquery = CRM_Core_DAO::composeQuery($update_financial_transaktion_query,
+                        array(1 => array($tax_total + $total, 'Float'),
+                            2 => array((int)$transaction['id'], 'Integer')));
+
+                    CRM_Core_DAO::executeUnbufferedQuery($finalquery);
+
+                }
+                catch(exception $e){
+
+                    $error_msg .= E::ts("Error for updating contribution") . $lineitemInfo['contribution_id'] . "<br/>";
+                }
+
+
             }
 
 
@@ -366,8 +489,11 @@ class CRM_Itemmanager_Page_UpdateItems extends CRM_Core_Page {
             return;
         }
 
+        if($update_label or $update_contribution or $update_price)
+            $this->processSuccess(E::ts('Items updated'),$contact_id);
+        else
+            $this->processInfo(E::ts('Nothing to be done'),$contact_id);
 
-        $this->processSuccess(E::ts('Items updated'),$contact_id);
 
 
     }
@@ -388,18 +514,26 @@ class CRM_Itemmanager_Page_UpdateItems extends CRM_Core_Page {
         $this->assign("error_title",   $title);
         $this->assign("error_message", $message);
 
-        if (!$this->isPopup()) {
-            $contact_url = CRM_Utils_System::url('civicrm/contact/view', "reset=1&cid={$contact_id}&selectedChild=itemmanager");
-            CRM_Utils_System::redirect($contact_url);
-        }
+
+        $contact_url = CRM_Utils_System::url('civicrm/contact/view', "reset=1&cid={$contact_id}&selectedChild=itemmanager");
+        CRM_Utils_System::redirect($contact_url);
+
     }
 
     protected function processSuccess($message, $contact_id) {
         CRM_Core_Session::setStatus($message, ts('Success', array('domain' => 'org.stadtlandbeides.itemmanager')), 'success');
-        if (!$this->isPopup()) {
-            $contact_url = CRM_Utils_System::url('civicrm/contact/view', "reset=1&cid={$contact_id}&selectedChild=contribute");
-            CRM_Utils_System::redirect($contact_url);
-        }
+
+        $contact_url = CRM_Utils_System::url('civicrm/contact/view', "reset=1&cid={$contact_id}&selectedChild=itemmanager");
+        CRM_Utils_System::redirect($contact_url);
+
+    }
+
+    protected function processInfo($message, $contact_id) {
+        CRM_Core_Session::setStatus($message, ts('Info', array('domain' => 'org.stadtlandbeides.itemmanager')), 'info');
+
+        $contact_url = CRM_Utils_System::url('civicrm/contact/view', "reset=1&cid={$contact_id}&selectedChild=itemmanager");
+        CRM_Utils_System::redirect($contact_url);
+
     }
 
 
