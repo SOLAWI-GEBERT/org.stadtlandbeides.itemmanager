@@ -169,7 +169,8 @@ class CRM_Itemmanager_Page_UpdateItems extends CRM_Core_Page {
 
                $change_unit_price = $line_items ->field_amount / $periods;
                $tax = 1.0;
-               if($this->isTaxEnabledInFinancialType($line_items->field_finance_type)) $tax = $this->getTaxRateInFinancialType($line_items->field_finance_type);
+               if(CRM_Itemmanager_Util::isTaxEnabledInFinancialType($line_items->field_finance_type))
+                   $tax = CRM_Itemmanager_Util::getTaxRateInFinancialType($line_items->field_finance_type);
                $changed_total = $line_items->item_quantity * $change_unit_price;
                $changed_tax = $line_items->item_quantity * $change_unit_price * $tax/100.0;
 
@@ -224,6 +225,8 @@ class CRM_Itemmanager_Page_UpdateItems extends CRM_Core_Page {
         $error_msg = "";
         $contribution_table = CRM_Contribute_DAO_Contribution::getTableName();
         $line_item_table = CRM_Price_DAO_LineItem::getTableName();
+        $financial_item_table = CRM_Financial_DAO_FinancialItem::getTableName();
+
         $update_date_query = "
                 UPDATE
                     ". $contribution_table ."
@@ -237,6 +240,14 @@ class CRM_Itemmanager_Page_UpdateItems extends CRM_Core_Page {
                 SET label = %1
                 WHERE id = %2
                 ";
+
+        $update_financial_tax ="
+                UPDATE
+                    ". $financial_item_table ."
+                SET label = %1
+                WHERE id = %2
+                ";
+        
 
         // first, try to load contact
         $contact = civicrm_api('Contact', 'getsingle', array('version' => 3, 'id' => $contact_id));
@@ -284,7 +295,8 @@ class CRM_Itemmanager_Page_UpdateItems extends CRM_Core_Page {
 
             $change_unit_price = $priceFieldValueInfo['amount'] / $periods;
             $tax = 1.0;
-            if($this->isTaxEnabledInFinancialType((int) $priceFieldValueInfo['financial_type_id'])) $tax = $this->getTaxRateInFinancialType((int) $priceFieldValueInfo['financial_type_id']);
+            if(CRM_Itemmanager_Util::isTaxEnabledInFinancialType((int) $priceFieldValueInfo['financial_type_id']))
+                $tax = CRM_Itemmanager_Util::getTaxRateInFinancialType((int) $priceFieldValueInfo['financial_type_id']);
             $changed_total = $lineitemInfo['qty'] * $change_unit_price;
             $changed_tax = $lineitemInfo['qty'] * $change_unit_price * $tax/100.0;
 
@@ -360,26 +372,6 @@ class CRM_Itemmanager_Page_UpdateItems extends CRM_Core_Page {
 
     }
 
-
-    /**
-     * Check if there is tax value for selected financial type.
-     * @param $financialTypeId
-     * @return bool
-     */
-    private function isTaxEnabledInFinancialType($financialTypeId) {
-        $taxRates = CRM_Core_PseudoConstant::getTaxRates();
-        return (isset($taxRates[$financialTypeId])) ? TRUE : FALSE;
-    }
-
-    /**
-     * get tax value for selected financial type.
-     * @param $financialTypeId
-     * @return Float
-     */
-    private function getTaxRateInFinancialType($financialTypeId) {
-        $taxRates = CRM_Core_PseudoConstant::getTaxRates();
-        return $taxRates[$financialTypeId];
-    }
 
     /**
      * test if this page is called as a popup
