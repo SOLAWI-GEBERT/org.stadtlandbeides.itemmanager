@@ -3,9 +3,9 @@
 <h3>{ts domain="org.stadtlandbeides.itemmanager"}Item Dashboard{/ts}</h3>
 
 <div>
-    <a id="items_renew_extra_button" class="button crm-popup" href="{crmURL p="civicrm/items/renewperiods" q="action=renew&cid=$contact_id"}">
+    <a id="items_renew_extra_button" class="button crm-popup" href="{crmURL p="civicrm/items/renewperiods" q="action=renew_item_periods&cid=$contact_id"}">
         <span>
-            <div class="icon add-icon edit-icon"></div>{ts domain="org.stadtlandbeides.itemmanager"}Renew Periods{/ts}
+            <div class="icon crm-i fa-plus-circle"></div>{ts domain="org.stadtlandbeides.itemmanager"}Renew Periods{/ts}
         </span>
     </a>
     <a id="items_update_extra_button" class="button crm-popup" href="{crmURL p="civicrm/items/update" q="action=update&cid=$contact_id&harm=1&sync=1"}">

@@ -15,7 +15,7 @@
     <input type="hidden" name="contact_id" value="{$contact_id}" />
 
     <div class="crm-actions-ribbon">
-
+        {include file="CRM/common/formButtons.tpl" location="top"}
             <span class="crm-checkbox-list">
                 <input type="checkbox" id='sync_price' name="optionlist" onchange="SetFilter(CRM.$, CRM._)"
 

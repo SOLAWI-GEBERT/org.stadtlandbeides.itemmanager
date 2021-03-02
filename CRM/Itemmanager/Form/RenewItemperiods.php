@@ -8,9 +8,20 @@ use CRM_Itemmanager_ExtensionUtil as E;
  * @see https://docs.civicrm.org/dev/en/latest/framework/quickform/
  */
 class CRM_Itemmanager_Form_RenewItemperiods extends CRM_Core_Form {
+    function __construct()
+    {
+        parent::__construct();
+    }
+
   public function buildQuickForm() {
 
-    // add form elements
+      $contact_id = CRM_Utils_Request::retrieve('cid', 'Integer');
+      $this->assign('contact_id', $contact_id);
+      $contact = civicrm_api('Contact', 'getsingle', array('version' => 3, 'id' => $contact_id));
+      $this->assign("display_name", $contact['display_name']);
+      CRM_Utils_System::setTitle(E::ts('Renew periods for booked items for contact ').$contact['display_name']);
+
+        // add form elements
     $this->add(
       'select', // field type
       'favorite_color', // field name

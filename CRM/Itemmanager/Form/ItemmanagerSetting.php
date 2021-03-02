@@ -13,7 +13,8 @@ class CRM_Itemmanager_Form_ItemmanagerSetting extends CRM_Core_Form {
     {
         parent::__construct();
     }
-  public function buildQuickForm() {
+
+    public function buildQuickForm() {
 
     // add form elements
     $this->add(

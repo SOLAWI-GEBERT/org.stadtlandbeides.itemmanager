@@ -154,6 +154,21 @@ function itemmanager_civicrm_preProcess($formName, &$form) {
 
 }
 
+function itemmanager_civicrm_renewPeriods( &$actions, $contactID ) {
+    // add "create SEPA mandate action"
+    if (CRM_Core_Permission::check('edit contributions')) {
+        $actions['renew_item_periods'] = array(
+            'title'           => ts("Renew Items Periods", array('domain' => 'org.stadtlandbeides.itemmanager')),
+            'weight'          => 5,
+            'ref'             => 'renew-items-periods',
+            'key'             => 'renew_item_periods',
+            'component'       => 'CiviContribute',
+            'href'            => CRM_Utils_System::url('civicrm/items/renewperiods', "reset=1&cid={$contactID}"),
+            'permissions'     => array('access CiviContribute', 'edit contributions')
+        );
+    }
+}
+
 /**
  * Implements hook_civicrm_navigationMenu().
  *
