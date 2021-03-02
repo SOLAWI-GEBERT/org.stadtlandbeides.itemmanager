@@ -27,4 +27,10 @@
     <title>ItemMaintenance</title>
     <access_arguments>access CiviCRM</access_arguments>
   </item>
+  <item>
+    <path>civicrm/items/renewperiods</path>
+    <page_callback>CRM_Itemmanager_Form_RenewItemperiods</page_callback>
+    <title>RenewItemperiods</title>
+    <access_arguments>access CiviCRM</access_arguments>
+  </item>
 </menu>

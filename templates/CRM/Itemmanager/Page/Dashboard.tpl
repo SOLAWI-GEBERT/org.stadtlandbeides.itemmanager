@@ -3,6 +3,11 @@
 <h3>{ts domain="org.stadtlandbeides.itemmanager"}Item Dashboard{/ts}</h3>
 
 <div>
+    <a id="items_renew_extra_button" class="button crm-popup" href="{crmURL p="civicrm/items/renewperiods" q="action=renew&cid=$contact_id"}">
+        <span>
+            <div class="icon add-icon edit-icon"></div>{ts domain="org.stadtlandbeides.itemmanager"}Renew Periods{/ts}
+        </span>
+    </a>
     <a id="items_update_extra_button" class="button crm-popup" href="{crmURL p="civicrm/items/update" q="action=update&cid=$contact_id&harm=1&sync=1"}">
         <span>
             <div class="icon add-icon edit-icon"></div>{ts domain="org.stadtlandbeides.itemmanager"}Update Items{/ts}
@@ -20,6 +25,9 @@
     <br/>
     <br/>
 </div>
+
+</br>
+<div class="help">{ts domain="org.stadtlandbeides.itemmanager"}To start with a new set of monthly contributions click Renew Periods{/ts}</div>
 
 {if $group_sets}
 
