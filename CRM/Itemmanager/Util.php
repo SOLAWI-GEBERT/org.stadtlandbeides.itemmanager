@@ -53,6 +53,8 @@ class CRM_Itemmanager_Util
         return CRM_Utils_Money::format($taxAmount, NULL, NULL, TRUE);
     }
 
+
+
     /**
      * Function used to return total amount of a contribution, calculated from associated line item records
      *
@@ -119,6 +121,286 @@ class CRM_Itemmanager_Util
 
         return $result;
     }
+
+
+    /**
+     * Returns the last contribution regarding the receive date from the given set of id's
+     *
+     * @param $contributionArray
+     * @return id
+     *
+     */
+    public static function getLastReceiveDateContribution($contributionArray) {
+
+        $contribution_table = CRM_Contribute_DAO_Contribution::getTableName();
+        $inset= implode(',',$contributionArray);
+
+
+        try {
+            $id = CRM_Core_DAO::singleValueQuery("
+                    SELECT id from " . $contribution_table . " 
+                    WHERE id IN (" . $inset . ") and receive_date = 
+                    (SELECT max(receive_date) FROM " . $contribution_table . "
+                     WHERE id IN(" . $inset . ") )");
+            return (int)$id;
+        } catch (Exception $e) {
+            return -1;
+        }
+
+
+    }
+
+    /**
+     * Returns the first contribution regarding the receive date from the given set of id's
+     *
+     * @param $contributionArray
+     * @return id
+     *
+     */
+    public static function getFirstReceiveDateContribution($contributionArray) {
+
+        $contribution_table = CRM_Contribute_DAO_Contribution::getTableName();
+        $inset= implode(',',$contributionArray);
+
+
+        try {
+            $id = CRM_Core_DAO::singleValueQuery("
+                    SELECT id from " . $contribution_table . " 
+                    WHERE id IN (" . $inset . ") and receive_date = 
+                    (SELECT min(receive_date) FROM " . $contribution_table . "
+                     WHERE id IN(" . $inset . ") )");
+            return (int)$id;
+        } catch (Exception $e) {
+            return -1;
+        }
+
+
+    }
+
+
+    /**
+     * Fetch the membertype data given by id
+     *
+     * @param $typeId
+     * @return array
+     */
+    public static function getMembershipTypeById($typeId) {
+        $params = [
+            'id' => $typeId,
+        ];
+
+        try{
+            $result = civicrm_api3('MembershipType', 'get', $params);
+        }
+        catch (CiviCRM_API3_Exception $e) {
+            // Handle error here.
+            $errorMessage = $e->getMessage();
+            $errorCode = $e->getErrorCode();
+            $errorData = $e->getExtraParams();
+            return [
+                'is_error' => 1,
+                'error_message' => $errorMessage,
+                'error_code' => $errorCode,
+                'error_data' => $errorData,
+            ];
+        }
+
+        return $result;
+    }
+
+    /**
+     *  Gets the membership payment connection
+     *
+     *
+     * @return array
+     */
+    public static function getMemberShipPaymentByMembershipId($membership_id) {
+        $params = [
+        'membership_id' => $membership_id,
+        ];
+
+        try{
+        $result = civicrm_api3('MembershipPayment', 'get', $params);
+        }
+        catch (CiviCRM_API3_Exception $e) {
+            // Handle error here.
+            $errorMessage = $e->getMessage();
+            $errorCode = $e->getErrorCode();
+            $errorData = $e->getExtraParams();
+            return [
+                'is_error' => 1,
+                'error_message' => $errorMessage,
+                'error_code' => $errorCode,
+                'error_data' => $errorData,
+            ];
+        }
+
+        return $result;
+    }
+
+
+    /**
+     *  Get the full record of the line item regarding to priceset
+     *
+     * @param $contribution_id
+     * @return array
+     */
+    public static function getLineitemFullRecordByContributionId($contribution_id)
+    {
+
+        $params = [
+            'contribution_id' => $contribution_id,
+        ];
+
+        $linearray = array();
+
+        try{
+            $lineitems = civicrm_api3('LineItem', 'get', $params);
+
+            if( $lineitems['is_error']) return  $lineitems;
+
+            foreach ($lineitems['values'] As $lineitem)
+            {
+                $pricefieldvalue = civicrm_api3('PriceFieldValue', 'getsingle', array('id' => (int) $lineitem['price_field_value_id']));
+                $pricefield = civicrm_api3('PriceField', 'getsingle', array('id' => (int) $lineitem['price_field_id']));
+                $priceset = civicrm_api3('PriceSet', 'getsingle', array('id' => (int) $pricefield['price_set_id']));
+
+                $itemcollection = array(
+                    'linedata' => $lineitem,
+                    'fielddata' => $pricefield,
+                    'valuedata' => $pricefieldvalue,
+                    'setdata' => $priceset,
+                );
+
+                $linearray[] = $itemcollection;
+
+            }
+
+        }
+        catch (CiviCRM_API3_Exception $e) {
+            // Handle error here.
+            $errorMessage = $e->getMessage();
+            $errorCode = $e->getErrorCode();
+            $errorData = $e->getExtraParams();
+            return [
+                'is_error' => 1,
+                'error_message' => $errorMessage,
+                'error_code' => $errorCode,
+                'error_data' => $errorData,
+            ];
+        }
+
+        return $linearray;
+    }
+
+
+    /**
+     *  Get the memberships regarding the last membership_type_id
+     *
+     * @param $contactid
+     * @return array
+     */
+    public static function getLastMembershipsByContactId($contactid) {
+
+        $membertable = CRM_Member_DAO_Membership::getTableName();
+
+        $last_query = "
+            SELECT * FROM " . $membertable . "  t1
+            JOIN (
+            SELECT
+                max(end_date) as last, membership_type_id
+            FROM " . $membertable . " 
+            WHERE contact_id = %1 group by membership_type_id) t2 ON t1.membership_type_id = t2.membership_type_id and t2.last = t1.end_date
+            WHERE t1.contact_id = %1 
+        ";
+
+
+        try{
+            $last_items = CRM_Core_DAO::executeQuery($last_query,
+                array( 1 => array($contactid, 'Integer')));
+            $result = $last_items->fetchAll();
+            return [
+                'is_error' => isset($result) ? 0 : 1,
+                'values' => $result,
+            ];
+
+        }
+
+    catch (Exception $e) {
+            // Handle error here.
+            $errorMessage = $e->getMessage();
+            $errorCode = $e->getErrorCode();
+            $errorData = $e->getExtraParams();
+            return [
+                'is_error' => 1,
+                'error_message' => $errorMessage,
+                'error_code' => $errorCode,
+                'error_data' => $errorData,
+            ];
+        }
+
+
+    }
+
+
+    /**
+     *
+     * Fetch the membership by the contact id
+     *
+     * @param $contactId
+     * @return array Returns the membership together with type and payment
+     */
+    public static function getLastMemberShipsFullRecordByContactId($contactId)
+    {
+
+        $memberarray = array();
+
+        try{
+            $memberdata = self::getLastMembershipsByContactId($contactId);
+
+            if($memberdata['is_error']) return $memberdata;
+            foreach ($memberdata['values'] As $memberitem)
+            {
+                $typedata = self::getMembershipTypeById($memberitem['membership_type_id']);
+                if($typedata['is_error']) return $typedata;
+                $paydata = self::getMemberShipPaymentByMembershipId($memberitem['id']);
+                if($paydata['is_error']) return $paydata;
+
+                $membercollection = array(
+                    'memberdata' => $memberitem,
+                    'typeinfo' => reset($typedata['values']),
+                    'payinfo' => $paydata['values'],
+                );
+
+                $memberarray[] = $membercollection;
+
+            }
+
+
+            return [
+                'is_error' => isset($memberarray) ? 0 : 1,
+                'values' => $memberarray,
+            ];
+
+
+        }
+        catch (CiviCRM_API3_Exception $e) {
+            // Handle error here.
+            $errorMessage = $e->getMessage();
+            $errorCode = $e->getErrorCode();
+            $errorData = $e->getExtraParams();
+            return [
+                'is_error' => 1,
+                'error_message' => $errorMessage,
+                'error_code' => $errorCode,
+                'error_data' => $errorData,
+            ];
+        }
+
+        return $result;
+    }
+
+
 
     /**
      *  Returns the Entity Transaktion for a financial item entity
