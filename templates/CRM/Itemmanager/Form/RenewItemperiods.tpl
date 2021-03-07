@@ -21,15 +21,17 @@
     {foreach from=$membership.line_items item=lineitem}
       {assign var="element_item_name" value=$lineitem.element_item_name}
       {assign var="element_quantity_name" value=$lineitem.element_quantity_name}
+      {assign var="element_period_name" value=$lineitem.element_period_name}
+
       <table>
         <thead>
         <tr>
           <th></th>
-          <th width="20%"><span class="label">{$form.$element_item_name.label}</span></th>
+          <th width="40%"><span class="label">{$form.$element_item_name.label}</span></th>
           <th>Start</th>
           <th>End</th>
           <th><span class="label">{$form.$element_quantity_name.label}</span></th>
-          <th>Periods</th>
+          <th><span class="label">{$form.$element_period_name.label}</span></th>
           <th>Interval</th>
           <th>Price per Interval</th>
           <th>Active ON</th>
@@ -39,8 +41,8 @@
         <tbody>
 
           <tr>
-            <td><div>{ts domain="org.stadtlandbeides.itemmanager"}Last{/ts}</div></td>
-            <td width="20%">{$lineitem.name}</td>
+            <td><div>{ts domain="org.stadtlandbeides.itemmanager"}Old{/ts}</div></td>
+            <td width="40%">{$lineitem.name}</td>
             <td><div>{$membership.start_date}</div></td>
             <td><div>{$membership.last_date}</div></td>
             <td>{$lineitem.last_qty}</td>
@@ -53,19 +55,23 @@
           <tr>
             <td><div>{ts}New{/ts}</div></td>
             <td><span class="content">{$form.$element_item_name.html}</span></td>
-            <td>Start</td>
-            <td>End</td>
+            <td>{$lineitem.new_period_start_on}</td>
+            <td>{$lineitem.new_period_end_on}</td>
             <td><span class="content">{$form.$element_quantity_name.html}</span></td>
-            <td>Periods</td>
+            <td><span class="content">{$form.$element_period_name.html}</span></td>
             <td>Interval</td>
-            <td>Price per Interval</td>
-            <td>Active ON</td>
-            <td>Active Until</td>
+            <td>{$lineitem.new_interval_price}</td>
+            <td>{$lineitem.new_active_on}</td>
+            <td>{$lineitem.new_expire_on}</td>
           </tr>
 
         </tbody>
 
       </table>
+      {if !$lineitem.help_pre}
+        </br>
+        <div class="help">{$lineitem.help_pre}</div>
+      {/if}
 
     {/foreach}
 

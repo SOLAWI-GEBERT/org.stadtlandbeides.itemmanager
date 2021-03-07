@@ -120,8 +120,22 @@ class CRM_Itemmanager_Form_RenewItemperiods extends CRM_Core_Form {
                         'item_'.CRM_Utils_Array::value('id', $lineitem['fielddata']),
                     'element_quantity_name' => 'member_'.$membership['memberdata']['id'].'_'.
                         'item_'.CRM_Utils_Array::value('id', $lineitem['fielddata']).'_'.
-                        'quantity_'.CRM_Utils_Array::value('id', $lineitem['linedata']),
+                        'quantity_'.CRM_Utils_Array::value('price_field_value_id', $lineitem['linedata']),
+                    'element_period_name' => 'member_'.$membership['memberdata']['id'].'_'.
+                        'item_'.CRM_Utils_Array::value('id', $lineitem['fielddata']).'_'.
+                        'period_'.CRM_Utils_Array::value('price_field_value_id', $lineitem['linedata']),
                     'choices' => $choices,
+                    'new_active_on' => $choices['period_data'][max(
+                        array_keys($choices['period_data']))]['active_on'],
+                    'new_expire_on' => $choices['period_data'][max(
+                        array_keys($choices['period_data']))]['expire_on'],
+                    'new_interval_price' => $choices['period_data'][
+                        max(array_keys($choices['period_data']))]['interval_price'],
+                    'new_period_start_on' => $choices['period_data'][max(
+                        array_keys($choices['period_data']))]['period_start_on'],
+                    'new_period_end_on' => $choices['period_data'][max(
+                        array_keys($choices['period_data']))]['period_end_on'],
+                    'help_pre' => $choices['help_pre'],
                 );
                 $linelist[] = $linecollection;
             }
@@ -163,12 +177,22 @@ class CRM_Itemmanager_Form_RenewItemperiods extends CRM_Core_Form {
         foreach ($this->_memberships as $membership) {
           foreach ($membership['line_items'] as $line_item)
           {
+
             //Selection of the price item
             $this->add(
             'select',
                 $line_item['element_item_name'],
                 E::ts('Item'),
-                $this->getColorOptions(), // list of options
+                $line_item['choices']['item_selection'], // list of options
+                TRUE, // is required
+                ['flex-grow'=> 1],
+            );
+              //Selection of the period
+            $this->add(
+                'select',
+                $line_item['element_period_name'],
+                E::ts('Periods'),
+                $line_item['choices']['period_selection'], // list of options
                 TRUE, // is required
             );
 

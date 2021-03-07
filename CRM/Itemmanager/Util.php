@@ -574,8 +574,11 @@ class CRM_Itemmanager_Util
             return;
         }
 
+        $help_pre = CRM_Utils_Array::value('help_pre',$pricefieldvalue);
+        if(!isset($choices['help_pre']))
+            $choices['help_pre'] = CRM_Utils_Array::value('help_pre',$pricefieldvalue);
 
-        //calculate tje interval price
+        //calculate the interval price
         $summary_price = CRM_Utils_Array::value('amount',$pricefieldvalue)/$periods;
         $summary_display = CRM_Utils_Money::format($summary_price, NULL, NULL, TRUE);
         //just copy field data for info
@@ -584,7 +587,8 @@ class CRM_Itemmanager_Util
         $expire_on = CRM_Utils_Date::customFormat(date_create( CRM_Utils_Array::value('expire_on',$pricefield))->format('Y-m-d'),
             Civi::settings()->get('dateformatshortdate'));
 
-        $choices['item_selection'][$index] = CRM_Utils_Array::value('label',$pricefieldvalue);
+        $choices['item_selection'][$index] = CRM_Utils_Array::value('label',$pricefieldvalue).' '.
+                                                        CRM_Utils_Array::value('title',$priceset);
 
         //decide the correct start date
         $new_start_timestamp = date_create($start_on);
