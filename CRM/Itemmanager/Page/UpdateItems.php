@@ -318,11 +318,11 @@ class CRM_Itemmanager_Page_UpdateItems extends CRM_Core_Page {
 
             //get itemmanager added informations
             $periods = CRM_Itemmanager_BAO_ItemmanagerSettings::getFieldValue('CRM_Itemmanager_DAO_ItemmanagerSettings',
-                (int) $lineitemInfo['price_field_id'] , 'periods','price_field_id',True);
+                (int) $lineitemInfo['price_field_value_id'] , 'periods','price_field_value_id',True);
             if(!isset($periods) or $periods == 0) $periods =1 ;
 
             $change_timestamp = CRM_Itemmanager_BAO_ItemmanagerSettings::getFieldValue('CRM_Itemmanager_DAO_ItemmanagerSettings',
-                (int) $lineitemInfo['price_field_id'] , 'period_start_on','price_field_id',True);
+                (int) $lineitemInfo['price_field_value_id'] , 'period_start_on','price_field_value_id',True);
             if(!isset($change_timestamp)) $change_timestamp = $contributionInfo['receive_date'];
 
             //extract start date from month
