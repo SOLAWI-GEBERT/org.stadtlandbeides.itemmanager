@@ -53,7 +53,8 @@ CREATE TABLE `civicrm_itemmanager_settings` (
      `price_field_id` int unsigned NOT NULL   COMMENT 'FK to civicrm_price_field',
      `period_start_on` datetime   DEFAULT NULL COMMENT 'If non-zero, do not show this field before the date specified',
      `periods` int unsigned   DEFAULT NULL COMMENT 'Number of periods at start',
-     `period_type` int unsigned   DEFAULT NULL COMMENT 'Period intervall type' 
+     `period_type` int unsigned   DEFAULT NULL COMMENT 'Period interval type',
+     `itemmanager_successor_id` int unsigned   DEFAULT 0 COMMENT 'ID to itemmanager entry which is the successor' 
 ,
         PRIMARY KEY (`id`)
  

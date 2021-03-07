@@ -120,9 +120,9 @@ class CRM_Itemmanager_Form_RenewItemperiods extends CRM_Core_Form {
 
             $form_collection = array(
                 'name' => $membership['typeinfo']['name'],
-                'start_date' => CRM_Utils_Date::customFormat(date_create($first_date)->format('YYYY-MM-DD'),
+                'start_date' => CRM_Utils_Date::customFormat(date_create($first_date)->format('Y-m-d'),
                     Civi::settings()->get('dateformatshortdate')),
-                'last_date' => CRM_Utils_Date::customFormat(date_create($last_date)->format('YYYY-MM-DD'),
+                'last_date' => CRM_Utils_Date::customFormat(date_create($last_date)->format('Y-m-d'),
                     Civi::settings()->get('dateformatshortdate')),
                 'line_items' => $linelist,
 
