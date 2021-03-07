@@ -113,6 +113,7 @@ class CRM_Itemmanager_Page_UpdateItems extends CRM_Core_Page {
             line_item.line_total As item_total,
             line_item.tax_amount As item_tax,
             line_item.financial_type_id As item_ftype,
+            line_item.price_field_value_id as field_value_id,
             price_field.id As field_id,
             price_field.is_active As item_active,
             price_field.active_on As item_startdate,
@@ -152,11 +153,11 @@ class CRM_Itemmanager_Page_UpdateItems extends CRM_Core_Page {
 
 
                $periods = CRM_Itemmanager_BAO_ItemmanagerSettings::getFieldValue('CRM_Itemmanager_DAO_ItemmanagerSettings',
-                    $line_items->field_id , 'periods','price_field_id',True);
+                    $line_items->field_value_id , 'periods','price_field_value_id',True);
                if(!isset($periods) or $periods == 0) $periods =1 ;
 
                 $change_timestamp = CRM_Itemmanager_BAO_ItemmanagerSettings::getFieldValue('CRM_Itemmanager_DAO_ItemmanagerSettings',
-                    $line_items->field_id , 'period_start_on','price_field_id',True);
+                    $line_items->field_value_id , 'period_start_on','price_field_value_id',True);
                 if(!isset($change_timestamp)) $change_timestamp = $line_items->contrib_date;
 
                 //extract start date from month

@@ -16,6 +16,8 @@
  * +-------------------------------------------------------------
  */
 
+use CRM_Itemmanager_ExtensionUtil as E;
+
 class CRM_Itemmanager_Util
 {
 
@@ -207,6 +209,7 @@ class CRM_Itemmanager_Util
 
         return $result;
     }
+
 
     /**
      *  Gets the membership payment connection
@@ -529,6 +532,171 @@ class CRM_Itemmanager_Util
         }
 
         return $result;
+
+    }
+
+
+    /**
+     *  Add a choice to for getChoicesOfPricefieldsByFieldID with references to the price_field and price_field_value
+     *
+     * @param $choices
+     * @param $fieldid
+     * @param $index
+     * @param $periods
+     * @param $start_on
+     */
+    private static function addChoice(&$choices,$fielvaluedid,$index,$periods,$start_on)
+    {
+
+        $pricefieldvalue = civicrm_api3('PriceFieldValue', 'getsingle', array('id' => (int) $fielvaluedid));
+
+        //In case of an error
+        if(!isset($pricefieldvalue))self::addEmptyChoice($choices,$index);
+
+        $pricefield = civicrm_api3('PriceField', 'getsingle', array('id' => (int) $pricefieldvalue['price_field_id']));
+        //In case of an error
+        if(!isset($pricefield))self::addEmptyChoice($choices,$index);
+
+        $priceset = civicrm_api3('PriceSet', 'getsingle', array('id' => (int) $pricefield['price_set_id']));
+
+        //In case of an error
+        if(!isset($priceset)) self::addEmptyChoice($choices,$index);
+
+
+        //calculate tje interval price
+        $summary_price = CRM_Utils_Array::value('amount',$pricefieldvalue)/$periods;
+
+
+        $choices['item_selection'][''] = E::ts('Next period canceled.', array('domain' => 'org.stadtlandbeides.itemmanager'));
+        $choices['period_selection'][$index] = $periods;
+
+        for ($i = $periods; $i > 0; $i--) {
+
+            $choices['period_data'][$i] = array(
+                'period_start_on' => $start_on,
+                'period_end_on' => $start_on,
+                'active_on' => 'todo',
+                'expire_on' => 'todo',
+                'interval_price' => CRM_Utils_Money::format($summary_price, NULL, NULL, TRUE),
+                );
+
+
+        }
+
+
+        return;
+    }
+
+    /**
+     *  Creates for getChoicesOfPricefieldsByFieldID an empty set
+     *
+     * @param $choices
+     */
+    private static function addEmptyChoice(&$choices,$index=0)
+    {
+
+        $choices['item_selection'][''] = E::ts('Next period canceled.', array('domain' => 'org.stadtlandbeides.itemmanager'));
+        $choices['period_selection'][$index] = 0;
+        $choices['period_data'][0] = array(
+            'period_start_on' => '',
+            'period_end_on' => '',
+            'active_on' => '',
+            'expire_on' => '',
+            'interval_price' => '',
+        );
+        return;
+    }
+
+
+    public static function getChoicesOfPricefieldsByFieldID($currentFieldValueId)
+    {
+        $choices = array(
+            'item_selection' => array(),
+            'period_selection' => array(),
+            'period_data' => array(),
+        );
+        $olditem = array();
+        $successor_item = array();
+
+        $old_id = CRM_Itemmanager_BAO_ItemmanagerSettings::getFieldValue('CRM_Itemmanager_DAO_ItemmanagerSettings',
+            $currentFieldValueId , 'id','price_field_id',True);
+        if(!isset($old_id))
+        {
+
+            self::addEmptyChoice($choices,0);
+            return $choices;
+        }
+
+
+        $old_record = \Civi\Api4\ItemmanagerSettings::get()
+            ->addWhere('id', '=', $old_id)
+            ->setCheckPermissions(FALSE)
+            ->execute();
+
+        $olditem = reset($old_record);
+
+        //if we are the last given data record
+        if($olditem['itemmanager_successor_id'] == 0)
+        {
+
+            self::addChoice(
+                $choices,
+                $currentFieldId,
+                0,
+                CRM_Utils_Array::value('periods',$olditem),
+                CRM_Utils_Array::value('period_start_on',$olditem)
+                );
+
+            self::addEmptyChoice($choices,1);
+            return $choices;
+        }
+
+        $successor_record = \Civi\Api4\ItemmanagerSettings::get()
+            ->addWhere('id', '=', $olditem['itemmanager_successor_id'])
+            ->setCheckPermissions(FALSE)
+            ->execute();
+
+        $successor_item = reset($successor_record);
+
+        self::addChoice(
+            $choices,
+            CRM_Utils_Array::value('price_field_id',$successor_item),
+            0,
+            CRM_Utils_Array::value('periods',$successor_item),
+            CRM_Utils_Array::value('period_start_on',$successor_item),
+        );
+
+        self::addChoice(
+            $choices,
+            $currentFieldId,
+            1,
+            CRM_Utils_Array::value('periods',$olditem),
+            CRM_Utils_Array::value('period_start_on',$olditem)
+
+        );
+
+        self::addEmptyChoice($choices,2);
+        return $choices;
+
+
+//        $successor_id = CRM_Itemmanager_BAO_ItemmanagerSettings::getFieldValue('CRM_Itemmanager_DAO_ItemmanagerSettings',
+//            $currentFieldId , 'itemmanager_successor_id','price_field_id',True);
+//
+//
+//
+//
+//        $period_start_on_timestamp = CRM_Itemmanager_BAO_ItemmanagerSettings::getFieldValue('CRM_Itemmanager_DAO_ItemmanagerSettings',
+//            $currentFieldId , 'period_start_on','price_field_id',True);
+
+
+
+        //extract start date from month
+       // $raw_date = date_create($period_start_on_timestamp);
+       // $new_date = new DateTime($line_timestamp->format('Y-m') . $raw_date->format('-d'));
+       // $new_date->setTime(0,0);
+
+       // $changed_date = $new_date->format('Y-m-d H:i:s');
+
 
     }
 

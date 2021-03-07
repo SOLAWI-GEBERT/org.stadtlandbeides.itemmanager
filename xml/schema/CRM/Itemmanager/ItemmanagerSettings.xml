@@ -18,15 +18,15 @@
     <autoincrement>true</autoincrement>
   </primaryKey>
   <field>
-    <name>price_field_id</name>
-    <title>Price Field</title>
+    <name>price_field_value_id</name>
+    <title>Price Field Value</title>
     <type>int unsigned</type>
     <required>true</required>
-    <comment>FK to civicrm_price_field</comment>
+    <comment>FK to civicrm_price_field_value</comment>
   </field>
   <foreignKey>
-    <name>price_field_id</name>
-    <table>civicrm_price_field</table>
+    <name>price_field_value_id</name>
+    <table>civicrm_price_field_value</table>
     <key>id</key>
     <add>3.3</add>
   </foreignKey>

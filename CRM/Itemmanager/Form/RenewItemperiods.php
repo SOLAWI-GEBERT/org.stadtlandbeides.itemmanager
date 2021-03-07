@@ -94,6 +94,7 @@ class CRM_Itemmanager_Form_RenewItemperiods extends CRM_Core_Form {
             $first_date = CRM_Utils_Array::value('receive_date', $first_contribution);
             //endregion
 
+
             //get the line items to the last contribution
             $linerecords = CRM_Itemmanager_Util::getLineitemFullRecordByContributionId($lastid);
             if($linerecords['is_error'])
@@ -101,9 +102,16 @@ class CRM_Itemmanager_Form_RenewItemperiods extends CRM_Core_Form {
                 $this->processError("ERROR",E::ts('Retrieve line items'),$member_array['error_message'],$this->_contact_id);
                 return;
             }
+
+
             $linelist = array();
             foreach ($linerecords As $lineitem)
             {
+                //get the itemmanager records
+                $choices = CRM_Itemmanager_Util::getChoicesOfPricefieldsByFieldID(
+                    CRM_Utils_Array::value('price_field_id', $lineitem['linedata']));
+                $this->assign('choices', $choices);
+
                 $linecollection = array(
                     'name' =>  CRM_Utils_Array::value('label', $lineitem['linedata']),
                     'last_qty' => CRM_Utils_Array::value('qty', $lineitem['linedata']),
@@ -114,6 +122,7 @@ class CRM_Itemmanager_Form_RenewItemperiods extends CRM_Core_Form {
                     'element_quantity_name' => 'member_'.$membership['memberdata']['id'].'_'.
                         'item_'.CRM_Utils_Array::value('id', $lineitem['fielddata']).'_'.
                         'quantity_'.CRM_Utils_Array::value('id', $lineitem['linedata']),
+                    'choices' => $choices,
                 );
                 $linelist[] = $linecollection;
             }
