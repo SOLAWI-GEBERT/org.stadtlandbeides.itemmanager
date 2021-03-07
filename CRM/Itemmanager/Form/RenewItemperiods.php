@@ -109,8 +109,7 @@ class CRM_Itemmanager_Form_RenewItemperiods extends CRM_Core_Form {
             {
                 //get the itemmanager records
                 $choices = CRM_Itemmanager_Util::getChoicesOfPricefieldsByFieldID(
-                    CRM_Utils_Array::value('price_field_id', $lineitem['linedata']));
-                $this->assign('choices', $choices);
+                    CRM_Utils_Array::value('price_field_value_id', $lineitem['linedata']),$last_date);
 
                 $linecollection = array(
                     'name' =>  CRM_Utils_Array::value('label', $lineitem['linedata']),
