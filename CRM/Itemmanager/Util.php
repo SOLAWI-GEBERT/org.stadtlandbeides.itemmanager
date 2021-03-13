@@ -545,7 +545,7 @@ class CRM_Itemmanager_Util
      * @param $periods
      * @param $start_on
      */
-    private static function addChoice(&$choices,$fielvaluedid,$index,$periods,$start_on,$lastDate)
+    private static function addChoice(&$choices,$fielvaluedid,$index,$periods,$start_on,$lastDate,$help=false)
     {
         if($fielvaluedid == 0)
         {
@@ -574,9 +574,8 @@ class CRM_Itemmanager_Util
             return;
         }
 
-        $help_pre = CRM_Utils_Array::value('help_pre',$pricefieldvalue);
-        if(!isset($choices['help_pre']))
-            $choices['help_pre'] = CRM_Utils_Array::value('help_pre',$pricefieldvalue);
+        $choices['help_pre'][$index] =  CRM_Utils_Array::value('help_pre',$pricefield) .'</br>'.
+            CRM_Utils_Array::value('help_pre',$pricefieldvalue);
 
         //calculate the interval price
         $summary_price = CRM_Utils_Array::value('amount',$pricefieldvalue)/$periods;
@@ -605,7 +604,9 @@ class CRM_Itemmanager_Util
         $start_formated = CRM_Utils_Date::customFormat($year.'-'.$month.'-'.$new_day,
             Civi::settings()->get('dateformatshortdate'));
 
-
+        //create container
+        $choices['period_data'][$index] = array();
+        $choices['period_selection'][$index] = array();
 
         for ($i = $periods; $i > 0; $i--) {
 
@@ -613,8 +614,8 @@ class CRM_Itemmanager_Util
             $end_date->add(new DateInterval('P'.$i.'M'));
             $end_formated = CRM_Utils_Date::customFormat($end_date->format('Y-m-d'),
                 Civi::settings()->get('dateformatshortdate'));
-            $choices['period_selection'][$i] = $i;
-            $choices['period_data'][$i] = array(
+            $choices['period_selection'][$index][$i] = $i;
+            $choices['period_data'][$index][$i] = array(
                 'period_start_on' => $start_formated,
                 'period_end_on' => $end_formated,
                 'active_on' => $active_on,
@@ -640,8 +641,13 @@ class CRM_Itemmanager_Util
             $choices['item_selection'][$index] = E::ts('Next period canceled.', array('domain' => 'org.stadtlandbeides.itemmanager'));
         else
             $choices['item_selection'][$index] = $error;
-        $choices['period_selection'][0] = 0;
-        $choices['period_data'][0] = array(
+
+        //create container
+        $choices['period_data'][$index] = array();
+        $choices['period_selection'][$index] = array();
+
+        $choices['period_selection'][$index][0] = 0;
+        $choices['period_data'][$index][0] = array(
             'period_start_on' => '',
             'period_end_on' => '',
             'active_on' => '',
@@ -651,13 +657,23 @@ class CRM_Itemmanager_Util
         return;
     }
 
-
+    /**
+     *  Returns an array of available Price Fieldvalues and calculates the next period
+     *
+     * @param $currentFieldValueId
+     * @param $lastDate
+     * @return array
+     * @throws API_Exception
+     * @throws CRM_Core_Exception
+     * @throws \Civi\API\Exception\UnauthorizedException
+     */
     public static function getChoicesOfPricefieldsByFieldID($currentFieldValueId,$lastDate)
     {
         $choices = array(
             'item_selection' => array(),
             'period_selection' => array(),
             'period_data' => array(),
+            'help_pre' => array(),
         );
         $olditem = array();
         $successor_item = array();
@@ -694,7 +710,8 @@ class CRM_Itemmanager_Util
                 0,
                 CRM_Utils_Array::value('periods',$olditem),
                 CRM_Utils_Array::value('period_start_on',$olditem),
-                $lastDate
+                $lastDate,
+                true
                 );
 
             self::addEmptyChoice($choices,1);
@@ -722,7 +739,8 @@ class CRM_Itemmanager_Util
             0,
             CRM_Utils_Array::value('periods',$successor_item),
             CRM_Utils_Array::value('period_start_on',$successor_item),
-            $lastDate
+            $lastDate,
+            true
         );
 
 

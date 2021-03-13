@@ -68,7 +68,7 @@
         </tbody>
 
       </table>
-      {if !$lineitem.help_pre}
+      {if $lineitem.help_pre}
         </br>
         <div class="help">{$lineitem.help_pre}</div>
       {/if}

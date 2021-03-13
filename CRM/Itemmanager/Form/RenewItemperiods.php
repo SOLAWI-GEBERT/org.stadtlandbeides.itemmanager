@@ -125,17 +125,17 @@ class CRM_Itemmanager_Form_RenewItemperiods extends CRM_Core_Form {
                         'item_'.CRM_Utils_Array::value('id', $lineitem['fielddata']).'_'.
                         'period_'.CRM_Utils_Array::value('price_field_value_id', $lineitem['linedata']),
                     'choices' => $choices,
-                    'new_active_on' => $choices['period_data'][max(
-                        array_keys($choices['period_data']))]['active_on'],
-                    'new_expire_on' => $choices['period_data'][max(
-                        array_keys($choices['period_data']))]['expire_on'],
-                    'new_interval_price' => $choices['period_data'][
-                        max(array_keys($choices['period_data']))]['interval_price'],
-                    'new_period_start_on' => $choices['period_data'][max(
+                    'new_active_on' => $choices['period_data'][0][max(
+                        array_keys($choices['period_data'][0]))]['active_on'],
+                    'new_expire_on' => $choices['period_data'][0][max(
+                        array_keys($choices['period_data'][0]))]['expire_on'],
+                    'new_interval_price' => $choices['period_data'][0][
+                        max(array_keys($choices['period_data'][0]))]['interval_price'],
+                    'new_period_start_on' => $choices['period_data'][0][max(
                         array_keys($choices['period_data']))]['period_start_on'],
-                    'new_period_end_on' => $choices['period_data'][max(
-                        array_keys($choices['period_data']))]['period_end_on'],
-                    'help_pre' => $choices['help_pre'],
+                    'new_period_end_on' => $choices['period_data'][0][max(
+                        array_keys($choices['period_data'][0]))]['period_end_on'],
+                    'help_pre' => $choices['help_pre'][0],
                 );
                 $linelist[] = $linecollection;
             }
@@ -192,7 +192,7 @@ class CRM_Itemmanager_Form_RenewItemperiods extends CRM_Core_Form {
                 'select',
                 $line_item['element_period_name'],
                 E::ts('Periods'),
-                $line_item['choices']['period_selection'], // list of options
+                $line_item['choices']['period_selection'][0], // list of options
                 TRUE, // is required
             );
 
