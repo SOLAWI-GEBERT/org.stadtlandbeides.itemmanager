@@ -625,6 +625,18 @@ class CRM_Itemmanager_Util
 
 
         }
+
+        //add 0
+        $choices['period_selection'][$index][$i] = 0;
+        $choices['period_data'][$index][$i] = array(
+            'period_start_on' => '-',
+            'period_end_on' => '-',
+            'active_on' => '-',
+            'expire_on' => '-',
+            'interval_price' => '-',
+        );
+
+
         return;
     }
 
@@ -637,8 +649,8 @@ class CRM_Itemmanager_Util
     {
 
 
-        if(!isset($error))
-            $choices['item_selection'][$index] = E::ts('Next period canceled.', array('domain' => 'org.stadtlandbeides.itemmanager'));
+        if($error == '')
+            $choices['item_selection'][$index] = '';
         else
             $choices['item_selection'][$index] = $error;
 
@@ -648,11 +660,11 @@ class CRM_Itemmanager_Util
 
         $choices['period_selection'][$index][0] = 0;
         $choices['period_data'][$index][0] = array(
-            'period_start_on' => '',
-            'period_end_on' => '',
-            'active_on' => '',
-            'expire_on' => '',
-            'interval_price' => '',
+            'period_start_on' => '-',
+            'period_end_on' => '-',
+            'active_on' => '-',
+            'expire_on' => '-',
+            'interval_price' => '-',
         );
         return;
     }

@@ -113,6 +113,8 @@ class CRM_Itemmanager_Form_RenewItemperiods extends CRM_Core_Form {
 
                 $linecollection = array(
                     'name' =>  CRM_Utils_Array::value('label', $lineitem['linedata']),
+                    'price_field_value_id' => CRM_Utils_Array::value('price_field_value_id', $lineitem['linedata']),
+                    'price_field_id' => CRM_Utils_Array::value('id', $lineitem['fielddata']),
                     'last_qty' => CRM_Utils_Array::value('qty', $lineitem['linedata']),
                     'last_price_per_interval' => CRM_Utils_Money::format(
                         CRM_Utils_Array::value('unit_price', $lineitem['linedata']), NULL, NULL, TRUE),
@@ -137,11 +139,12 @@ class CRM_Itemmanager_Form_RenewItemperiods extends CRM_Core_Form {
                         array_keys($choices['period_data'][0]))]['period_end_on'],
                     'help_pre' => $choices['help_pre'][0],
                 );
-                $linelist[] = $linecollection;
+                $linelist[CRM_Utils_Array::value('price_field_value_id', $lineitem['linedata'])] = $linecollection;
             }
 
             $form_collection = array(
                 'name' => $membership['typeinfo']['name'],
+                'member_id' => $membership['memberdata']['id'],
                 'start_date' => CRM_Utils_Date::customFormat(date_create($first_date)->format('Y-m-d'),
                     Civi::settings()->get('dateformatshortdate')),
                 'last_date' => CRM_Utils_Date::customFormat(date_create($last_date)->format('Y-m-d'),
@@ -151,13 +154,14 @@ class CRM_Itemmanager_Form_RenewItemperiods extends CRM_Core_Form {
 
             );
             $this->assign('linerecord', $linerecords);
-            $this->_memberships[] = $form_collection;
+            $this->_memberships[$membership['memberdata']['id']] = $form_collection;
 
         }
 
 
         $this->assign('memberrecord', $member_array['values']);
         $this->assign('memberships',$this->_memberships);
+        Civi::resources()->addVars('RenewItemperiods', $this->_memberships);
 
         parent::preProcess();
     }//public function preProcess()
@@ -185,7 +189,10 @@ class CRM_Itemmanager_Form_RenewItemperiods extends CRM_Core_Form {
                 E::ts('Item'),
                 $line_item['choices']['item_selection'], // list of options
                 TRUE, // is required
-                ['flex-grow'=> 1],
+                ['flex-grow'=> 1,
+                    'onchange'=>"UpdateSettings(CRM.$, CRM._,".
+                        $membership['member_id'].",".$line_item['price_field_id'].",".
+                        $line_item['price_field_value_id'].",true)"],
             );
               //Selection of the period
             $this->add(
@@ -194,6 +201,9 @@ class CRM_Itemmanager_Form_RenewItemperiods extends CRM_Core_Form {
                 E::ts('Periods'),
                 $line_item['choices']['period_selection'][0], // list of options
                 TRUE, // is required
+                ['onchange'=>"UpdateSettings(CRM.$, CRM._,".
+                        $membership['member_id'].",".$line_item['price_field_id'].",".
+                    $line_item['price_field_value_id'].",false)"],
             );
 
             $qtyattributes = array(
