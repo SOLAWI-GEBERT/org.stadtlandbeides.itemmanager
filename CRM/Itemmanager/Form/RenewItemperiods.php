@@ -28,32 +28,6 @@ class CRM_Itemmanager_Form_RenewItemperiods extends CRM_Core_Form {
         $this->_contact_id = CRM_Utils_Request::retrieve('cid', 'Integer');
         $this->assign('contact_id', $this->_contact_id);
 
-        //Later we compound all line items belonging to the contribution
-        $item_query = "
-        SELECT
-            line_item.label As item_label,
-            line_item.qty As item_quantity,
-            price_field.id As field_id,
-            price_field.is_active As item_active,
-            price_field.active_on As item_startdate,
-            price_field.expire_on As item_enddate,
-            price_field.help_pre As item_help,
-            contribution.receive_date As contrib_date,
-            price_set.id As set_id,
-            price_set.name As set_name,
-            price_set.is_active As set_active,
-            price_set.help_pre As set_help
-        FROM civicrm_line_item line_item
-             LEFT JOIN civicrm_price_field_value price_field_value ON line_item.price_field_value_id = price_field_value.id
-             LEFT JOIN civicrm_price_field price_field ON line_item.price_field_id = price_field.id
-             LEFT JOIN civicrm_contribution as contribution ON line_item.contribution_id = contribution.id
-             LEFT JOIN civicrm_price_set price_set ON price_field.price_set_id = price_set.id
-        WHERE line_item.contribution_id = %1 
-        ORDER BY contribution.receipt_date DESC 
-
-     ";
-
-
 
         // Get the given memberships
         $member_array = CRM_Itemmanager_Util::getLastMemberShipsFullRecordByContactId($this->_contact_id);
@@ -145,6 +119,7 @@ class CRM_Itemmanager_Form_RenewItemperiods extends CRM_Core_Form {
             $form_collection = array(
                 'name' => $membership['typeinfo']['name'],
                 'member_id' => $membership['memberdata']['id'],
+                'lascontribution_id' => $lastid,
                 'start_date' => CRM_Utils_Date::customFormat(date_create($first_date)->format('Y-m-d'),
                     Civi::settings()->get('dateformatshortdate')),
                 'last_date' => CRM_Utils_Date::customFormat(date_create($last_date)->format('Y-m-d'),
@@ -153,13 +128,10 @@ class CRM_Itemmanager_Form_RenewItemperiods extends CRM_Core_Form {
 
 
             );
-            $this->assign('linerecord', $linerecords);
             $this->_memberships[$membership['memberdata']['id']] = $form_collection;
 
         }
 
-
-        $this->assign('memberrecord', $member_array['values']);
         $this->assign('memberships',$this->_memberships);
         Civi::resources()->addVars('RenewItemperiods', $this->_memberships);
 
@@ -244,27 +216,31 @@ class CRM_Itemmanager_Form_RenewItemperiods extends CRM_Core_Form {
   }
 
   public function postProcess() {
-    $values = $this->exportValues();
-    $options = $this->getColorOptions();
-    CRM_Core_Session::setStatus(E::ts('You picked color "%1"', array(
-      1 => $options[$values['favorite_color']],
-    )));
+    $values = $this->controller->exportValues($this->_name);
+    foreach ($values as $value)
+    {
+        CRM_Core_Session::setStatus($value);
+    }
+
+
+    try {
+
+
+        $multipleInstallmentRenewal = new CRM_Itemmanager_Logic_RenewalMultipleInstallmentPlan(132,
+            511,1,'2023-04-01');
+        $multipleInstallmentRenewal->addLineItemPrototype(6,1.0);
+
+        $multipleInstallmentRenewal->run();
+        }
+
+    catch (CRM_Core_Exception $e) {
+        CRM_Core_Session::setStatus($e->getMessage());
+    }
+
     parent::postProcess();
+
   }
 
-  public function getColorOptions() {
-    $options = array(
-      '' => E::ts('- select -'),
-      '#f00' => E::ts('Red'),
-      '#0f0' => E::ts('Green'),
-      '#00f' => E::ts('Blue'),
-      '#f0f' => E::ts('Purple'),
-    );
-    foreach (array('1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e') as $f) {
-      $options["#{$f}{$f}{$f}"] = E::ts('Grey (%1)', array(1 => $f));
-    }
-    return $options;
-  }
 
   /**
    * Get the fields/elements defined in this form.

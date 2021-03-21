@@ -8,10 +8,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8a4e2072-c43d-4029-bc01-730e5001dde6" name="Default Changelist" comment="ENH Intermittent changes to analyze the price items">
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/org.stadtlandbeides.itemmanager.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/org.stadtlandbeides.itemmanager.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CRM/Itemmanager/Form/RenewItemperiods.php" beforeDir="false" afterPath="$PROJECT_DIR$/CRM/Itemmanager/Form/RenewItemperiods.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CRM/Itemmanager/Util.php" beforeDir="false" afterPath="$PROJECT_DIR$/CRM/Itemmanager/Util.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/CRM/Itemmanager/Form/RenewItemperiods.tpl" beforeDir="false" afterPath="$PROJECT_DIR$/templates/CRM/Itemmanager/Form/RenewItemperiods.tpl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CRM/Itemmanager/Page/UpdateItems.php" beforeDir="false" afterPath="$PROJECT_DIR$/CRM/Itemmanager/Page/UpdateItems.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -31,7 +32,13 @@
   <component name="PhpDebugGeneral" listening_started="true" />
   <component name="PhpServers">
     <servers>
-      <server host="localhost" id="803f8716-bd15-4fed-9bc9-04d846abe046" name="localhost" />
+      <server host="localhost" id="803f8716-bd15-4fed-9bc9-04d846abe046" name="localhost" use_path_mappings="true">
+        <path_mappings>
+          <mapping local-root="$PROJECT_DIR$/../Stadt-Land-Beides/JML3" remote-root="/Users/linus/Documents/0_Development/Stadt-Land-Beides/JML3" />
+          <mapping local-root="$PROJECT_DIR$/../Stadt-Land-Beides/JML3/media/civicrm/ext/org.stadtlandbeides.itemmanager" remote-root="/Users/linus/Documents/0_Development/Stadt-Land-Beides/JML3/media/civicrm/ext/org.stadtlandbeides.itemmanager" />
+          <mapping local-root="$PROJECT_DIR$" remote-root="/Users/linus/Documents/0_Development/Stadt-Land-Beides/JML3/media/civicrm/ext/org.stadtlandbeides.itemmanager" />
+        </path_mappings>
+      </server>
     </servers>
   </component>
   <component name="PhpWorkspaceProjectConfiguration">
@@ -48,25 +55,30 @@
     <option name="showMembers" value="true" />
   </component>
   <component name="PropertiesComponent">
+    <property name="Constants" value="false" />
     <property name="DatabaseDriversLRU" value="mysql" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/CRM/Itemmanager" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
     <property name="node.js.path.for.package.tslint" value="project" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
-    <property name="settings.editor.selected.configurable" value="liveEdit" />
+    <property name="settings.editor.selected.configurable" value="web-ide.project.structure" />
     <property name="two.files.diff.last.used.folder" value="$PROJECT_DIR$/../Stadt-Land-Beides/JML3/media/civicrm/ext/org.stadtlandbeides.itemmanager" />
     <property name="vue.rearranger.settings.migration" value="true" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/CRM/Itemmanager" />
       <recent name="$PROJECT_DIR$" />
       <recent name="$PROJECT_DIR$/templates/CRM/Itemmanager/Page" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/CRM/Itemmanager/Logic" />
     </key>
   </component>
   <component name="RunManager">
@@ -106,6 +118,14 @@
       <workItem from="1615029827519" duration="33240000" />
       <workItem from="1615101857277" duration="27400000" />
       <workItem from="1615621462643" duration="13991000" />
+      <workItem from="1615735018886" duration="168000" />
+      <workItem from="1615735200110" duration="51000" />
+      <workItem from="1615735278539" duration="2290000" />
+      <workItem from="1615830667536" duration="7402000" />
+      <workItem from="1615883982066" duration="3311000" />
+      <workItem from="1616084877681" duration="6455000" />
+      <workItem from="1616186894001" duration="9302000" />
+      <workItem from="1616319612108" duration="16180000" />
     </task>
     <task id="LOCAL-00001" summary="ENH Intermittent changes to analyze the price items">
       <created>1612779470217</created>
@@ -135,6 +155,17 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="ENH Intermittent changes to analyze the price items" />
     <option name="LAST_COMMIT_MESSAGE" value="ENH Intermittent changes to analyze the price items" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="php">
+          <url>file://$PROJECT_DIR$/CRM/Itemmanager/Logic/RenewalMultipleInstallmentPlan.php</url>
+          <line>339</line>
+          <option name="timeStamp" value="16" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

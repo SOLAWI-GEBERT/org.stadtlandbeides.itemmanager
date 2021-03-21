@@ -328,7 +328,7 @@ class CRM_Itemmanager_Page_UpdateItems extends CRM_Core_Page {
             //extract start date from month
             $raw_date = date_create($change_timestamp);
             $new_date = new DateTime($line_timestamp->format('Y-m') . $raw_date->format('-d'));
-            $new_date->setTime(0,0);
+            $new_date->setTime(12,0);
 
             $changed_date = $new_date->format('Y-m-d H:i:s');
 
