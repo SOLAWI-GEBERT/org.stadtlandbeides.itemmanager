@@ -34,7 +34,7 @@ class CRM_Itemmanager_Form_RenewItemperiods extends CRM_Core_Form {
 
         if($member_array['is_error'])
         {
-            $this->processError("ERROR",E::ts('Retrieve memberships'),$member_array['error_message'],$this->_contact_id);
+            $this->processError("ERROR",E::ts('Retrieve memberships'),$member_array['error_message']);
             return;
         }
 
@@ -118,8 +118,8 @@ class CRM_Itemmanager_Form_RenewItemperiods extends CRM_Core_Form {
 
             $form_collection = array(
                 'name' => $membership['typeinfo']['name'],
-                'member_id' => $membership['memberdata']['id'],
-                'lascontribution_id' => $lastid,
+                'member_id' => (int)$membership['memberdata']['id'],
+                'lastcontribution_id' => $lastid,
                 'start_date' => CRM_Utils_Date::customFormat(date_create($first_date)->format('Y-m-d'),
                     Civi::settings()->get('dateformatshortdate')),
                 'last_date' => CRM_Utils_Date::customFormat(date_create($last_date)->format('Y-m-d'),
@@ -216,40 +216,107 @@ class CRM_Itemmanager_Form_RenewItemperiods extends CRM_Core_Form {
   }
 
   public function postProcess() {
-    $values = $this->controller->exportValues($this->_name);
-    foreach ($values as $value)
+    $formvalues = $this->controller->exportValues($this->_name);
+
+    foreach ($this->_memberships as $membership)
     {
-        CRM_Core_Session::setStatus($value);
-    }
+        $item_prototypes = array();
+        $startdate ="";
+        $periods = 0;
+        foreach ($membership['line_items'] as $line_item)
+        {
+
+            $choices = $line_item['choices'];
+            $quantity = $line_item['last_qty'];
+            $periods = $choices['period_selection'][0][max(
+                array_keys($choices['period_selection'][0]))];
+            $item_id = 0;
+            $fieldValueId = $choices['field_value_selection'][0];
+            $startdate = $choices['period_data'][0][max(
+                array_keys($choices['period_data']))]['period_iso_start_on'];
+            $manager_id = $choices['itemmanager_selection'][0];
+
+            if(isset($formvalues[$line_item['element_item_name']]))
+            {
+                $item_id = (int)$formvalues[$line_item['element_item_name']];
+                $id = $choices['field_value_selection'][$item_id];
+                //break here if the empty is chosen
+                if(!isset($id))
+                    continue;
+
+                $fieldValueId = $id;
+                $startdate = $choices['period_data'][$item_id][max(
+                    array_keys($choices['period_data']))]['period_iso_start_on'];
+                $manager_id = $choices['itemmanager_selection'][$item_id];
+
+            }
+
+            if(isset($formvalues[$line_item['element_quantity_name']]))
+            {
+                $quantity = (float)$formvalues[$line_item['element_quantity_name']];
+            }
+
+            if(isset($formvalues[$line_item['element_period_name']]))
+            {
+                $periods = (int)$formvalues[$line_item['element_period_name']];
+                $startdate = $choices['period_data'][$item_id][$periods]['period_iso_start_on'];
+            }
+
+            if($quantity == 0.0 or $periods == 0)
+                continue;
+
+            $item_prototypes[] = array(
+                'manager_id'=> (int)$manager_id,
+                 'quantity' => $quantity,
+            );
+        }
 
 
-//    try {
-//
-//
-//        $multipleInstallmentRenewal = new CRM_Itemmanager_Logic_RenewalMultipleInstallmentPlan(132,
-//            511,1,'2023-04-01');
-//        $multipleInstallmentRenewal->addLineItemPrototype(6,1.0);
-//
-//        $multipleInstallmentRenewal->run();
-//        }
-//
-//    catch (CRM_Core_Exception $e) {
-//        CRM_Core_Session::setStatus($e->getMessage());
-//    }
+        if(count($item_prototypes)>0)
+        {
+            try {
 
-      try {
+                if ($periods == 1) {
+                    //Single Installments
+                    $singleInstallmentRenewal = new CRM_Itemmanager_Logic_RenewalSingleInstallmentPlan($membership['member_id'],
+                        $membership['lastcontribution_id'], $periods, $startdate);
 
-          $singleInstallmentRenewal = new CRM_Itemmanager_Logic_RenewalSingleInstallmentPlan(132,
-              511,1,'2023-04-01');
+                    foreach ($item_prototypes as $prototype)
+                    {
+                        $singleInstallmentRenewal->addLineItemPrototype($prototype['manager_id'], $prototype['quantity']);
+                    }
 
-          $singleInstallmentRenewal->addLineItemPrototype(6,1.0);
+                    $singleInstallmentRenewal->run();
 
-          $singleInstallmentRenewal->run();
-      }
 
-      catch (CRM_Core_Exception $e) {
-          CRM_Core_Session::setStatus($e->getMessage());
-      }
+                } else {
+
+                    //Multiple Installments
+                    $multipleInstallmentRenewal = new CRM_Itemmanager_Logic_RenewalMultipleInstallmentPlan($membership['member_id'],
+                        $membership['lastcontribution_id'],$periods, $startdate);
+
+                    foreach ($item_prototypes as $prototype) {
+                        $multipleInstallmentRenewal->addLineItemPrototype($prototype['manager_id'], $prototype['quantity']);
+                    }
+
+                   $multipleInstallmentRenewal->run();
+
+                }
+
+                $this->processSuccess("Membership ".$membership['name']." has been updated.");
+
+            }
+        catch (CRM_Core_Exception $e) {
+            $this->processError("Membership ".$membership['name']." has been failed.",$e->getMessage(),
+                "Update Membership");
+        }
+
+        }
+
+    }//foreach ($this->_memberships as $membership)
+
+
+
 
     parent::postProcess();
 
@@ -281,30 +348,25 @@ class CRM_Itemmanager_Form_RenewItemperiods extends CRM_Core_Form {
     /**
      * report error data
      */
-    protected function processError($status, $title, $message, $contact_id) {
+    protected function processError($status, $title, $message) {
         CRM_Core_Session::setStatus($status . "<br/>" . $message, ts('Error', array('domain' => 'org.stadtlandbeides.itemmanager')), 'error');
         $this->assign("error_title",   $title);
         $this->assign("error_message", $message);
 
 
-        $contact_url = CRM_Utils_System::url('civicrm/contact/view', "reset=1&cid={$contact_id}&selectedChild=itemmanager");
-        CRM_Utils_System::redirect($contact_url);
-
     }
 
-    protected function processSuccess($message, $contact_id) {
+    protected function processSuccess($message) {
         CRM_Core_Session::setStatus($message, ts('Success', array('domain' => 'org.stadtlandbeides.itemmanager')), 'success');
 
-        $contact_url = CRM_Utils_System::url('civicrm/contact/view', "reset=1&cid={$contact_id}&selectedChild=itemmanager");
-        CRM_Utils_System::redirect($contact_url);
+
 
     }
 
-    protected function processInfo($message, $contact_id) {
+    protected function processInfo($message) {
         CRM_Core_Session::setStatus($message, ts('Info', array('domain' => 'org.stadtlandbeides.itemmanager')), 'info');
 
-        $contact_url = CRM_Utils_System::url('civicrm/contact/view', "reset=1&cid={$contact_id}&selectedChild=itemmanager");
-        CRM_Utils_System::redirect($contact_url);
+
 
     }
 

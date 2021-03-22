@@ -589,6 +589,8 @@ class CRM_Itemmanager_Util
         $choices['item_selection'][$index] = CRM_Utils_Array::value('label',$pricefieldvalue).' '.
                                                         CRM_Utils_Array::value('title',$priceset);
 
+        $choices['field_value_selection'][$index] = (int)$fielvaluedid;
+
         //decide the correct start date
         $new_start_timestamp = date_create($start_on);
         $new_month = (int)$new_start_timestamp->format('n');
@@ -616,6 +618,7 @@ class CRM_Itemmanager_Util
                 Civi::settings()->get('dateformatshortdate'));
             $choices['period_selection'][$index][$i] = $i;
             $choices['period_data'][$index][$i] = array(
+                'period_iso_start_on' => $year.'-'.$month.'-'.$new_day,
                 'period_start_on' => $start_formated,
                 'period_end_on' => $end_formated,
                 'active_on' => $active_on,
@@ -629,6 +632,7 @@ class CRM_Itemmanager_Util
         //add 0
         $choices['period_selection'][$index][$i] = 0;
         $choices['period_data'][$index][$i] = array(
+            'period_iso_start_on' => '-',
             'period_start_on' => '-',
             'period_end_on' => '-',
             'active_on' => '-',
@@ -654,12 +658,15 @@ class CRM_Itemmanager_Util
         else
             $choices['item_selection'][$index] = $error;
 
+        $choices['field_value_selection'][$index] = null;
+
         //create container
         $choices['period_data'][$index] = array();
         $choices['period_selection'][$index] = array();
 
         $choices['period_selection'][$index][0] = 0;
         $choices['period_data'][$index][0] = array(
+            'period_iso_start_on' => '-',
             'period_start_on' => '-',
             'period_end_on' => '-',
             'active_on' => '-',
@@ -682,6 +689,8 @@ class CRM_Itemmanager_Util
     public static function getChoicesOfPricefieldsByFieldID($currentFieldValueId,$lastDate)
     {
         $choices = array(
+            'itemmanager_selection' => array(),
+            'field_value_selection' => array(),
             'item_selection' => array(),
             'period_selection' => array(),
             'period_data' => array(),
@@ -696,7 +705,7 @@ class CRM_Itemmanager_Util
             $currentFieldValueId , 'id','price_field_value_id',True);
         if(!isset($old_id))
         {
-
+            $choices['itemmanager_selection'][0] = null;
             self::addEmptyChoice($choices,0,'Missing Price Field Value Id');
             return $choices;
         }
@@ -715,7 +724,7 @@ class CRM_Itemmanager_Util
         //if we are the last given data record
         if($olditem['itemmanager_successor_id'] == 0)
         {
-
+            $choices['itemmanager_selection'][0] = $old_id;
             self::addChoice(
                 $choices,
                 $currentFieldValueId,
@@ -726,6 +735,7 @@ class CRM_Itemmanager_Util
                 true
                 );
 
+            $choices['itemmanager_selection'][1] = null;
             self::addEmptyChoice($choices,1);
             return $choices;
         }
@@ -739,12 +749,12 @@ class CRM_Itemmanager_Util
 
         if(!isset($successor_item))
         {
-
+            $choices['itemmanager_selection'][0] = null;
             self::addEmptyChoice($choices,0,'Missing successor record');
             return $choices;
         }
 
-
+        $choices['itemmanager_selection'][0] = $olditem['itemmanager_successor_id'];
         self::addChoice(
             $choices,
             CRM_Utils_Array::value('price_field_value_id',$successor_item),
@@ -755,7 +765,7 @@ class CRM_Itemmanager_Util
             true
         );
 
-
+        $choices['itemmanager_selection'][1] = $old_id;
         self::addChoice(
             $choices,
             $currentFieldValueId,
@@ -766,6 +776,7 @@ class CRM_Itemmanager_Util
 
         );
 
+        $choices['itemmanager_selection'][2] = null;
         self::addEmptyChoice($choices,2);
         return $choices;
 
