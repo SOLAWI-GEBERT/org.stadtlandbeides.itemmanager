@@ -423,6 +423,12 @@ class CRM_Itemmanager_Page_UpdateItems extends CRM_Core_Page {
                 $tax_total = CRM_Itemmanager_Util::getTaxAmountTotalFromContributionID((int) $lineitemInfo['contribution_id']);
                 $total = CRM_Itemmanager_Util::getAmountTotalFromContributionID((int) $lineitemInfo['contribution_id']);
 
+                if(isset($contributionInfo['contribution_recur_id']))
+                    civicrm_api3('ContributionRecur', 'create', [
+                        'id' => (int)$contributionInfo['contribution_recur_id'],
+                        'amount' => $this->$total,
+                    ]);
+
                 try{
                     $finalquery = CRM_Core_DAO::composeQuery($update_contribution_query,
                         array( 1 => array($tax_total + $total, 'Float'),

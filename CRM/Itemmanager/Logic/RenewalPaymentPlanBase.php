@@ -195,9 +195,9 @@ abstract class CRM_Itemmanager_Logic_RenewalPaymentPlanBase {
    * @param $recurringContributionID
    */
   private function setCurrentRecurringContribution($recurringContributionID) {
-    $this->currentRecurContributionID = $recurringContributionID;
+    $this->currentRecurContributionID = (int)$recurringContributionID;
     $this->currentRecurringContribution = civicrm_api3('ContributionRecur', 'getsingle', [
-      'id' => $this->currentRecurContributionID,
+      'id' =>(int) $this->currentRecurContributionID,
     ]);
   }
 
@@ -558,13 +558,11 @@ abstract class CRM_Itemmanager_Logic_RenewalPaymentPlanBase {
    * Updates amount on recurring contribution by calculating from associated line
    * items.
    *
-   * @param $recurringContributionID
    */
-  protected function updateRecurringContributionAmount($recurringContributionID) {
-    $totalAmount = $this->calculateRecurringContributionTotalAmount($recurringContributionID);
+  protected function updateRecurringContributionAmount() {
     civicrm_api3('ContributionRecur', 'create', [
-      'id' => $recurringContributionID,
-      'amount' => $totalAmount,
+      'id' => (int)$this->currentRecurContributionID,
+      'amount' => $this->totalAmount,
     ]);
   }
 

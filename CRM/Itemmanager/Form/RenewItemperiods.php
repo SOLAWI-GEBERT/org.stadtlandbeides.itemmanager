@@ -223,19 +223,33 @@ class CRM_Itemmanager_Form_RenewItemperiods extends CRM_Core_Form {
     }
 
 
-    try {
+//    try {
+//
+//
+//        $multipleInstallmentRenewal = new CRM_Itemmanager_Logic_RenewalMultipleInstallmentPlan(132,
+//            511,1,'2023-04-01');
+//        $multipleInstallmentRenewal->addLineItemPrototype(6,1.0);
+//
+//        $multipleInstallmentRenewal->run();
+//        }
+//
+//    catch (CRM_Core_Exception $e) {
+//        CRM_Core_Session::setStatus($e->getMessage());
+//    }
 
+      try {
 
-        $multipleInstallmentRenewal = new CRM_Itemmanager_Logic_RenewalMultipleInstallmentPlan(132,
-            511,1,'2023-04-01');
-        $multipleInstallmentRenewal->addLineItemPrototype(6,1.0);
+          $singleInstallmentRenewal = new CRM_Itemmanager_Logic_RenewalSingleInstallmentPlan(132,
+              511,1,'2023-04-01');
 
-        $multipleInstallmentRenewal->run();
-        }
+          $singleInstallmentRenewal->addLineItemPrototype(6,1.0);
 
-    catch (CRM_Core_Exception $e) {
-        CRM_Core_Session::setStatus($e->getMessage());
-    }
+          $singleInstallmentRenewal->run();
+      }
+
+      catch (CRM_Core_Exception $e) {
+          CRM_Core_Session::setStatus($e->getMessage());
+      }
 
     parent::postProcess();
 
