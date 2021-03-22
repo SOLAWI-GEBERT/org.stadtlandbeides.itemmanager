@@ -8,11 +8,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8a4e2072-c43d-4029-bc01-730e5001dde6" name="Default Changelist" comment="ENH Intermittent changes to analyze the price items">
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/org.stadtlandbeides.itemmanager.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/org.stadtlandbeides.itemmanager.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CRM/Itemmanager/Form/RenewItemperiods.php" beforeDir="false" afterPath="$PROJECT_DIR$/CRM/Itemmanager/Form/RenewItemperiods.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CRM/Itemmanager/Page/UpdateItems.php" beforeDir="false" afterPath="$PROJECT_DIR$/CRM/Itemmanager/Page/UpdateItems.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CRM/Itemmanager/Logic/RenewalMultipleInstallmentPlan.php" beforeDir="false" afterPath="$PROJECT_DIR$/CRM/Itemmanager/Logic/RenewalMultipleInstallmentPlan.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CRM/Itemmanager/Logic/RenewalPaymentPlanBase.php" beforeDir="false" afterPath="$PROJECT_DIR$/CRM/Itemmanager/Logic/RenewalPaymentPlanBase.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CRM/Itemmanager/Logic/RenewalSingleInstallmentPlan.php" beforeDir="false" afterPath="$PROJECT_DIR$/CRM/Itemmanager/Logic/RenewalSingleInstallmentPlan.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -125,7 +124,8 @@
       <workItem from="1615883982066" duration="3311000" />
       <workItem from="1616084877681" duration="6455000" />
       <workItem from="1616186894001" duration="9302000" />
-      <workItem from="1616319612108" duration="16180000" />
+      <workItem from="1616319612108" duration="17024000" />
+      <workItem from="1616402124165" duration="2398000" />
     </task>
     <task id="LOCAL-00001" summary="ENH Intermittent changes to analyze the price items">
       <created>1612779470217</created>
@@ -161,7 +161,7 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="php">
           <url>file://$PROJECT_DIR$/CRM/Itemmanager/Logic/RenewalMultipleInstallmentPlan.php</url>
-          <line>339</line>
+          <line>337</line>
           <option name="timeStamp" value="16" />
         </line-breakpoint>
       </breakpoints>

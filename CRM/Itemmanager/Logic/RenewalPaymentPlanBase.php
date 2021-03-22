@@ -284,17 +284,15 @@ abstract class CRM_Itemmanager_Logic_RenewalPaymentPlanBase {
       }
 
 
-    foreach ($this->listofPlannedDates as $date) {
       $transaction = new CRM_Core_Transaction();
       try {
-          $this->renew($date);
+          $this->renew();
       } catch (CRM_Core_Exception $e) {
         $transaction->rollback();
         $exceptions[] = "An error occurred renewing a payment plan: " . $e->getMessage();
       }
 
       $transaction->commit();
-    }
 
     if (count($exceptions)) {
       throw new CRM_Core_Exception(implode(";\n", $exceptions));
@@ -311,7 +309,7 @@ abstract class CRM_Itemmanager_Logic_RenewalPaymentPlanBase {
   /**
    * Renews the current payment plan.
    */
-  abstract public function renew($newPaymentDate);
+  abstract public function renew();
 
   /**
    * Dispatches postOfflineAutoRenewal hook for each membership line item in the
@@ -843,7 +841,7 @@ abstract class CRM_Itemmanager_Logic_RenewalPaymentPlanBase {
       'is_pay_later' => TRUE,
       'skipLineItem' => 1,
       'skipCleanMoney' => TRUE,
-      //todo Findout the recurring ID 'contribution_recur_id' => $this->newRecurringContributionID,
+      'contribution_recur_id' => $this->newRecurringContributionID,
     ];
 
     if (!empty($this->totalTaxAmount)) {

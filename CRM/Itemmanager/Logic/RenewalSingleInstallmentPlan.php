@@ -141,7 +141,7 @@ class CRM_Itemmanager_Logic_RenewalSingleInstallmentPlan extends CRM_Itemmanager
   /**
    * @inheritdoc
    */
-  public function renew($newPaymentDate) {
+  public function renew() {
     $this->endCurrentLineItemsAndCreateNewOnesForNextPeriod($this->currentRecurContributionID);
     $this->updateRecurringContributionAmount($this->currentRecurContributionID);
     $this->setNewRecurringContribution();

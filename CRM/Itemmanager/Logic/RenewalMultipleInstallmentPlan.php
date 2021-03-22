@@ -97,16 +97,14 @@ class CRM_Itemmanager_Logic_RenewalMultipleInstallmentPlan extends CRM_Itemmanag
   /**
    * @inheritdoc
    */
-  public function renew($newPaymentDate) {
-    //$this->createRecurringContribution();
+  public function renew() {
+
     $this->extendExistingMembership();
     $this->setTotalAndTaxAmount();
-    $this->recordPaymentPlanFirstContribution($newPaymentDate);
-//
-//Todo: Find out what is required   $installmentsHandler = new MembershipInstallmentsHandler(
-//      $this->newRecurringContributionID
-//    );
-//    $installmentsHandler->createRemainingInstalmentContributionsUpfront();
+    $this->createRecurringContribution();
+      foreach ($this->listofPlannedDates as $date) {
+          $this->recordPaymentPlanFirstContribution($date);
+      }
   }
 
   /**
@@ -126,10 +124,12 @@ class CRM_Itemmanager_Logic_RenewalMultipleInstallmentPlan extends CRM_Itemmanag
     $this->membershipsStartDate = $this->newPeriodStartOn;
     $paymentInstrumentName = $this->getPaymentMethodNameFromItsId($currentRecurContribution['payment_instrument_id']);
 
+
+
     $params=  [
           'sequential' => 1,
           'contact_id' => $currentRecurContribution['contact_id'],
-          'amount' => 0,
+          'amount' => $this->totalAmount,
           'currency' => $currentRecurContribution['currency'],
           'frequency_unit' => $currentRecurContribution['frequency_unit'],
           'frequency_interval' => $currentRecurContribution['frequency_interval'],
@@ -152,9 +152,7 @@ class CRM_Itemmanager_Logic_RenewalMultipleInstallmentPlan extends CRM_Itemmanag
 //      'ContributionRecur'
 //    );
     $this->updateFieldsLinkingPeriods($currentRecurContribution['id'], $newRecurringContribution['id']);
-  //  $this->copyRecurringLineItems($currentRecurContribution, $newRecurringContribution);
-    $this->updateRecurringContributionAmount($newRecurringContribution['id']);
-
+  //ToDo: Copy to membership extra  $this->copyRecurringLineItems($currentRecurContribution, $newRecurringContribution);
     $this->newRecurringContribution = $newRecurringContribution;
     $this->newRecurringContributionID = $newRecurringContribution['id'];
   }
