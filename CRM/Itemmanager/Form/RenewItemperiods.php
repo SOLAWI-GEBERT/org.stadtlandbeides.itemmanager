@@ -50,7 +50,7 @@ class CRM_Itemmanager_Form_RenewItemperiods extends CRM_Core_Form {
             $lastid = CRM_Itemmanager_Util::getLastReceiveDateContribution($contributions);
             if($lastid < 0)
             {
-                $this->processError("ERROR",E::ts('Retrieve Contributions'),$member_array['error_message'],$this->_contact_id);
+                $this->processError("ERROR",E::ts('Retrieve Contributions'),$member_array['error_message']);
                 return;
             }
 
@@ -58,7 +58,7 @@ class CRM_Itemmanager_Form_RenewItemperiods extends CRM_Core_Form {
             $firstid = CRM_Itemmanager_Util::getFirstReceiveDateContribution($contributions);
             if($firstid < 0)
             {
-                $this->processError("ERROR",E::ts('Retrieve Contributions'),$member_array['error_message'],$this->_contact_id);
+                $this->processError("ERROR",E::ts('Retrieve Contributions'),$member_array['error_message']);
                 return;
             }
 
@@ -73,7 +73,7 @@ class CRM_Itemmanager_Form_RenewItemperiods extends CRM_Core_Form {
             $linerecords = CRM_Itemmanager_Util::getLineitemFullRecordByContributionId($lastid);
             if($linerecords['is_error'])
             {
-                $this->processError("ERROR",E::ts('Retrieve line items'),$member_array['error_message'],$this->_contact_id);
+                $this->processError("ERROR",E::ts('Retrieve line items'),$member_array['error_message']);
                 return;
             }
 
@@ -86,14 +86,18 @@ class CRM_Itemmanager_Form_RenewItemperiods extends CRM_Core_Form {
                     CRM_Utils_Array::value('price_field_value_id', $lineitem['linedata']),$last_date);
 
                 $linecollection = array(
-                    'name' =>  CRM_Utils_Array::value('label', $lineitem['linedata']),
+                    'name' =>  '(' .CRM_Utils_Array::value('id', $lineitem['setdata']) .') '.CRM_Utils_Array::value('label', $lineitem['linedata']).' '.
+                        CRM_Utils_Array::value('title',$lineitem['setdata']),
                     'price_field_value_id' => CRM_Utils_Array::value('price_field_value_id', $lineitem['linedata']),
                     'price_field_id' => CRM_Utils_Array::value('id', $lineitem['fielddata']),
+                    'price_set_id' => CRM_Utils_Array::value('id', $lineitem['setdata']),
                     'last_qty' => CRM_Utils_Array::value('qty', $lineitem['linedata']),
                     'last_price_per_interval' => CRM_Utils_Money::format(
                         CRM_Utils_Array::value('unit_price', $lineitem['linedata']), NULL, NULL, TRUE),
                     'element_item_name' => 'member_'.$membership['memberdata']['id'].'_'.
                         'item_'.CRM_Utils_Array::value('id', $lineitem['fielddata']),
+                    'element_hidden_name' => 'member_'.$membership['memberdata']['id'].'_'.
+                        'item_'.CRM_Utils_Array::value('id', $lineitem['fielddata']).'_hidden',
                     'element_quantity_name' => 'member_'.$membership['memberdata']['id'].'_'.
                         'item_'.CRM_Utils_Array::value('id', $lineitem['fielddata']).'_'.
                         'quantity_'.CRM_Utils_Array::value('price_field_value_id', $lineitem['linedata']),
@@ -166,6 +170,16 @@ class CRM_Itemmanager_Form_RenewItemperiods extends CRM_Core_Form {
                         $membership['member_id'].",".$line_item['price_field_id'].",".
                         $line_item['price_field_value_id'].",true)"],
             );
+
+
+            $this->addElement(
+                'hidden',
+                $line_item['element_hidden_name'],
+                $line_item['price_set_id'],
+                array('id'=> $line_item['element_hidden_name'],)
+            );
+
+
               //Selection of the period
             $this->add(
                 'select',
@@ -323,7 +337,75 @@ class CRM_Itemmanager_Form_RenewItemperiods extends CRM_Core_Form {
   }
 
 
-  /**
+    /**
+     * If your form requires special validation, add one or more callbacks here
+     */
+    public function addRules() {
+        $this->addFormRule(array('CRM_Itemmanager_Form_RenewItemperiods', 'checkIntegrityRule'));
+    }
+
+    /**
+     * We validate, that the pricefields for one membership are not mixed
+     */
+    public static function checkIntegrityRule($values) {
+        $errors = array();
+        $keys = array_keys($values);
+        $items = array();
+        $periods = array();
+        foreach ($keys as $key) {
+            if (strpos($key, 'member_') === 0) {
+                $split = explode('_',$key);
+                if(count($split)==5 and $split[4] == 'hidden')
+                {
+                    if($values[$key] == "") continue;
+
+                    //Decide here, if pricesets are equal
+                    if(!isset($items[$split[1]]))
+                    {
+                        $items[$split[1]] = $values[$key];
+                    }
+                    else
+                    {
+                        //check if all pricesets are equal
+                        if($items[$split[1]] != $values[$key])
+                            $errors[$split[0].'_'.$split[1].'_'.$split[2].'_'.$split[3]] =
+                                '</br>'.ts('The price field has been chosen from a different price set!');
+                    }
+
+
+                }//if(count($split)==5 and $split[4] == 'hidden')
+
+
+                if(count($split)==6 and $split[4] == 'period')
+                {
+                    if(($values[$key])==0) continue;
+
+                    //Decide here, if pricesets are equal
+                    if(!isset($periods [$split[1]]))
+                    {
+                        $periods [$split[1]] = $values[$key];
+                    }
+                    else
+                    {
+                        //check if all pricesets are equal
+                        if($periods [$split[1]] != $values[$key])
+                            $errors[$key] =
+                                '</br>'.ts('The period count for all items has to be equal');
+                    }
+
+
+                }//if(count($split)==5 and $split[4] == 'hidden')
+
+
+            }
+        }
+
+        return empty($errors) ? TRUE : $errors;
+    }
+
+
+
+    /**
    * Get the fields/elements defined in this form.
    *
    * @return array (string)

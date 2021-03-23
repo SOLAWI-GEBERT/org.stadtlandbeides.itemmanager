@@ -11,6 +11,7 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CRM/Itemmanager/Form/RenewItemperiods.php" beforeDir="false" afterPath="$PROJECT_DIR$/CRM/Itemmanager/Form/RenewItemperiods.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CRM/Itemmanager/Util.php" beforeDir="false" afterPath="$PROJECT_DIR$/CRM/Itemmanager/Util.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/CRM/Itemmanager/Form/RenewItemperiods.tpl" beforeDir="false" afterPath="$PROJECT_DIR$/templates/CRM/Itemmanager/Form/RenewItemperiods.tpl" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -125,7 +126,7 @@
       <workItem from="1616186894001" duration="9302000" />
       <workItem from="1616319612108" duration="17024000" />
       <workItem from="1616402124165" duration="6022000" />
-      <workItem from="1616440436962" duration="9109000" />
+      <workItem from="1616440436962" duration="20177000" />
     </task>
     <task id="LOCAL-00001" summary="ENH Intermittent changes to analyze the price items">
       <created>1612779470217</created>
@@ -168,46 +169,6 @@
           <url>file://$PROJECT_DIR$/CRM/Itemmanager/Logic/RenewalPaymentPlanBase.php</url>
           <line>297</line>
           <option name="timeStamp" value="19" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="php">
-          <url>file://$PROJECT_DIR$/CRM/Itemmanager/Form/RenewItemperiods.php</url>
-          <line>288</line>
-          <option name="timeStamp" value="46" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="php">
-          <url>file://$PROJECT_DIR$/CRM/Itemmanager/Form/RenewItemperiods.php</url>
-          <line>301</line>
-          <option name="timeStamp" value="47" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="php">
-          <url>file://$PROJECT_DIR$/CRM/Itemmanager/Form/RenewItemperiods.php</url>
-          <line>285</line>
-          <option name="timeStamp" value="48" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="php">
-          <url>file://$PROJECT_DIR$/CRM/Itemmanager/Form/RenewItemperiods.php</url>
-          <line>298</line>
-          <option name="timeStamp" value="50" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="php">
-          <url>file://$PROJECT_DIR$/../Stadt-Land-Beides/JML3/media/civicrm/ext/org.stadtlandbeides.itemmanager/CRM/Itemmanager/Form/RenewItemperiods.php</url>
-          <line>298</line>
-          <option name="timeStamp" value="51" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="php">
-          <url>file://$PROJECT_DIR$/../Stadt-Land-Beides/JML3/media/civicrm/ext/org.stadtlandbeides.itemmanager/CRM/Itemmanager/Form/RenewItemperiods.php</url>
-          <line>275</line>
-          <option name="timeStamp" value="52" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="php">
-          <url>file://$PROJECT_DIR$/CRM/Itemmanager/Form/RenewItemperiods.php</url>
-          <line>274</line>
-          <option name="timeStamp" value="53" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="php">
-          <url>file://$PROJECT_DIR$/CRM/Itemmanager/Form/RenewItemperiods.php</url>
-          <line>232</line>
-          <option name="timeStamp" value="54" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

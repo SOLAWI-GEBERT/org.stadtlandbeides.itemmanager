@@ -586,10 +586,11 @@ class CRM_Itemmanager_Util
         $expire_on = CRM_Utils_Date::customFormat(date_create( CRM_Utils_Array::value('expire_on',$pricefield))->format('Y-m-d'),
             Civi::settings()->get('dateformatshortdate'));
 
-        $choices['item_selection'][$index] = CRM_Utils_Array::value('label',$pricefieldvalue).' '.
+        $choices['item_selection'][$index] = '('.(int)$pricefield['price_set_id'].') '.CRM_Utils_Array::value('label',$pricefieldvalue).' '.
                                                         CRM_Utils_Array::value('title',$priceset);
 
         $choices['field_value_selection'][$index] = (int)$fielvaluedid;
+        $choices['price_set_selection'][$index] = (int)$pricefield['price_set_id'];
 
         //decide the correct start date
         $new_start_timestamp = date_create($start_on);
@@ -659,6 +660,7 @@ class CRM_Itemmanager_Util
             $choices['item_selection'][$index] = $error;
 
         $choices['field_value_selection'][$index] = null;
+        $choices['price_set_selection'][$index] = null;
 
         //create container
         $choices['period_data'][$index] = array();
@@ -690,6 +692,7 @@ class CRM_Itemmanager_Util
     {
         $choices = array(
             'itemmanager_selection' => array(),
+            'price_set_selection'=> array(),
             'field_value_selection' => array(),
             'item_selection' => array(),
             'period_selection' => array(),

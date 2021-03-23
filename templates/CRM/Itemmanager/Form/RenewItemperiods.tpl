@@ -20,6 +20,7 @@
     </div>
     {foreach from=$membership.line_items item=lineitem}
       {assign var="element_item_name" value=$lineitem.element_item_name}
+      {assign var="element_hidden_name" value=$lineitem.element_hidden_name}
       {assign var="element_quantity_name" value=$lineitem.element_quantity_name}
       {assign var="element_period_name" value=$lineitem.element_period_name}
 
@@ -89,16 +90,21 @@
     //Example member_27_item_11_period_14"
     try {
       var item_name = 'member_' + membership_id + '_item_' + price_field_id;
+      var hidden_name = 'member_' + membership_id + '_item_' + price_field_id + '_hidden';
+      var hidden_field = document.getElementById(hidden_name);
       var item_selector = document.getElementById(item_name);
       var period_selector = document.getElementById('member_' + membership_id + '_item_' + price_field_id +
                                                     '_period_' + price_field_value_id);
       var line_item = CRM.vars.RenewItemperiods[membership_id]['line_items'][price_field_value_id];
       //first set period selector
       var options = line_item['choices']['period_selection'][item_selector.value];
+      var priceset = line_item['choices']['price_set_selection'][item_selector.value];
       var length = period_selector.options.length;
 
       if(isitemselector)
       {
+        hidden_field.value = priceset;
+
         for (i = length-1; i >= 0; i--) {
           period_selector.options[i] = null;
         }
