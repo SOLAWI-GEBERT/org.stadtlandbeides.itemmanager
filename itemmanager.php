@@ -152,6 +152,10 @@ function itemmanager_civicrm_themes(&$themes) {
  */
 function itemmanager_civicrm_preProcess($formName, &$form) {
 
+
+
+
+
 }
 
 function itemmanager_civicrm_renewPeriods( &$actions, $contactID ) {
@@ -176,21 +180,18 @@ function itemmanager_civicrm_renewPeriods( &$actions, $contactID ) {
  */
 function itemmanager_civicrm_navigationMenu(&$menu) {
 
-    _itemmanager_civix_navigationMenu($menu);
 
-    return;
-
-    $item_maintenance_url = 'civicrm/items/maintenance';
-
-    _sepa_civix_insert_navigation_menu($menu,'CiviMember',array(
-        'label' => ts('Itemmanager Maintenance',array('domain' => 'org.stadtlandbeides.itemmanager')),
-        'name' => 'Itemmanager Maintenance',
-        'url' => $item_maintenance_url,
-        'permission' => 'administer CiviMember',
-        'operator' => NULL,
-        'separator' => 2,
-        'active' => 1
-    ));
+//    $item_maintenance_url = 'civicrm/items/maintenance';
+//
+//    _sepa_civix_insert_navigation_menu($menu,'CiviMember',array(
+//        'label' => ts('Itemmanager Maintenance',array('domain' => 'org.stadtlandbeides.itemmanager')),
+//        'name' => 'Itemmanager Maintenance',
+//        'url' => $item_maintenance_url,
+//        'permission' => 'administer CiviMember',
+//        'operator' => NULL,
+//        'separator' => 2,
+//        'active' => 1
+//    ));
 
     //add menu entry for Itemmanager settings to Administer>CiviContribute menu
     $items_settings_url = 'civicrm/admin/setting/itemmanager';
