@@ -2,7 +2,7 @@
 <module type="WEB_MODULE" version="4">
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$/../PEAR_Exception-1.0.0" />
-    <content url="file://$MODULE_DIR$/../Stadt-Land-Beides/JML3" />
+    <content url="file://$MODULE_DIR$/../Stadt-Land-Beides/JML3/media/civicrm/ext/org.stadtlandbeides.itemmanager" />
     <content url="file://$MODULE_DIR$/../civicrm-core" />
     <content url="file://$MODULE_DIR$" />
     <orderEntry type="inheritedJdk" />

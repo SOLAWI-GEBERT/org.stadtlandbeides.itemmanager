@@ -474,6 +474,11 @@ function _itemmanager_civix_civicrm_alterSettingsFolders(&$metaDataFolders = NUL
  */
 function _itemmanager_civix_civicrm_entityTypes(&$entityTypes) {
   $entityTypes = array_merge($entityTypes, [
+    'CRM_Itemmanager_DAO_ItemmanagerPeriods' => [
+      'name' => 'ItemmanagerPeriods',
+      'class' => 'CRM_Itemmanager_DAO_ItemmanagerPeriods',
+      'table' => 'civicrm_itemmanager_periods',
+    ],
     'CRM_Itemmanager_DAO_ItemmanagerSettings' => [
       'name' => 'ItemmanagerSettings',
       'class' => 'CRM_Itemmanager_DAO_ItemmanagerSettings',

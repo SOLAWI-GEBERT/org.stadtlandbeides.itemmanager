@@ -18,5 +18,6 @@
 SET FOREIGN_KEY_CHECKS=0;
 
 DROP TABLE IF EXISTS `civicrm_itemmanager_settings`;
+DROP TABLE IF EXISTS `civicrm_itemmanager_periods`;
 
 SET FOREIGN_KEY_CHECKS=1;
