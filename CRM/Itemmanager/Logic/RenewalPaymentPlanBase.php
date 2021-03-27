@@ -711,12 +711,19 @@ abstract class CRM_Itemmanager_Logic_RenewalPaymentPlanBase {
 
       $manager_item = reset($manager_record);
 
+      $period_record = \Civi\Api4\ItemmanagerPeriods::get()
+          ->addWhere('id', '=', $manager_item['itemmanager_periods_id'])
+          ->setCheckPermissions(FALSE)
+          ->execute();
+
+      $period_item = reset($period_record);
+
 
       $pricefieldvalue = civicrm_api3('PriceFieldValue', 'getsingle',
           array('id' => $manager_item['price_field_value_id']));
 
       //calculate the interval price
-      $unit_price = CRM_Utils_Array::value('amount',$pricefieldvalue)/$manager_item['periods'];
+      $unit_price = CRM_Utils_Array::value('amount',$pricefieldvalue)/$period_item['periods'];
 
       $tax = 0.0;
       if(CRM_Itemmanager_Util::isTaxEnabledInFinancialType((int) $pricefieldvalue['financial_type_id']))

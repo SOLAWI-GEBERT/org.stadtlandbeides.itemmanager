@@ -3,7 +3,7 @@
 <h3>{ts domain="org.stadtlandbeides.itemmanager"}Item Dashboard{/ts}</h3>
 
 <div>
-    <a id="items_renew_extra_button" class="button crm-popup" href="{crmURL p="civicrm/items/renewperiods" q="action=renew_item_periods&cid=$contact_id&smartyDebug=1&backtrace=1"}">
+    <a id="items_renew_extra_button" class="button crm-popup" href="{crmURL p="civicrm/items/renewperiods" q="action=renew_item_periods&cid=$contact_id"}">
         <span>
             <div class="icon crm-i fa-plus-circle"></div>{ts domain="org.stadtlandbeides.itemmanager"}Renew Periods{/ts}
         </span>

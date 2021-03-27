@@ -766,12 +766,25 @@ class CRM_Itemmanager_Util
 
 
         $old_record = \Civi\Api4\ItemmanagerSettings::get()
-            ->addWhere('id', '=', $old_id)
+            ->addWhere('id', '=',(int) $old_id)
             ->setCheckPermissions(FALSE)
             ->execute();
 
         $olditem = reset($old_record);
 
+        $old_period_record = \Civi\Api4\ItemmanagerPeriods::get()
+            ->addWhere('id', '=', $olditem['itemmanager_periods_id'])
+            ->setCheckPermissions(FALSE)
+            ->execute();
+
+        if(!isset($old_period_record))
+        {
+            $choices['itemmanager_selection'][0] = null;
+            self::addEmptyChoice($choices,0,'Missing Itemmanager Period');
+            return $choices;
+        }
+
+        $old_period = reset($old_period_record);
 
 
         //if we are the last given data record
@@ -782,8 +795,8 @@ class CRM_Itemmanager_Util
                 $choices,
                 $currentFieldValueId,
                 0,
-                CRM_Utils_Array::value('periods',$olditem),
-                CRM_Utils_Array::value('period_start_on',$olditem),
+                CRM_Utils_Array::value('periods',$old_period),
+                CRM_Utils_Array::value('period_start_on',$old_period),
                 $lastDate,
                 true
                 );
@@ -807,13 +820,28 @@ class CRM_Itemmanager_Util
             return $choices;
         }
 
+
+        $successor_record = \Civi\Api4\ItemmanagerPeriods::get()
+            ->addWhere('id', '=', $olditem['itemmanager_periods_id'])
+            ->setCheckPermissions(FALSE)
+            ->execute();
+
+        if(!isset($successor_period_record))
+        {
+            $choices['itemmanager_selection'][0] = null;
+            self::addEmptyChoice($choices,0,'Missing Itemmanager Successor Period');
+            return $choices;
+        }
+
+        $successor_period = $successor_period_record->single();
+
         $choices['itemmanager_selection'][0] = $olditem['itemmanager_successor_id'];
         self::addChoice(
             $choices,
             CRM_Utils_Array::value('price_field_value_id',$successor_item),
             0,
-            CRM_Utils_Array::value('periods',$successor_item),
-            CRM_Utils_Array::value('period_start_on',$successor_item),
+            CRM_Utils_Array::value('periods',$successor_period),
+            CRM_Utils_Array::value('period_start_on',$successor_period),
             $lastDate,
             true
         );
@@ -823,8 +851,8 @@ class CRM_Itemmanager_Util
             $choices,
             $currentFieldValueId,
             1,
-            CRM_Utils_Array::value('periods',$olditem),
-            CRM_Utils_Array::value('period_start_on',$olditem),
+            CRM_Utils_Array::value('periods',$old_period),
+            CRM_Utils_Array::value('period_start_on',$old_period),
             $lastDate
 
         );

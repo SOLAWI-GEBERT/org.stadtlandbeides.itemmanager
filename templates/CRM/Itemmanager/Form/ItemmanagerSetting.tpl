@@ -1,5 +1,9 @@
 {* HEADER *}
-<div class="help">{ts domain="org.stadtlandbeides.itemmanager"}Edit here the successor of each price field item.{/ts}</div>
+<div class="help">
+  {ts domain="org.stadtlandbeides.itemmanager"}
+    Edit here the successor of each price field item.
+    The given start date just defines day and month. The year has no meaning.
+  {/ts}</div>
 <div class="crm-submit-buttons">
 {include file="CRM/common/formButtons.tpl" location="top"}
 </div>

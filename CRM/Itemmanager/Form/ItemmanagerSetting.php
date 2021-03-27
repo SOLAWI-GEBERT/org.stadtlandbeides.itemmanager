@@ -91,7 +91,7 @@ class CRM_Itemmanager_Form_ItemmanagerSetting extends CRM_Core_Form {
                     E::ts('Successor'),
                     $field['selection'], // list of options
                     FALSE, // is required
-                    ['flex-grow'=> 1,'value'=>$field['successor']],
+                    ['flex-grow'=> 1,'value'=>$field['successor'],'style'=>'width:300px',],
                 );
 
             }
