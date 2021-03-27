@@ -4,7 +4,7 @@
   <base>CRM/Itemmanager</base>
   <class>ItemmanagerPeriods</class>
   <name>civicrm_itemmanager_periods</name>
-  <comment>FIXME</comment>
+  <comment>Stores the common data, how often the items will be repeated</comment>
   <log>true</log>
 
   <field>
@@ -21,13 +21,13 @@
     <name>price_set_id</name>
     <title>Price Set</title>
     <type>int unsigned</type>
-    <required>true</required>
     <comment>FK to civicrm_price_set</comment>
   </field>
   <foreignKey>
     <name>price_set_id</name>
     <table>civicrm_price_set</table>
     <key>id</key>
+    <onDelete>CASCADE</onDelete>
   </foreignKey>
   <field>
     <name>period_start_on</name>

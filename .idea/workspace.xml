@@ -10,10 +10,13 @@
     <list default="true" id="8a4e2072-c43d-4029-bc01-730e5001dde6" name="Default Changelist" comment="ENH Intermittent changes to analyze the price items">
       <change beforePath="$PROJECT_DIR$/.idea/org.stadtlandbeides.itemmanager.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/org.stadtlandbeides.itemmanager.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CRM/Itemmanager/DAO/ItemmanagerPeriods.php" beforeDir="false" afterPath="$PROJECT_DIR$/CRM/Itemmanager/DAO/ItemmanagerPeriods.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CRM/Itemmanager/DAO/ItemmanagerSettings.php" beforeDir="false" afterPath="$PROJECT_DIR$/CRM/Itemmanager/DAO/ItemmanagerSettings.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/itemmanager.civix.php" beforeDir="false" afterPath="$PROJECT_DIR$/itemmanager.civix.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CRM/Itemmanager/Form/ItemmanagerSetting.php" beforeDir="false" afterPath="$PROJECT_DIR$/CRM/Itemmanager/Form/ItemmanagerSetting.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CRM/Itemmanager/Util.php" beforeDir="false" afterPath="$PROJECT_DIR$/CRM/Itemmanager/Util.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/sql/auto_install.sql" beforeDir="false" afterPath="$PROJECT_DIR$/sql/auto_install.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sql/auto_uninstall.sql" beforeDir="false" afterPath="$PROJECT_DIR$/sql/auto_uninstall.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/CRM/Itemmanager/Form/ItemmanagerSetting.tpl" beforeDir="false" afterPath="$PROJECT_DIR$/templates/CRM/Itemmanager/Form/ItemmanagerSetting.tpl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/xml/schema/CRM/Itemmanager/ItemmanagerPeriods.xml" beforeDir="false" afterPath="$PROJECT_DIR$/xml/schema/CRM/Itemmanager/ItemmanagerPeriods.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/xml/schema/CRM/Itemmanager/ItemmanagerSettings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/xml/schema/CRM/Itemmanager/ItemmanagerSettings.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -24,6 +27,11 @@
   <component name="ComposerSettings">
     <execution />
   </component>
+  <component name="FileColors">
+    <fileColor scope="HTML" color="Green" />
+    <fileColor scope="Database" color="Blue" />
+    <fileColor scope="Forms" color="Violet" />
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
@@ -31,6 +39,12 @@
     <joomlaConfigPath>$PROJECT_DIR$/../Stadt-Land-Beides/JML3/configuration.php</joomlaConfigPath>
     <joomlaPath>$PROJECT_DIR$/../Stadt-Land-Beides/JML3</joomlaPath>
   </component>
+  <component name="NamedScopeManager">
+    <scope name="Forms" pattern="file[org.stadtlandbeides.itemmanager]:Civi/Angular/Page/*||file[org.stadtlandbeides.itemmanager]:CRM/Itemmanager/Logic/*||file[org.stadtlandbeides.itemmanager]:CRM/ACL/Form/*||file[org.stadtlandbeides.itemmanager]:CRM/Itemmanager/Page//*||file[org.stadtlandbeides.itemmanager]:CRM/Itemmanager/Form//*" />
+    <scope name="Database" pattern="file[org.stadtlandbeides.itemmanager]:xml/schema//*||file[org.stadtlandbeides.itemmanager]:CRM/Itemmanager/DAO//*||file[org.stadtlandbeides.itemmanager]:CRM/Itemmanager/BAO//*" />
+    <scope name="HTML" pattern="file[org.stadtlandbeides.itemmanager]:templates//*" />
+  </component>
+  <component name="PhpDebugGeneral" listening_started="true" />
   <component name="PhpServers">
     <servers>
       <server host="localhost" id="803f8716-bd15-4fed-9bc9-04d846abe046" name="localhost" use_path_mappings="true">
@@ -129,7 +143,8 @@
       <workItem from="1616319612108" duration="17024000" />
       <workItem from="1616402124165" duration="6022000" />
       <workItem from="1616440436962" duration="20332000" />
-      <workItem from="1616785770212" duration="9308000" />
+      <workItem from="1616785770212" duration="9362000" />
+      <workItem from="1616823609693" duration="41883000" />
     </task>
     <task id="LOCAL-00001" summary="ENH Intermittent changes to analyze the price items">
       <created>1612779470217</created>
@@ -172,11 +187,6 @@
           <url>file://$PROJECT_DIR$/CRM/Itemmanager/Logic/RenewalPaymentPlanBase.php</url>
           <line>297</line>
           <option name="timeStamp" value="19" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="php">
-          <url>file://$PROJECT_DIR$/CRM/Itemmanager/Form/ItemmanagerSetting.php</url>
-          <line>76</line>
-          <option name="timeStamp" value="38" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

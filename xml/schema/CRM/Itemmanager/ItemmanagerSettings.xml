@@ -4,7 +4,7 @@
   <base>CRM/Itemmanager</base>
   <class>ItemmanagerSettings</class>
   <name>civicrm_itemmanager_settings</name>
-  <comment>FIXME</comment>
+  <comment>Stores the successor of an item</comment>
   <log>true</log>
 
   <field>
@@ -28,6 +28,7 @@
     <name>price_field_value_id</name>
     <table>civicrm_price_field_value</table>
     <key>id</key>
+    <onDelete>CASCADE</onDelete>
     <add>3.3</add>
   </foreignKey>
   <field>
@@ -41,6 +42,7 @@
     <name>itemmanager_periods_id</name>
     <table>civicrm_itemmanager_periods</table>
     <key>id</key>
+    <onDelete>CASCADE</onDelete>
     <add>3.3</add>
   </foreignKey>
   <field>

@@ -537,6 +537,56 @@ class CRM_Itemmanager_Util
 
 
     /**
+     *  Returns an complete information set to the given price field value
+     *
+     * @param $fielvaluedid Id ot the Price Field Value
+     * @return array Related Priceset, Related Price Field, Price Field Value
+     */
+    public static function getPriceInfosFullRecordByFieldValueId($fielvaluedid){
+
+        try {
+            $pricefieldvalue = civicrm_api3('PriceFieldValue', 'getsingle', array('id' => (int)$fielvaluedid));//In case of an error
+            if (!isset($pricefieldvalue)) {
+                return array(
+                    'iserror' => 1,
+                    'error'=>'Could not get the price field value '.$fielvaluedid );
+            }
+            $pricefield = civicrm_api3('PriceField', 'getsingle', array('id' => (int)$pricefieldvalue['price_field_id']));//In case of an error
+            if (!isset($pricefield)) {
+                return array(
+                    'iserror' => 1,
+                    'error'=>'Could not get the price field '.(int)$pricefieldvalue['price_field_id']);
+            }
+            $priceset = civicrm_api3('PriceSet', 'getsingle', array('id' => (int)$pricefield['price_set_id']));//In case of an error
+            if (!isset($priceset)) {
+                return array(
+                    'iserror' => 1,
+                    'error'=>'Could not get the price set '.(int)$pricefield['price_set_id']);
+            }
+
+            return array(
+                'iserror' => 0,
+                'values' => array(
+                    'set' => $priceset,
+                    'field' => $pricefield,
+                    'field_value' => $pricefieldvalue,
+
+                ),
+
+
+            );
+
+
+        } catch (CiviCRM_API3_Exception $e) {
+            return array(
+                'iserror' => 1,
+                'error'=>$e->getMessage());
+        }
+
+    }
+
+
+    /**
      *  Add a choice to for getChoicesOfPricefieldsByFieldID with references to the price_field and price_field_value
      *
      * @param $choices
