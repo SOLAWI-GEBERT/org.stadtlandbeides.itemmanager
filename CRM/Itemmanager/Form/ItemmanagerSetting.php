@@ -446,15 +446,20 @@ class CRM_Itemmanager_Form_ItemmanagerSetting extends CRM_Core_Form {
 
 
                     $itemmanager_period_rec = \Civi\Api4\ItemmanagerPeriods::get()
-                        ->addWhere('price_set_id','=',$price_set['id'])
+                        ->addWhere('price_set_id','=',(int)$price_set['id'])
                         ->setCheckPermissions(FALSE)
                         ->execute();
 
 
-                    $itemmanager_period = reset($itemmanager_period_rec);
+
+                    $itemmanager_period = $itemmanager_period_rec->single();
+                    $this->assign('item_periods',$itemmanager_period);
+                    $this->assign('itemmanager_period_rec',$itemmanager_period_rec);
+                    $this->assign('price_set',$price_set);
                     if (!isset($itemmanager_period['id'] ) or !$itemmanager_period['id'] > 0)
                     {
                         $this->_errormessages[] = 'Update itemmanager setting violation.';
+                        return;
                         continue;
                     }
 
