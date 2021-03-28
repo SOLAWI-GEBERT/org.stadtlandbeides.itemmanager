@@ -47,34 +47,47 @@ class CRM_Itemmanager_Form_ItemmanagerSetting extends CRM_Core_Form {
                 $period['element_period_periods']  ,
                 E::ts('Periods'),
                 $periodsattributes,
-                True,
+                False,
             );
 
 
-            $dateparams = [
-                'date' => $period['period_start_on'],
-                'format' => 'd M',
+            $params = [
+                'date' => 'yy-mm-dd',
+                'time' =>  FALSE,
             ];
 
             $this->add(
-                'date',
+                'datepicker',
                 $period['element_period_start_on'],
                 ts('Start On'),
-                [],
-                True,
-                $dateparams);
-
+                ['placeholder' => 'select','value' => $period['period_start_on_raw']->format('Y-m-d')],
+                False,
+                $params);
 
             foreach ($period['fields'] as $field)
             {
-                $this->add(
+                $ignoreparam = array('value' => $field['ignore']);
+
+                if($field['ignore'] == 1)
+                {
+                    $ignoreparam['checked'] = 1;
+                }
+
+                 $this->add(
                     'checkbox',
                     $field['element_period_field_ignore'],
                     ts('Ignore'),
                     Null,
                     False,
-                    ['value' => $field['ignore']]
+                     $ignoreparam
                 );
+
+                $novitiate = array('value' => $field['novitiate']);
+                if($field['novitiate'] == 1)
+                {
+                    $novitiate['checked'] = 1;
+                }
+
 
                 $this->add(
                     'checkbox',
@@ -82,7 +95,7 @@ class CRM_Itemmanager_Form_ItemmanagerSetting extends CRM_Core_Form {
                     ts('Novitiate'),
                     Null,
                     False,
-                    ['value' => $field['novitiate']]
+                    $novitiate
                 );
 
                 $this->add(
@@ -90,9 +103,9 @@ class CRM_Itemmanager_Form_ItemmanagerSetting extends CRM_Core_Form {
                     $field['element_period_field_successor'],
                     E::ts('Successor'),
                     $field['selection'], // list of options
-                    FALSE, // is required
-                    ['flex-grow'=> 1,'value'=>$field['successor'],'style'=>'width:300px',],
-                );
+                    False, // is required
+                    ['flex-grow'=> 1,'style'=>'width:300px',],
+                )->setSelected($field['successor']);
 
             }
         }
@@ -156,7 +169,7 @@ class CRM_Itemmanager_Form_ItemmanagerSetting extends CRM_Core_Form {
 
                   foreach ($pricefield_values_records['values'] as $selectedpricefieldvalue)
                   {
-                      $selection[] = '('.$selectedpriceset['title'].') '.$selectedpricefieldvalue['label'];
+                      $selection[CRM_Utils_Array::value('id', $selectedpricefieldvalue)] = '('.$selectedpriceset['title'].') '.$selectedpricefieldvalue['label'];
                   }
 
 
@@ -222,9 +235,10 @@ class CRM_Itemmanager_Form_ItemmanagerSetting extends CRM_Core_Form {
                   continue;
               }
 
+              $period_start_on_raw = date_create(CRM_Utils_Array::value('period_start_on',$itemmanager_period));
 
-              $period_start_on = CRM_Utils_Date::customFormat(date_create(CRM_Utils_Array::value('period_start_on',
-                  $itemmanager_period))->format('Y-m-d'),Civi::settings()->get('dateformatshortdate'));
+              $period_start_on = CRM_Utils_Date::customFormat($period_start_on_raw->format('Y-m-d'),
+                  Civi::settings()->get('dateformatshortdate'));
 
               $field_list = array();
               foreach ($itemmanager_price_fields As $itemmanager_price_field)
@@ -262,6 +276,7 @@ class CRM_Itemmanager_Form_ItemmanagerSetting extends CRM_Core_Form {
                       $expire_on = "-";
 
                   $field_collection = array(
+                      'manager_id' => (int)$itemmanager_id,
                       'field_label' => CRM_Utils_Array::value('label',$pricefieldvalue),
                       'active_on' => $active_on,
                       'expire_on' => $expire_on,
@@ -287,7 +302,9 @@ class CRM_Itemmanager_Form_ItemmanagerSetting extends CRM_Core_Form {
 
               $form_collection = array(
                   'price_label' => $priceset['title'],
+                  'periods_id' => (int)$itemmanager_period_id,
                   'period_start_on' => $period_start_on,
+                  'period_start_on_raw' => $period_start_on_raw,
                   'periods' => CRM_Utils_Array::value('periods',$itemmanager_period),
                   'period_type' => CRM_Utils_Array::value('period_type',$itemmanager_period),
                   'fields' => $field_list,
@@ -451,11 +468,64 @@ class CRM_Itemmanager_Form_ItemmanagerSetting extends CRM_Core_Form {
     }
 
 
+    /**
+     * Update the settings records from form
+     */
     public function postProcess() {
-    $values = $this->exportValues();
+        $formvalues = $this->controller->exportValues($this->_name);
 
-    parent::postProcess();
-  }
+        try {
+            foreach ($this->_itemSettings as $period) {
+
+                $periods = isset($formvalues[$period['element_period_periods']]) ?
+                    (int)$formvalues[$period['element_period_periods']] : (int)$period['periods'];
+
+                if (isset($formvalues[$period['element_period_start_on']])) {
+                    $start_on = date_create($formvalues[$period['element_period_start_on']]);
+                } else {
+                    $start_on = $period['period_start_on_raw'];
+                }
+
+
+                $update_period = new CRM_Itemmanager_BAO_ItemmanagerPeriods();
+                $update_period->id = (int)$period['periods_id'];
+                $update_period->periods = $periods;
+                $update_period->period_start_on = $start_on->format('Ymd');
+                $update_period->update();
+
+                foreach ($period['fields'] as $field) {
+
+
+                    $successor = isset($formvalues[$field['element_period_field_successor']]) ?
+                        (int)$formvalues[$field['element_period_field_successor']] : (int)$field['successor'];
+
+                    $ignore = isset($formvalues[$field['element_period_field_ignore']]) ?
+                        (int)$formvalues[$field['element_period_field_ignore']] : (int)$field['ignore'];
+
+                    $novitiate = isset($formvalues[$field['element_period_field_novitiate']]) ?
+                        (int)$formvalues[$field['element_period_field_novitiate']] : (int)$field['novitiate'];
+
+                    $update_manager = new CRM_Itemmanager_BAO_ItemmanagerSettings();
+                    $update_manager->id = (int)$field['manager_id'];
+                    $update_manager->itemmanager_successor_id = $successor;
+                    $update_manager->ignore = $ignore == 1;
+                    $update_manager->novitiate = $novitiate == 1;
+                    $update_manager->update();
+
+
+                }
+
+            }
+        } catch (Exception $e) {
+
+            $this->_errormessages[] = $e->getMessage();
+            $this->assign('errormessages',$this->_errormessages);
+        }
+        parent::postProcess();
+
+        CRM_Core_Session::setStatus(ts("Saved"), ts('Success', array('domain' => 'org.stadtlandbeides.itemmanager')), 'success');
+
+    }
 
 
   /**

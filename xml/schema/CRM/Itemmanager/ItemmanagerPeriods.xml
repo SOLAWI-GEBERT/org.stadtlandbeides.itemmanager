@@ -32,12 +32,14 @@
   <field>
     <name>period_start_on</name>
     <title>Booking Period Start on</title>
-    <type>datetime</type>
-    <default>NULL</default>
+    <type>date</type>
+    <import>true</import>
+    <headerPattern>/^join|(j(oin\s)?date)$/i</headerPattern>
+    <dataPattern>/\d{4}-?\d{2}-?\d{2}/</dataPattern>
     <comment>If non-zero, do not show this field before the date specified</comment>
     <html>
       <type>Select Date</type>
-      <formatType>activityDateTime</formatType>
+      <formatType>activityDate</formatType>
     </html>
   </field>
   <field>

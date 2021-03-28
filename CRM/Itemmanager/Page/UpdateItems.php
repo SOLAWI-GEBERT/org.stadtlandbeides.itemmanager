@@ -186,7 +186,7 @@ class CRM_Itemmanager_Page_UpdateItems extends CRM_Core_Page {
                 //extract start date from month
                 $raw_date = date_create($change_timestamp);
                 $new_date = new DateTime($line_timestamp->format('Y-m') . $raw_date->format('-d'));
-                $new_date->setTime(0,0);
+                $new_date->setTime(12,0);
 
                 $changed_date = $new_date->format('Y-m-d H:i:s');
 
@@ -566,9 +566,9 @@ class CRM_Itemmanager_Page_UpdateItems extends CRM_Core_Page {
 
     protected function processSuccess($message, $contact_id) {
         CRM_Core_Session::setStatus($message, ts('Success', array('domain' => 'org.stadtlandbeides.itemmanager')), 'success');
-
+        $this->assign("destroy",  True);
         $contact_url = CRM_Utils_System::url('civicrm/contact/view', "reset=1&cid={$contact_id}&selectedChild=itemmanager");
-        CRM_Utils_System::redirect($contact_url);
+        CRM_Utils_System::setUserContext(null);
 
     }
 
