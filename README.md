@@ -1,15 +1,26 @@
 # org.stadtlandbeides.itemmanager
 
-![Screenshot](/images/screenshot.png)
+![Screenshot](/images/renew.png)
 
-(*FIXME: In one or two paragraphs, describe what the extension does and why one would download it. *)
+The Itemmanager has three main features:
+* Update the Line items based on updated price field values
+* Definition of a successor price set and/or price field values
+* Renew the membership with payment plans based on the defined price field successor
+
+It cooperates with the Membership Extras Extension. (https://civicrm.org/extensions/membership-extras)
 
 The extension is licensed under [AGPL-3.0](LICENSE.txt).
+
+## Use Case
+The extension is made to use CiviCRM for CSA (Consumer Supported Agriculture).
+The price fields are items used for the weekly delivery of food. 
+So there is need to change the price information on regular base.
 
 ## Requirements
 
 * PHP v7.2+
-* CiviCRM (*FIXME: Version number*)
+* CiviCRM 5.24
+* uk.co.compucorp.membershipextras 2.0.0
 
 ## Installation (Web UI)
 

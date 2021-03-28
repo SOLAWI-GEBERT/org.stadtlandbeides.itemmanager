@@ -9,7 +9,7 @@
   <component name="ChangeListManager">
     <list default="true" id="8a4e2072-c43d-4029-bc01-730e5001dde6" name="Default Changelist" comment="ENH Intermittent changes to analyze the price items">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/info.xml" beforeDir="false" afterPath="$PROJECT_DIR$/info.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -36,7 +36,6 @@
     <scope name="Database" pattern="file[org.stadtlandbeides.itemmanager]:xml/schema//*||file[org.stadtlandbeides.itemmanager]:CRM/Itemmanager/DAO//*||file[org.stadtlandbeides.itemmanager]:CRM/Itemmanager/BAO//*" />
     <scope name="HTML" pattern="file[org.stadtlandbeides.itemmanager]:templates//*" />
   </component>
-  <component name="PhpDebugGeneral" listening_started="true" />
   <component name="PhpServers">
     <servers>
       <server host="localhost" id="803f8716-bd15-4fed-9bc9-04d846abe046" name="localhost" use_path_mappings="true">
@@ -138,7 +137,7 @@
       <workItem from="1616440436962" duration="20332000" />
       <workItem from="1616785770212" duration="9362000" />
       <workItem from="1616823609693" duration="46634000" />
-      <workItem from="1616915712500" duration="17092000" />
+      <workItem from="1616915712500" duration="18439000" />
     </task>
     <task id="LOCAL-00001" summary="ENH Intermittent changes to analyze the price items">
       <created>1612779470217</created>
@@ -194,11 +193,6 @@
           <url>file://$PROJECT_DIR$/CRM/Itemmanager/Util.php</url>
           <line>790</line>
           <option name="timeStamp" value="75" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="php">
-          <url>file://$PROJECT_DIR$/CRM/Itemmanager/Form/ItemmanagerSetting.php</url>
-          <line>520</line>
-          <option name="timeStamp" value="95" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
