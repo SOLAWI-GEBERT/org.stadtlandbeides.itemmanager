@@ -383,24 +383,27 @@ class CRM_Itemmanager_Form_ItemmanagerSetting extends CRM_Core_Form {
 
             }
 
-            foreach ($priceset_ids as $set_id)
-            {
-                if(!in_array((int)$set_id,$itemmanager_price_set_ids))
-                {
-                    $toinsertPeriods[] = $set_id;
+            $transaction = new CRM_Core_Transaction();
+            try {
+                foreach ($priceset_ids as $set_id) {
+                    if (!in_array((int)$set_id, $itemmanager_price_set_ids)) {
+                        $toinsertPeriods[] = $set_id;
 
-                    $newperiod = new CRM_Itemmanager_BAO_ItemmanagerPeriods();
-                    $newperiod->price_set_id = (int)$set_id;
-                    $newperiod->period_start_on = date_create('2000-01-01')->format('Ymd');
-                    $newperiod->periods = 1;
-                    $newperiod->period_type = 1;
-                    $newperiod->save();
+                        $newperiod = new CRM_Itemmanager_BAO_ItemmanagerPeriods();
+                        $newperiod->price_set_id = (int)$set_id;
+                        $newperiod->period_start_on = date_create('2000-01-01')->format('Ymd');
+                        $newperiod->periods = 1;
+                        $newperiod->period_type = 1;
+                        $newperiod->save();
+
+                    }
 
                 }
-
+            } catch (Exception $e) {
+                $transaction->rollback();
+                $this->_errormessages[] = "An error occurred renewing a payment plan: " . $e->getMessage();
             }
-
-            usleep(1000000);
+            $transaction->commit();
 
             $itemmanager_price_fields = \Civi\Api4\ItemmanagerSettings::get()
                 ->addSelect('price_field_value_id')
