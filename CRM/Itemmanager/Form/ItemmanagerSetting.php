@@ -389,17 +389,13 @@ class CRM_Itemmanager_Form_ItemmanagerSetting extends CRM_Core_Form {
                 {
                     $toinsertPeriods[] = $set_id;
 
+                    $newperiod = new CRM_Itemmanager_BAO_ItemmanagerPeriods();
+                    $newperiod->price_set_id = (int)$set_id;
+                    $newperiod->period_start_on = date_create('2000-01-01')->format('Ymd');
+                    $newperiod->periods = 1;
+                    $newperiod->period_type = 1;
+                    $newperiod->save();
 
-
-                    \Civi\Api4\ItemmanagerPeriods::create()
-                        ->setValues(array(
-                            'price_set_id' => $set_id,
-                            'period_start_on' => '2000-01-01',
-                            'periods' => 1,
-                            'period_type' => 1,
-                        ))
-                        ->setCheckPermissions(FALSE)
-                        ->execute();
                 }
 
             }
