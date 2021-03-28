@@ -558,7 +558,7 @@ class CRM_Itemmanager_Page_UpdateItems extends CRM_Core_Page {
         $this->assign("error_title",   $title);
         $this->assign("error_message", $message);
 
-
+        $this->assign("destroy",  True);
         $contact_url = CRM_Utils_System::url('civicrm/contact/view', "reset=1&cid={$contact_id}&selectedChild=itemmanager");
         CRM_Utils_System::redirect($contact_url);
 
@@ -568,7 +568,7 @@ class CRM_Itemmanager_Page_UpdateItems extends CRM_Core_Page {
         CRM_Core_Session::setStatus($message, ts('Success', array('domain' => 'org.stadtlandbeides.itemmanager')), 'success');
         $this->assign("destroy",  True);
         $contact_url = CRM_Utils_System::url('civicrm/contact/view', "reset=1&cid={$contact_id}&selectedChild=itemmanager");
-        CRM_Utils_System::setUserContext(null);
+
 
     }
 

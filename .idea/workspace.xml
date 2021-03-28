@@ -9,7 +9,8 @@
   <component name="ChangeListManager">
     <list default="true" id="8a4e2072-c43d-4029-bc01-730e5001dde6" name="Default Changelist" comment="ENH Intermittent changes to analyze the price items">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CRM/Itemmanager/Page/UpdateItems.php" beforeDir="false" afterPath="$PROJECT_DIR$/CRM/Itemmanager/Page/UpdateItems.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/CRM/Itemmanager/Page/UpdateItems.tpl" beforeDir="false" afterPath="$PROJECT_DIR$/templates/CRM/Itemmanager/Page/UpdateItems.tpl" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -137,7 +138,7 @@
       <workItem from="1616440436962" duration="20332000" />
       <workItem from="1616785770212" duration="9362000" />
       <workItem from="1616823609693" duration="46634000" />
-      <workItem from="1616915712500" duration="18439000" />
+      <workItem from="1616915712500" duration="19646000" />
     </task>
     <task id="LOCAL-00001" summary="ENH Intermittent changes to analyze the price items">
       <created>1612779470217</created>

@@ -143,6 +143,14 @@
 </script>
 {/if}
 
+{if $destroy}
+    <script type="text/javascript">
+        {literal}
+        cj(".ui-dialog > [id^=crm-ajax-dialog-]").dialog("destroy");
+        {/literal}
+    </script>
+{/if}
+
 
 <script type="text/javascript">
 {literal}
