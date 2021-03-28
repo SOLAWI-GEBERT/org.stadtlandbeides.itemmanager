@@ -7,7 +7,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="8a4e2072-c43d-4029-bc01-730e5001dde6" name="Default Changelist" comment="ENH Intermittent changes to analyze the price items">
+    <list default="true" id="8a4e2072-c43d-4029-bc01-730e5001dde6" name="Default Changelist" comment="FIX Add Debug infos">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CRM/Itemmanager/Form/ItemmanagerSetting.php" beforeDir="false" afterPath="$PROJECT_DIR$/CRM/Itemmanager/Form/ItemmanagerSetting.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/itemmanager.php" beforeDir="false" afterPath="$PROJECT_DIR$/itemmanager.php" afterDir="false" />
@@ -140,7 +140,7 @@
       <workItem from="1616785770212" duration="9362000" />
       <workItem from="1616823609693" duration="46634000" />
       <workItem from="1616915712500" duration="20076000" />
-      <workItem from="1616948705115" duration="4218000" />
+      <workItem from="1616948705115" duration="6042000" />
     </task>
     <task id="LOCAL-00001" summary="ENH Intermittent changes to analyze the price items">
       <created>1612779470217</created>
@@ -156,7 +156,14 @@
       <option name="project" value="LOCAL" />
       <updated>1616943443196</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="FIX Add Debug infos">
+      <created>1616953315734</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1616953315734</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -177,7 +184,8 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="ENH Intermittent changes to analyze the price items" />
     <MESSAGE value="ENH Final working version of the admin settings form for the itemmanager" />
-    <option name="LAST_COMMIT_MESSAGE" value="ENH Final working version of the admin settings form for the itemmanager" />
+    <MESSAGE value="FIX Add Debug infos" />
+    <option name="LAST_COMMIT_MESSAGE" value="FIX Add Debug infos" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

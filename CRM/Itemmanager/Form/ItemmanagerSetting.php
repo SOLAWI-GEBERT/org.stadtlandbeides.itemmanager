@@ -445,32 +445,18 @@ class CRM_Itemmanager_Form_ItemmanagerSetting extends CRM_Core_Form {
                     if (!isset($price_set['financial_type_id'] )) continue;
 
 
-                    $itemmanager_period_rec = \Civi\Api4\ItemmanagerPeriods::get()
-                        ->addWhere('price_set_id','=',(int)$price_set['id'])
-                        ->setCheckPermissions(FALSE)
-                        ->execute();
-
-
-
-                    $itemmanager_period = $itemmanager_period_rec->single();
-                    $this->assign('item_periods',$itemmanager_period);
-                    $this->assign('itemmanager_period_rec',$itemmanager_period_rec);
-                    $this->assign('price_set',$price_set);
-                    if (!isset($itemmanager_period['id'] ) or !$itemmanager_period['id'] > 0)
+                    $period = new CRM_Itemmanager_BAO_ItemmanagerPeriods();
+                    $valid = $period->get('price_set_id',(int)$price_set['id']);
+                    if(!$valid or $period->id == 0)
                     {
-                        $this->_errormessages[] = 'Update itemmanager setting violation.';
-                        return;
+                        $this->_errormessages[] = 'No Itemmanager periods found with id '.(int)$price_set['id'];
                         continue;
                     }
 
-
-                    \Civi\Api4\ItemmanagerSettings::create()
-                        ->setValues(array(
-                            'price_field_value_id' => $field_id,
-                            'itemmanager_periods_id' => $itemmanager_period['id'],
-                        ))
-                        ->setCheckPermissions(FALSE)
-                        ->execute();
+                    $itemsetting = new CRM_Itemmanager_BAO_ItemmanagerSettings();
+                    $itemsetting->price_field_value_id = $field_id;
+                    $itemsetting->itemmanager_periods_id = $period->id;
+                    $itemsetting->save();
                 }
 
             }
