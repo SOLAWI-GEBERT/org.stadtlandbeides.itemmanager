@@ -404,6 +404,7 @@ class CRM_Itemmanager_Form_ItemmanagerSetting extends CRM_Core_Form {
 
             }
 
+            usleep(1000000);
 
             $itemmanager_price_fields = \Civi\Api4\ItemmanagerSettings::get()
                 ->addSelect('price_field_value_id')
@@ -440,14 +441,24 @@ class CRM_Itemmanager_Form_ItemmanagerSetting extends CRM_Core_Form {
                     }
 
                     $price_set = $field_infos['values']['set'];
-
+                    if (!isset($price_set)) continue;
                     if (!isset($price_set['financial_type_id'] )) continue;
+
 
                     $itemmanager_period_rec = \Civi\Api4\ItemmanagerPeriods::get()
                         ->addWhere('price_set_id','=',$price_set['id'])
                         ->setCheckPermissions(FALSE)
                         ->execute();
+
+
                     $itemmanager_period = reset($itemmanager_period_rec);
+                    if (!isset($itemmanager_period['id'] ) or !$itemmanager_period['id'] > 0)
+                    {
+                        $this->_errormessages[] = 'Update itemmanager setting violation.';
+                        continue;
+                    }
+
+
                     \Civi\Api4\ItemmanagerSettings::create()
                         ->setValues(array(
                             'price_field_value_id' => $field_id,
