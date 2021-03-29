@@ -7,9 +7,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="8a4e2072-c43d-4029-bc01-730e5001dde6" name="Default Changelist" comment="FIX Add Debug infos">
-      <change beforePath="$PROJECT_DIR$/CRM/Itemmanager/Logic/RenewalPaymentPlanBase.php" beforeDir="false" afterPath="$PROJECT_DIR$/CRM/Itemmanager/Logic/RenewalPaymentPlanBase.php" afterDir="false" />
-    </list>
+    <list default="true" id="8a4e2072-c43d-4029-bc01-730e5001dde6" name="Default Changelist" comment="FIX Add Debug infos" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -139,7 +137,7 @@
       <workItem from="1616823609693" duration="46634000" />
       <workItem from="1616915712500" duration="20076000" />
       <workItem from="1616948705115" duration="36100000" />
-      <workItem from="1617005340962" duration="4351000" />
+      <workItem from="1617005340962" duration="4516000" />
     </task>
     <task id="LOCAL-00001" summary="ENH Intermittent changes to analyze the price items">
       <created>1612779470217</created>
