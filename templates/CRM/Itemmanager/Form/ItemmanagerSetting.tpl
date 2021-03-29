@@ -34,14 +34,15 @@
     </div>
       <table>
         <thead>
-        <th width="20%">{ts}Item Name{/ts}</th>
-        <th width="2%">{ts}Active On{/ts}</th>
-        <th width="2%">{ts}Expire On{/ts}</th>
-        <th width="2%">{ts}Active{/ts}</th>
-        <th width="2%">{ts}Ignore{/ts}</th>
-        <th width="2%">{ts}Novitiate{/ts}</th>
-        <th>{ts}Successor{/ts}</th>
-
+        <tr class="columnheader">
+          <th width="20%">{ts}Item Name{/ts}</th>
+          <th width="2%">{ts}Active On{/ts}</th>
+          <th width="2%">{ts}Expire On{/ts}</th>
+          <th width="2%">{ts}Active{/ts}</th>
+          <th width="2%">{ts}Ignore{/ts}</th>
+          <th width="2%">{ts}Novitiate{/ts}</th>
+          <th>{ts}Successor{/ts}</th>
+        </tr>
 
         </thead>
 
@@ -50,7 +51,7 @@
           {assign var="element_period_field_ignore" value=$field.element_period_field_ignore}
           {assign var="element_period_field_novitiate" value=$field.element_period_field_novitiate}
           {assign var="element_period_field_successor" value=$field.element_period_field_successor}
-          <tr>
+          <tr class="{cycle values="odd-row,even-row"}">
             <td width="20%">{$field.field_label}</td>
             <td width="2%">{$field.active_on}</td>
             <td width="2%">{$field.expire_on}</td>

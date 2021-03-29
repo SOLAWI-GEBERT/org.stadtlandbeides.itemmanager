@@ -183,7 +183,10 @@ class CRM_Itemmanager_Form_ItemmanagerSetting extends CRM_Core_Form {
 
                   foreach ($pricefield_values_records['values'] as $selectedpricefieldvalue)
                   {
-                      $selection[CRM_Utils_Array::value('id', $selectedpricefieldvalue)] = '('.$selectedpriceset['title'].') '.$selectedpricefieldvalue['label'];
+                      $settings = new CRM_Itemmanager_BAO_ItemmanagerSettings();
+                      $settings->get('price_field_value_id',CRM_Utils_Array::value('id', $selectedpricefieldvalue));
+
+                      $selection[(int)$settings->id] = '('.$selectedpriceset['title'].') '.$selectedpricefieldvalue['label'];
                   }
 
 
@@ -526,8 +529,11 @@ class CRM_Itemmanager_Form_ItemmanagerSetting extends CRM_Core_Form {
                 foreach ($period['fields'] as $field) {
 
 
-                    $successor = isset($formvalues[$field['element_period_field_successor']]) ?
-                        (int)$formvalues[$field['element_period_field_successor']] : (int)$field['successor'];
+
+
+
+
+                    $successor = isset($formvalues[$field['element_period_field_successor']])? (int)$formvalues[$field['element_period_field_successor']]: (int)$field['successor'];
 
                     $ignore = isset($formvalues[$field['element_period_field_ignore']]) ?
                         (int)$formvalues[$field['element_period_field_ignore']] : (int)$field['ignore'];
