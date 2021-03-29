@@ -39,9 +39,9 @@ class CRM_Itemmanager_Page_UpdateItems extends CRM_Core_Page {
           $this->assign("request",$_REQUEST);
           $this->assign("action",$loaded_action);
           if(isset($loaded_action) and $loaded_action == "update")
-            $this->prepareCreateForm($contact_id,$filter_sync,$filter_harmonize);
+            $this->prepareCreateForm($contact_id,$filter_harmonize,$filter_sync);
           else
-              $this->prepareCreateForm($contact_id,$filter_sync,$filter_harmonize);
+              $this->prepareCreateForm($contact_id,$filter_harmonize,$filter_sync);
 
           parent::run();
 

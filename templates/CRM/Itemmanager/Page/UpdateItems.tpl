@@ -35,10 +35,10 @@
                 {ts domain="org.stadtlandbeides.itemmanager"}Harmonize date{/ts}
             </span>
 
-            <span class="refresh crm-button">
+            <span class="refresh crm-button" onclick="CloseDialog(CRM.$, CRM._)").dialog('destroy');">
                 <a title="{ts domain="org.project60.sepa"}Preview{/ts}" name="preview_button"
                    id="Preview_Button"
-                   href="{$filter_url}&harm={$filter_harmonize}&sync={$filter_sync}">
+                   href="{$filter_url}&harm={$filter_harmonize}&sync={$filter_sync}" class="crm-popup action-item">
                     <span>
                       <div class="icon refresh-icon  ui-icon-refresh"></div>
                       {ts domain="org.stadtlandbeides.itemmanager"}Preview{/ts}
@@ -154,6 +154,11 @@
 
 <script type="text/javascript">
 {literal}
+
+    function CloseDialog($, _)
+    {
+        cj(".ui-dialog > [id^=crm-ajax-dialog-]").dialog("destroy");
+    }
 
     //Set Filter
     function SetFilter($, _)
