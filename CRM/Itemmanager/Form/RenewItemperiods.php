@@ -138,6 +138,9 @@ class CRM_Itemmanager_Form_RenewItemperiods extends CRM_Core_Form {
 
 
             );
+
+            if(!isset($linelist)) continue;
+
             $this->_memberships[$membership['memberdata']['id']] = $form_collection;
 
         }
