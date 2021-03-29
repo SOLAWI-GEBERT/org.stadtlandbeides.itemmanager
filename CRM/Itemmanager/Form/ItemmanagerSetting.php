@@ -32,7 +32,8 @@ class CRM_Itemmanager_Form_ItemmanagerSetting extends CRM_Core_Form {
      */
     public function buildQuickForm() {
 
-        CRM_Utils_System::setTitle(E::ts('Itemmanager Settings'));
+
+        $this->setTitle(E::ts('Itemmanager Settings'));
 
         foreach ($this->_itemSettings as $period)
         {
@@ -115,13 +116,26 @@ class CRM_Itemmanager_Form_ItemmanagerSetting extends CRM_Core_Form {
         array(
             'type' => 'submit',
             'name' => E::ts('Submit'),
+            'js' => ['onclick' => "CRM.status(ts('Saving...'));"],
             'isDefault' => TRUE,
         ),
+        [
+            'type' => 'done',
+            'name' => ts('Synchronize'),
+            'js' => ['onclick' => "CRM.status(ts('Synchronizing...')); location.href='civicrm/admin/setting/itemmanager';"],
+            'subName' => 'sync',
+        ],
+        [
+            'type' => 'done',
+            'name' => ts('Cancel'),
+            'subName' => 'cancel',
+        ],
     ));
 
     $this->assign('elementNames', $this->getRenderableElementNames());
     parent::buildQuickForm();
   }
+
 
     /**
      * Returns a drop down selection for the possible successor
@@ -209,9 +223,11 @@ class CRM_Itemmanager_Form_ItemmanagerSetting extends CRM_Core_Form {
      */
   public function preProcess()
   {
-
-      //before we start, we sync with the price definitions
-      $this->syncItemmanager();
+     if(isset($this->_submitValues['_qf_ItemmanagerSetting_done_sync']))
+     {
+         parent::preProcess();
+         return;
+     }
 
 
       try {
@@ -328,6 +344,7 @@ class CRM_Itemmanager_Form_ItemmanagerSetting extends CRM_Core_Form {
       $this->assign('itemsettings',$this->_itemSettings);
 
       parent::preProcess();
+
   }
 
     /**
@@ -338,23 +355,23 @@ class CRM_Itemmanager_Form_ItemmanagerSetting extends CRM_Core_Form {
      */
     private function syncItemmanager()
     {
-        //Declarations
-        $todeleteSettings = array();
-        $toinsertSettings = array();
-        $todeletePeriods = array();
-        $toinsertPeriods = array();
+
 
         try {
+
             $pricefield_values_records = civicrm_api3('PriceFieldValue', 'get',
-                array('sequential' => 1,'return' => 'id'));
+                array(
+                    'sequential' => 1,
+                    'return' => 'id',
+                    'options' => [
+                        'limit' => 'NULL']));
 
             if( $pricefield_values_records['is_error']) return;
 
-            $pricefield_records = civicrm_api3('PriceField', 'get',array('sequential' => 1,'return' => 'id'));
-            if( $pricefield_records['is_error']) return;
-
             $priceset_records = civicrm_api3('PriceSet', 'get',
-                array('sequential' => 1,'financial_type_id'=>array('IS NOT NULL'=>1),'return' => 'id'));
+                array('sequential' => 1,'return' => 'id',
+                    'options' => [
+                        'limit' => 'NULL']));
             if( $priceset_records['is_error']) return;
 
             $itemmanager_periods = \Civi\Api4\ItemmanagerPeriods::get()
@@ -364,7 +381,6 @@ class CRM_Itemmanager_Form_ItemmanagerSetting extends CRM_Core_Form {
                 ->indexBy('price_set_id');
 
             $pricefield_value_ids = array_column($pricefield_values_records['values'],'id');
-            //$pricefield_ids = array_column($pricefield_records['values'],'id');
             $priceset_ids = array_column($priceset_records['values'],'id');
             $itemmanager_price_set_ids = array_column($itemmanager_periods->getArrayCopy(),'price_set_id');
 
@@ -374,7 +390,6 @@ class CRM_Itemmanager_Form_ItemmanagerSetting extends CRM_Core_Form {
 
                 if(!in_array((string)$itemmanager_price_set_id,$priceset_ids))
                 {
-                    $todeletePeriods[] = $itemmanager_price_set_id;
                     \Civi\Api4\ItemmanagerPeriods::delete()
                         ->addWhere('id','=',$itemmanager_price_set_id)
                         ->setCheckPermissions(FALSE)
@@ -387,7 +402,6 @@ class CRM_Itemmanager_Form_ItemmanagerSetting extends CRM_Core_Form {
             try {
                 foreach ($priceset_ids as $set_id) {
                     if (!in_array((int)$set_id, $itemmanager_price_set_ids)) {
-                        $toinsertPeriods[] = $set_id;
 
                         $newperiod = new CRM_Itemmanager_BAO_ItemmanagerPeriods();
                         $newperiod->price_set_id = (int)$set_id;
@@ -417,7 +431,6 @@ class CRM_Itemmanager_Form_ItemmanagerSetting extends CRM_Core_Form {
             {
                 if(!in_array((string)$field_id,$pricefield_value_ids))
                 {
-                    $todeleteSettings[] = $field_id;
                     \Civi\Api4\ItemmanagerSettings::delete()
                         ->addWhere('id',"=","$field_id")
                         ->setCheckPermissions(FALSE)
@@ -430,31 +443,34 @@ class CRM_Itemmanager_Form_ItemmanagerSetting extends CRM_Core_Form {
             foreach ($pricefield_value_ids as $field_id)
             {
                 if(!in_array((int)$field_id,$itemmanager_price_fields_ids)) {
-                    $toinsertSettings[] = $field_id;
 
-                    $field_infos = CRM_Itemmanager_Util::getPriceInfosFullRecordByFieldValueId($field_id);
+                    $field_infos = CRM_Itemmanager_Util::getPriceSetRefByFieldValueId($field_id);
 
                     if ($field_infos['iserror'] == 1) {
                         $this->_errormessages[] = 'Could not get the full record for price field value '.$field_id;
                         continue;
                     }
 
-                    $price_set = $field_infos['values']['set'];
-                    if (!isset($price_set)) continue;
-                    if (!isset($price_set['financial_type_id'] )) continue;
 
+                    if (!isset($field_infos['price_id']))
+                    {
+                        $this->_errormessages[] = 'Could not get the full record for price field value '.$field_id;
+                        continue;
+                    }
+
+                    $price_set = $field_infos['price_id'];
 
                     $period = new CRM_Itemmanager_BAO_ItemmanagerPeriods();
-                    $valid = $period->get('price_set_id',(int)$price_set['id']);
+                    $valid = $period->get('price_set_id',(int)$price_set);
                     if(!$valid or $period->id == 0)
                     {
-                        $this->_errormessages[] = 'No Itemmanager periods found with id '.(int)$price_set['id'];
+                        $this->_errormessages[] = 'No Itemmanager periods found with id '.(int)$price_set;
                         continue;
                     }
 
                     $itemsetting = new CRM_Itemmanager_BAO_ItemmanagerSettings();
-                    $itemsetting->price_field_value_id = $field_id;
-                    $itemsetting->itemmanager_periods_id = $period->id;
+                    $itemsetting->price_field_value_id = (int)$field_id;
+                    $itemsetting->itemmanager_periods_id = (int)$period->id;
                     $itemsetting->save();
                 }
 
@@ -474,6 +490,19 @@ class CRM_Itemmanager_Form_ItemmanagerSetting extends CRM_Core_Form {
      */
     public function postProcess() {
         $formvalues = $this->controller->exportValues($this->_name);
+
+        if(isset($this->_submitValues['_qf_ItemmanagerSetting_done_sync']))
+        {
+            $this->syncItemmanager();
+            CRM_Core_Session::setStatus(ts("Synchronized."), ts('Start', array('domain' => 'org.stadtlandbeides.itemmanager')),
+                'success');
+            parent::postProcess();
+            $admin_url = CRM_Utils_System::url('civicrm/admin', "reset=1");
+            CRM_Utils_System::redirect($admin_url);
+
+            return;
+        }
+
 
         try {
             foreach ($this->_itemSettings as $period) {
@@ -524,7 +553,8 @@ class CRM_Itemmanager_Form_ItemmanagerSetting extends CRM_Core_Form {
         }
         parent::postProcess();
 
-        CRM_Core_Session::setStatus(ts("Saved"), ts('Success', array('domain' => 'org.stadtlandbeides.itemmanager')), 'success');
+        CRM_Core_Session::setStatus(ts("Saved"), ts('Success', array('domain' => 'org.stadtlandbeides.itemmanager')),
+            'success');
 
     }
 

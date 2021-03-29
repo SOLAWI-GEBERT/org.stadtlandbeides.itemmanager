@@ -537,27 +537,30 @@ class CRM_Itemmanager_Util
 
 
     /**
-     *  Returns an complete information set to the given price field value
+     *  Returns an the id of the price set given by the field value id
      *
      * @param $fielvaluedid Id ot the Price Field Value
      * @return array Related Priceset, Related Price Field, Price Field Value
      */
-    public static function getPriceInfosFullRecordByFieldValueId($fielvaluedid){
+    public static function getPriceSetRefByFieldValueId($fielvaluedid){
 
         try {
-            $pricefieldvalue = civicrm_api3('PriceFieldValue', 'getsingle', array('id' => (int)$fielvaluedid));//In case of an error
+            $pricefieldvalue = civicrm_api3('PriceFieldValue', 'getsingle',
+                array('id' => (int)$fielvaluedid,'return' => ['id','price_field_id']));
             if (!isset($pricefieldvalue)) {
                 return array(
                     'iserror' => 1,
                     'error'=>'Could not get the price field value '.$fielvaluedid );
             }
-            $pricefield = civicrm_api3('PriceField', 'getsingle', array('id' => (int)$pricefieldvalue['price_field_id']));//In case of an error
+            $pricefield = civicrm_api3('PriceField', 'getsingle',
+                array('id' => (int)$pricefieldvalue['price_field_id'],'return' => ['id','price_set_id']));
             if (!isset($pricefield)) {
                 return array(
                     'iserror' => 1,
                     'error'=>'Could not get the price field '.(int)$pricefieldvalue['price_field_id']);
             }
-            $priceset = civicrm_api3('PriceSet', 'getsingle', array('id' => (int)$pricefield['price_set_id']));//In case of an error
+            $priceset = civicrm_api3('PriceSet', 'getsingle',
+                array('id' => (int)$pricefield['price_set_id'],'return' =>'id'));
             if (!isset($priceset)) {
                 return array(
                     'iserror' => 1,
@@ -566,13 +569,7 @@ class CRM_Itemmanager_Util
 
             return array(
                 'iserror' => 0,
-                'values' => array(
-                    'set' => $priceset,
-                    'field' => $pricefield,
-                    'field_value' => $pricefieldvalue,
-
-                ),
-
+                'price_id' => $priceset['id'],
 
             );
 
