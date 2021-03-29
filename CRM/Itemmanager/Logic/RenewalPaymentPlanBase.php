@@ -704,26 +704,17 @@ abstract class CRM_Itemmanager_Logic_RenewalPaymentPlanBase {
      */
   public function addLineItemPrototype($itemmanagerID,$quantity){
 
-      $manager_record = \Civi\Api4\ItemmanagerSettings::get()
-          ->addWhere('id', '=', $itemmanagerID)
-          ->setCheckPermissions(FALSE)
-          ->execute();
+      $manager_item = new CRM_Itemmanager_BAO_ItemmanagerSettings();
+      $valid=$manager_item->get('id',(int) $itemmanagerID);
 
-      $manager_item = reset($manager_record);
-
-      $period_record = \Civi\Api4\ItemmanagerPeriods::get()
-          ->addWhere('id', '=', $manager_item['itemmanager_periods_id'])
-          ->setCheckPermissions(FALSE)
-          ->execute();
-
-      $period_item = reset($period_record);
-
+      $period_item = new CRM_Itemmanager_BAO_ItemmanagerPeriods();
+      $valid = $period_item->get('id',$manager_item->itemmanager_periods_id);
 
       $pricefieldvalue = civicrm_api3('PriceFieldValue', 'getsingle',
-          array('id' => $manager_item['price_field_value_id']));
+          array('id' => (int)$manager_item->price_field_value_id));
 
       //calculate the interval price
-      $unit_price = CRM_Utils_Array::value('amount',$pricefieldvalue)/$period_item['periods'];
+      $unit_price = CRM_Utils_Array::value('amount',$pricefieldvalue)/(int)$period_item->periods;
 
       $tax = 0.0;
       if(CRM_Itemmanager_Util::isTaxEnabledInFinancialType((int) $pricefieldvalue['financial_type_id']))
