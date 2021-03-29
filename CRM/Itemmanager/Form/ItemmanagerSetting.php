@@ -52,8 +52,19 @@ class CRM_Itemmanager_Form_ItemmanagerSetting extends CRM_Core_Form {
             );
 
 
+            $dt_min = new DateTime();
+            $dt_min->sub(new DateInterval('P5Y'));
+            $dt_min->setDate((int)$dt_min->format('Y'),1,1);
+
+            $dt_max = new DateTime();
+            $dt_max->add(new DateInterval('P5Y'));
+            $dt_max->setDate((int)$dt_max->format('Y'),12,31);
+
             $params = [
                 'date' => 'yy-mm-dd',
+                'minDate' => $dt_min->format('Y-m-d'),
+                //CRM-18487 - max date should be the last date of the year.
+                'maxDate' => $dt_max->format('Y-m-d'),
                 'time' =>  FALSE,
             ];
 
