@@ -332,27 +332,19 @@ class CRM_Itemmanager_Page_UpdateItems extends CRM_Core_Page {
             $line_date = $line_timestamp->format('Y-m-d H:i:s');
 
             //get itemmanager added informations
-            $manager_id = CRM_Itemmanager_BAO_ItemmanagerSettings::getFieldValue('CRM_Itemmanager_DAO_ItemmanagerSettings',
-                (int) $lineitemInfo['price_field_value_id'], 'id', 'price_field_value_id', True);
 
-            $manager_record = \Civi\Api4\ItemmanagerSettings::get()
-                ->addWhere('id', '=', $manager_id)
-                ->setCheckPermissions(FALSE)
-                ->execute();
-            $manager_item = reset($manager_record);
+            $manager_item = new CRM_Itemmanager_BAO_ItemmanagerSettings();
+            $valid=$manager_item->get('price_field_value_id',(int) $lineitemInfo['price_field_value_id']);
 
-            $period_record = \Civi\Api4\ItemmanagerPeriods::get()
-                ->addWhere('id', '=', $manager_item['itemmanager_periods_id'])
-                ->setCheckPermissions(FALSE)
-                ->execute();
+            $period_item = new CRM_Itemmanager_BAO_ItemmanagerPeriods();
+            $valid = $period_item->get('id',$manager_item->itemmanager_periods_id);
 
-            $period_item = reset($period_record);
 
-            $periods = $period_item['periods'];
-            if (!isset($period_record) or $periods == 0) $periods = 1;
+            $periods = (int)$period_item->periods;
+            if (!$valid or $periods == 0) $periods = 1;
 
-            $change_timestamp = $period_item['period_start_on'];
-            if (!isset($period_record))  $change_timestamp = $contributionInfo['receive_date'];
+            $change_timestamp = $period_item->period_start_on;
+            if (!$valid)  $change_timestamp = $contributionInfo['receive_date'];
 
             //extract start date from month
             $raw_date = date_create($change_timestamp);
