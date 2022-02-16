@@ -109,14 +109,16 @@ class CRM_Itemmanager_Page_Dashboard extends CRM_Core_Page {
                     $choices = CRM_Itemmanager_Util::getChoicesOfPricefieldsByFieldID(
                         CRM_Utils_Array::value('price_field_value_id', $lineitem['linedata']),$contrib_date);
 
+                    $max_field_id = max($choices['field_value_selection']);
+
                     $line_date = $line_timestamp->format('Y-M');
                     $field_id = CRM_Utils_Array::value('id', $lineitem['fielddata']);
                     $item_quantity = CRM_Utils_Array::value('qty', $lineitem['linedata']);
 
                     //new stuff
-                    if (!array_key_exists($field_id, $field_data))
-                        $field_data[$field_id] = array();
-                    $_field = &$field_data[$field_id];
+                    if (!array_key_exists($max_field_id, $field_data))
+                        $field_data[$max_field_id] = array();
+                    $_field = &$field_data[$max_field_id];
                     if (!array_key_exists($item_quantity, $_field)) {
                         $_details = array(
                             'item_quantity' => (string)$item_quantity,
