@@ -60,18 +60,7 @@
                                     <td width="5%">{$ritem.item_quantity}</td>
                                     <td width="40%">{$ritem.item_label}</td>
 
-
                                 </tr>
-
-                                {foreach from=$ritem.item_dates item=list_date}
-                                    <tr class="{cycle values="odd-row,even-row"}">
-                                        <td width="45%">{$list_date}</td>
-                                        <td width="5%"></td>
-                                        <td width="40%"></td>
-
-
-                                    </tr>
-                                {/foreach}
                             {/foreach}
                         {/foreach}
                         </tbody>

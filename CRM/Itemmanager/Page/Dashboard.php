@@ -102,7 +102,6 @@ class CRM_Itemmanager_Page_Dashboard extends CRM_Core_Page {
                     $line_date = $line_timestamp->format('Y-M');
                     $field_id = CRM_Utils_Array::value('id', $lineitem['fielddata']);
                     $item_quantity = CRM_Utils_Array::value('qty', $lineitem['linedata']);
-                    $max_field_id = $field_id;
 
                     //new stuff
                     if (!array_key_exists($max_field_id, $field_data))
@@ -137,7 +136,6 @@ class CRM_Itemmanager_Page_Dashboard extends CRM_Core_Page {
                 }
 
             }//foreach ($linerecords As $lineitem)
-
 
         }
 

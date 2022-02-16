@@ -253,6 +253,9 @@ class CRM_Itemmanager_Util
 
         $params = [
             'contribution_id' => $contribution_id,
+            'options' => array(
+                'limit' => 100,
+            ),
         ];
 
         $linearray = array();
