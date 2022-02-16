@@ -47,24 +47,12 @@ class CRM_Itemmanager_Page_Dashboard extends CRM_Core_Page {
     CRM_Utils_System::setTitle(E::ts('Items Dashboard'));
 
     //Deklaration
-      $base_list = array();
-      $collect_list = array();
-      $field_list = array();
-      $group_sets = array();
-      $group_dates = array();
-      $old_set = -1;
-      $old_field = -1;
-      $old_date = "";
+      $member_list = array();
       $error = False;
-
 
       $this->assign('currentTime', date('Y-m-d H:i:s'));
       $this->_contact_id = CRM_Utils_Request::retrieve('cid', 'Integer');
       $this->assign('contact_id', $this->_contact_id);
-
-
-
-
 
       // Get the given memberships
       $member_array = CRM_Itemmanager_Util::getLastMemberShipsFullRecordByContactId($this->_contact_id);
@@ -83,6 +71,8 @@ class CRM_Itemmanager_Page_Dashboard extends CRM_Core_Page {
     //compound membership with lineitems
     foreach ($member_array['values'] As $membership)
     {
+
+        $field_data = array();
         //dig into details of a membership
         foreach ($membership['payinfo'] As $contribution_link)
         {
@@ -104,44 +94,46 @@ class CRM_Itemmanager_Page_Dashboard extends CRM_Core_Page {
             $contrib_date = CRM_Utils_Array::value('receive_date', $contribution);
             $line_timestamp = date_create($contrib_date);
 
+
+
             foreach ($linerecords As $lineitem) {
 
 
                 try {
 
-                    $valid=$item_settings->get('price_field_value_id',
-                        CRM_Utils_Array::value('price_field_value_id', $lineitem['linedata']));
+                    //$valid=$item_settings->get('price_field_value_id',
+                    //    CRM_Utils_Array::value('price_field_value_id', $lineitem['linedata']));
 
                     //if(!$valid) continue;
 
-                    //$choices = CRM_Itemmanager_Util::getChoicesOfPricefieldsByFieldID(
-                    //    CRM_Utils_Array::value('price_field_value_id', $lineitem['linedata']),$last_date);
-
+                    $choices = CRM_Itemmanager_Util::getChoicesOfPricefieldsByFieldID(
+                        CRM_Utils_Array::value('price_field_value_id', $lineitem['linedata']),$contrib_date);
 
                     $line_date = $line_timestamp->format('Y-M');
-                    $newdate = $line_date != $old_date;
-                    $old_date = $line_date;
-                    $base = array(
-                        'set_id' => CRM_Utils_Array::value('id', $lineitem['setdata']),
-                        'field_id' => CRM_Utils_Array::value('id', $lineitem['fielddata']),
-                        'member_name' => $membership['typeinfo']['name'],
-                        'item_label' => CRM_Utils_Array::value('label', $lineitem['linedata']),
-                        'item_quantity' => CRM_Utils_Array::value('qty', $lineitem['linedata']),
-                        'contrib_date' => $line_timestamp,
-                      //  'field_choices' => $choices['field_value_selection'],
-                      //  'set_choices' => $choices['price_set_selection'],
-                    );
-                    $base_list[] = $base;
-                    $collect_list[] = $base;
-                    if ($newdate) {
-                        $date_item = array(
-                            'group_date' => $line_date,
-                            'group_data' => $collect_list,
-                        );
+                    $field_id = CRM_Utils_Array::value('id', $lineitem['fielddata']);
+                    $item_quantity = CRM_Utils_Array::value('qty', $lineitem['linedata']);
 
-                        $collect_list = array();
-                        $group_dates[] = $date_item;
+                    //new stuff
+                    if (!array_key_exists($field_id, $field_data))
+                        $field_data[$field_id] = array();
+                    $_field = &$field_data[$field_id];
+                    if (!array_key_exists($item_quantity, $_field)) {
+                        $_details = array(
+                            'item_quantity' => (string)$item_quantity,
+                            'item_label' => CRM_Utils_Array::value('label', $lineitem['linedata']),
+                            'item_dates' => array(),
+                            'min' => null,
+                            'max' => null,
+                            //'field_choices' => $choices['field_value_selection'],
+                        );
+                        $_field[$item_quantity] = $_details;
                     }
+                    $_dates = &$_field[$item_quantity]['item_dates'];
+                    $_dates[] = $line_date;
+                    $_field[$item_quantity]['min'] = min($_dates);
+                    $_field[$item_quantity]['max'] = max($_dates);
+
+
                 } catch (Exception $e) {
 
                     $error = True;
@@ -155,91 +147,29 @@ class CRM_Itemmanager_Page_Dashboard extends CRM_Core_Page {
                 }
 
             }//foreach ($linerecords As $lineitem)
+
+
+
         }
+
+        $member_list[] = array(
+            'field_data' => $field_data,
+            'member_name' => $membership['typeinfo']['name'],
+        );
+
+        $group_dates = array();
+        $base_list = array();
 
 
     }//foreach ($member_array['values'] As $membership)
 
 
-      $current_sets = array();
-      $current_index = 0;
-      $group_sets = array();
-      $_group_sets = array();
-      $current_datelist = array();
 
-    //dig into Date Groups and find different sets
-    foreach ($group_dates As $date_set)
-    {
+      $this->assign('member_list',$member_list);
+      $this->assign("group_refresh", CRM_Utils_System::url('civicrm/items/tab', "reset=1&force=1&cid={$this->_contact_id}"));
+      $this->assign('data_error',$error);
 
-        foreach ($date_set['group_data'] as $group_data)
-        {
-
-            try {
-                $current_datelist[] = $group_data['contrib_date'];
-                if (!array_key_exists($group_data['set_id'], $_group_sets))
-                    $_group_sets[$group_data['set_id']] = array();
-                $_group_set = &$_group_sets[$group_data['set_id']];
-                if (!array_key_exists($group_data['field_id'], $_group_set)) {
-                    $_details = array(
-                        'item_quantity' => (string)$group_data['item_quantity'],
-                        'item_label' => (string)$group_data['item_label'],
-                        'member_name' => (string)$group_data['member_name'],
-                    );
-                    $_group_set[$group_data['field_id']] = $_details;
-
-                }
-            } catch (Exception $e) {
-
-                $error = True;
-                $this->assign('data_error',$error);
-                $this->processError("ERROR",E::ts('Find different sets'),
-                    $e->getMessage());
-                $this->processDetail((string)$group_data['member_name'],
-                    $group_data['contrib_date'],
-                    (string)$group_data['item_label']);
-                return;
-            }
-
-
-        }//foreach ($date_set['group_data'] as $group_data)
-
-        try {
-            $diffresult = self::compare_multi_Arrays($current_sets, $_group_sets);
-            $current_sets = $_group_sets;
-            if (!$diffresult) {
-                if (!array_key_exists($current_index, $group_sets)) {
-                    $details = array();
-                    foreach ($_group_sets as $set)
-                        foreach ($set as $fields)
-                            $details[] = $fields;
-
-                    $group_sets[$current_index]['list'] = $details;
-                    $group_sets[$current_index]['raw'] = $_group_sets;
-                    $group_sets[$current_index]['date_max'] = max($current_datelist)->format('Y-M');
-                    $group_sets[$current_index]['date_min'] = min($current_datelist)->format('Y-M');
-                }
-
-                $current_index += 1;
-                $_group_sets = array();
-                $current_datelist = array();
-            }
-        } catch (Exception $e) {
-
-            $error = True;
-            $this->assign('data_error',$error);
-            $this->processError("ERROR",E::ts('Split datasets'),
-                $e->getMessage());
-            return;
-
-        }
-
-    }//foreach ($group_dates As $date_set)
-
-    $this->assign('group_sets',$group_sets);
-    $this->assign("group_refresh", CRM_Utils_System::url('civicrm/items/tab', "reset=1&force=1&cid={$this->_contact_id}"));
-    $this->assign('data_error',$error);
-
-    parent::run();
+      parent::run();
   }
 
 

@@ -30,13 +30,15 @@
 <div class="help">{ts domain="org.stadtlandbeides.itemmanager"}To start with a new set of monthly contributions click Renew Periods{/ts}</div>
 
 {if not $data_error}
-    {if $group_sets}
+    {if $member_list}
 
         <div class="crm-accordion-wrapper open">
 
-            {foreach from=$group_sets item=group}
+            {foreach from=$member_list item=member}
+                {assign var="field_data" value=$member.field_data}
+
                 <div class="crm-accordion-header">
-                    {ts domain="org.stadtlandbeides.itemmanager"}Booked items from {$group.date_min} to {$group.date_max} {/ts}
+                    {ts domain="org.stadtlandbeides.itemmanager"}Membership of {$member.member_name} {/ts}
                 </div>
                 <div class="crm-accordion-body">
                     <div class="crm-block crm-form-block crm-form-title-here-form-block">
@@ -44,20 +46,22 @@
                         <table>
                         <thead>
                             <tr class="columnheader">
-                                <td width="45%">{ts domain="org.stadtlandbeides.itemmanager"}Referred to{/ts}</td>
+                                <td width="45%">{ts domain="org.stadtlandbeides.itemmanager"}Booked{/ts}</td>
                                 <td width="5%">{ts domain="org.stadtlandbeides.itemmanager"}Quantity{/ts}</td>
                                 <td width="40%">{ts domain="org.stadtlandbeides.itemmanager"}Item{/ts}</td>
                             </tr>
                         </thead>
 
                         <tbody>
-                        {foreach from=$group.list item=ritem}
-                            <tr class="{cycle values="odd-row,even-row"}">
-                                <td width="45%">{$ritem.member_name}</td>
-                                <td width="5%">{$ritem.item_quantity}</td>
-                                <td width="40%">{$ritem.item_label}</td>
+                        {foreach from=$field_data item=quantity}
+                            {foreach from=$quantity item=ritem}
+                                <tr class="{cycle values="odd-row,even-row"}">
+                                    <td width="45%">{$ritem.min} to {$ritem.max}</td>
+                                    <td width="5%">{$ritem.item_quantity}</td>
+                                    <td width="40%">{$ritem.item_label}</td>
 
-                            </tr>
+                                </tr>
+                            {/foreach}
                         {/foreach}
                         </tbody>
                         </table>

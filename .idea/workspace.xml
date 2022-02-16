@@ -7,9 +7,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="8a4e2072-c43d-4029-bc01-730e5001dde6" name="Default Changelist" comment="MNT Refactoring of the Itemmanager Dashboard to DAO objects">
+    <list default="true" id="8a4e2072-c43d-4029-bc01-730e5001dde6" name="Default Changelist" comment="FIX Remove itemmanager settings comparison">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CRM/Itemmanager/Page/Dashboard.php" beforeDir="false" afterPath="$PROJECT_DIR$/CRM/Itemmanager/Page/Dashboard.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/info.xml" beforeDir="false" afterPath="$PROJECT_DIR$/info.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/CRM/Itemmanager/Page/Dashboard.tpl" beforeDir="false" afterPath="$PROJECT_DIR$/templates/CRM/Itemmanager/Page/Dashboard.tpl" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -142,7 +144,7 @@
       <workItem from="1616948705115" duration="36100000" />
       <workItem from="1617005340962" duration="4516000" />
       <workItem from="1617037558284" duration="3244000" />
-      <workItem from="1645000178749" duration="10344000" />
+      <workItem from="1645000178749" duration="22154000" />
     </task>
     <task id="LOCAL-00001" summary="ENH Intermittent changes to analyze the price items">
       <created>1612779470217</created>
@@ -172,7 +174,14 @@
       <option name="project" value="LOCAL" />
       <updated>1645008468923</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="FIX Remove itemmanager settings comparison">
+      <created>1645011730052</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1645011730052</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -195,7 +204,8 @@
     <MESSAGE value="ENH Final working version of the admin settings form for the itemmanager" />
     <MESSAGE value="FIX Add Debug infos" />
     <MESSAGE value="MNT Refactoring of the Itemmanager Dashboard to DAO objects" />
-    <option name="LAST_COMMIT_MESSAGE" value="MNT Refactoring of the Itemmanager Dashboard to DAO objects" />
+    <MESSAGE value="FIX Remove itemmanager settings comparison" />
+    <option name="LAST_COMMIT_MESSAGE" value="FIX Remove itemmanager settings comparison" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
