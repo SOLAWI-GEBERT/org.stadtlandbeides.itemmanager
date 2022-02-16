@@ -255,6 +255,7 @@ class CRM_Itemmanager_Util
             'contribution_id' => $contribution_id,
             'options' => array(
                 'limit' => 100,
+                'sort' => "id DESC",
             ),
         ];
 
