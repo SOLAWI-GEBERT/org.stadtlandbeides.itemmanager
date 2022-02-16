@@ -732,7 +732,7 @@ class CRM_Itemmanager_Util
         $valid = $item->get('price_field_value_id', $currentFieldValueId);
 
         if (!$valid)
-            return 0;
+            return $currentFieldValueId;
 
         if($item->itemmanager_successor_id == 0)
             return $item->price_field_value_id;
@@ -740,7 +740,7 @@ class CRM_Itemmanager_Util
         $successor_item = new CRM_Itemmanager_BAO_ItemmanagerSettings();
         $valid = $successor_item->get('id',$item->itemmanager_successor_id);
         if(!$valid)
-            return 0;
+            return $currentFieldValueId;
 
         return CRM_Itemmanager_Util::getLastPricefieldSuccessor($successor_item->price_field_value_id);
     }
