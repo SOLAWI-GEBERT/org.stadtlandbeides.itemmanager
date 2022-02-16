@@ -112,7 +112,7 @@ class CRM_Itemmanager_Page_Dashboard extends CRM_Core_Page {
                     $valid=$item_settings->get('price_field_value_id',
                         CRM_Utils_Array::value('price_field_value_id', $lineitem['linedata']));
 
-                    if(!$valid) continue;
+                    //if(!$valid) continue;
 
                     //$choices = CRM_Itemmanager_Util::getChoicesOfPricefieldsByFieldID(
                     //    CRM_Utils_Array::value('price_field_value_id', $lineitem['linedata']),$last_date);
