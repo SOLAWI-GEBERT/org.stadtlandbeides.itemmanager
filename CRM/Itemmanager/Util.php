@@ -725,6 +725,26 @@ class CRM_Itemmanager_Util
         return;
     }
 
+
+    public static function getLastPricefieldSuccessor($currentFieldValueId)
+    {
+        $item = new CRM_Itemmanager_BAO_ItemmanagerSettings();
+        $valid = $item->get('price_field_value_id', $currentFieldValueId);
+
+        if (!$valid)
+            return 0;
+
+        if($item->itemmanager_successor_id == 0)
+            return $item->price_field_value_id;
+
+        $successor_item = new CRM_Itemmanager_BAO_ItemmanagerSettings();
+        $valid = $successor_item->get('id',$item->itemmanager_successor_id);
+        if(!$valid)
+            return 0;
+
+        return CRM_Itemmanager_Util::getLastPricefieldSuccessor($successor_item->price_field_value_id);
+    }
+
     /**
      *  Returns an array of available Price Fieldvalues and calculates the next period
      *

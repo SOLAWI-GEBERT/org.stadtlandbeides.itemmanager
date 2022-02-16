@@ -105,11 +105,8 @@ class CRM_Itemmanager_Page_Dashboard extends CRM_Core_Page {
                     //    CRM_Utils_Array::value('price_field_value_id', $lineitem['linedata']));
 
                     //if(!$valid) continue;
-
-                    $choices = CRM_Itemmanager_Util::getChoicesOfPricefieldsByFieldID(
-                        CRM_Utils_Array::value('price_field_value_id', $lineitem['linedata']),$contrib_date);
-
-                    $max_field_id = max($choices['field_value_selection']);
+                    $max_field_id = CRM_Itemmanager_Util::getLastPricefieldSuccessor(
+                        CRM_Utils_Array::value('price_field_value_id', $lineitem['linedata']));
 
                     $line_date = $line_timestamp->format('Y-M');
                     $field_id = CRM_Utils_Array::value('id', $lineitem['fielddata']);

@@ -7,9 +7,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="8a4e2072-c43d-4029-bc01-730e5001dde6" name="Default Changelist" comment="ENH Redesign Itemmanager dashboard">
+    <list default="true" id="8a4e2072-c43d-4029-bc01-730e5001dde6" name="Default Changelist" comment="FIX Create recursive function to get last successor of a price field set for better line up">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CRM/Itemmanager/Page/Dashboard.php" beforeDir="false" afterPath="$PROJECT_DIR$/CRM/Itemmanager/Page/Dashboard.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CRM/Itemmanager/Util.php" beforeDir="false" afterPath="$PROJECT_DIR$/CRM/Itemmanager/Util.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -142,7 +143,7 @@
       <workItem from="1616948705115" duration="36100000" />
       <workItem from="1617005340962" duration="4516000" />
       <workItem from="1617037558284" duration="3244000" />
-      <workItem from="1645000178749" duration="23385000" />
+      <workItem from="1645000178749" duration="25396000" />
     </task>
     <task id="LOCAL-00001" summary="ENH Intermittent changes to analyze the price items">
       <created>1612779470217</created>
@@ -186,7 +187,14 @@
       <option name="project" value="LOCAL" />
       <updated>1645023684110</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="FIX Make use of Itemmanagersettings to get clean timelines">
+      <created>1645025186841</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1645025186841</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -211,7 +219,9 @@
     <MESSAGE value="MNT Refactoring of the Itemmanager Dashboard to DAO objects" />
     <MESSAGE value="FIX Remove itemmanager settings comparison" />
     <MESSAGE value="ENH Redesign Itemmanager dashboard" />
-    <option name="LAST_COMMIT_MESSAGE" value="ENH Redesign Itemmanager dashboard" />
+    <MESSAGE value="FIX Make use of Itemmanagersettings to get clean timelines" />
+    <MESSAGE value="FIX Create recursive function to get last successor of a price field set for better line up" />
+    <option name="LAST_COMMIT_MESSAGE" value="FIX Create recursive function to get last successor of a price field set for better line up" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
