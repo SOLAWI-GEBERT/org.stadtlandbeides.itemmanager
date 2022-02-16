@@ -29,51 +29,67 @@
 </br>
 <div class="help">{ts domain="org.stadtlandbeides.itemmanager"}To start with a new set of monthly contributions click Renew Periods{/ts}</div>
 
-{if $group_sets}
+{if not $data_error}
+    {if $group_sets}
 
-    <div class="crm-accordion-wrapper open">
+        <div class="crm-accordion-wrapper open">
 
-        {foreach from=$group_sets item=group}
-            <div class="crm-accordion-header">
-                {ts domain="org.stadtlandbeides.itemmanager"}Booked items from {$group.date_min} to {$group.date_max} {/ts}
-            </div>
-            <div class="crm-accordion-body">
-                <div class="crm-block crm-form-block crm-form-title-here-form-block">
-
-                    <table>
-                    <thead>
-                        <tr class="columnheader">
-                            <td width="45%">{ts domain="org.stadtlandbeides.itemmanager"}Referred to{/ts}</td>
-                            <td width="5%">{ts domain="org.stadtlandbeides.itemmanager"}Quantity{/ts}</td>
-                            <td width="40%">{ts domain="org.stadtlandbeides.itemmanager"}Item{/ts}</td>
-                        </tr>
-                    </thead>
-
-                    <tbody>
-                    {foreach from=$group.list item=ritem}
-                        <tr class="{cycle values="odd-row,even-row"}">
-                            <td width="45%">{$ritem.member_name}</td>
-                            <td width="5%">{$ritem.item_quantity}</td>
-                            <td width="40%">{$ritem.item_label}</td>
-
-                        </tr>
-                    {/foreach}
-                    </tbody>
-                    </table>
-
+            {foreach from=$group_sets item=group}
+                <div class="crm-accordion-header">
+                    {ts domain="org.stadtlandbeides.itemmanager"}Booked items from {$group.date_min} to {$group.date_max} {/ts}
                 </div>
-            </div>
-        {/foreach}
+                <div class="crm-accordion-body">
+                    <div class="crm-block crm-form-block crm-form-title-here-form-block">
 
-    </div>
+                        <table>
+                        <thead>
+                            <tr class="columnheader">
+                                <td width="45%">{ts domain="org.stadtlandbeides.itemmanager"}Referred to{/ts}</td>
+                                <td width="5%">{ts domain="org.stadtlandbeides.itemmanager"}Quantity{/ts}</td>
+                                <td width="40%">{ts domain="org.stadtlandbeides.itemmanager"}Item{/ts}</td>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                        {foreach from=$group.list item=ritem}
+                            <tr class="{cycle values="odd-row,even-row"}">
+                                <td width="45%">{$ritem.member_name}</td>
+                                <td width="5%">{$ritem.item_quantity}</td>
+                                <td width="40%">{$ritem.item_label}</td>
+
+                            </tr>
+                        {/foreach}
+                        </tbody>
+                        </table>
+
+                    </div>
+                </div>
+            {/foreach}
+
+        </div>
+    {else}
+        <div id="help">
+            {ts domain="org.stadtlandbeides.itemmanager"}This contact has no recorded line items.{/ts}
+        </div>
+    {/if}
 {else}
-    <div id="help">
-        {ts domain="org.stadtlandbeides.itemmanager"}This contact has no recorded line items.{/ts}
+    <div id="error" class="crm-error">
+        {$error_title}
+        <span>{$error_message}</br></span>
+        <if {$detail_member}>
+            <span>Membership {$detail_member}</br></span>
+        </if>
+        <if {$detail_contribution}>
+            <span>Contribution ID {$detail_contribution}</br></span>
+        </if>
+        <if {$detail_lineitem}>
+            <span>Lineitem {$detail_lineitem}</br></span>
+        </if>
     </div>
 {/if}
 
 
-<script type="application/javascript">
+    <script type="application/javascript">
     {literal}
         // trigger reload of tab
         // || cj(event.target).attr('href').includes('civicrm/sepa/xmandate')

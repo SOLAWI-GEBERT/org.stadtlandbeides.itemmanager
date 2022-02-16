@@ -133,7 +133,7 @@ class CRM_Itemmanager_Page_UpdateItems extends CRM_Core_Page {
              LEFT JOIN civicrm_contribution as contribution ON line_item.contribution_id = contribution.id
              LEFT JOIN civicrm_price_set price_set ON price_field.price_set_id = price_set.id
         WHERE line_item.contribution_id = %1 
-        ORDER BY contribution.receipt_date ASC
+        ORDER BY contribution.receipt_date DESC 
 
      ";
 

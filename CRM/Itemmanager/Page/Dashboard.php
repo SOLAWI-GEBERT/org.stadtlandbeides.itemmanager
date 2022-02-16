@@ -2,7 +2,7 @@
 /*
  * ------------------------------------------------------------+
  * | stadt, land, beides - CSA Support                                       |
- * | Copyright (C) 2021 Stadt, Land, Beides                               |
+ * | Copyright (C) 2022 Stadt, Land, Beides                               |
  * | Author: A. Gebert (webmaster -at- stadt-land-beides.de)  |
  * | https://stadt-land-beides.de/                                              |
  * +-------------------------------------------------------------+
@@ -55,97 +55,110 @@ class CRM_Itemmanager_Page_Dashboard extends CRM_Core_Page {
       $old_set = -1;
       $old_field = -1;
       $old_date = "";
+      $error = False;
 
 
-    $this->assign('currentTime', date('Y-m-d H:i:s'));
-    $contact_id = CRM_Utils_Request::retrieve('cid', 'Integer');
-    $this->assign('contact_id', $contact_id);
+      $this->assign('currentTime', date('Y-m-d H:i:s'));
+      $this->_contact_id = CRM_Utils_Request::retrieve('cid', 'Integer');
+      $this->assign('contact_id', $this->_contact_id);
 
 
 
-    //Here we just collect the memberships
-    $base_query = "
-        SELECT
-            member_type.name AS member_name,
-            contribution.id AS contrib_id,
-            membership.start_date as member_start,
-            membership.end_date as member_end,
-            membership.status_id as member_status
-        FROM civicrm_membership membership
-         LEFT JOIN civicrm_membership_payment member_pay ON member_pay.membership_id = membership.id
-         LEFT JOIN civicrm_contribution as contribution ON contribution.contact_id = %1 and member_pay.contribution_id = contribution.id
-         LEFT JOIN civicrm_membership_type member_type ON member_type.id = membership.membership_type_id
-        WHERE membership.contact_id = %1
-                ";
-
-     //Later we compound all line items belonging to the contribution
-     $item_query = "
-        SELECT
-            line_item.label As item_label,
-            line_item.qty As item_quantity,
-            price_field.id As field_id,
-            price_field.is_active As item_active,
-            price_field.active_on As item_startdate,
-            price_field.expire_on As item_enddate,
-            price_field.help_pre As item_help,
-            contribution.receive_date As contrib_date,
-            price_set.id As set_id,
-            price_set.name As set_name,
-            price_set.is_active As set_active,
-            price_set.help_pre As set_help
-        FROM civicrm_line_item line_item
-             LEFT JOIN civicrm_price_field_value price_field_value ON line_item.price_field_value_id = price_field_value.id
-             LEFT JOIN civicrm_price_field price_field ON line_item.price_field_id = price_field.id
-             LEFT JOIN civicrm_contribution as contribution ON line_item.contribution_id = contribution.id
-             LEFT JOIN civicrm_price_set price_set ON price_field.price_set_id = price_set.id
-        WHERE line_item.contribution_id = %1 
-        ORDER BY contribution.receipt_date ASC
-
-     ";
 
 
-    $base_items = CRM_Core_DAO::executeQuery($base_query,
-          array( 1 => array($contact_id, 'Integer')));
+      // Get the given memberships
+      $member_array = CRM_Itemmanager_Util::getLastMemberShipsFullRecordByContactId($this->_contact_id);
 
-    //compound both queries together
-    while ($base_items->fetch()) {
-        $line_items = CRM_Core_DAO::executeQuery($item_query,
-            array( 1 => array($base_items->contrib_id, 'Integer')));
+      if($member_array['is_error'])
+      {
+          $error = True;
+          $this->assign('data_error',$error);
+          $this->processError("ERROR",E::ts('Retrieve memberships'),$member_array['error_message']);
+          return;
+      }
 
-        while ($line_items->fetch()) {
+      //get our itemsettings
+      $item_settings = new CRM_Itemmanager_BAO_ItemmanagerSettings();
 
-            $line_timestamp = date_create($line_items->contrib_date);
-            $line_date = $line_timestamp->format('Y-M');
-            $newdate = $line_date != $old_date;
-            $old_date = $line_date;
+    //compound membership with lineitems
+    foreach ($member_array['values'] As $membership)
+    {
+        //dig into details of a membership
+        foreach ($membership['payinfo'] As $contribution_link)
+        {
 
-            $base = array(
-                'set_id'        => $line_items->set_id,
-                'field_id'        => $line_items->field_id,
-                'member_name'   => $base_items->member_name,
-                'item_label'    => $line_items->item_label,
-                'item_quantity' => $line_items->item_quantity,
-                'contrib_date'  => $line_timestamp,
-            );
-
-            $base_list[] = $base;
-            $collect_list[] = $base;
-
-            if($newdate)
+            //get the line items to the last contribution
+            $linerecords = CRM_Itemmanager_Util::getLineitemFullRecordByContributionId((int)$contribution_link['contribution_id']);
+            if($linerecords['is_error'])
             {
-                $date_item = array(
-                    'group_date' => $line_date,
-                    'group_data' => $collect_list,
-                );
-
-                $collect_list = array();
-                $group_dates[] = $date_item;
+                $error = True;
+                $this->assign('data_error',$error);
+                $this->processError("ERROR",E::ts('Retrieve line items'),
+                    $linerecords['error_message']);
+                $this->processDetail($membership['typeinfo']['name'],
+                    (int)$contribution_link['contribution_id']);
+                return;
             }
+
+            $contribution = civicrm_api3('Contribution', 'getsingle', array('id' => (int)$contribution_link['contribution_id']));
+            $contrib_date = CRM_Utils_Array::value('receive_date', $contribution);
+            $line_timestamp = date_create($contrib_date);
+
+            foreach ($linerecords As $lineitem) {
+
+
+                try {
+
+                    $valid=$item_settings->get('price_field_value_id',
+                        CRM_Utils_Array::value('price_field_value_id', $lineitem['linedata']));
+
+                    if(!$valid) continue;
+
+                    //$choices = CRM_Itemmanager_Util::getChoicesOfPricefieldsByFieldID(
+                    //    CRM_Utils_Array::value('price_field_value_id', $lineitem['linedata']),$last_date);
+
+
+                    $line_date = $line_timestamp->format('Y-M');
+                    $newdate = $line_date != $old_date;
+                    $old_date = $line_date;
+                    $base = array(
+                        'set_id' => CRM_Utils_Array::value('id', $lineitem['setdata']),
+                        'field_id' => CRM_Utils_Array::value('id', $lineitem['fielddata']),
+                        'member_name' => $membership['typeinfo']['name'],
+                        'item_label' => CRM_Utils_Array::value('label', $lineitem['linedata']),
+                        'item_quantity' => CRM_Utils_Array::value('qty', $lineitem['linedata']),
+                        'contrib_date' => $line_timestamp,
+                      //  'field_choices' => $choices['field_value_selection'],
+                      //  'set_choices' => $choices['price_set_selection'],
+                    );
+                    $base_list[] = $base;
+                    $collect_list[] = $base;
+                    if ($newdate) {
+                        $date_item = array(
+                            'group_date' => $line_date,
+                            'group_data' => $collect_list,
+                        );
+
+                        $collect_list = array();
+                        $group_dates[] = $date_item;
+                    }
+                } catch (Exception $e) {
+
+                    $error = True;
+                    $this->assign('data_error',$error);
+                    $this->processError("ERROR",E::ts('Combine line items'),
+                        $e->getMessage());
+                    $this->processDetail($membership['typeinfo']['name'],
+                        (int)$contribution_link['contribution_id'],
+                        CRM_Utils_Array::value('label', $lineitem['linedata']));
+                    return;
+                }
+
+            }//foreach ($linerecords As $lineitem)
         }
 
 
-
-    }//while ($base_items->fetch())
+    }//foreach ($member_array['values'] As $membership)
 
 
       $current_sets = array();
@@ -160,52 +173,94 @@ class CRM_Itemmanager_Page_Dashboard extends CRM_Core_Page {
 
         foreach ($date_set['group_data'] as $group_data)
         {
-            $current_datelist[] = $group_data['contrib_date'];
-            if(!array_key_exists($group_data['set_id'],$_group_sets))
-                $_group_sets[$group_data['set_id']] = array();
 
-            $_group_set = &$_group_sets[$group_data['set_id']];
-            if(!array_key_exists($group_data['field_id'],$_group_set))
-            {
-                $_details = array(
-                    'item_quantity' => (string)$group_data['item_quantity'],
-                    'item_label' => (string)$group_data['item_label'],
-                    'member_name' => (string)$group_data['member_name'],
-                );
-                $_group_set[$group_data['field_id']] = $_details;
+            try {
+                $current_datelist[] = $group_data['contrib_date'];
+                if (!array_key_exists($group_data['set_id'], $_group_sets))
+                    $_group_sets[$group_data['set_id']] = array();
+                $_group_set = &$_group_sets[$group_data['set_id']];
+                if (!array_key_exists($group_data['field_id'], $_group_set)) {
+                    $_details = array(
+                        'item_quantity' => (string)$group_data['item_quantity'],
+                        'item_label' => (string)$group_data['item_label'],
+                        'member_name' => (string)$group_data['member_name'],
+                    );
+                    $_group_set[$group_data['field_id']] = $_details;
 
+                }
+            } catch (Exception $e) {
+
+                $error = True;
+                $this->assign('data_error',$error);
+                $this->processError("ERROR",E::ts('Find different sets'),
+                    $e->getMessage());
+                $this->processDetail((string)$group_data['member_name'],
+                    $group_data['contrib_date'],
+                    (string)$group_data['item_label']);
+                return;
             }
 
 
         }//foreach ($date_set['group_data'] as $group_data)
 
-        $diffresult = self::compare_multi_Arrays($current_sets,$_group_sets);
-        $current_sets = $_group_sets;
-        if(!$diffresult){
-            if(!array_key_exists($current_index,$group_sets)){
-                $details = array();
-                foreach($_group_sets As $set)
-                    foreach ($set As $fields)
+        try {
+            $diffresult = self::compare_multi_Arrays($current_sets, $_group_sets);
+            $current_sets = $_group_sets;
+            if (!$diffresult) {
+                if (!array_key_exists($current_index, $group_sets)) {
+                    $details = array();
+                    foreach ($_group_sets as $set)
+                        foreach ($set as $fields)
                             $details[] = $fields;
 
-                $group_sets[$current_index]['list'] = $details;
-                $group_sets[$current_index]['raw'] = $_group_sets;
-                $group_sets[$current_index]['date_max'] = max($current_datelist)->format('Y-M');
-                $group_sets[$current_index]['date_min'] = min($current_datelist)->format('Y-M');
-            }
+                    $group_sets[$current_index]['list'] = $details;
+                    $group_sets[$current_index]['raw'] = $_group_sets;
+                    $group_sets[$current_index]['date_max'] = max($current_datelist)->format('Y-M');
+                    $group_sets[$current_index]['date_min'] = min($current_datelist)->format('Y-M');
+                }
 
-            $current_index +=1;
-            $_group_sets = array();
-            $current_datelist = array();
+                $current_index += 1;
+                $_group_sets = array();
+                $current_datelist = array();
+            }
+        } catch (Exception $e) {
+
+            $error = True;
+            $this->assign('data_error',$error);
+            $this->processError("ERROR",E::ts('Split datasets'),
+                $e->getMessage());
+            return;
+
         }
 
     }//foreach ($group_dates As $date_set)
 
     $this->assign('group_sets',$group_sets);
-    $this->assign("group_refresh", CRM_Utils_System::url('civicrm/items/tab', "reset=1&force=1&cid={$contact_id}"));
-
+    $this->assign("group_refresh", CRM_Utils_System::url('civicrm/items/tab', "reset=1&force=1&cid={$this->_contact_id}"));
+    $this->assign('data_error',$error);
 
     parent::run();
   }
+
+
+    /**
+     * report error data
+     */
+    protected function processError($status, $title, $message) {
+        CRM_Core_Session::setStatus($status . "<br/>" . $message, ts('Error', array('domain' => 'org.stadtlandbeides.itemmanager')), 'error');
+        $this->assign("error_title",   $title);
+        $this->assign("error_message", $message);
+
+
+    }
+
+    //some details
+    protected function processDetail($membership, $contribution, $lineitem = null) {
+        $this->assign("detail_member",   $membership);
+        $this->assign("detail_contribution", $contribution);
+        $this->assign("detail_lineitem", $lineitem);
+
+
+    }
 
 }

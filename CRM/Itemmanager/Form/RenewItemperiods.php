@@ -73,7 +73,7 @@ class CRM_Itemmanager_Form_RenewItemperiods extends CRM_Core_Form {
             $linerecords = CRM_Itemmanager_Util::getLineitemFullRecordByContributionId($lastid);
             if($linerecords['is_error'])
             {
-                $this->processError("ERROR",E::ts('Retrieve line items'),$member_array['error_message']);
+                $this->processError("ERROR",E::ts('Retrieve line items'),$linerecords['error_message']);
                 return;
             }
 
