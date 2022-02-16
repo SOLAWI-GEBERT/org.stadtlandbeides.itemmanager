@@ -65,8 +65,6 @@ class CRM_Itemmanager_Page_Dashboard extends CRM_Core_Page {
           return;
       }
 
-      //get our itemsettings
-      $item_settings = new CRM_Itemmanager_BAO_ItemmanagerSettings();
 
     //compound membership with lineitems
     foreach ($member_array['values'] As $membership)
@@ -94,23 +92,17 @@ class CRM_Itemmanager_Page_Dashboard extends CRM_Core_Page {
             $contrib_date = CRM_Utils_Array::value('receive_date', $contribution);
             $line_timestamp = date_create($contrib_date);
 
-
-
             foreach ($linerecords As $lineitem) {
-
 
                 try {
 
-                    //$valid=$item_settings->get('price_field_value_id',
-                    //    CRM_Utils_Array::value('price_field_value_id', $lineitem['linedata']));
-
-                    //if(!$valid) continue;
                     $max_field_id = CRM_Itemmanager_Util::getLastPricefieldSuccessor(
-                        CRM_Utils_Array::value('price_field_value_id', $lineitem['linedata']));
+                        CRM_Utils_Array::value('id', $lineitem['valuedata']));
 
                     $line_date = $line_timestamp->format('Y-M');
                     $field_id = CRM_Utils_Array::value('id', $lineitem['fielddata']);
                     $item_quantity = CRM_Utils_Array::value('qty', $lineitem['linedata']);
+                    $max_field_id = $field_id;
 
                     //new stuff
                     if (!array_key_exists($max_field_id, $field_data))
@@ -123,7 +115,6 @@ class CRM_Itemmanager_Page_Dashboard extends CRM_Core_Page {
                             'item_dates' => array(),
                             'min' => null,
                             'max' => null,
-                            //'field_choices' => $choices['field_value_selection'],
                         );
                         $_field[$item_quantity] = $_details;
                     }
@@ -148,16 +139,12 @@ class CRM_Itemmanager_Page_Dashboard extends CRM_Core_Page {
             }//foreach ($linerecords As $lineitem)
 
 
-
         }
 
         $member_list[] = array(
             'field_data' => $field_data,
             'member_name' => $membership['typeinfo']['name'],
         );
-
-        $group_dates = array();
-        $base_list = array();
 
 
     }//foreach ($member_array['values'] As $membership)

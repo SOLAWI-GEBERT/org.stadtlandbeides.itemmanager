@@ -7,8 +7,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="8a4e2072-c43d-4029-bc01-730e5001dde6" name="Default Changelist" comment="FIX Create recursive function to get last successor of a price field set for better line up">
-      <change beforePath="$PROJECT_DIR$/CRM/Itemmanager/Util.php" beforeDir="false" afterPath="$PROJECT_DIR$/CRM/Itemmanager/Util.php" afterDir="false" />
+    <list default="true" id="8a4e2072-c43d-4029-bc01-730e5001dde6" name="Default Changelist" comment="FIX Return input field value as default instead of 0">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CRM/Itemmanager/Page/Dashboard.php" beforeDir="false" afterPath="$PROJECT_DIR$/CRM/Itemmanager/Page/Dashboard.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/CRM/Itemmanager/Page/Dashboard.tpl" beforeDir="false" afterPath="$PROJECT_DIR$/templates/CRM/Itemmanager/Page/Dashboard.tpl" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -141,7 +143,7 @@
       <workItem from="1616948705115" duration="36100000" />
       <workItem from="1617005340962" duration="4516000" />
       <workItem from="1617037558284" duration="3244000" />
-      <workItem from="1645000178749" duration="26020000" />
+      <workItem from="1645000178749" duration="28382000" />
     </task>
     <task id="LOCAL-00001" summary="ENH Intermittent changes to analyze the price items">
       <created>1612779470217</created>
@@ -199,7 +201,14 @@
       <option name="project" value="LOCAL" />
       <updated>1645026911981</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="FIX Return input field value as default instead of 0">
+      <created>1645027909432</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1645027909432</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -226,7 +235,8 @@
     <MESSAGE value="ENH Redesign Itemmanager dashboard" />
     <MESSAGE value="FIX Make use of Itemmanagersettings to get clean timelines" />
     <MESSAGE value="FIX Create recursive function to get last successor of a price field set for better line up" />
-    <option name="LAST_COMMIT_MESSAGE" value="FIX Create recursive function to get last successor of a price field set for better line up" />
+    <MESSAGE value="FIX Return input field value as default instead of 0" />
+    <option name="LAST_COMMIT_MESSAGE" value="FIX Return input field value as default instead of 0" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
