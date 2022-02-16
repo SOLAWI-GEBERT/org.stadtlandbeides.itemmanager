@@ -7,7 +7,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="8a4e2072-c43d-4029-bc01-730e5001dde6" name="Default Changelist" comment="FIX Increase the limit for the line items">
+    <list default="true" id="8a4e2072-c43d-4029-bc01-730e5001dde6" name="Default Changelist" comment="FIX Use another field value for sorting">
       <change beforePath="$PROJECT_DIR$/CRM/Itemmanager/Util.php" beforeDir="false" afterPath="$PROJECT_DIR$/CRM/Itemmanager/Util.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -141,7 +141,7 @@
       <workItem from="1616948705115" duration="36100000" />
       <workItem from="1617005340962" duration="4516000" />
       <workItem from="1617037558284" duration="3244000" />
-      <workItem from="1645000178749" duration="29928000" />
+      <workItem from="1645000178749" duration="30699000" />
     </task>
     <task id="LOCAL-00001" summary="ENH Intermittent changes to analyze the price items">
       <created>1612779470217</created>
@@ -227,7 +227,14 @@
       <option name="project" value="LOCAL" />
       <updated>1645031262045</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="FIX Use another field value for sorting">
+      <created>1645032046764</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1645032046764</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -257,7 +264,8 @@
     <MESSAGE value="FIX Return input field value as default instead of 0" />
     <MESSAGE value="FIX Test on real data to find error in date array" />
     <MESSAGE value="FIX Increase the limit for the line items" />
-    <option name="LAST_COMMIT_MESSAGE" value="FIX Increase the limit for the line items" />
+    <MESSAGE value="FIX Use another field value for sorting" />
+    <option name="LAST_COMMIT_MESSAGE" value="FIX Use another field value for sorting" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

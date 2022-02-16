@@ -220,6 +220,10 @@ class CRM_Itemmanager_Util
     public static function getMemberShipPaymentByMembershipId($membership_id) {
         $params = [
         'membership_id' => $membership_id,
+        'options' => array(
+            'limit' => 100,
+            'sort' => "id DESC",
+        ),
         ];
 
         try{
