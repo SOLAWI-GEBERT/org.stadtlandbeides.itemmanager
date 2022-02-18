@@ -204,10 +204,10 @@ function itemmanager_civicrm_links($op, $objectName, $objectId, &$links, &$mask,
 
     if ($op == 'contribution.selector.row' && $objectName == 'Contribution') {
         $links[] = array(
-            'name' => ts('Insert missing contribution'),
+            'name' => ts('Duplicate contribution'),
             'url' => 'civicrm/items/repaircontribution',
             'qs' => 'id=%%id%%&cid=%%cid%%&context=%%cxt%%',
-            'title' => 'Duplicate contribution',
+            'title' => 'Repair missing contribution.',
         );
     }
 }

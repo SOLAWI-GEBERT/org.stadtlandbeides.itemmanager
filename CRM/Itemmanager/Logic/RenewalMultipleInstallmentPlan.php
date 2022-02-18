@@ -146,7 +146,7 @@ class CRM_Itemmanager_Logic_RenewalMultipleInstallmentPlan extends CRM_Itemmanag
           'frequency_unit' => $currentRecurContribution['frequency_unit'],
           'frequency_interval' => $currentRecurContribution['frequency_interval'],
           'installments' => $currentRecurContribution['installments'],
-          'contribution_status_id' => 'Pending',
+          'contribution_status_id' => '2',
           'is_test' => $currentRecurContribution['is_test'],
           'auto_renew' => 1,
           'cycle_day' => $currentRecurContribution['cycle_day'],
@@ -158,9 +158,7 @@ class CRM_Itemmanager_Logic_RenewalMultipleInstallmentPlan extends CRM_Itemmanag
 
     if($contributionParams)
     {
-        $contributionStatusOptions = CRM_Contribute_BAO_Contribution::buildOptions('contribution_status_id');
-        $params['contribution_status_id'] = $contributionStatusOptions[
-            (int)$contributionParams['contribution_status_id']];
+        $params['contribution_status_id'] = $contributionParams['contribution_status_id'];
     }
 
 
