@@ -107,6 +107,18 @@ class CRM_Itemmanager_Logic_RenewalMultipleInstallmentPlan extends CRM_Itemmanag
       }
   }
 
+    /**
+     * @inheritdoc
+     */
+    public function clone($contributionParams) {
+
+        $this->setTotalAndTaxAmount();
+        $this->createRecurringContribution($contributionParams);
+        foreach ($this->listofPlannedDates as $date) {
+            $this->recordPaymentPlanFirstContribution($date);
+        }
+    }
+
   /**
    * Renews the current membership recurring contribution by creating a new one
    * based on its data.
@@ -116,7 +128,7 @@ class CRM_Itemmanager_Logic_RenewalMultipleInstallmentPlan extends CRM_Itemmanag
    *
    * @throws \Exception
    */
-  private function createRecurringContribution() {
+  private function createRecurringContribution($contributionParams=null) {
     $currentRecurContribution = $this->currentRecurringContribution;
     $paymentProcessorID = !empty($currentRecurContribution['payment_processor_id']) ? $currentRecurContribution['payment_processor_id'] : NULL;
 
@@ -143,6 +155,14 @@ class CRM_Itemmanager_Logic_RenewalMultipleInstallmentPlan extends CRM_Itemmanag
           'payment_instrument_id' => $paymentInstrumentName,
           'start_date' => $this->newPeriodStartOn->format('Y-m-d'),
       ];
+
+    if($contributionParams)
+    {
+        $contributionStatusOptions = CRM_Contribute_BAO_Contribution::buildOptions('contribution_status_id');
+        $params['contribution_status_id'] = $contributionStatusOptions[
+            (int)$contributionParams['contribution_status_id']];
+    }
+
 
     $newRecurringContribution = civicrm_api3('ContributionRecur', 'create',$params )['values'][0];
 

@@ -145,6 +145,8 @@ function itemmanager_civicrm_themes(&$themes) {
 
 // --- Functions below this ship commented out. Uncomment as required. ---
 
+
+
 /**
  * Implements hook_civicrm_preProcess().
  *
@@ -152,7 +154,13 @@ function itemmanager_civicrm_themes(&$themes) {
  */
 function itemmanager_civicrm_preProcess($formName, &$form) {
 
+ if($formName == 'CRM_Member_Form_MembershipRenewal')
+ {
+     CRM_Core_Session::setStatus("Standard renew feature has been disabled. Use renew period instead.",
+         ts('Warning', array('domain' => 'org.stadtlandbeides.itemmanager')), 'warning');
 
+
+ }
 
 
 
@@ -172,6 +180,38 @@ function itemmanager_civicrm_renewPeriods( &$actions, $contactID ) {
         );
     }
 }
+
+/**
+ * Implements hook_civicrm_links().
+ *
+ * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_links
+ */
+function itemmanager_civicrm_links($op, $objectName, $objectId, &$links, &$mask, &$values) {
+
+
+
+    if (($op == 'membership.selector.row' || $op == 'membership.tab.row') && $objectName == 'Membership') {
+
+        $links[] = array(
+            'name' => ts('Renew periods'),
+            'url' => 'civicrm/items/renewperiods',
+            'qs' => 'reset=1&cid=%%cid%%',
+            'title' => ts("Renew Items Periods", array('domain' => 'org.stadtlandbeides.itemmanager')),
+        );
+    }
+
+
+
+    if ($op == 'contribution.selector.row' && $objectName == 'Contribution') {
+        $links[] = array(
+            'name' => ts('Insert missing contribution'),
+            'url' => 'civicrm/items/repaircontribution',
+            'qs' => 'id=%%id%%&cid=%%cid%%&context=%%cxt%%',
+            'title' => 'Duplicate contribution',
+        );
+    }
+}
+
 
 /**
  * Implements hook_civicrm_navigationMenu().

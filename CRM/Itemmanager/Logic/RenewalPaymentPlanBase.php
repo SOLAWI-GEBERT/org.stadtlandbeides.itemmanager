@@ -264,6 +264,54 @@ abstract class CRM_Itemmanager_Logic_RenewalPaymentPlanBase {
 
   }
 
+    /**
+     *  Set the list of new planned dates
+     * @throws Exception
+     */
+    protected function setListofPlannedReceivedDateForRepair()
+    {
+
+        $new_date = clone $this->newPeriodStartOn;
+        $new_date->add(new DateInterval('P1M'));
+        $this->listofPlannedDates[] = $new_date;
+
+    }
+
+
+
+    /**
+     * Repair the given lineitems.
+     *
+     * @throws \CRM_Core_Exception
+     */
+    public function repair($contributionParams) {
+        $exceptions = [];
+
+        try {
+            $this->setListofPlannedReceivedDateForRepair();
+            $this->setLastContribution();
+            $this->setCurrentRecurringContribution($this->lastContribution['contribution_recur_id']);
+
+        } catch (CRM_Core_Exception $e) {
+            $exceptions[] = "An error occurred renewing a payment plan: " . $e->getMessage();
+
+        }
+
+
+        $transaction = new CRM_Core_Transaction();
+        try {
+            $this->clone($contributionParams);
+        } catch (CRM_Core_Exception $e) {
+            $transaction->rollback();
+            $exceptions[] = "An error occurred renewing a payment plan: " . $e->getMessage();
+        }
+
+        $transaction->commit();
+
+        if (count($exceptions)) {
+            throw new CRM_Core_Exception(implode(";\n", $exceptions));
+        }
+    }
 
   /**
    * Renews the given payment plan.
@@ -310,6 +358,11 @@ abstract class CRM_Itemmanager_Logic_RenewalPaymentPlanBase {
    * Renews the current payment plan.
    */
   abstract public function renew();
+
+    /**
+     * Clones the current contribution.
+     */
+    abstract public function clone($contributionParams);
 
   /**
    * Dispatches postOfflineAutoRenewal hook for each membership line item in the

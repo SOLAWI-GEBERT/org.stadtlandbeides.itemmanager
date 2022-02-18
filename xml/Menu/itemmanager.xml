@@ -33,4 +33,10 @@
     <title>RenewItemperiods</title>
     <access_arguments>access CiviCRM</access_arguments>
   </item>
+  <item>
+    <path>civicrm/items/repaircontribution</path>
+    <page_callback>CRM_Itemmanager_Form_RepairMissingContribution</page_callback>
+    <title>RepairMissingContribution</title>
+    <access_arguments>access CiviCRM</access_arguments>
+  </item>
 </menu>
