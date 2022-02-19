@@ -39,4 +39,10 @@
     <title>RepairMissingContribution</title>
     <access_arguments>access CiviCRM</access_arguments>
   </item>
+  <item>
+    <path>civicrm/items/linksepapayment</path>
+    <page_callback>CRM_Itemmanager_Form_LinkSepaPayments</page_callback>
+    <title>LinkSepaPayments</title>
+    <access_arguments>access CiviCRM</access_arguments>
+  </item>
 </menu>

@@ -3,22 +3,37 @@
 <h3>{ts domain="org.stadtlandbeides.itemmanager"}Item Dashboard{/ts}</h3>
 
 <div>
-    <a id="items_renew_extra_button" class="button crm-popup" href="{crmURL p="civicrm/items/renewperiods" q="action=renew_item_periods&cid=$contact_id"}">
+    <a id="items_renew_extra_button"
+       class="button crm-popup"
+       href="{crmURL p="civicrm/items/renewperiods" q="action=renew_item_periods&cid=$contact_id"}">
         <span>
-            <div class="icon crm-i fa-plus-circle"></div>{ts domain="org.stadtlandbeides.itemmanager"}Renew Periods{/ts}
+            <div class="crm-i fa-retweet" style="padding-right:5px;"></div>{ts domain="org.stadtlandbeides.itemmanager"}Renew Periods{/ts}
         </span>
     </a>
-    <a id="items_update_extra_button" class="button crm-popup" href="{crmURL p="civicrm/items/update" q="action=update&cid=$contact_id&harm=1&sync=1"}">
+    <a id="items_update_extra_button"
+       class="button crm-popup"
+       href="{crmURL p="civicrm/items/update" q="action=update&cid=$contact_id&harm=1&sync=1"}">
         <span>
-            <div class="icon add-icon edit-icon"></div>{ts domain="org.stadtlandbeides.itemmanager"}Update Items{/ts}
+            <div class="crm-i fa-level-up" style="padding-right:5px;"></div>{ts domain="org.stadtlandbeides.itemmanager"}Update Items{/ts}
         </span>
     </a>
+
+    <a id="items_link_to_sepa_button"
+       class="button crm-popup"
+       href="{crmURL p="civicrm/items/linksepapayment" q="action=sepalink&cid=$contact_id"}">
+        <span>
+            <div class="crm-i fa-money" style="padding-right:5px;"></div>{ts domain="org.stadtlandbeides.itemmanager"}Link Sepa Payments{/ts}
+        </span>
+    </a>
+
+
+
     <a title="{ts domain="org.project60.sepa"}Refresh{/ts}"
        id="refresh_dashboard"
-       class="refresh button"
+       class="button"
        href="{crmURL p="civicrm/contact/view" q="action=refresh&reset=1&cid=$contact_id&selectedChild=itemmanager"}">
                     <span>
-                      <div class="icon refresh-icon ui-icon-refresh"></div>
+                      <div class="crm-i fa-refresh" style="padding-right:5px;"></div>
                       {ts domain="org.stadtlandbeides.itemmanager"}Refresh{/ts}
                     </span>
     </a>
