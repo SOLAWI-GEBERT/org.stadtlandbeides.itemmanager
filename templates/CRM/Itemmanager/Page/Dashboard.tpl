@@ -47,9 +47,8 @@
 {if not $data_error}
     {if $member_list}
 
-        <div class="crm-accordion-wrapper open">
-
-            {foreach from=$member_list item=member}
+        {foreach from=$member_list item=member}
+            <div class="crm-accordion-wrapper open">
                 {assign var="field_data" value=$member.field_data}
 
                 <div class="crm-accordion-header">
@@ -83,9 +82,10 @@
 
                     </div>
                 </div>
-            {/foreach}
+            </div>
+        {/foreach}
 
-        </div>
+
     {else}
         <div id="help">
             {ts domain="org.stadtlandbeides.itemmanager"}This contact has no recorded line items.{/ts}
