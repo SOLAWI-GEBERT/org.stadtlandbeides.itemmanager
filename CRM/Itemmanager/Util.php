@@ -21,6 +21,7 @@ use CRM_Itemmanager_ExtensionUtil as E;
 class CRM_Itemmanager_Util
 {
 
+
     /**
      * Check if there is tax value for selected financial type.
      * @param $financialTypeId

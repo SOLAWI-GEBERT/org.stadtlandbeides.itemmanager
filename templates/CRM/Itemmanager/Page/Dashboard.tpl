@@ -20,7 +20,7 @@
 
     <a id="items_link_to_sepa_button"
        class="button crm-popup"
-       href="{crmURL p="civicrm/items/linksepapayment" q="action=sepalink&cid=$contact_id"}">
+       href="{crmURL p="civicrm/items/linksepapayment" q="action=sepalink&cid=$contact_id&smartyDebug=1"}">
         <span>
             <div class="crm-i fa-money" style="padding-right:5px;"></div>{ts domain="org.stadtlandbeides.itemmanager"}Link Sepa Payments{/ts}
         </span>
