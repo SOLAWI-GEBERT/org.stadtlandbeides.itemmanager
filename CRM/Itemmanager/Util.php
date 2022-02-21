@@ -354,6 +354,145 @@ class CRM_Itemmanager_Util
 
     }
 
+    /**
+     *  Get the SEPA mandates by contact id
+     *
+     * @param $contactid
+     * @return array
+     */
+    public static function getSDDByContactId($contactid) {
+
+        $mandatetable = CRM_Sepa_DAO_SEPAMandate::getTableName();
+
+        $ooff_query = "
+          SELECT *
+          FROM " . $mandatetable . " t1
+          WHERE t1.contact_id = %1
+            AND t1.type = 'OOFF'
+            AND t1.entity_table = 'civicrm_contribution'";
+
+        $rcur_query = "
+          SELECT *
+          FROM " . $mandatetable . " t1
+          WHERE t1.contact_id = %1
+            AND t1.type = 'RCUR'
+            AND t1.entity_table = 'civicrm_contribution_recur'
+          ORDER BY t1.id DESC;";
+
+
+        try{
+            $ooff_items = CRM_Core_DAO::executeQuery($ooff_query,
+                array( 1 => array($contactid, 'Integer')));
+
+            $result_ooff = $ooff_items->fetchAll();
+
+            $rcur_items = CRM_Core_DAO::executeQuery($rcur_query,
+                array( 1 => array($contactid, 'Integer')));
+
+            $rcur_ooff = $rcur_items->fetchAll();
+
+            return [
+                'is_error' => isset($result_ooff) && isset($rcur_ooff) ? 0 : 1,
+                'ooff_values' => $result_ooff,
+                'rcur_values' => $rcur_ooff,
+            ];
+
+        }
+
+        catch (Exception $e) {
+            // Handle error here.
+            $errorMessage = $e->getMessage();
+            $errorCode = $e->getErrorCode();
+            $errorData = $e->getExtraParams();
+            return [
+                'is_error' => 1,
+                'error_message' => $errorMessage,
+                'error_code' => $errorCode,
+                'error_data' => $errorData,
+            ];
+        }
+
+
+    }
+
+
+    /**
+     *
+     * Fetch the membership by the contact id
+     *
+     * @param $contactId
+     * @return array Returns the membership together with type and payment
+     */
+    public static function getSDDFullRecordByContactId($contactId)
+    {
+
+        $sddfullarray = array();
+
+        try{
+            $sddarray = self::getSDDByContactId($contactId);
+
+            if($sddarray['is_error']) return $sddarray;
+            foreach ($sddarray['ooff_values'] As $sdd)
+            {
+                $id = CRM_Utils_Array::value('entity_id', $sdd);
+                $contribution = civicrm_api3('Contribution', 'getsingle', array('id' => (int) $id));
+
+                $paydata = array();
+                $paydata[$id] = $contribution;
+
+                $collection = array(
+                    'sdddata' => $sdd,
+                    'payinfo' => $paydata,
+                );
+
+                $sddfullarray[] = $collection;
+
+            }
+
+            foreach ($sddarray['rcur_values'] As $sdd)
+            {
+                $id = CRM_Utils_Array::value('entity_id', $sdd);
+
+                $contributions = civicrm_api3('Contribution', 'get', array('contribution_recur_id' => (int) $id));
+
+                if($contributions['is_error']) return $sddarray;
+
+                $paydata = array();
+                foreach ($contributions['values'] as $contribution)
+                    $paydata[(int)CRM_Utils_Array::value('id', $contribution)] = $contribution;
+
+
+                $collection = array(
+                    'sdddata' => $sdd,
+                    'payinfo' => $paydata,
+                );
+
+                $sddfullarray[] = $collection;
+
+            }
+
+            return [
+                'is_error' => isset($sddarray) ? 0 : 1,
+                'values' => $sddfullarray,
+            ];
+
+
+        }
+        catch (CiviCRM_API3_Exception $e) {
+            // Handle error here.
+            $errorMessage = $e->getMessage();
+            $errorCode = $e->getErrorCode();
+            $errorData = $e->getExtraParams();
+            return [
+                'is_error' => 1,
+                'error_message' => $errorMessage,
+                'error_code' => $errorCode,
+                'error_data' => $errorData,
+            ];
+        }
+
+
+    }
 
     /**
      *
@@ -409,7 +548,7 @@ class CRM_Itemmanager_Util
             ];
         }
 
-        return $result;
+
     }
 
 

@@ -49,6 +49,7 @@ class CRM_Itemmanager_Page_Dashboard extends CRM_Core_Page {
     //Deklaration
       $member_list = array();
       $error = False;
+      $max_time = max(ini_get('max_execution_time'),30);
 
       $this->assign('currentTime', date('Y-m-d H:i:s'));
       $this->_contact_id = CRM_Utils_Request::retrieve('cid', 'Integer');
@@ -71,6 +72,9 @@ class CRM_Itemmanager_Page_Dashboard extends CRM_Core_Page {
     {
 
         $field_data = array();
+        $member_count = count($member_array['values']);
+        $max_time_member = 0.75 * $max_time / $member_count;
+        $time_start = microtime(true);
         //dig into details of a membership
         foreach ($membership['payinfo'] As $contribution_link)
         {
@@ -135,7 +139,17 @@ class CRM_Itemmanager_Page_Dashboard extends CRM_Core_Page {
                     return;
                 }
 
+                $time_end = microtime(true);
+                $execution_time = ($time_end - $time_start);
+                if($execution_time > $max_time_member)
+                    break;
+
             }//foreach ($linerecords As $lineitem)
+
+            $time_end = microtime(true);
+            $execution_time = ($time_end - $time_start);
+            if($execution_time > $max_time_member)
+                break;
 
         }
 

@@ -36,102 +36,123 @@
     {* make here some better access *}
     {assign var="contributions" value=$relation.contributions}
 
-    <div class="crm-accordion-wrapper open">
-      <div class="crm-accordion-header">
-        {ts}Contribution Type{/ts} {$relation.financial_name}
-      </div>
-      <div class="crm-accordion-body">
-        {* List and Editor to assign payments *}
-        <TABLE>
-          <thead>
-            <tr>
-              <th>{ts}Contribution{/ts} {ts}Item{/ts}</th>
-              <th>
-                <a id="middle_id_top"
-                   class="crm-designer-edit-custom"
-                >
-                  <span>
-                      <div class="crm-i fa-toggle-off" style="padding-right:5px;"></div>
-                  </span>
-                </a>
-              </th>
-              <th>SEPA {ts}Payments{/ts}</th>
-            </tr>
-          </thead>
+    {if $relation.valid}
 
-          <tbody>
-            {* Contribution List *}
-            {foreach from=$contributions item=contribution}
-
-              <tr class="{cycle values="odd-row,even-row"}">
-                {* left page *}
-                <td style="display:flex; justify-content : space-between;">
-                  <div><span class="crm-i fa-calendar-o"></span> {$contribution.contribution_date}</div>
-                  <div>{$contribution.item_label}</div>
-                  <div><span class="crm-i fa-bars"></span> {$contribution.line_count}</div>
-                  <div>&sum; {$contribution.total_display}</div>
-                  <div>check</div></td>
-
-                {* button page *}
-                <td>
-                  <a id="middle_id_1"
+      <div class="crm-accordion-wrapper open">
+        <div class="crm-accordion-header">
+          {ts}Contribution Type{/ts} {$relation.financial_name}
+        </div>
+        <div class="crm-accordion-body">
+          {* List and Editor to assign payments *}
+          <TABLE>
+            <thead>
+              <tr>
+                <th>{ts}Contribution{/ts} {ts}Item{/ts}</th>
+                <th>
+                  <a id="middle_id_top"
                      class="crm-designer-edit-custom"
-                     >
+                  >
                     <span>
                         <div class="crm-i fa-toggle-off" style="padding-right:5px;"></div>
                     </span>
                   </a>
+                </th>
+                <th>SEPA {ts}Payments{/ts}</th>
+              </tr>
+            </thead>
 
-                </td>
+            <tbody>
+              {* Contribution List *}
+              {foreach from=$contributions item=contribution}
 
-                {* right page *}
-                <td>
-                  Right
 
-                </td>
+                <tr class="{cycle values="odd-row,even-row"}">
+                  {* left page *}
+                  <td>
+                    {foreach from=$contribution.related_contributions item=related}
+                      <div style="display:flex; justify-content : space-between;">
+                        <div>{$related.item_label}</div>
+                        <div><span class="crm-i fa-bars"></span> {$related.line_count}</div>
+                        <div>&sum; {$related.total_display}</div>
+                        <div><span class="crm-i fa-calendar-o"></span> {$related.contribution_date}</div>
+                        <div>check</div>
+                      </div></br>
+                    {/foreach}
+                  </td>
+
+                  {* button page *}
+                  <td>
+                    <a id="middle_id_1"
+                       class="crm-designer-edit-custom"
+                       >
+                      <span>
+                          <div class="crm-i fa-toggle-off" style="padding-right:5px;"></div>
+                      </span>
+                    </a>
+
+                  </td>
+
+                  {if $contribution.sdd}
+                    {assign var="sdd" value=$contribution.sdd}
+                    {* right page *}
+
+                    <td style="display:flex; justify-content : space-between;">
+                      <div>check</div>
+                      <div><span class="crm-i fa-calendar-o"></span> {$sdd.sdd_contribution_date}</div>
+                      <div>&sum; {$sdd.sdd_total_display}</div>
+                      <div>{$sdd.sdd_source}</div>
+                      <div>{$sdd.sdd_mandate}</div>
+
+
+                    </td>
+
+                  {/if}
+
+
+                </tr>
+
+              {/foreach}
+
+              {* Example linked *}
+              <tr>
+                {* left page *}
+                <td colspan="3">Left very long </td>
 
               </tr>
 
-            {/foreach}
+              <tr>
 
-            {* Example linked *}
-            <tr>
-              {* left page *}
-              <td colspan="3">Left very long </td>
+                {* detail row *}
+                <td colspan="3">
+                  <div style="padding-left: 20px;">
 
-            </tr>
+                    <a id="middle_id_1"
+                        class="crm-designer-edit-custom"
+                    >
+                    <span>
+                        <div class="crm-i fa-toggle-on" style="padding-right:5px;"></div>
+                    </span>
+                    </a>
 
-            <tr>
+                  </div>
 
-              {* detail row *}
-              <td colspan="3">
-                <div style="padding-left: 20px;">
-
-                  <a id="middle_id_1"
-                      class="crm-designer-edit-custom"
-                  >
-                  <span>
-                      <div class="crm-i fa-toggle-on" style="padding-right:5px;"></div>
-                  </span>
-                  </a>
-
-                </div>
-
-              </td>
+                </td>
 
 
-            </tr>
+              </tr>
 
 
 
-          </tbody>
+            </tbody>
 
 
-        </TABLE>
+          </TABLE>
 
 
+        </div>
       </div>
-    </div>
+
+    {/if}
 
   {/foreach}
 

@@ -7,12 +7,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="8a4e2072-c43d-4029-bc01-730e5001dde6" name="Default Changelist" comment="FIX Cahnge accordion wrapper to separate collapse behavior">
+    <list default="true" id="8a4e2072-c43d-4029-bc01-730e5001dde6" name="Default Changelist" comment="ENH Init contribution list for SEPA Link App">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CRM/Itemmanager/Form/LinkSepaPayments.php" beforeDir="false" afterPath="$PROJECT_DIR$/CRM/Itemmanager/Form/LinkSepaPayments.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CRM/Itemmanager/Page/Dashboard.php" beforeDir="false" afterPath="$PROJECT_DIR$/CRM/Itemmanager/Page/Dashboard.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CRM/Itemmanager/Util.php" beforeDir="false" afterPath="$PROJECT_DIR$/CRM/Itemmanager/Util.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/CRM/Itemmanager/Form/LinkSepaPayments.tpl" beforeDir="false" afterPath="$PROJECT_DIR$/templates/CRM/Itemmanager/Form/LinkSepaPayments.tpl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/CRM/Itemmanager/Page/Dashboard.tpl" beforeDir="false" afterPath="$PROJECT_DIR$/templates/CRM/Itemmanager/Page/Dashboard.tpl" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -65,7 +65,7 @@
     <option name="showMembers" value="true" />
   </component>
   <component name="PropertiesComponent">
-    <property name="Constants" value="true" />
+    <property name="Constants" value="false" />
     <property name="DatabaseDriversLRU" value="mysql" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
@@ -148,7 +148,7 @@
       <workItem from="1645000178749" duration="31186000" />
       <workItem from="1645193699714" duration="31410000" />
       <workItem from="1645358540849" duration="10405000" />
-      <workItem from="1645427199603" duration="9659000" />
+      <workItem from="1645427199603" duration="33456000" />
     </task>
     <task id="LOCAL-00001" summary="ENH Intermittent changes to analyze the price items">
       <created>1612779470217</created>
@@ -276,7 +276,14 @@
       <option name="project" value="LOCAL" />
       <updated>1645270550115</updated>
     </task>
-    <option name="localTasksCounter" value="19" />
+    <task id="LOCAL-00019" summary="ENH Init contribution list for SEPA Link App">
+      <created>1645437377752</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1645437377752</updated>
+    </task>
+    <option name="localTasksCounter" value="20" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -312,7 +319,15 @@
     <MESSAGE value="ENH Add duplication function to repair missing contributions." />
     <MESSAGE value="ENH Init version for new sepa link app" />
     <MESSAGE value="FIX Cahnge accordion wrapper to separate collapse behavior" />
-    <option name="LAST_COMMIT_MESSAGE" value="FIX Cahnge accordion wrapper to separate collapse behavior" />
+    <MESSAGE value="ENH Init contribution list for SEPA Link App" />
+    <option name="LAST_COMMIT_MESSAGE" value="ENH Init contribution list for SEPA Link App" />
+  </component>
+  <component name="XDebuggerManager">
+    <watches-manager>
+      <configuration name="index.php">
+        <watch expression="$relation[&quot;contributions&quot;]" />
+      </configuration>
+    </watches-manager>
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
