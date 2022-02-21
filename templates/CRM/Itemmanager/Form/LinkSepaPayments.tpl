@@ -1,5 +1,41 @@
 {* HEADER *}
+{literal}
+  <style>
+    .contrib_table {
+      display: table;
+      width: 100%;
+    }
+    .contrib_table-row { display: flex;
 
+    }
+    .contrib_table .contrib_table-cell
+    {
+      display: table-cell;
+      padding: 2px;
+    }
+
+    .col-md-fix-big {
+      width:30%;
+
+    }
+
+    .col-md-fix-small {
+      width:20%;
+    }
+
+    .col-md-fix-tiny {
+      width:5%;
+    }
+
+    .col-md-auto {
+      -moz-box-flex: 1;
+      flex:1 1 auto;
+      width: auto;
+    }
+
+
+  </style>
+{/literal}
 
 <h3>{ts domain="org.stadtlandbeides.itemmanager"}SEPA Payment Assignments{/ts}</h3>
 
@@ -68,16 +104,27 @@
 
                 <tr class="{cycle values="odd-row,even-row"}">
                   {* left page *}
-                  <td>
+                  <td class="contrib_table">
                     {foreach from=$contribution.related_contributions item=related}
-                      <div style="display:flex; justify-content : space-between;">
-                        <div>{$related.item_label}</div>
-                        <div><span class="crm-i fa-bars"></span> {$related.line_count}</div>
-                        <div>&sum; {$related.total_display}</div>
-                        <div><span class="crm-i fa-calendar-o"></span> {$related.contribution_date}</div>
-                        <div>check</div>
-                      </div></br>
+                      <div class="contrib_table-row">
+                        <div class="contrib_table-cell col-md-fix-big">{$related.item_label}</div>
+                        <div class="contrib_table-cell col-md-fix-tiny"><span class="crm-i fa-bars"></span> {$related.line_count}</div>
+                        <div class="contrib_table-cell col-md-fix-small">&sum; {$related.total_display}</div>
+                        <div class="contrib_table-cell col-md-fix-small"><span class="crm-i fa-calendar-o"></span> {$related.contribution_date}</div>
+                        <div class="contrib_table-cell col-md-auto">check</div>
+                      </div>
+
                     {/foreach}
+
+                    {if $contribution.multiline}
+                      <div class="contrib_table-row">
+                        <div class="contrib_table-cell col-md-fix-big"></div>
+                        <div class="contrib_table-cell col-md-fix-tiny" ></div>
+                        <div class="contrib_table-cell col-md-fix-small" >&sum; {$contribution.related_total_display}</div>
+                        <div class="contrib_table-cell col-md-fix-small" ></div>
+                        <div class="contrib_table-cell col-md-auto" ></div>
+                      </div>
+                    {/if}
                   </td>
 
                   {* button page *}
@@ -96,12 +143,14 @@
                     {assign var="sdd" value=$contribution.sdd}
                     {* right page *}
 
-                    <td style="display:flex; justify-content : space-between;">
-                      <div>check</div>
-                      <div><span class="crm-i fa-calendar-o"></span> {$sdd.sdd_contribution_date}</div>
-                      <div>&sum; {$sdd.sdd_total_display}</div>
-                      <div>{$sdd.sdd_source}</div>
-                      <div>{$sdd.sdd_mandate}</div>
+                    <td class="contrib_table">
+                      <div class="contrib_table-row">
+                        <div class="contrib_table-cell col-md-auto">check</div>
+                        <div class="contrib_table-cell col-md-fix-small"><span class="crm-i fa-calendar-o"></span> {$sdd.sdd_contribution_date}</div>
+                        <div class="contrib_table-cell col-md-fix-small">&sum; {$sdd.sdd_total_display}</div>
+                        <div class="contrib_table-cell col-md-fix-big">{$sdd.sdd_source}</div>
+                        <div class="contrib_table-cell col-md-fix-big">{$sdd.sdd_mandate}</div>
+                      </div>
 
 
                     </td>
@@ -112,35 +161,6 @@
                 </tr>
 
               {/foreach}
-
-              {* Example linked *}
-              <tr>
-                {* left page *}
-                <td colspan="3">Left very long </td>
-
-              </tr>
-
-              <tr>
-
-                {* detail row *}
-                <td colspan="3">
-                  <div style="padding-left: 20px;">
-
-                    <a id="middle_id_1"
-                        class="crm-designer-edit-custom"
-                    >
-                    <span>
-                        <div class="crm-i fa-toggle-on" style="padding-right:5px;"></div>
-                    </span>
-                    </a>
-
-                  </div>
-
-                </td>
-
-
-              </tr>
-
 
 
             </tbody>
