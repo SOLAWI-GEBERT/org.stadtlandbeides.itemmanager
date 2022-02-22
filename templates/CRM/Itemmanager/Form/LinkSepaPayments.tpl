@@ -1,14 +1,26 @@
 {* HEADER *}
 {literal}
   <style>
+
     .contrib_table {
       display: table;
       width: 100%;
     }
+
+    .contrib_table_left {
+      display: table;
+      width: 100%;
+    }
+
+    .contrib_table_right {
+      display: table;
+      width: 80%;
+    }
+
     .contrib_table-row { display: flex;
 
     }
-    .contrib_table .contrib_table-cell
+    .contrib_table_right .contrib_table_left .contrib_table .contrib_table-cell
     {
       display: table-cell;
       padding: 2px;
@@ -33,9 +45,69 @@
       width: auto;
     }
 
+    /* Toggle Button */
+    .cm-toggle {
+      -webkit-appearance: none;
+      -webkit-tap-highlight-color: transparent;
+      position: relative;
+      border: 0;
+      outline: 0;
+      cursor: pointer;
+      margin: 5px;
+    }
+
+    /* To create surface of toggle button */
+    .cm-toggle:after {
+      content: '';
+      width: 30px;
+      height: 14px;
+      display: inline-block;
+      background: rgba(196, 195, 195, 0.55);
+      border-radius: 9px;
+      clear: both;
+    }
+
+    /* Contents before checkbox to create toggle handle */
+    .cm-toggle:before {
+      content: '';
+      width: 16px;
+      height: 16px;
+      display: block;
+      position: absolute;
+      left: 0;
+      top: -0px;
+      border-radius: 50%;
+      background: rgb(255, 255, 255);
+      box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6);
+    }
+
+    /* Shift the handle to left on check event */
+    .cm-toggle:checked:before {
+      left: 19px;
+      box-shadow: -1px 1px 3px rgba(0, 0, 0, 0.6);
+    }
+    /* Background color when toggle button will be active */
+    .cm-toggle:checked:after {
+      background: #2A71B4;
+    }
+
+    /* Transition for smoothness */
+    .cm-toggle,
+    .cm-toggle:before,
+    .cm-toggle:after,
+    .cm-toggle:checked:before,
+    .cm-toggle:checked:after {
+      transition: ease .3s;
+      -webkit-transition: ease .3s;
+      -moz-transition: ease .3s;
+      -o-transition: ease .3s;
+    }
+
 
   </style>
 {/literal}
+
+
 
 <h3>{ts domain="org.stadtlandbeides.itemmanager"}SEPA Payment Assignments{/ts}</h3>
 
@@ -71,6 +143,7 @@
 
     {* make here some better access *}
     {assign var="contributions" value=$relation.contributions}
+    {assign var="element_group_relation_name" value=$relation.element_link_name}
 
     {if $relation.valid}
 
@@ -85,13 +158,7 @@
               <tr>
                 <th>{ts}Contribution{/ts} {ts}Item{/ts}</th>
                 <th>
-                  <a id="middle_id_top"
-                     class="crm-designer-edit-custom"
-                  >
-                    <div>
-                        <span class="crm-i fa-toggle-off" style="padding-right:5px;"></span>
-                    </div>
-                  </a>
+                  <span class="content">{$form.$element_group_relation_name.html}</span>
                 </th>
                 <th>SEPA {ts}Payments{/ts}</th>
               </tr>
@@ -100,18 +167,29 @@
             <tbody>
               {* Contribution List *}
               {foreach from=$contributions item=contribution}
+                {assign var="element_contrib_relation_name" value=$contribution.element_link_name}
 
 
                 <tr class="{cycle values="odd-row,even-row"}">
                   {* left page *}
                   <td class="contrib_table">
                     {foreach from=$contribution.related_contributions item=related}
+                      {assign var="element_contrib_cross_name" value=$related.element_cross_name}
+
+
                       <div class="contrib_table-row">
                         <div class="contrib_table-cell col-md-fix-big">{$related.item_label}</div>
                         <div class="contrib_table-cell col-md-fix-tiny"><span class="crm-i fa-bars"></span> {$related.line_count}</div>
                         <div class="contrib_table-cell col-md-fix-small">&sum; {$related.total_display}</div>
-                        <div class="contrib_table-cell col-md-fix-small"><span class="crm-i fa-calendar-o"></span> {$related.contribution_date}</div>
-                        <div class="contrib_table-cell col-md-auto">check</div>
+                        <div class="contrib_table-cell col-md-auto"><span class="crm-i fa-calendar-o"></span> {$related.contribution_date}</div>
+                        <div class="contrib_table-cell col-md-fix-small">
+                          {if $related.empty}
+                          -
+                          {else}
+                            <span class="content">{$form.$element_contrib_cross_name.html}</span>
+                          {/if}
+
+                        </div>
                       </div>
 
                     {/foreach}
@@ -121,31 +199,27 @@
                         <div class="contrib_table-cell col-md-fix-big"></div>
                         <div class="contrib_table-cell col-md-fix-tiny" ></div>
                         <div class="contrib_table-cell col-md-fix-small" style="border-top: 1px solid #000;" >&sum; {$contribution.related_total_display}</div>
-                        <div class="contrib_table-cell col-md-fix-small" ></div>
                         <div class="contrib_table-cell col-md-auto" ></div>
+                        <div class="contrib_table-cell col-md-fix-small" ></div>
                       </div>
                     {/if}
                   </td>
 
-                  {* button page *}
+                  {* link button *}
                   <td>
-                    <a id="middle_id_1"
-                       class="crm-designer-edit-custom"
-                       >
-                      <div>
-                          <span class="crm-i fa-toggle-off" style="padding-right:5px;"></span>
-                      </div>
-                    </a>
-
+                    <span class="content">{$form.$element_contrib_relation_name.html}</span>
                   </td>
 
                   {if $contribution.sdd}
                     {assign var="sdd" value=$contribution.sdd}
+                    {assign var="element_sdd_cross_name" value=$sdd.element_cross_name}
                     {* right page *}
 
-                    <td class="contrib_table">
+                    <td class="contrib_table_right">
                       <div class="contrib_table-row">
-                        <div class="contrib_table-cell col-md-auto">check</div>
+                        <div class="contrib_table-cell col-md-auto">
+                          <span class="content">{$form.$element_sdd_cross_name.html}</span>
+                        </div>
                         <div class="contrib_table-cell col-md-fix-small"><span class="crm-i fa-calendar-o"></span> {$sdd.sdd_contribution_date}</div>
                         <div class="contrib_table-cell col-md-fix-small">&sum; {$sdd.sdd_total_display}</div>
                         <div class="contrib_table-cell col-md-fix-big">{$sdd.sdd_source}</div>
@@ -178,23 +252,6 @@
 
 {/if}
 
-
-{* FIELD EXAMPLE: OPTION 1 (AUTOMATIC LAYOUT) *}
-
-{foreach from=$elementNames item=elementName}
-  <div class="crm-section">
-    <div class="label">{$form.$elementName.label}</div>
-    <div class="content">{$form.$elementName.html}</div>
-    <div class="clear"></div>
-  </div>
-{/foreach}
-
-{* FIELD EXAMPLE: OPTION 2 (MANUAL LAYOUT)
-
-  <div>
-    <span>{$form.favorite_color.label}</span>
-    <span>{$form.favorite_color.html}</span>
-  </div>
 
 {* FOOTER *}
 <div class="crm-submit-buttons">

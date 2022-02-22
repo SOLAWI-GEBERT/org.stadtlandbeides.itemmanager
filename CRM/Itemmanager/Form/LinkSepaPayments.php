@@ -90,6 +90,7 @@ class CRM_Itemmanager_Form_LinkSepaPayments extends CRM_Core_Form {
             $this->_relations[(int)$financial_id] = array(
                 'financial_id' => $financial_id,
                 'financial_name' => $finance_name,
+                'element_link_name' => 'grouplink_'.$financial_id,
                 'contributions' => array(),
             );
 
@@ -146,6 +147,7 @@ class CRM_Itemmanager_Form_LinkSepaPayments extends CRM_Core_Form {
                     if(!array_key_exists($reference_month, $relation['contributions']))
                         $relation['contributions'][$reference_month] = array(
                             'reference_month' => $reference_month,
+                            'element_link_name' => 'link_'.$reference_month,
                             'related_contributions' => array(),
                             'related_total_display' => '-',
                             'related_total' => 0,
@@ -160,6 +162,7 @@ class CRM_Itemmanager_Form_LinkSepaPayments extends CRM_Core_Form {
                             'contribution_id' => $contribution_id,
                             'contribution_date' => $contrib_date,
                             'item_label' => $price_set_name,
+                            'element_cross_name' => 'contribution_'.$reference_month.'_'.$contribution_id,
                             'total' => 0.0,
                             'total_display' => '-',
                             'line_count' => 0,
@@ -235,6 +238,7 @@ class CRM_Itemmanager_Form_LinkSepaPayments extends CRM_Core_Form {
                     $this->_relations[(int)$financial_id] = array(
                         'financial_id' => $financial_id,
                         'financial_name' => $finance_name,
+                        'element_link_name' => 'grouplink_'.$financial_id,
                         'contributions' => array(),
                     );
 
@@ -254,6 +258,7 @@ class CRM_Itemmanager_Form_LinkSepaPayments extends CRM_Core_Form {
                             $contrib['sdd'] = array(
                                 'sdd_id' => $sdd_contribution_id,
                                 'sdd_contribution_date' => $sdd_contrib_date,
+                                'element_cross_name' => 'mandate_'.$reference_month.'_'.$sdd_contribution_id,
                                 'sdd_mandate' => CRM_Utils_Array::value('reference', $sddmandate['sdddata']),
                                 'sdd_source' => CRM_Utils_Array::value('source', $sddmandate['sdddata']),
                                 'sdd_total' => CRM_Utils_Array::value('total_amount', $sdd_contribution),
@@ -279,6 +284,7 @@ class CRM_Itemmanager_Form_LinkSepaPayments extends CRM_Core_Form {
                         $relation['contributions'][$reference_month] = array(
                             'reference_month' => $reference_month,
                             'related_contributions' => array(),
+                            'element_link_name' => 'link_'.$reference_month,
 
                         );
 
@@ -288,6 +294,7 @@ class CRM_Itemmanager_Form_LinkSepaPayments extends CRM_Core_Form {
                     $sdd_contrib_base['sdd'] = array(
                         'sdd_id' => $sdd_contribution_id,
                         'sdd_contribution_date' => $sdd_contrib_date,
+                        'element_cross_name' => 'mandate_'.$reference_month.'_'.$sdd_contribution_id,
                         'sdd_mandate' => CRM_Utils_Array::value('reference', $sddmandate['sdddata']),
                         'sdd_source' => CRM_Utils_Array::value('source', $sddmandate['sdddata']),
                         'sdd_total' => CRM_Utils_Array::value('total_amount', $sdd_contribution),
@@ -300,11 +307,13 @@ class CRM_Itemmanager_Form_LinkSepaPayments extends CRM_Core_Form {
                         $sdd_contrib_rel[$sdd_contribution_id] = array(
 
                             'contribution_id' => 0,
+                            'element_cross_name' => 'empty_'.$reference_month.'_'.$sdd_contribution_id,
                             'contribution_date' => '-',
                             'item_label' => '-',
                             'total' => 0.0,
                             'total_display' => '-',
                             'line_count' => 0,
+                            'empty' => True,
 
                         );
 
@@ -319,50 +328,99 @@ class CRM_Itemmanager_Form_LinkSepaPayments extends CRM_Core_Form {
         $this->assign('relations', $this->_relations);
     }
 
+    /**
+     * Create Form
+     *
+     * @throws CRM_Core_Exception
+     */
     public function buildQuickForm() {
 
-    // add form elements
-    $this->add(
-      'select', // field type
-      'favorite_color', // field name
-      'Favorite Color', // field label
-      $this->getColorOptions(), // list of options
-      TRUE // is required
-    );
-    $this->addButtons(array(
-      array(
-        'type' => 'submit',
-        'name' => E::ts('Submit'),
-        'isDefault' => TRUE,
-      ),
-    ));
+        foreach ($this->_relations as $relation) {
 
-    // export form elements
-    $this->assign('elementNames', $this->getRenderableElementNames());
-    parent::buildQuickForm();
-  }
+            $this->addElement(
+                'checkbox',
+                $relation['element_link_name'],
+                ts('Relation'),
+                null,
+                array(
+                    'id'=> $relation['financial_id'],
+                    'class' => 'cm-toggle',
+                ),
+            );
+
+
+            foreach ($relation['contributions'] as $basecontribution) {
+
+                $this->addElement(
+                    'checkbox',
+                    $basecontribution['element_link_name'],
+                    ts('Relation'),
+                    null,
+                    array(
+                        'id'=> $basecontribution['reference_month'],
+                        'class' => 'cm-toggle',
+                    ),
+                );
+
+
+                foreach ($basecontribution['related_contributions'] as $contribution)
+                {
+                    $this->addElement(
+                        'checkbox',
+                        $contribution['element_cross_name'],
+                        ts('Crosslink'),
+                        null,
+                        array(
+                            'id'=> $contribution['contribution_id'],
+                        ),
+                    );
+
+                }//foreach ($basecontribution['related_contributions'] as $contribution)
+
+                $related_mandate = $basecontribution['sdd'];
+
+
+
+                $this->addElement(
+                    'checkbox',
+                    $related_mandate['element_cross_name'],
+                    ts('Crosslink'),
+                    null,
+                    array(
+                        'id'=> $related_mandate['sdd_id'],
+                        )
+                );
+
+
+
+            }//foreach ($relation['contributions'] as $basecontribution)
+
+
+        }//foreach ($this->_relations as $relation)
+
+
+
+        $this->addButtons(array(
+          array(
+            'type' => 'submit',
+            'name' => E::ts('Submit'),
+            'isDefault' => TRUE,
+          ),
+            array(
+                'type' => 'cancel',
+                'name' => ts('Cancel'),
+            ),
+        ));
+
+        // export form elements
+        $this->assign('elementNames', $this->getRenderableElementNames());
+        parent::buildQuickForm();
+      }
 
   public function postProcess() {
     $values = $this->exportValues();
-    $options = $this->getColorOptions();
-    CRM_Core_Session::setStatus(E::ts('You picked color "%1"', array(
-      1 => $options[$values['favorite_color']],
-    )));
-    parent::postProcess();
-  }
 
-  public function getColorOptions() {
-    $options = array(
-      '' => E::ts('- select -'),
-      '#f00' => E::ts('Red'),
-      '#0f0' => E::ts('Green'),
-      '#00f' => E::ts('Blue'),
-      '#f0f' => E::ts('Purple'),
-    );
-    foreach (array('1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e') as $f) {
-      $options["#{$f}{$f}{$f}"] = E::ts('Grey (%1)', array(1 => $f));
-    }
-    return $options;
+    parent::postProcess();
   }
 
   /**
