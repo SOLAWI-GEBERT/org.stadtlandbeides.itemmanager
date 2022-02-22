@@ -517,10 +517,18 @@ class CRM_Itemmanager_Util
                 $paydata = self::getMemberShipPaymentByMembershipId($memberitem['id']);
                 if($paydata['is_error']) return $paydata;
 
+                $statusparams = [
+                    'id' => $memberitem['status_id'],
+                ];
+
+                $statusdata = civicrm_api3('MembershipStatus', 'getsingle', $statusparams);
+
                 $membercollection = array(
                     'memberdata' => $memberitem,
                     'typeinfo' => reset($typedata['values']),
                     'payinfo' => $paydata['values'],
+                    'status' => CRM_Utils_Array::value('label',$statusdata),
+                    'member_active' => CRM_Utils_Array::value('is_current_member',$statusdata),
                 );
 
                 $memberarray[] = $membercollection;

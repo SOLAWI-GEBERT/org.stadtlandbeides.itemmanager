@@ -60,9 +60,9 @@
   <a id="top_button"
      class="button"
   >
-              <span>
-                  <div class="crm-i fa-random" style="padding-right:5px;">Cross Link</div>
-              </span>
+              <div>
+                  <span class="crm-i fa-random" style="padding-right:5px;">Cross Link</span>
+              </div>
   </a>
 </div>
 
@@ -88,9 +88,9 @@
                   <a id="middle_id_top"
                      class="crm-designer-edit-custom"
                   >
-                    <span>
-                        <div class="crm-i fa-toggle-off" style="padding-right:5px;"></div>
-                    </span>
+                    <div>
+                        <span class="crm-i fa-toggle-off" style="padding-right:5px;"></span>
+                    </div>
                   </a>
                 </th>
                 <th>SEPA {ts}Payments{/ts}</th>
@@ -120,7 +120,7 @@
                       <div class="contrib_table-row">
                         <div class="contrib_table-cell col-md-fix-big"></div>
                         <div class="contrib_table-cell col-md-fix-tiny" ></div>
-                        <div class="contrib_table-cell col-md-fix-small" >&sum; {$contribution.related_total_display}</div>
+                        <div class="contrib_table-cell col-md-fix-small" style="border-top: 1px solid #000;" >&sum; {$contribution.related_total_display}</div>
                         <div class="contrib_table-cell col-md-fix-small" ></div>
                         <div class="contrib_table-cell col-md-auto" ></div>
                       </div>
@@ -132,9 +132,9 @@
                     <a id="middle_id_1"
                        class="crm-designer-edit-custom"
                        >
-                      <span>
-                          <div class="crm-i fa-toggle-off" style="padding-right:5px;"></div>
-                      </span>
+                      <div>
+                          <span class="crm-i fa-toggle-off" style="padding-right:5px;"></span>
+                      </div>
                     </a>
 
                   </td>

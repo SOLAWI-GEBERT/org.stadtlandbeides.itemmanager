@@ -53,6 +53,7 @@
 
                 <div class="crm-accordion-header">
                     {ts domain="org.stadtlandbeides.itemmanager"}Membership of {$member.member_name} {/ts}
+                    {ts}Status{/ts} {$member.status}
                 </div>
                 <div class="crm-accordion-body">
                     <div class="crm-block crm-form-block crm-form-title-here-form-block">

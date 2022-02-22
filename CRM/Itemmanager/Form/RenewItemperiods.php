@@ -129,6 +129,8 @@ class CRM_Itemmanager_Form_RenewItemperiods extends CRM_Core_Form {
             $form_collection = array(
                 'name' => $membership['typeinfo']['name'],
                 'member_id' => (int)$membership['memberdata']['id'],
+                'status' => $membership['status'],
+                'active' => $membership['member_active'],
                 'lastcontribution_id' => $lastid,
                 'start_date' => CRM_Utils_Date::customFormat(date_create($first_date)->format('Y-m-d'),
                     Civi::settings()->get('dateformatshortdate')),

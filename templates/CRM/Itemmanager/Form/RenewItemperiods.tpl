@@ -9,14 +9,17 @@
   {foreach from=$memberships item=membership}
     <div class="crm-accordion-wrapper open">
       <div class="crm-accordion-header">
-        {ts domain="org.stadtlandbeides.itemmanager"}Membership {/ts}
+        {ts}Membership{/ts}
         {$membership.name}
       </div>
       <div class="crm-accordion-body">
         <div class="crm-block crm-form-block crm-form-title-here-form-block">
-
-
-
+          {ts}Status{/ts}
+          {if $membership.active}
+            <span style="font-weight: bold; color: #60A237;">{$membership.status}</span>
+          {else}
+            <span style="font-weight: bold; color: #cc0000;">{$membership.status}</span>
+          {/if}
         </div>
         {foreach from=$membership.line_items item=lineitem}
           {assign var="element_item_name" value=$lineitem.element_item_name}

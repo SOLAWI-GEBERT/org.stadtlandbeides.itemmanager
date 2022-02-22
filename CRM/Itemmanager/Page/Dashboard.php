@@ -156,6 +156,8 @@ class CRM_Itemmanager_Page_Dashboard extends CRM_Core_Page {
         $member_list[] = array(
             'field_data' => $field_data,
             'member_name' => $membership['typeinfo']['name'],
+            'status' => $membership['status'],
+            'active' => $membership['member_active'],
         );
 
 
