@@ -7,7 +7,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="8a4e2072-c43d-4029-bc01-730e5001dde6" name="Default Changelist" comment="ENH Show member status ind itemmanager forms">
+    <list default="true" id="8a4e2072-c43d-4029-bc01-730e5001dde6" name="Default Changelist" comment="ENH Introduce some checkboxes to the Link Form">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CRM/Itemmanager/Form/LinkSepaPayments.php" beforeDir="false" afterPath="$PROJECT_DIR$/CRM/Itemmanager/Form/LinkSepaPayments.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/CRM/Itemmanager/Form/LinkSepaPayments.tpl" beforeDir="false" afterPath="$PROJECT_DIR$/templates/CRM/Itemmanager/Form/LinkSepaPayments.tpl" afterDir="false" />
@@ -147,7 +147,7 @@
       <workItem from="1645193699714" duration="31410000" />
       <workItem from="1645358540849" duration="10405000" />
       <workItem from="1645427199603" duration="40872000" />
-      <workItem from="1645516478595" duration="19505000" />
+      <workItem from="1645516478595" duration="32553000" />
     </task>
     <task id="LOCAL-00001" summary="ENH Intermittent changes to analyze the price items">
       <created>1612779470217</created>
@@ -303,7 +303,14 @@
       <option name="project" value="LOCAL" />
       <updated>1645522780145</updated>
     </task>
-    <option name="localTasksCounter" value="23" />
+    <task id="LOCAL-00023" summary="ENH Introduce some checkboxes to the Link Form">
+      <created>1645540076761</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1645540076761</updated>
+    </task>
+    <option name="localTasksCounter" value="24" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -343,15 +350,16 @@
     <MESSAGE value="ENH Init sepa add for SEPA Link App" />
     <MESSAGE value="MNT Some basic style setting for SEPA App" />
     <MESSAGE value="ENH Show member status ind itemmanager forms" />
-    <option name="LAST_COMMIT_MESSAGE" value="ENH Show member status ind itemmanager forms" />
+    <MESSAGE value="ENH Introduce some checkboxes to the Link Form" />
+    <option name="LAST_COMMIT_MESSAGE" value="ENH Introduce some checkboxes to the Link Form" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="php">
-          <url>file://$PROJECT_DIR$/../Stadt-Land-Beides/JML3/media/civicrm/ext/org.stadtlandbeides.itemmanager/CRM/Itemmanager/Form/LinkSepaPayments.php</url>
-          <line>422</line>
-          <option name="timeStamp" value="7" />
+          <url>file://$PROJECT_DIR$/CRM/Itemmanager/Form/LinkSepaPayments.php</url>
+          <line>559</line>
+          <option name="timeStamp" value="16" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

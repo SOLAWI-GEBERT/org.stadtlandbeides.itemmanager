@@ -215,7 +215,7 @@
                     {assign var="element_sdd_cross_name" value=$sdd.element_cross_name}
                     {* right page *}
 
-                    <td class="contrib_table_right">
+                    <td class="contrib_table">
                       <div class="contrib_table-row">
                         <div class="contrib_table-cell col-md-auto">
                           <span class="content">{$form.$element_sdd_cross_name.html}</span>
