@@ -148,6 +148,7 @@ class CRM_Itemmanager_Form_LinkSepaPayments extends CRM_Core_Form {
                     continue;
                 }
 
+                $foundtrxfinance = false;
                 foreach ($linerecords as $lineitem) {
 
                     $price_field_value_id = CRM_Utils_Array::value('price_field_value_id', $lineitem['linedata']);
@@ -156,6 +157,24 @@ class CRM_Itemmanager_Form_LinkSepaPayments extends CRM_Core_Form {
 
                     $line_total = CRM_Utils_Array::value('line_total',$lineitem['linedata']);
                     $line_tax = CRM_Utils_Array::value('tax_amount',$lineitem['linedata']);
+
+                    //check here transaction relation
+                    $istrxn = !$trxn['is_error'] && count($trxn['values']) > 0;
+
+
+
+                    foreach ($trxn['values'] as $trx) {
+                        $needle = 'SDD@';
+                        $length = strlen( $needle );
+                        if (!substr( $trx['trxn_id'], 0, $length ) === $needle) continue;
+                        $split = explode("#finance#", $trx['trxn_id']);
+                        if (count($split) != 2) continue;
+                        $finance_sdd_id = (int)$split[1];
+                        if ($finance_sdd_id == (int)$financial_id) {
+                            $foundtrxfinance = true;
+                        }
+                    }
+
 
                     //if($line_total == 0.0) continue;
 
@@ -170,7 +189,8 @@ class CRM_Itemmanager_Form_LinkSepaPayments extends CRM_Core_Form {
                             'related_contributions' => array(),
                             'related_total_display' => '-',
                             'related_total' => 0,
-                            'is_trxn' => !$trxn['is_error'] && count($trxn['values']) > 0,
+                            'is_trxn' => $istrxn,
+                            'is_direct_trxn' => $foundtrxfinance,
 
                         );
 
@@ -180,6 +200,8 @@ class CRM_Itemmanager_Form_LinkSepaPayments extends CRM_Core_Form {
                         'element' => $relation['contributions'][$reference_month]['element_link_name'],
                         'financial_id' => $financial_id,
                         'reference_month' => $reference_month,
+                        'is_trxn' => $istrxn,
+                        'is_direct_trxn' => $foundtrxfinance,
                     );
 
                     //we want to collect all items of the same month
@@ -199,6 +221,7 @@ class CRM_Itemmanager_Form_LinkSepaPayments extends CRM_Core_Form {
                             'net_amount' => 0.0,
                             'line_count' => 0,
                             'is_trxn' => !$trxn['is_error'] && count($trxn['values']) > 0,
+                            'is_direct_trxn' => $foundtrxfinance,
 
                         );
 
@@ -405,6 +428,7 @@ class CRM_Itemmanager_Form_LinkSepaPayments extends CRM_Core_Form {
                             'net_amount' => 0.0,
                             'line_count' => 0,
                             'is_trxn' => 0,
+                            'is_direct_trxn' => 0,
                             'empty' => True,
 
                         );
@@ -438,7 +462,7 @@ class CRM_Itemmanager_Form_LinkSepaPayments extends CRM_Core_Form {
         foreach ($this->_relations as $relation) {
 
             $this->addElement(
-                'checkbox',
+                'advcheckbox',
                 $relation['element_link_name'],
                 ts('Relation'),
                 null,
@@ -453,7 +477,7 @@ class CRM_Itemmanager_Form_LinkSepaPayments extends CRM_Core_Form {
 
 
                 $chk = $this->addElement(
-                    'checkbox',
+                    'advcheckbox',
                     $basecontribution['element_link_name'],
                     null,
                     null,
@@ -463,13 +487,13 @@ class CRM_Itemmanager_Form_LinkSepaPayments extends CRM_Core_Form {
                     ),
                 );
 
-                $chk->setValue($basecontribution['is_trxn']);
+                $chk->setValue($basecontribution['is_direct_trxn']);
 
 
                 foreach ($basecontribution['related_contributions'] as $contribution)
                 {
                     $this->addElement(
-                        'checkbox',
+                        'advcheckbox',
                         $contribution['element_cross_name'],
                         ts('Crosslink'),
                         null,
@@ -485,7 +509,7 @@ class CRM_Itemmanager_Form_LinkSepaPayments extends CRM_Core_Form {
 
 
                 $this->addElement(
-                    'checkbox',
+                    'advcheckbox',
                     $related_mandate['element_cross_name'],
                     ts('Crosslink'),
                     null,
@@ -538,7 +562,10 @@ class CRM_Itemmanager_Form_LinkSepaPayments extends CRM_Core_Form {
                    break;
 
                case 'link':
-                   $this->createPaymentbyLink($back_reference);
+                   if($value == 1 && !$back_reference['is_direct_trxn'])
+                        $this->createPaymentbyLink($back_reference);
+                   elseif ($value == 0 && $back_reference['is_direct_trxn'])
+                        $this->deletePaymentbyLink($back_reference);
                    break;
 
                case 'contr_cross':
@@ -597,9 +624,9 @@ class CRM_Itemmanager_Form_LinkSepaPayments extends CRM_Core_Form {
                 //'pan_truncation',
                 'trxn_result_code'=>2,
                 'payment_instrument_id'=> (int) $mandate['payment_instrument_id'],
-                'trxn_id' => 'SDD_'.$mandate['sdd_mandate'],
+                'trxn_id' => 'SDD@'.$mandate['sdd_mandate'].'#finance#'.$financial_id,
                 'trxn_date' => $mandate['sdd_contribution_raw'],
-                'contribution_date_copy' => $contribution[contribution_date_raw],
+                'contribution_date_copy' => $contribution['contribution_date_raw'],
                 //'order_reference' => ,
 
 
@@ -614,6 +641,43 @@ class CRM_Itemmanager_Form_LinkSepaPayments extends CRM_Core_Form {
 
       return;
   }
+
+
+    /**
+     *  Delete the related payment based on the link button
+     *
+     * @param $reference (array) back reference array item
+     */
+    private function deletePaymentbyLink($reference)
+    {
+        $financial_id = $reference['financial_id'];
+        $reference_month = $reference['reference_month'];
+
+        $relation = &$this->_relations[$financial_id];
+        $contrib_base = &$relation['contributions'][$reference_month];
+        $contrib_rel = &$relation['contributions'][$reference_month]['related_contributions'];
+        $mandate = $contrib_base['sdd'];
+
+        foreach ($contrib_rel as $contribution)
+        {
+            //skip unrelated payments
+            if(!$contribution['is_trxn']) continue;
+
+            //has to be filled up for the payment
+            $pay_param = array(
+                'contribution_id' => (int) $contribution['contribution_id'],
+                'financial_id' => $financial_id,
+            );
+
+            $this->deletePayment($pay_param,
+                E::ts('Delete SEPA payment relation').
+                ' '.$mandate['sdd_mandate'].' from '.$mandate['sdd_contribution_date']);
+
+        }
+
+        return;
+    }
+
 
 
     /**
@@ -634,8 +698,7 @@ class CRM_Itemmanager_Form_LinkSepaPayments extends CRM_Core_Form {
               'receive_date' =>  $params['contribution_date_copy'],
           );
 
-          //restore origin date
-          civicrm_api3('Contribution', 'create', $update_param);
+
 
           if($trxn['is_error'])
           {
@@ -645,7 +708,18 @@ class CRM_Itemmanager_Form_LinkSepaPayments extends CRM_Core_Form {
           }
           else
           {
-              $this->processSuccess($sucessmessage);
+
+              //restore origin date
+              $update = civicrm_api3('Contribution', 'create', $update_param);
+
+              if($update['is_error'])
+              {
+                  $this->processError("ERROR",E::ts('Update status contribution'),$update['error_message']);
+                  $transaction->rollback();
+
+              }
+              else
+                $this->processSuccess($sucessmessage.' transaction '.$trxn['id']);
           }
 
 
@@ -656,6 +730,91 @@ class CRM_Itemmanager_Form_LinkSepaPayments extends CRM_Core_Form {
       $transaction->commit();
 
   }
+
+    /**
+     *  Wrapper for the API Payment delete call to serve some adds
+     *
+     * @param $params Payment see API3
+     * @param $sucessmessage
+     * @throws CiviCRM_API3_Exception
+     */
+    private function deletePayment(array $params, $sucessmessage){
+
+        $transaction = new CRM_Core_Transaction();
+        try {
+
+            $contribution_id = $params['contribution_id'];
+
+            $trxn = civicrm_api3('Payment','get',array('entity_id' => (int)$contribution_id));
+            if ($trxn['is_error']) {
+                $this->processError("ERROR",
+                    E::ts('Could not get the payments for the contribution ' .(int)$contribution_id),
+                    $trxn['error_message']);
+                $transaction->rollback();
+            }
+            else
+            {
+
+                foreach ($trxn['values'] as $trx )
+                {
+                    //check our stuff
+                    $needle = 'SDD@';
+                    $length = strlen( $needle );
+                    if (!substr( $trx['trxn_id'], 0, $length ) === $needle) continue;
+                    $split = explode("#finance#", $trx['trxn_id']);
+                    if(count($split) != 2 ) continue;
+
+                    $finance_sdd_id = (int)$split[1];
+
+                    if($finance_sdd_id != (int)$params['financial_id']) continue;
+
+                    $trxd = civicrm_api3('Payment', 'delete', array('id' => (int)$trx['id']));
+
+                    if($trxd['is_error'])
+                    {
+                        $this->processError("ERROR",E::ts('Delete SEPA payment relation'),$trxd['error_message']);
+                        $transaction->rollback();
+                        break;
+
+                    }
+                    else {
+
+                        // it is not everythin allowed here
+//                        $update_param = array(
+//                            'id' => (int)$params['contribution_id'],
+//                            'contribution_status_id' =>  3,
+//                        );
+//
+//                        //restore origin date
+//                        $update = civicrm_api3('Contribution', 'create', $update_param);
+//
+//                        if($update['is_error'])
+//                        {
+//                            $this->processError("ERROR",E::ts('Update status contribution'),$update['error_message']);
+//                            $transaction->rollback();
+//
+//                        }
+//                        else
+//                        {
+//                            $this->processSuccess($sucessmessage . ' transaction ' . $trx['id']);
+//                        }
+
+
+                        $this->processSuccess($sucessmessage . ' transaction ' . $trx['id']);
+
+                    }
+                }
+
+            }
+
+
+        } catch (CRM_Core_Exception $e) {
+            $transaction->rollback();
+        }
+
+        $transaction->commit();
+
+    }
 
 
   /**

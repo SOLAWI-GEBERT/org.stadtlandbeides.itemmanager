@@ -7,10 +7,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="8a4e2072-c43d-4029-bc01-730e5001dde6" name="Default Changelist" comment="ENH First prototype of payment SEPA relation">
+    <list default="true" id="8a4e2072-c43d-4029-bc01-730e5001dde6" name="Default Changelist" comment="ENH Add lazy load payment details to SEPA App">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CRM/Itemmanager/Form/LinkSepaPayments.php" beforeDir="false" afterPath="$PROJECT_DIR$/CRM/Itemmanager/Form/LinkSepaPayments.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/CRM/Itemmanager/Form/LinkSepaPayments.tpl" beforeDir="false" afterPath="$PROJECT_DIR$/templates/CRM/Itemmanager/Form/LinkSepaPayments.tpl" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -148,7 +147,7 @@
       <workItem from="1645358540849" duration="10405000" />
       <workItem from="1645427199603" duration="40872000" />
       <workItem from="1645516478595" duration="33159000" />
-      <workItem from="1645616796773" duration="14133000" />
+      <workItem from="1645616796773" duration="27797000" />
     </task>
     <task id="LOCAL-00001" summary="ENH Intermittent changes to analyze the price items">
       <created>1612779470217</created>
@@ -318,7 +317,14 @@
       <option name="project" value="LOCAL" />
       <updated>1645560774340</updated>
     </task>
-    <option name="localTasksCounter" value="25" />
+    <task id="LOCAL-00025" summary="ENH Add lazy load payment details to SEPA App">
+      <created>1645632251691</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1645632251691</updated>
+    </task>
+    <option name="localTasksCounter" value="26" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -360,25 +366,26 @@
     <MESSAGE value="ENH Show member status ind itemmanager forms" />
     <MESSAGE value="ENH Introduce some checkboxes to the Link Form" />
     <MESSAGE value="ENH First prototype of payment SEPA relation" />
-    <option name="LAST_COMMIT_MESSAGE" value="ENH First prototype of payment SEPA relation" />
+    <MESSAGE value="ENH Add lazy load payment details to SEPA App" />
+    <option name="LAST_COMMIT_MESSAGE" value="ENH Add lazy load payment details to SEPA App" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="php">
           <url>file://$PROJECT_DIR$/../Stadt-Land-Beides/JML3/media/civicrm/ext/org.stadtlandbeides.itemmanager/CRM/Itemmanager/Form/LinkSepaPayments.php</url>
-          <line>627</line>
-          <option name="timeStamp" value="4" />
+          <line>712</line>
+          <option name="timeStamp" value="38" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php">
           <url>file://$PROJECT_DIR$/../Stadt-Land-Beides/JML3/media/civicrm/ext/org.stadtlandbeides.itemmanager/CRM/Itemmanager/Form/LinkSepaPayments.php</url>
-          <line>638</line>
-          <option name="timeStamp" value="5" />
+          <line>565</line>
+          <option name="timeStamp" value="39" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php">
           <url>file://$PROJECT_DIR$/../Stadt-Land-Beides/JML3/media/civicrm/ext/org.stadtlandbeides.itemmanager/CRM/Itemmanager/Form/LinkSepaPayments.php</url>
-          <line>623</line>
-          <option name="timeStamp" value="6" />
+          <line>567</line>
+          <option name="timeStamp" value="40" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
