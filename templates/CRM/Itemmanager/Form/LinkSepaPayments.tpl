@@ -119,6 +119,15 @@
   {/ts}
 </div>
 
+{if $errormessages}
+  <div class="crm-error">
+    {foreach from=$errormessages item=message}
+      <span>{$message}</br></span>
+    {/foreach}
+  </div>
+
+{/if}
+
 <div class="crm-submit-buttons">
   {include file="CRM/common/formButtons.tpl" location="top"}
 </div>
@@ -180,8 +189,15 @@
                       <div class="contrib_table-row">
                         <div class="contrib_table-cell col-md-fix-big">{$related.item_label}</div>
                         <div class="contrib_table-cell col-md-fix-tiny"><span class="crm-i fa-bars"></span> {$related.line_count}</div>
+                        <div class="contrib_table-cell col-md-fix-tiny">
+                          <a class="nowrap bold crm-expand-row"
+                              title="{ts}view payments{/ts}"
+                             href="{crmURL p='civicrm/payment' q="view=transaction&component=contribution&action=browse&cid=`$contact_id`&id=`$related.contribution_id`&selector=1"}">
+                          </a>
+                        </div>
                         <div class="contrib_table-cell col-md-fix-small">&sum; {$related.total_display}</div>
-                        <div class="contrib_table-cell col-md-auto"><span class="crm-i fa-calendar-o"></span> {$related.contribution_date}</div>
+                        <div class="contrib_table-cell col-md-auto">
+                          <span class="crm-i fa-calendar-o"></span> {$related.contribution_date}</div>
                         <div class="contrib_table-cell col-md-fix-small">
                           {if $related.empty}
                           -
@@ -198,12 +214,14 @@
                       <div class="contrib_table-row">
                         <div class="contrib_table-cell col-md-fix-big"></div>
                         <div class="contrib_table-cell col-md-fix-tiny" ></div>
+                        <div class="contrib_table-cell col-md-fix-tiny"></div>
                         <div class="contrib_table-cell col-md-fix-small" style="border-top: 1px solid #000;" >&sum; {$contribution.related_total_display}</div>
                         <div class="contrib_table-cell col-md-auto" ></div>
                         <div class="contrib_table-cell col-md-fix-small" ></div>
                       </div>
                     {/if}
                   </td>
+
 
                   {* link button *}
                   <td>
@@ -257,3 +275,5 @@
 <div class="crm-submit-buttons">
 {include file="CRM/common/formButtons.tpl" location="bottom"}
 </div>
+
+{crmScript file='js/crm.expandRow.js'}
