@@ -162,16 +162,17 @@ class CRM_Itemmanager_Form_LinkSepaPayments extends CRM_Core_Form {
                     $istrxn = !$trxn['is_error'] && count($trxn['values']) > 0;
 
 
-
-                    foreach ($trxn['values'] as $trx) {
-                        $needle = 'SDD@';
-                        $length = strlen( $needle );
-                        if (!substr( $trx['trxn_id'], 0, $length ) === $needle) continue;
-                        $split = explode("#finance#", $trx['trxn_id']);
-                        if (count($split) != 2) continue;
-                        $finance_sdd_id = (int)$split[1];
-                        if ($finance_sdd_id == (int)$financial_id) {
-                            $foundtrxfinance = true;
+                    if ($istrxn) {
+                        foreach ($trxn['values'] as $trx) {
+                            $needle = 'SDD@';
+                            $length = strlen($needle);
+                            if (!substr($trx['trxn_id'], 0, $length) === $needle) continue;
+                            $split = explode("#finance#", $trx['trxn_id']);
+                            if (count($split) != 2) continue;
+                            $finance_sdd_id = (int)$split[1];
+                            if ($finance_sdd_id == (int)$financial_id) {
+                                $foundtrxfinance = true;
+                            }
                         }
                     }
 
@@ -182,10 +183,10 @@ class CRM_Itemmanager_Form_LinkSepaPayments extends CRM_Core_Form {
                     $relation['valid'] = True;
 
                     //create entry just once per contribution
-                    if(!array_key_exists($reference_month, $relation['contributions']))
+                    if(!array_key_exists($reference_month, $relation['contributions'])) {
                         $relation['contributions'][$reference_month] = array(
                             'reference_month' => $reference_month,
-                            'element_link_name' => 'link_'.$financial_id.'_'.$reference_month,
+                            'element_link_name' => 'link_' . $financial_id . '_' . $reference_month,
                             'related_contributions' => array(),
                             'related_total_display' => '-',
                             'related_total' => 0,
@@ -194,26 +195,30 @@ class CRM_Itemmanager_Form_LinkSepaPayments extends CRM_Core_Form {
 
                         );
 
-                    //fill form backward search
-                    $this->_back_ward_search[$relation['contributions'][$reference_month]['element_link_name']] = array(
-                        'entity' => 'link',
-                        'element' => $relation['contributions'][$reference_month]['element_link_name'],
-                        'financial_id' => $financial_id,
-                        'reference_month' => $reference_month,
-                        'is_trxn' => $istrxn,
-                        'is_direct_trxn' => $foundtrxfinance,
-                    );
+                        //fill form backward search
+                        $this->_back_ward_search[$relation['contributions'][$reference_month]['element_link_name']] = array(
+                            'entity' => 'link',
+                            'element' => $relation['contributions'][$reference_month]['element_link_name'],
+                            'financial_id' => $financial_id,
+                            'reference_month' => $reference_month,
+                            'is_trxn' => $istrxn,
+                            'is_direct_trxn' => $foundtrxfinance,
+                        );
+
+                    }
+
+
 
                     //we want to collect all items of the same month
                     $contrib_base = &$relation['contributions'][$reference_month]['related_contributions'];
 
-                    if(!array_key_exists($contribution_id, $contrib_base))
-                        $contrib_base[$contribution_id] =  array(
+                    if(!array_key_exists($contribution_id, $contrib_base)) {
+                        $contrib_base[$contribution_id] = array(
                             'contribution_id' => $contribution_id,
                             'contribution_date_raw' => $contrib_date_raw,
                             'contribution_date' => $contrib_date,
                             'item_label' => $price_set_name,
-                            'element_cross_name' => 'contribution_'.$financial_id.'_'.$reference_month.'_'.$contribution_id,
+                            'element_cross_name' => 'contribution_' . $financial_id . '_' . $reference_month . '_' . $contribution_id,
                             'total' => 0.0,
                             'total_display' => '-',
                             'fee_amount' => $contrib_fee_amount,
@@ -225,14 +230,17 @@ class CRM_Itemmanager_Form_LinkSepaPayments extends CRM_Core_Form {
 
                         );
 
-                    //fill form backward search
-                    $this->_back_ward_search[$contrib_base[$contribution_id]['element_cross_name']] = array(
-                        'entity' => 'contr_cross',
-                        'element' => $contrib_base[$contribution_id]['element_cross_name'],
-                        'financial_id' => $financial_id,
-                        'contribution_id' => $contribution_id,
-                        'reference_month' => $reference_month,
-                    );
+                        //fill form backward search
+                        $this->_back_ward_search[$contrib_base[$contribution_id]['element_cross_name']] = array(
+                            'entity' => 'contr_cross',
+                            'element' => $contrib_base[$contribution_id]['element_cross_name'],
+                            'financial_id' => $financial_id,
+                            'contribution_id' => $contribution_id,
+                            'reference_month' => $reference_month,
+                        );
+
+
+                    }
 
                     //sum up some parts
 
