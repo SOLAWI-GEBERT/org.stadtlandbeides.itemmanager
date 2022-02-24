@@ -699,6 +699,9 @@ class CRM_Itemmanager_Form_LinkSepaPayments extends CRM_Core_Form {
 
       $transaction = new CRM_Core_Transaction();
       try {
+
+          //$param['is_email_receipt'] = false;
+
           $trxn = civicrm_api3('Payment', 'create', $params);
 
           $update_param = array(
@@ -718,6 +721,7 @@ class CRM_Itemmanager_Form_LinkSepaPayments extends CRM_Core_Form {
           {
 
               //restore origin date
+              $transaction->commit();
               $update = civicrm_api3('Contribution', 'create', $update_param);
 
               if($update['is_error'])
@@ -735,7 +739,7 @@ class CRM_Itemmanager_Form_LinkSepaPayments extends CRM_Core_Form {
           $transaction->rollback();
       }
 
-      $transaction->commit();
+
 
   }
 

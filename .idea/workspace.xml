@@ -7,7 +7,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="8a4e2072-c43d-4029-bc01-730e5001dde6" name="Default Changelist" comment="FIX Some delete and create bugs for the SEPA App">
+    <list default="true" id="8a4e2072-c43d-4029-bc01-730e5001dde6" name="Default Changelist" comment="FIX correct context for backward search function in SEPA App">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CRM/Itemmanager/Form/LinkSepaPayments.php" beforeDir="false" afterPath="$PROJECT_DIR$/CRM/Itemmanager/Form/LinkSepaPayments.php" afterDir="false" />
     </list>
@@ -147,7 +147,8 @@
       <workItem from="1645358540849" duration="10405000" />
       <workItem from="1645427199603" duration="40872000" />
       <workItem from="1645516478595" duration="33159000" />
-      <workItem from="1645616796773" duration="29007000" />
+      <workItem from="1645616796773" duration="30664000" />
+      <workItem from="1645725630808" duration="4063000" />
     </task>
     <task id="LOCAL-00001" summary="ENH Intermittent changes to analyze the price items">
       <created>1612779470217</created>
@@ -331,7 +332,14 @@
       <option name="project" value="LOCAL" />
       <updated>1645647716852</updated>
     </task>
-    <option name="localTasksCounter" value="27" />
+    <task id="LOCAL-00027" summary="FIX correct context for backward search function in SEPA App">
+      <created>1645649152844</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1645649152844</updated>
+    </task>
+    <option name="localTasksCounter" value="28" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -350,7 +358,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="ENH Intermittent changes to analyze the price items" />
     <MESSAGE value="ENH Final working version of the admin settings form for the itemmanager" />
     <MESSAGE value="FIX Add Debug infos" />
     <MESSAGE value="MNT Refactoring of the Itemmanager Dashboard to DAO objects" />
@@ -375,18 +382,8 @@
     <MESSAGE value="ENH First prototype of payment SEPA relation" />
     <MESSAGE value="ENH Add lazy load payment details to SEPA App" />
     <MESSAGE value="FIX Some delete and create bugs for the SEPA App" />
-    <option name="LAST_COMMIT_MESSAGE" value="FIX Some delete and create bugs for the SEPA App" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="php">
-          <url>file://$PROJECT_DIR$/../Stadt-Land-Beides/JML3/media/civicrm/ext/org.stadtlandbeides.itemmanager/CRM/Itemmanager/Form/LinkSepaPayments.php</url>
-          <line>720</line>
-          <option name="timeStamp" value="38" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
+    <MESSAGE value="FIX correct context for backward search function in SEPA App" />
+    <option name="LAST_COMMIT_MESSAGE" value="FIX correct context for backward search function in SEPA App" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
