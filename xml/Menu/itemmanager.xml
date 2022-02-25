@@ -45,4 +45,18 @@
     <title>LinkSepaPayments</title>
     <access_arguments>access CiviCRM</access_arguments>
   </item>
+  <item>
+    <path>civicrm/items/linksepawrapper</path>
+    <page_callback>CRM_Itemmanager_Form_LinkSepaWrapper</page_callback>
+    <title>LinkSepaWrapper</title>
+    <access_arguments>access CiviCRM</access_arguments>
+  </item>
+  <item>
+    <path>civicrm/sepastub</path>
+    <page_callback>CRM_Itemmanager_Page_LinkSepaPaymentsStub</page_callback>
+    <title>LinkSepaPaymentsStub</title>
+    <path_arguments>action=edit</path_arguments>
+    <access_arguments>access CiviContribute</access_arguments>
+    <page_type>1</page_type>
+  </item>
 </menu>

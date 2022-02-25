@@ -1,0 +1,180 @@
+<?php
+
+use CRM_Itemmanager_ExtensionUtil as E;
+
+
+
+
+
+
+/**
+ * Form controller class
+ *
+ * @see https://docs.civicrm.org/dev/en/latest/framework/quickform/
+ */
+class CRM_Itemmanager_Form_LinkSepaWrapper extends CRM_Core_Form {
+
+    public $_contact_id;
+    public $_relations;
+    private $_errormessages;
+    private $_back_ward_search;
+
+    function __construct()
+    {
+        parent::__construct();
+        $this->_relations = array();
+        $this->_errormessages = array();
+        $this->_back_ward_search = array();
+    }
+
+    public function preProcess()
+    {
+        $this->_contact_id = CRM_Utils_Request::retrieve('cid', 'Integer');
+
+        $contact = civicrm_api('Contact', 'getsingle', array('version' => 3, 'id' => $this->_contact_id));
+        if (isset($contact['is_error']) && $contact['is_error']) {
+            CRM_Core_Session::setStatus(sprintf(ts("Couldn't find contact #%s", array('domain' => 'org.stadtlandbeides.itemmanager')),
+                $this->_contact_id), ts('Error', array('domain' => 'org.stadtlandbeides.itemmanager')), 'error');
+            $this->assign("display_name", "ERROR");
+            return;
+        }
+
+        CRM_Utils_System::setTitle(E::ts('Payments relation for').' '.CRM_Utils_Array::value('display_name', $contact));
+
+        $this->assign('contact_id', $this->_contact_id);
+
+        $itemmanager_price_fields = \Civi\Api4\ItemmanagerSettings::get()
+            ->setCheckPermissions(TRUE)
+            ->execute();
+
+        $currency = Civi::settings()->get('defaultCurrency');
+
+        //region Fetch Financial types as root object
+        foreach ($itemmanager_price_fields as $item)
+        {
+
+            $price_id = CRM_Utils_Array::value('price_field_value_id', $item);
+            $ignore = CRM_Utils_Array::value('ignore', $item);
+            $novitiate = CRM_Utils_Array::value('novitiate', $item);
+            //avoid general contribution amount etc.
+            if($ignore && !$novitiate) continue;
+
+            $price_origins  = civicrm_api3('PriceFieldValue', 'get',
+                array('price_field_id' => (int)$price_id));
+            if ($price_origins['is_error']) {
+                $this->_errormessages[] = 'Could not get the price field ' .(int)$price_id;
+                continue;
+            }
+
+            $price_origin = reset($price_origins['values']);
+
+            if(!$price_origin)
+                continue;
+
+            $financial_id = CRM_Utils_Array::value('financial_type_id', $price_origin);
+
+            //check further efforts first
+            if(array_key_exists($financial_id, $this->_relations)) continue;
+
+            $finance_type  = civicrm_api3('FinancialType', 'getsingle',
+                array('id' => (int)$financial_id));
+            if (!isset($finance_type)) {
+                $this->_errormessages[] = 'Could not get the financial type ' .(int)$financial_id;
+                continue;
+            }
+
+            $finance_name = CRM_Utils_Array::value('name', $finance_type);
+
+            //basic dictionary with default settings
+            $this->_relations[(int)$financial_id] = array(
+                'financial_id' => $financial_id,
+                'financial_name' => $finance_name,
+                'element_link_name' => 'grouplink_'.$financial_id,
+            );
+
+            //fill form backward search
+            $this->_back_ward_search[$this->_relations[(int)$financial_id]['element_link_name']] = array(
+                'entity' => 'financial',
+                'financial_id' => $financial_id,
+            );
+
+        }
+        //endregion
+
+    }
+
+
+    public function buildQuickForm() {
+
+
+    $this->addButtons(array(
+      array(
+        'type' => 'cancel',
+        'name' => E::ts('Complete'),
+        'isDefault' => TRUE,
+      ),
+    ));
+
+    // export form elements
+    CRM_Core_Resources::singleton()
+        ->addScriptFile('org.stadtlandbeides.itemmanager', 'js/expandAccordion.js')
+        ->addStyleFile('org.stadtlandbeides.itemmanager', 'css/sepaLink.css');
+    $this->assign('relations', $this->_relations);
+    $this->assign('elementNames', $this->getRenderableElementNames());
+    parent::buildQuickForm();
+  }
+
+  public function postProcess() {
+    $values = $this->exportValues();
+
+    parent::postProcess();
+  }
+
+
+
+  /**
+   * Get the fields/elements defined in this form.
+   *
+   * @return array (string)
+   */
+  public function getRenderableElementNames() {
+    // The _elements list includes some items which should not be
+    // auto-rendered in the loop -- such as "qfKey" and "buttons".  These
+    // items don't have labels.  We'll identify renderable by filtering on
+    // the 'label'.
+    $elementNames = array();
+    foreach ($this->_elements as $element) {
+      /** @var HTML_QuickForm_Element $element */
+      $label = $element->getLabel();
+      if (!empty($label)) {
+        $elementNames[] = $element->getName();
+      }
+    }
+    return $elementNames;
+  }
+
+    /**
+     * report error data
+     */
+    protected function processError($status, $title, $message) {
+        CRM_Core_Session::setStatus($status . "<br/>" . $message, ts('Error', array('domain' => 'org.stadtlandbeides.itemmanager')), 'error');
+        $this->assign("error_title",   $title);
+        $this->assign("error_message", $message);
+
+
+    }
+
+    protected function processSuccess($message) {
+        CRM_Core_Session::setStatus($message, ts('Success', array('domain' => 'org.stadtlandbeides.itemmanager')), 'success');
+
+
+
+    }
+
+    protected function processInfo($message) {
+        CRM_Core_Session::setStatus($message, ts('Info', array('domain' => 'org.stadtlandbeides.itemmanager')), 'info');
+
+
+
+    }
+}

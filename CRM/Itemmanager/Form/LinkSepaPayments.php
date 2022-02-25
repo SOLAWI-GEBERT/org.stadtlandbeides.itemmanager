@@ -9,8 +9,6 @@ use CRM_Itemmanager_ExtensionUtil as E;
  */
 class CRM_Itemmanager_Form_LinkSepaPayments extends CRM_Core_Form {
 
-
-
     public $_contact_id;
     public $_relations;
     private $_errormessages;
