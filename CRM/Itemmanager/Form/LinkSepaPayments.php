@@ -463,6 +463,7 @@ class CRM_Itemmanager_Form_LinkSepaPayments extends CRM_Core_Form {
      *
      * @throws CRM_Core_Exception
      */
+
     public function buildQuickForm() {
 
         foreach ($this->_relations as $relation) {

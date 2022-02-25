@@ -41,13 +41,14 @@
         {assign var="element_group_relation_name" value=$relation.element_link_name}
 
         <div class="crm-accordion-wrapper collapsed"
-             data-url="{crmURL p='civicrm/sepastub' q="edit=payment&cid=`$contact_id`&smartyDebug=1"}"
+             style="padding: 5px;"
+             data-url="{crmURL p='civicrm/sepastub' q="edit=payment&cid=`$contact_id`&fid=`$relation.financial_id`&smartyDebug=1"}"
         >
                 <div class="crm-accordion-header">{ts}Contribution Type{/ts} {$relation.financial_name}</div>
                 <div class="crm-accordion-body">
                     <div class="crm-clear">
 
-                        <div> was </div>
+                        <div>{ts}Please wait...{/ts}</div>
 
                     </div>
                 </div>

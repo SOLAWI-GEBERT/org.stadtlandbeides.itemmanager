@@ -7,13 +7,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="8a4e2072-c43d-4029-bc01-730e5001dde6" name="Default Changelist" comment="FIX make the contribution update outside of transaction">
-      <change afterPath="$PROJECT_DIR$/css/sepaLink.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/js/expandAccordion.js" afterDir="false" />
+    <list default="true" id="8a4e2072-c43d-4029-bc01-730e5001dde6" name="Default Changelist" comment="ENH Refactoring the form with stubs">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CRM/Itemmanager/Form/LinkSepaPayments.php" beforeDir="false" afterPath="$PROJECT_DIR$/CRM/Itemmanager/Form/LinkSepaPayments.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/CRM/Itemmanager/Page/Dashboard.tpl" beforeDir="false" afterPath="$PROJECT_DIR$/templates/CRM/Itemmanager/Page/Dashboard.tpl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/xml/Menu/itemmanager.xml" beforeDir="false" afterPath="$PROJECT_DIR$/xml/Menu/itemmanager.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CRM/Itemmanager/Page/LinkSepaPaymentsStub.php" beforeDir="false" afterPath="$PROJECT_DIR$/CRM/Itemmanager/Page/LinkSepaPaymentsStub.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/css/sepaLink.css" beforeDir="false" afterPath="$PROJECT_DIR$/css/sepaLink.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/expandAccordion.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/expandAccordion.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/CRM/Itemmanager/Form/LinkSepaWrapper.tpl" beforeDir="false" afterPath="$PROJECT_DIR$/templates/CRM/Itemmanager/Form/LinkSepaWrapper.tpl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/CRM/Itemmanager/Page/LinkSepaPaymentsStub.tpl" beforeDir="false" afterPath="$PROJECT_DIR$/templates/CRM/Itemmanager/Page/LinkSepaPaymentsStub.tpl" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -74,7 +75,7 @@
     <option name="showMembers" value="true" />
   </component>
   <component name="PropertiesComponent">
-    <property name="Constants" value="true" />
+    <property name="Constants" value="false" />
     <property name="DatabaseDriversLRU" value="mysql" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
@@ -162,7 +163,7 @@
       <workItem from="1645516478595" duration="33159000" />
       <workItem from="1645616796773" duration="30664000" />
       <workItem from="1645725630808" duration="14878000" />
-      <workItem from="1645803265000" duration="16693000" />
+      <workItem from="1645803265000" duration="23294000" />
     </task>
     <task id="LOCAL-00001" summary="ENH Intermittent changes to analyze the price items">
       <created>1612779470217</created>
@@ -360,7 +361,14 @@
       <option name="project" value="LOCAL" />
       <updated>1645730736220</updated>
     </task>
-    <option name="localTasksCounter" value="29" />
+    <task id="LOCAL-00029" summary="ENH Refactoring the form with stubs">
+      <created>1645821038443</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1645821038443</updated>
+    </task>
+    <option name="localTasksCounter" value="30" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -379,7 +387,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="FIX Add Debug infos" />
     <MESSAGE value="MNT Refactoring of the Itemmanager Dashboard to DAO objects" />
     <MESSAGE value="FIX Remove itemmanager settings comparison" />
     <MESSAGE value="ENH Redesign Itemmanager dashboard" />
@@ -404,7 +411,8 @@
     <MESSAGE value="FIX Some delete and create bugs for the SEPA App" />
     <MESSAGE value="FIX correct context for backward search function in SEPA App" />
     <MESSAGE value="FIX make the contribution update outside of transaction" />
-    <option name="LAST_COMMIT_MESSAGE" value="FIX make the contribution update outside of transaction" />
+    <MESSAGE value="ENH Refactoring the form with stubs" />
+    <option name="LAST_COMMIT_MESSAGE" value="ENH Refactoring the form with stubs" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

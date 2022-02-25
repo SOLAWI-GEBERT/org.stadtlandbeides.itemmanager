@@ -22,15 +22,13 @@ CRM.$(function($) {
             var $body = $(this).children('div.crm-accordion-body').children('div');
             var $link = this.dataset.url;
 
-            console.log('Hallo')
             console.log($link)
 
             if ($(this).hasClass('collapsed')) {
-                $body.deleteContents();
+                $body.children('div').children('div').remove();
             }
             else
             {
-                console.log($body.innerText)
                 CRM.loadPage($link, {target: $('div', $body).animate({minHeight: '3em'}, 'fast')});
             }
 
