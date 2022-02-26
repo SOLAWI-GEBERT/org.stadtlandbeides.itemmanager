@@ -42,9 +42,11 @@
 
         <div class="crm-accordion-wrapper collapsed"
              style="padding: 5px;"
-             data-url="{crmURL p='civicrm/sepastub' q="edit=payment&cid=`$contact_id`&fid=`$relation.financial_id`&smartyDebug=1"}"
-        >
-                <div class="crm-accordion-header">{ts}Contribution Type{/ts} {$relation.financial_name}</div>
+                     >
+                <div class="crm-accordion-header" id="AccordionExpander"
+                     data-url="{crmURL p='civicrm/sepastub' q="edit=payment&cid=`$contact_id`&fid=`$relation.financial_id`&smartyDebug=1"}"
+
+                >{ts}Contribution Type{/ts} {$relation.financial_name}</div>
                 <div class="crm-accordion-body">
                     <div class="crm-clear">
 

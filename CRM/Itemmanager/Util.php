@@ -253,7 +253,7 @@ class CRM_Itemmanager_Util
      * @param $contribution_id
      * @return array
      */
-    public static function getLineitemFullRecordByContributionId($contribution_id)
+    public static function getLineitemFullRecordByContributionId($contribution_id, $financial_id = null)
     {
 
         $params = [
@@ -263,6 +263,9 @@ class CRM_Itemmanager_Util
                 'sort' => "price_field_value_id DESC",
             ),
         ];
+
+        if($financial_id)
+            $params['financial_type_id'] = $financial_id;
 
         $linearray = array();
 
@@ -423,10 +426,11 @@ class CRM_Itemmanager_Util
      * @param $contactId
      * @return array Returns the membership together with type and payment
      */
-    public static function getSDDFullRecordByContactId($contactId)
+    public static function getSDDFullRecordByContactId($contactId, $financial_id=null)
     {
 
         $sddfullarray = array();
+
 
         try{
             $sddarray = self::getSDDByContactId($contactId);
@@ -435,7 +439,12 @@ class CRM_Itemmanager_Util
             foreach ($sddarray['ooff_values'] As $sdd)
             {
                 $id = CRM_Utils_Array::value('entity_id', $sdd);
-                $contribution = civicrm_api3('Contribution', 'getsingle', array('id' => (int) $id));
+
+                $param = array(
+                    'id' => (int) $id,
+                );
+
+                $contribution = civicrm_api3('Contribution', 'getsingle', $param);
 
                 $paydata = array();
                 $paydata[$id] = $contribution;
@@ -453,7 +462,14 @@ class CRM_Itemmanager_Util
             {
                 $id = CRM_Utils_Array::value('entity_id', $sdd);
 
-                $contributions = civicrm_api3('Contribution', 'get', array('contribution_recur_id' => (int) $id));
+                $param = array(
+                    'contribution_recur_id' => (int) $id,
+                );
+
+                if($financial_id)
+                    $param['financial_type_id'] = $financial_id;
+
+                $contributions = civicrm_api3('Contribution', 'get', $param);
 
                 if($contributions['is_error']) return $sddarray;
 

@@ -22,8 +22,9 @@ class CRM_Itemmanager_Page_LinkSepaPaymentsStub extends CRM_Core_Page {
     }
 
     public function run() {
-      $this->_contact_id = CRM_Utils_Request::retrieve('cid', 'Integer');
-      $this->assign('contact_id', $this->_contact_id);
+        $this->_contact_id = CRM_Utils_Request::retrieve('cid', 'Integer');
+        $this->assign('contact_id', $this->_contact_id);
+        $currency = Civi::settings()->get('defaultCurrency');
 
         $this->_financial_id = CRM_Utils_Request::retrieve('fid', 'Integer');
         $this->assign('financial_id', $this->_financial_id);
@@ -64,7 +65,9 @@ class CRM_Itemmanager_Page_LinkSepaPaymentsStub extends CRM_Core_Page {
                 }
 
                 //get the line items of the contribution
-                $linerecords = CRM_Itemmanager_Util::getLineitemFullRecordByContributionId($contribution_id);
+                $linerecords = CRM_Itemmanager_Util::getLineitemFullRecordByContributionId(
+                    $contribution_id,
+                    $this->_financial_id);
                 if ($linerecords['is_error']) {
                     $this->_errormessages[] = 'Could not get the line items for contribution ' .(int)$contribution_id;
                     continue;
@@ -192,7 +195,7 @@ class CRM_Itemmanager_Page_LinkSepaPaymentsStub extends CRM_Core_Page {
 
 
         // Get the given memberships
-        $sdd_array = CRM_Itemmanager_Util::getSDDFullRecordByContactId($this->_contact_id);
+        $sdd_array = CRM_Itemmanager_Util::getSDDFullRecordByContactId($this->_contact_id, $this->_financial_id);
 
         if($sdd_array['is_error'])
         {
