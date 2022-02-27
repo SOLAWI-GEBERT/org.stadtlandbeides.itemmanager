@@ -6,11 +6,12 @@
     <div hidden id="financial_id" data-financial="{$financial_id}"></div>
 
     {debug}
-    <p>
-        <img src="{$config->resourceBase}i/loading-overlay.gif" width="32"/>
-    <div id="separetry-text" style="text-align: center; font-size: 1.6em;"></div>
-    <div id="separetry-busy" align="center" style="display: none;"><img src="{$config->resourceBase}i/loading-overlay.gif" width="32"/></div>
-    </p>
+
+        <div id="separetry-text" style="text-align: center; font-size: 1.6em;"></div>
+        <div id="separetry-busy" style="display: none; align-content: center">
+            <img src="{$config->resourceBase}i/loading-overlay.gif" alt="'busy" width="32"/>
+        </div>
+
 
     {if $relation.valid}
         <TABLE id="SEPASTUBTABLE">

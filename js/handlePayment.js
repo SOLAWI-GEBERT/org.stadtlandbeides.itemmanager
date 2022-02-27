@@ -93,6 +93,9 @@ CRM.$(function($) {
 
         });
 
+        while(working)
+            await Sleep(1000)
+
         console.log('Add payment completed '  + payparam['contribution_id']);
 
     }
@@ -157,6 +160,9 @@ CRM.$(function($) {
             working = false;
 
         });
+
+        while(working)
+            await Sleep(1000);
 
         console.log('Delete payment completed ' +  delete_param['contribution_id']);
 
@@ -252,8 +258,6 @@ CRM.$(function($) {
             cj("#separetry-text").hide();
             cj("#separetry-busy").show();
 
-            while(globalsepalinkwait)
-                await Sleep(1000);
 
             try {
                 var fid_ident = this.dataset.financial;

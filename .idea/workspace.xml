@@ -7,14 +7,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="8a4e2072-c43d-4029-bc01-730e5001dde6" name="Default Changelist" comment="FIX Improve collapse and expand behavior">
-      <change afterPath="$PROJECT_DIR$/js/handlePayment.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/l10n/org.stadtlandbeides.itemmanager.pot" afterDir="false" />
+    <list default="true" id="8a4e2072-c43d-4029-bc01-730e5001dde6" name="Default Changelist" comment="ENH Add javascript api handler to get interactive SEPA LINK App">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CRM/Itemmanager/Page/LinkSepaPaymentsStub.php" beforeDir="false" afterPath="$PROJECT_DIR$/CRM/Itemmanager/Page/LinkSepaPaymentsStub.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CRM/Itemmanager/Page/UpdateItems.php" beforeDir="false" afterPath="$PROJECT_DIR$/CRM/Itemmanager/Page/UpdateItems.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/css/sepaLink.css" beforeDir="false" afterPath="$PROJECT_DIR$/css/sepaLink.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/CRM/Itemmanager/Form/LinkSepaWrapper.tpl" beforeDir="false" afterPath="$PROJECT_DIR$/templates/CRM/Itemmanager/Form/LinkSepaWrapper.tpl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/handlePayment.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/handlePayment.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/CRM/Itemmanager/Page/LinkSepaPaymentsStub.tpl" beforeDir="false" afterPath="$PROJECT_DIR$/templates/CRM/Itemmanager/Page/LinkSepaPaymentsStub.tpl" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -167,7 +162,7 @@
       <workItem from="1645725630808" duration="14878000" />
       <workItem from="1645803265000" duration="33423000" />
       <workItem from="1645840317399" duration="566000" />
-      <workItem from="1645882228120" duration="50810000" />
+      <workItem from="1645882228120" duration="51542000" />
     </task>
     <task id="LOCAL-00001" summary="ENH Intermittent changes to analyze the price items">
       <created>1612779470217</created>
@@ -386,7 +381,14 @@
       <option name="project" value="LOCAL" />
       <updated>1645839220305</updated>
     </task>
-    <option name="localTasksCounter" value="32" />
+    <task id="LOCAL-00032" summary="ENH Add javascript api handler to get interactive SEPA LINK App">
+      <created>1645939167689</created>
+      <option name="number" value="00032" />
+      <option name="presentableId" value="LOCAL-00032" />
+      <option name="project" value="LOCAL" />
+      <updated>1645939167689</updated>
+    </task>
+    <option name="localTasksCounter" value="33" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -405,7 +407,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="ENH Redesign Itemmanager dashboard" />
     <MESSAGE value="FIX Make use of Itemmanagersettings to get clean timelines" />
     <MESSAGE value="FIX Create recursive function to get last successor of a price field set for better line up" />
     <MESSAGE value="FIX Return input field value as default instead of 0" />
@@ -430,7 +431,8 @@
     <MESSAGE value="ENH Refactoring the form with stubs" />
     <MESSAGE value="ENH First prototype of a lazy load version of the Sepa Link App" />
     <MESSAGE value="FIX Improve collapse and expand behavior" />
-    <option name="LAST_COMMIT_MESSAGE" value="FIX Improve collapse and expand behavior" />
+    <MESSAGE value="ENH Add javascript api handler to get interactive SEPA LINK App" />
+    <option name="LAST_COMMIT_MESSAGE" value="ENH Add javascript api handler to get interactive SEPA LINK App" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
