@@ -44,7 +44,7 @@
              style="padding: 5px;"
                      >
                 <div class="crm-accordion-header" id="AccordionExpander"
-                     data-url="{crmURL p='civicrm/sepastub' q="edit=payment&cid=`$contact_id`&fid=`$relation.financial_id`&smartyDebug=1"}"
+                     data-url="{crmURL p='civicrm/sepastub' q="action=browse&cid=`$contact_id`&fid=`$relation.financial_id`&smartyDebug=1"}"
 
                 >{ts}Contribution Type{/ts} {$relation.financial_name}</div>
                 <div class="crm-accordion-body">

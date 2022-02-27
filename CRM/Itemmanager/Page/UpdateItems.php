@@ -56,7 +56,7 @@ class CRM_Itemmanager_Page_UpdateItems extends CRM_Core_Page {
           $this->assign("update_done",  1);
           if(isset($check_list))
             $this->updateData($contact_id,$filter_harmonize,$filter_sync,$check_list);
-          parent::run();
+          return parent::run();
       }
 
   }

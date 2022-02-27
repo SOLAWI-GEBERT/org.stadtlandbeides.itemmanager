@@ -1,0 +1,380 @@
+#: ./CRM/Itemmanager/Form/ItemmanagerSetting.php ./itemmanager.php
+msgid "Itemmanager Settings"
+msgstr ""
+
+#: ./CRM/Itemmanager/Form/ItemmanagerSetting.php ./CRM/Itemmanager/Form/RenewItemperiods.php
+msgid "Periods"
+msgstr ""
+
+#: ./CRM/Itemmanager/Form/ItemmanagerSetting.php
+msgid "Start On"
+msgstr ""
+
+#: ./CRM/Itemmanager/Form/ItemmanagerSetting.php ./templates/CRM/Itemmanager/Form/ItemmanagerSetting.tpl
+msgid "Ignore"
+msgstr ""
+
+#: ./CRM/Itemmanager/Form/ItemmanagerSetting.php ./templates/CRM/Itemmanager/Form/ItemmanagerSetting.tpl
+msgid "Novitiate"
+msgstr ""
+
+#: ./CRM/Itemmanager/Form/ItemmanagerSetting.php ./templates/CRM/Itemmanager/Form/ItemmanagerSetting.tpl
+msgid "Successor"
+msgstr ""
+
+#: ./CRM/Itemmanager/Form/ItemmanagerSetting.php ./CRM/Itemmanager/Form/LinkSepaPayments.php ./CRM/Itemmanager/Form/RenewItemperiods.php
+msgid "Submit"
+msgstr ""
+
+#: ./CRM/Itemmanager/Form/ItemmanagerSetting.php
+msgid "Synchronize"
+msgstr ""
+
+#: ./CRM/Itemmanager/Form/ItemmanagerSetting.php ./CRM/Itemmanager/Form/LinkSepaPayments.php ./CRM/Itemmanager/Form/RepairMissingContribution.php
+msgid "Cancel"
+msgstr ""
+
+#: ./CRM/Itemmanager/Form/ItemmanagerSetting.php
+msgid "No Successor"
+msgstr ""
+
+#: ./CRM/Itemmanager/Form/ItemmanagerSetting.php ./templates/CRM/Itemmanager/Form/ItemmanagerSetting.tpl
+msgid "Active"
+msgstr ""
+
+#: ./CRM/Itemmanager/Form/ItemmanagerSetting.php
+msgid "Synchronized."
+msgstr ""
+
+#: ./CRM/Itemmanager/Form/ItemmanagerSetting.php
+msgid "Start"
+msgstr ""
+
+#: ./CRM/Itemmanager/Form/ItemmanagerSetting.php
+msgid "Saved"
+msgstr ""
+
+#: ./CRM/Itemmanager/Form/ItemmanagerSetting.php ./CRM/Itemmanager/Form/LinkSepaPayments.php ./CRM/Itemmanager/Form/LinkSepaWrapper.php ./CRM/Itemmanager/Form/RenewItemperiods.php ./CRM/Itemmanager/Form/RepairMissingContribution.php ./CRM/Itemmanager/Page/LinkSepaPaymentsStub.php ./CRM/Itemmanager/Page/UpdateItems.php
+msgid "Success"
+msgstr ""
+
+#: ./CRM/Itemmanager/Form/LinkSepaPayments.php ./CRM/Itemmanager/Form/LinkSepaWrapper.php ./CRM/Itemmanager/Page/UpdateItems.php
+msgid "Couldn't find contact #%s"
+msgstr ""
+
+#: ./CRM/Itemmanager/Form/LinkSepaPayments.php ./CRM/Itemmanager/Form/LinkSepaWrapper.php ./CRM/Itemmanager/Form/RenewItemperiods.php ./CRM/Itemmanager/Form/RepairMissingContribution.php ./CRM/Itemmanager/Page/Dashboard.php ./CRM/Itemmanager/Page/LinkSepaPaymentsStub.php ./CRM/Itemmanager/Page/UpdateItems.php
+msgid "Error"
+msgstr ""
+
+#: ./CRM/Itemmanager/Form/LinkSepaPayments.php ./CRM/Itemmanager/Form/LinkSepaWrapper.php
+msgid "Payments relation for"
+msgstr ""
+
+#: ./CRM/Itemmanager/Form/LinkSepaPayments.php ./CRM/Itemmanager/Form/RenewItemperiods.php ./CRM/Itemmanager/Form/RepairMissingContribution.php ./CRM/Itemmanager/Page/Dashboard.php ./CRM/Itemmanager/Page/LinkSepaPaymentsStub.php
+msgid "Retrieve memberships"
+msgstr ""
+
+#: ./CRM/Itemmanager/Form/LinkSepaPayments.php ./CRM/Itemmanager/Page/LinkSepaPaymentsStub.php
+msgid "Retrieve SEPA mandate"
+msgstr ""
+
+#: ./CRM/Itemmanager/Form/LinkSepaPayments.php
+msgid "Relation"
+msgstr ""
+
+#: ./CRM/Itemmanager/Form/LinkSepaPayments.php
+msgid "Crosslink"
+msgstr ""
+
+#: ./CRM/Itemmanager/Form/LinkSepaPayments.php
+msgid "Add SEPA payment relation"
+msgstr ""
+
+#: ./CRM/Itemmanager/Form/LinkSepaPayments.php
+msgid "Delete SEPA payment relation"
+msgstr ""
+
+#: ./CRM/Itemmanager/Form/LinkSepaPayments.php
+msgid "Update status contribution"
+msgstr ""
+
+#: ./CRM/Itemmanager/Form/LinkSepaPayments.php ./CRM/Itemmanager/Form/LinkSepaWrapper.php ./CRM/Itemmanager/Form/RenewItemperiods.php ./CRM/Itemmanager/Form/RepairMissingContribution.php ./CRM/Itemmanager/Page/LinkSepaPaymentsStub.php ./CRM/Itemmanager/Page/UpdateItems.php
+msgid "Info"
+msgstr ""
+
+#: ./CRM/Itemmanager/Form/LinkSepaWrapper.php
+msgid "Complete"
+msgstr ""
+
+#: ./CRM/Itemmanager/Form/RenewItemperiods.php
+msgid "Retrieve Contributions"
+msgstr ""
+
+#: ./CRM/Itemmanager/Form/RenewItemperiods.php ./CRM/Itemmanager/Form/RepairMissingContribution.php ./CRM/Itemmanager/Page/Dashboard.php
+msgid "Retrieve line items"
+msgstr ""
+
+#: ./CRM/Itemmanager/Form/RenewItemperiods.php
+msgid "Renew periods for booked items for contact "
+msgstr ""
+
+#: ./CRM/Itemmanager/Form/RenewItemperiods.php ./templates/CRM/Itemmanager/Form/LinkSepaPayments.tpl ./templates/CRM/Itemmanager/Page/Dashboard.tpl ./templates/CRM/Itemmanager/Page/LinkSepaPaymentsStub.tpl ./templates/CRM/Itemmanager/Page/UpdateItems.tpl
+msgid "Item"
+msgstr ""
+
+#: ./CRM/Itemmanager/Form/RenewItemperiods.php ./templates/CRM/Itemmanager/Form/RepairMissingContribution.tpl ./templates/CRM/Itemmanager/Page/Dashboard.tpl ./templates/CRM/Itemmanager/Page/UpdateItems.tpl
+msgid "Quantity"
+msgstr ""
+
+#: ./CRM/Itemmanager/Form/RenewItemperiods.php
+msgid "The price field has been chosen from a different price set!"
+msgstr ""
+
+#: ./CRM/Itemmanager/Form/RenewItemperiods.php
+msgid "The period count for all items has to be equal"
+msgstr ""
+
+#: ./CRM/Itemmanager/Form/RepairMissingContribution.php
+msgid "Clone contributions to insert missing data"
+msgstr ""
+
+#: ./CRM/Itemmanager/Form/RepairMissingContribution.php
+msgid "Contribution Status"
+msgstr ""
+
+#: ./CRM/Itemmanager/Form/RepairMissingContribution.php
+msgid "Duplicate"
+msgstr ""
+
+#: ./CRM/Itemmanager/Form/RepairMissingContribution.php
+msgid "Please specify a contribution to clone."
+msgstr ""
+
+#: ./CRM/Itemmanager/Form/RepairMissingContribution.php
+msgid "Retrieve related membership"
+msgstr ""
+
+#: ./CRM/Itemmanager/Form/RepairMissingContribution.php
+msgid "There is no membership related to that contribution."
+msgstr ""
+
+#: ./CRM/Itemmanager/Page/Dashboard.php ./itemmanager.php
+msgid "Items Dashboard"
+msgstr ""
+
+#: ./CRM/Itemmanager/Page/Dashboard.php
+msgid "Combine line items"
+msgstr ""
+
+#: ./CRM/Itemmanager/Page/ItemMaintenance.php
+msgid "ItemMaintenance"
+msgstr ""
+
+#: ./CRM/Itemmanager/Page/UpdateItems.php ./templates/CRM/Itemmanager/Page/Dashboard.tpl ./templates/CRM/Itemmanager/Page/UpdateItems.tpl
+msgid "Update Items"
+msgstr ""
+
+#: ./CRM/Itemmanager/Page/UpdateItems.php
+msgid "Error for updating line items"
+msgstr ""
+
+#: ./CRM/Itemmanager/Page/UpdateItems.php
+msgid "Retrieve financial infos"
+msgstr ""
+
+#: ./CRM/Itemmanager/Page/UpdateItems.php
+msgid "Error for updating financeitem"
+msgstr ""
+
+#: ./CRM/Itemmanager/Page/UpdateItems.php
+msgid "Error for updating contribution"
+msgstr ""
+
+#: ./CRM/Itemmanager/Page/UpdateItems.php
+msgid "Error for label for "
+msgstr ""
+
+#: ./CRM/Itemmanager/Page/UpdateItems.php
+msgid "Items updated"
+msgstr ""
+
+#: ./CRM/Itemmanager/Page/UpdateItems.php
+msgid "Nothing to be done"
+msgstr ""
+
+#: ./CRM/Itemmanager/Upgrader/Base.php
+msgid "Upgrade %1 to revision %2"
+msgstr ""
+
+#: ./itemmanager.php
+msgid "Warning"
+msgstr ""
+
+#: ./itemmanager.php
+msgid "Renew Items Periods"
+msgstr ""
+
+#: ./itemmanager.php
+msgid "Renew periods"
+msgstr ""
+
+#: ./itemmanager.php
+msgid "Duplicate contribution"
+msgstr ""
+
+#: ./templates/CRM/Itemmanager/Form/ItemmanagerSetting.tpl
+msgid "\n    Edit here the successor of each price field item.\n    The given start date just defines day and month. The year has no meaning.\n  "
+msgstr ""
+
+#: ./templates/CRM/Itemmanager/Form/ItemmanagerSetting.tpl
+msgid "Priceset"
+msgstr ""
+
+#: ./templates/CRM/Itemmanager/Form/ItemmanagerSetting.tpl
+msgid "Item Name"
+msgstr ""
+
+#: ./templates/CRM/Itemmanager/Form/ItemmanagerSetting.tpl
+msgid "Active On"
+msgstr ""
+
+#: ./templates/CRM/Itemmanager/Form/ItemmanagerSetting.tpl
+msgid "Expire On"
+msgstr ""
+
+#: ./templates/CRM/Itemmanager/Form/LinkSepaPayments.tpl ./templates/CRM/Itemmanager/Form/LinkSepaWrapper.tpl
+msgid "SEPA Payment Assignments"
+msgstr ""
+
+#: ./templates/CRM/Itemmanager/Form/LinkSepaPayments.tpl
+msgid "\n    Link here the SEPA payments to the payment plan contributions.\n    You can also set the payment contributions manually to paid here.\n  "
+msgstr ""
+
+#: ./templates/CRM/Itemmanager/Form/LinkSepaPayments.tpl ./templates/CRM/Itemmanager/Form/LinkSepaWrapper.tpl
+msgid "Contribution Type"
+msgstr ""
+
+#: ./templates/CRM/Itemmanager/Form/LinkSepaPayments.tpl ./templates/CRM/Itemmanager/Page/LinkSepaPaymentsStub.tpl
+msgid "Contribution"
+msgstr ""
+
+#: ./templates/CRM/Itemmanager/Form/LinkSepaPayments.tpl ./templates/CRM/Itemmanager/Page/LinkSepaPaymentsStub.tpl
+msgid "Payments"
+msgstr ""
+
+#: ./templates/CRM/Itemmanager/Form/LinkSepaPayments.tpl ./templates/CRM/Itemmanager/Page/LinkSepaPaymentsStub.tpl
+msgid "view payments"
+msgstr ""
+
+#: ./templates/CRM/Itemmanager/Form/LinkSepaWrapper.tpl
+msgid "\n        Link here the SEPA payments to the payment plan contributions.\n        You can also set the payment contributions manually to paid here.\n    "
+msgstr ""
+
+#: ./templates/CRM/Itemmanager/Form/LinkSepaWrapper.tpl
+msgid "Please wait..."
+msgstr ""
+
+#: ./templates/CRM/Itemmanager/Form/RenewItemperiods.tpl
+msgid "Membership"
+msgstr ""
+
+#: ./templates/CRM/Itemmanager/Form/RenewItemperiods.tpl ./templates/CRM/Itemmanager/Page/Dashboard.tpl
+msgid "Status"
+msgstr ""
+
+#: ./templates/CRM/Itemmanager/Form/RenewItemperiods.tpl
+msgid "Old"
+msgstr ""
+
+#: ./templates/CRM/Itemmanager/Form/RenewItemperiods.tpl
+msgid "New"
+msgstr ""
+
+#: ./templates/CRM/Itemmanager/Form/RepairMissingContribution.tpl
+msgid "Are you sure, create a clone of this contribution?"
+msgstr ""
+
+#: ./templates/CRM/Itemmanager/Form/RepairMissingContribution.tpl
+msgid "\n    Change the required contribution status for the cloned dataset.\n  "
+msgstr ""
+
+#: ./templates/CRM/Itemmanager/Form/RepairMissingContribution.tpl
+msgid "Lineitem"
+msgstr ""
+
+#: ./templates/CRM/Itemmanager/Form/RepairMissingContribution.tpl ./templates/CRM/Itemmanager/Page/UpdateItems.tpl
+msgid "Total"
+msgstr ""
+
+#: ./templates/CRM/Itemmanager/Page/Dashboard.tpl
+msgid "Item Dashboard"
+msgstr ""
+
+#: ./templates/CRM/Itemmanager/Page/Dashboard.tpl
+msgid "Renew Periods"
+msgstr ""
+
+#: ./templates/CRM/Itemmanager/Page/Dashboard.tpl
+msgid "Link Sepa Payments"
+msgstr ""
+
+#: ./templates/CRM/Itemmanager/Page/Dashboard.tpl
+msgid "Refresh"
+msgstr ""
+
+#: ./templates/CRM/Itemmanager/Page/Dashboard.tpl
+msgid "To start with a new set of monthly contributions click Renew Periods"
+msgstr ""
+
+#: ./templates/CRM/Itemmanager/Page/Dashboard.tpl
+msgid "Booked"
+msgstr ""
+
+#: ./templates/CRM/Itemmanager/Page/Dashboard.tpl
+msgid "This contact has no recorded line items."
+msgstr ""
+
+#: ./templates/CRM/Itemmanager/Page/ItemMaintenance.tpl
+msgid "(In your native language) The current time is %1."
+msgstr ""
+
+#: ./templates/CRM/Itemmanager/Page/UpdateItems.tpl
+msgid "Sync price items"
+msgstr ""
+
+#: ./templates/CRM/Itemmanager/Page/UpdateItems.tpl
+msgid "Harmonize date"
+msgstr ""
+
+#: ./templates/CRM/Itemmanager/Page/UpdateItems.tpl
+msgid "Preview"
+msgstr ""
+
+#: ./templates/CRM/Itemmanager/Page/UpdateItems.tpl
+msgid "Found items to be updated"
+msgstr ""
+
+#: ./templates/CRM/Itemmanager/Page/UpdateItems.tpl
+msgid "Date"
+msgstr ""
+
+#: ./templates/CRM/Itemmanager/Page/UpdateItems.tpl
+msgid "Referred to"
+msgstr ""
+
+#: ./templates/CRM/Itemmanager/Page/UpdateItems.tpl
+msgid "Unit price"
+msgstr ""
+
+#: ./templates/CRM/Itemmanager/Page/UpdateItems.tpl
+msgid "Tax"
+msgstr ""
+
+#: ./templates/CRM/Itemmanager/Page/UpdateItems.tpl
+msgid "change to"
+msgstr ""
+
+#: ./templates/CRM/Itemmanager/Page/UpdateItems.tpl
+msgid "Nothing there for updating. Please use filter options to see more."
+msgstr ""
+
