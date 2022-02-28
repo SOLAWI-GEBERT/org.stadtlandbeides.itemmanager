@@ -155,6 +155,9 @@ class CRM_Itemmanager_Page_LinkSepaPaymentsStub extends CRM_Core_Page {
                             'line_count' => 0,
                             'is_trxn' => !$trxn['is_error'] && count($trxn['values']) > 0,
                             'is_direct_trxn' => $foundtrxfinance ? 1 : 0,
+                            'statusclass' => $this->getcssClassforPaystatus(
+                                (int)CRM_Utils_Array::value('contribution_status_id', $current_contribution),
+                                !$trxn['is_error'] && count($trxn['values']) > 0),
 
                         );
 
@@ -248,6 +251,8 @@ class CRM_Itemmanager_Page_LinkSepaPaymentsStub extends CRM_Core_Page {
                             'sdd_fee_amount' => CRM_Utils_Array::value('fee_amount', $sdd_contribution),
                             'sdd_net_amount' => CRM_Utils_Array::value('net_amount', $sdd_contribution),
                             'sdd_total_display' => $summary_display.' '.$currency,
+                            'statusclass' => $this->getcssClassforPaystatus(
+                                (int)CRM_Utils_Array::value('contribution_status_id', $sdd_contribution), true),
                         );
 
 
@@ -322,6 +327,8 @@ class CRM_Itemmanager_Page_LinkSepaPaymentsStub extends CRM_Core_Page {
                         'sdd_fee_amount' => CRM_Utils_Array::value('fee_amount', $sdd_contribution),
                         'sdd_net_amount' => CRM_Utils_Array::value('net_amount', $sdd_contribution),
                         'sdd_total_display' => $summary_display.' '.$currency,
+                        'statusclass' => $this->getcssClassforPaystatus(
+                            (int)CRM_Utils_Array::value('contribution_status_id', $sdd_contribution), true),
                     );
 
                     //fill form backward search
@@ -351,6 +358,7 @@ class CRM_Itemmanager_Page_LinkSepaPaymentsStub extends CRM_Core_Page {
                             'is_trxn' => 0,
                             'is_direct_trxn' => 0,
                             'empty' => True,
+                            'statusclass' => $this->getcssClassforPaystatus(0, false),
 
                         );
 
@@ -450,6 +458,77 @@ class CRM_Itemmanager_Page_LinkSepaPaymentsStub extends CRM_Core_Page {
         CRM_Core_Session::setStatus($message, ts('Info', array('domain' => 'org.stadtlandbeides.itemmanager')), 'info');
 
 
+    }
+
+
+    protected function getcssClassforPaystatus($status, $istrxn)
+    {
+        switch($status)
+        {
+            case 3:
+                return 'fa-times-circle';
+
+            case 5:
+                return 'fa-spinner';
+
+                case 6:
+            case 2:
+                return 'fa-circle-o';
+
+            case 8:
+                return 'fa-adjust';
+
+            case 1:
+                if(!$istrxn) return 'fa-flash';
+                return 'fa-check-circle';
+
+            case 4:
+            case 11:
+                return 'fa-flash';
+
+            case 9:
+            case 10:
+                return 'fa-arrow-circle-left';
+
+
+        }
+
+        return 'fa-flash';
+
+    }
+
+    protected function getcssClassforSDDstatus($status)
+    {
+        switch($status)
+        {
+            case 'SENT':
+                return 'fa-times-circle';
+
+            case 'COMPLETE':
+                return 'fa-spinner';
+
+            case 'OOF':
+            case 'FIRST':
+                return 'fa-circle-o';
+
+            case 8:
+                return 'fa-adjust';
+
+            case 1:
+                return 'fa-check-circle';
+
+            case 4:
+            case 11:
+                return 'fa-flash';
+
+            case 9:
+            case 10:
+                return 'fa-arrow-circle-left';
+
+
+        }
+
+        return 'fa-flash';
 
     }
 

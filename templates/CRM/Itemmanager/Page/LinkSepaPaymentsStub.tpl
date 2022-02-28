@@ -7,15 +7,18 @@
 
     {debug}
 
-        <div id="separetry-text" style="text-align: center; font-size: 1.6em;"></div>
-        <div id="separetry-busy" style="display: none; align-content: center">
-            <img src="{$config->resourceBase}i/loading-overlay.gif" alt="'busy" width="32"/>
-        </div>
+
 
 
     {if $relation.valid}
         <TABLE id="SEPASTUBTABLE">
             <thead>
+            <tr align="center">
+                <div id="separetry-text" style="text-align: center; font-size: 1.6em;"></div>
+                <div id="separetry-busy" style="display: none; alignment: center">
+                    <img src="{$config->resourceBase}i/loading-overlay.gif" alt="'busy" width="32"/>
+                </div>
+            </tr>
             <tr>
                 <th>{ts}Contribution{/ts} {ts}Item{/ts}</th>
                 <th>
@@ -38,6 +41,7 @@
                         {foreach from=$contribution.related_contributions item=related}
                             {assign var="element_contrib_cross_name" value=$related.element_cross_name}
                             <div class="contrib_table-row">
+                                <div class="contrib_table-cell col-md-fix-tiny crm-i {$related.statusclass}"></div>
                                 <div class="contrib_table-cell col-md-fix-big">{$related.item_label}</div>
                                 <div class="contrib_table-cell col-md-fix-tiny"><span
                                             class="crm-i fa-bars"></span> {$related.line_count}</div>
@@ -54,7 +58,7 @@
                                     {if $related.empty}
                                         -
                                     {else}
-                                        <label><input type="checkbox" name="{$element_contrib_cross_name}"></label>
+                                        <label><input type="checkbox" id="SelectContribution" data-ident=="{$element_contrib_cross_name}"></label>
                                     {/if}
 
                                 </div>
@@ -95,13 +99,16 @@
                         <td class="contrib_table">
                             <div class="contrib_table-row">
                                 <div class="contrib_table-cell col-md-auto">
-                                    <label><input type="checkbox" name="{$element_sdd_cross_name}"></label>
+                                    <label><input type="checkbox"
+                                                  id="SelectMandate"
+                                                  data-ident="{$element_sdd_cross_name}"></label>
                                 </div>
                                 <div class="contrib_table-cell col-md-fix-small"><span
                                             class="crm-i fa-calendar-o"></span> {$sdd.sdd_contribution_date}</div>
                                 <div class="contrib_table-cell col-md-fix-small">&sum; {$sdd.sdd_total_display}</div>
                                 <div class="contrib_table-cell col-md-fix-big">{$sdd.sdd_source}</div>
                                 <div class="contrib_table-cell col-md-fix-big">{$sdd.sdd_mandate}</div>
+                                <div class="contrib_table-cell col-md-fix-tiny crm-i {$sdd.statusclass}"></div>
                             </div>
 
 

@@ -46,6 +46,26 @@ CRM.$(function($) {
         return new Promise(resolve => setTimeout(resolve, milliseconds));
     }
 
+
+    function setCheckContributionByDataIdent(identity,status)
+    {
+        var collection = document.getElementsByClassName('cm-toggle');
+        for(var element in collection)
+        {
+            if(collection.hasOwnProperty(element))
+                if(collection[element].dataset.hasOwnProperty('ident'))
+                    if(collection[element].dataset.ident === identity)
+                    {
+                        collection[element].checked = status;
+                        break;
+                    }
+
+
+        }
+
+    }
+
+
     /**
      * Call the api function to relate a payment
      * @param back_reference reference with the payment infos
@@ -53,6 +73,9 @@ CRM.$(function($) {
     async function createPaymentbyLink(back_reference)
     {
 
+        // show busy indicator
+        cj("#separetry-text").hide();
+        cj("#separetry-busy").show();
 
         if(!back_reference.hasOwnProperty('add_payment'))
                 CRM.alert(ts('Could not find the payment data to add for ') + back_reference['element_cross_name'],
@@ -98,20 +121,30 @@ CRM.$(function($) {
 
         console.log('Add payment completed '  + payparam['contribution_id']);
 
+        // show busy indicator
+        cj("#separetry-text").show();
+        cj("#separetry-busy").hide();
+
     }
 
     /**
      * Call the api function to delete a payment
      * @param delete_param reference with the delete infos
      */
-    async function deletePaymentbyLink(delete_param)
+    async function deletePaymentbyLink(delete_param, receive_date)
     {
+
+        // show busy indicator
+        cj("#separetry-text").hide();
+        cj("#separetry-busy").show();
+
 
         var working = true;
         let entity = {}
         entity['entity_id'] = delete_param['contribution_id']
-        console.log('GEt Payment ' + delete_param['contribution_id']);
+        console.log('Get Payment for contribution ' + delete_param['contribution_id']);
 
+        var workarray = []
         CRM.api3('Payment', 'get', entity).done(function(result) {
 
             if(result['iserror']) {
@@ -124,7 +157,10 @@ CRM.$(function($) {
 
             for(var trx in trxs['values'])
             {
+
                 if (trxs['values'].hasOwnProperty(trx)) {
+                    workarray.push(trx)
+
                     var item = trxs['values'][trx];
                     //check if we set the reference for ourself
                     if(!item.hasOwnProperty('trxn_id')) continue;
@@ -138,18 +174,19 @@ CRM.$(function($) {
                     let param = {};
                     param['id'] = item['id'];
 
-                    console.log('Delete Payment' +  + delete_param['contribution_id']);
+
                     let trx_id = item['trxn_id'];
+                    console.log('Delete Payment' +  trx_id);
                     CRM.api3('Payment', 'delete',param).done(function(result) {
 
                         if(result['iserror']) {
                             CRM.alert(result['error_message'], ts('Delete SEPA payment relation'), 'error');
-                            working = false;
+                            workarray.pop()
                             return;
                         }
 
                         CRM.alert(trx_id, ts('SEPA payment relation deleted'), 'success');
-
+                        workarray.pop()
 
                     });
 
@@ -164,7 +201,37 @@ CRM.$(function($) {
         while(working)
             await Sleep(1000);
 
-        console.log('Delete payment completed ' +  delete_param['contribution_id']);
+        while(workarray.length > 0)
+            await Sleep(1000);
+
+        working = true;
+
+        let update_param = {};
+        update_param['id'] = delete_param['contribution_id'];
+        update_param['receive_date'] =  receive_date
+
+        console.log('Update Contribution ' + delete_param['contribution_id']);
+        CRM.api3('Contribution', 'create',update_param).done(function(result) {
+
+            if(result['iserror']) {
+                CRM.alert(result['error_message'], ts('Update Contribution'), 'error');
+                working = false;
+                return;
+            }
+
+            CRM.alert(ts('Date')+' '+ receive_date, ts('Contribution updated'), 'success');
+            working = false;
+
+        });
+
+        while(working)
+            await Sleep(1000);
+
+        console.log('Delete payment completed for contribution ' +  delete_param['contribution_id']);
+
+        // show busy indicator
+        cj("#separetry-text").show();
+        cj("#separetry-busy").hide();
 
     }
 
@@ -174,10 +241,6 @@ CRM.$(function($) {
     $('body')
         .on('change.cm-toggle','#LinkPayment',function(e) {
 
-
-            // show busy indicator
-            cj("#separetry-text").hide();
-            cj("#separetry-busy").show();
 
             try {
                 var ident = this.dataset.ident;
@@ -220,6 +283,8 @@ CRM.$(function($) {
 
                         if(back.hasOwnProperty(key_del))
                         {
+
+
                             if (back[key_del]['entity'] !== 'contr_cross' ||
                                 back[key_del]['reference_month'] !== reference['reference_month'])
                                 continue;
@@ -231,7 +296,7 @@ CRM.$(function($) {
                             deleteparam['contribution_id'] = back[key_del]['contribution_id'];
                             deleteparam['financial_id'] = reference['financial_id'];
 
-                            deletePaymentbyLink(deleteparam);
+                            deletePaymentbyLink(deleteparam, back[key_del]['add_payment']['contribution_date_copy']);
                         }
 
                     }
@@ -247,22 +312,19 @@ CRM.$(function($) {
             }
 
 
-            // show busy indicator
-            cj("#separetry-text").show();
-            cj("#separetry-busy").hide();
+
 
         }) //here start the group stuff
         .on('change.cm-toggle','#FinancialGrouplink', async function(e) {
 
-            // show busy indicator
-            cj("#separetry-text").hide();
-            cj("#separetry-busy").show();
+
 
 
             try {
                 var fid_ident = this.dataset.financial;
                 var back = CRM.vars['itemmanager_SEPA_backward_search'+fid_ident];
                 var ischecked = this.checked;
+                var checklist = [];
 
                 this.disabled = true;
 
@@ -271,22 +333,40 @@ CRM.$(function($) {
 
                     if(back.hasOwnProperty(key))
                     {
+
+                        if (back[key]['entity'] === 'link' )
+                        {
+                            var ident = back[key]['element'];
+                            checklist.push(ident);
+
+                        }
+
                         if (back[key]['entity'] !== 'contr_cross')
                             continue;
+
+
 
                         //decide what to do
                         if (ischecked && !back[key]['is_direct_trxn'])
                         {
+
                             createPaymentbyLink(back[key]);
                         }
 
                     }
 
                 }
+
+                for(var link in checklist)
+                {
+                    if(checklist.hasOwnProperty(link))
+                        setCheckContributionByDataIdent(checklist[link], true);
+                }
+
+
                 $(this).toggleClass('linked');
-                // show busy indicator
-                cj("#separetry-text").show();
-                cj("#separetry-busy").hide();
+
+
 
                 this.disabled = false;
 
@@ -296,6 +376,11 @@ CRM.$(function($) {
             }
 
 
+        })
+        .on('change','#SelectContribution', function(e)
+        {
+            alert('CLick')
+            e.preventDefault();
         });
 
 });
