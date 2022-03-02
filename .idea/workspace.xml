@@ -7,10 +7,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="8a4e2072-c43d-4029-bc01-730e5001dde6" name="Default Changelist" comment="FIX Remove wrong wait cycle">
+    <list default="true" id="8a4e2072-c43d-4029-bc01-730e5001dde6" name="Default Changelist" comment="ENH Show payment status&#10;ENH Finalize Group Link&#10;FIX Also update date contribution after deletion&#10;FIX Improve wait behavior and busy indication">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CRM/Itemmanager/Page/LinkSepaPaymentsStub.php" beforeDir="false" afterPath="$PROJECT_DIR$/CRM/Itemmanager/Page/LinkSepaPaymentsStub.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/js/handlePayment.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/handlePayment.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/CRM/Itemmanager/Form/LinkSepaWrapper.tpl" beforeDir="false" afterPath="$PROJECT_DIR$/templates/CRM/Itemmanager/Form/LinkSepaWrapper.tpl" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/CRM/Itemmanager/Page/LinkSepaPaymentsStub.tpl" beforeDir="false" afterPath="$PROJECT_DIR$/templates/CRM/Itemmanager/Page/LinkSepaPaymentsStub.tpl" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -164,7 +164,8 @@
       <workItem from="1645803265000" duration="33423000" />
       <workItem from="1645840317399" duration="566000" />
       <workItem from="1645882228120" duration="52401000" />
-      <workItem from="1646074282555" duration="16540000" />
+      <workItem from="1646074282555" duration="16635000" />
+      <workItem from="1646244551807" duration="10579000" />
     </task>
     <task id="LOCAL-00001" summary="ENH Intermittent changes to analyze the price items">
       <created>1612779470217</created>
@@ -397,7 +398,14 @@
       <option name="project" value="LOCAL" />
       <updated>1645939908799</updated>
     </task>
-    <option name="localTasksCounter" value="34" />
+    <task id="LOCAL-00034" summary="ENH Show payment status&#10;ENH Finalize Group Link&#10;FIX Also update date contribution after deletion&#10;FIX Improve wait behavior and busy indication">
+      <created>1646091411254</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1646091411254</updated>
+    </task>
+    <option name="localTasksCounter" value="35" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -416,7 +424,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="FIX Create recursive function to get last successor of a price field set for better line up" />
     <MESSAGE value="FIX Return input field value as default instead of 0" />
     <MESSAGE value="FIX Test on real data to find error in date array" />
     <MESSAGE value="FIX Increase the limit for the line items" />
@@ -441,7 +448,8 @@
     <MESSAGE value="FIX Improve collapse and expand behavior" />
     <MESSAGE value="ENH Add javascript api handler to get interactive SEPA LINK App" />
     <MESSAGE value="FIX Remove wrong wait cycle" />
-    <option name="LAST_COMMIT_MESSAGE" value="FIX Remove wrong wait cycle" />
+    <MESSAGE value="ENH Show payment status&#10;ENH Finalize Group Link&#10;FIX Also update date contribution after deletion&#10;FIX Improve wait behavior and busy indication" />
+    <option name="LAST_COMMIT_MESSAGE" value="ENH Show payment status&#10;ENH Finalize Group Link&#10;FIX Also update date contribution after deletion&#10;FIX Improve wait behavior and busy indication" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

@@ -7,11 +7,20 @@
 
     {debug}
 
-
+    <div class="crm-block crm-form-block crm-form-title-here-form-block" style="margin: auto">
+        <a id="SepaCrossLink"
+           class="button"
+           data-financial = "{$financial_id}"
+        >
+            <div>
+                <span class="crm-i fa-random" style="padding-right:5px;">Cross Link</span>
+            </div>
+        </a>
+    </div>
 
 
     {if $relation.valid}
-        <TABLE id="SEPASTUBTABLE">
+        <TABLE id="SEPASTUBTABLE{$financial_id}">
             <thead>
             <tr align="center">
                 <div id="separetry-text" style="text-align: center; font-size: 1.6em;"></div>

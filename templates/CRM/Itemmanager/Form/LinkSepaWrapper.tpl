@@ -25,13 +25,6 @@
         Differ
     </label>
     <span class="label">Checkbox</span>
-    <a id="top_button"
-       class="button"
-    >
-        <div>
-            <span class="crm-i fa-random" style="padding-right:5px;">Cross Link</span>
-        </div>
-    </a>
 </div>
 
 {if $relations}

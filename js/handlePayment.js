@@ -38,7 +38,12 @@ cj(document).ready(function() {
 
 
 
+
 });
+
+
+
+
 
 CRM.$(function($) {
 
@@ -47,6 +52,11 @@ CRM.$(function($) {
     }
 
 
+    /**
+     * Set all link checkboxes to true during group link action
+     * @param identity
+     * @param status
+     */
     function setCheckContributionByDataIdent(identity,status)
     {
         var collection = document.getElementsByClassName('cm-toggle');
@@ -59,10 +69,7 @@ CRM.$(function($) {
                         collection[element].checked = status;
                         break;
                     }
-
-
         }
-
     }
 
 
@@ -306,7 +313,7 @@ CRM.$(function($) {
                 this.disabled = false;
 
             } catch (e) {
-                CRM.alert('Try to add the payment failed ' + e);
+                CRM.alert(e, ts('Try to add the payment failed'), 'error');
                 this.disabled = false;
                 globalsepalinkwait = false;
             }
@@ -379,8 +386,127 @@ CRM.$(function($) {
         })
         .on('change','#SelectContribution', function(e)
         {
-            alert('CLick')
+
             e.preventDefault();
+        })
+        .on('click.a.button','#SepaCrossLink',function(e) {
+            try
+            {
+                var fid = this.dataset.financial;
+                var local = document.getElementById('SEPASTUBTABLE'+fid)
+
+                let contributions = local.querySelectorAll('input[id="SelectContribution"]:checked');
+                let mandates = local.querySelectorAll('input[id="SelectMandate"]:checked');
+                let mandate_content = [];
+                let contribution_content = [];
+
+                if(contributions.length === 0 || mandates.length === 0)
+                {
+                    CRM.alert(ts('Please select on both sides a cross link relation.'),
+                        ts('SEPA cross link relation'), 'info');
+                    return;
+                }
+
+                if(contributions.length > 1 && mandates.length > 1)
+                {
+                    CRM.alert(ts('Please select a 1:n or n:1 relation.'),
+                        ts('SEPA cross link relation'), 'info');
+                    return;
+                }
+
+                //delete table entry contribution
+                for(var contribution_check in contributions)
+                    if(contributions.hasOwnProperty(contribution_check))
+                    {
+                        var checkbox = contributions[contribution_check];
+                        var row = checkbox.closest('.contrib_table-row');
+                        var row_tr = row.closest('tr');
+                        var link_check = row_tr.querySelector('input[id="LinkPayment"]');
+                        var link_label = link_check.closest('label');
+                        link_label.parentNode.removeChild(link_label);
+
+                        const newrow = document.createElement('div');
+                        newrow.innerHTML = '<div class="contrib_table-row"><div class="contrib_table-cell col-md-fix-tiny"></div>' +
+                            '<div class="contrib_table-cell col-md-fix-big">-</div>' +
+                            '<div class="contrib_table-cell col-md-fix-tiny"><span class="crm-i fa-bars"></span>-</div>' +
+                            '<div class="contrib_table-cell col-md-fix-tiny"></div>' +
+                            '<div class="contrib_table-cell col-md-fix-small">&sum;-</div>\n' +
+                            '<div class="contrib_table-cell col-md-auto">' +
+                            '<span class="crm-i fa-calendar-o"></span> -</div>\n' +
+                            '<div class="contrib_table-cell col-md-fix-small"></div></div>';
+
+                        var check_c = row.querySelector('input[type="checkbox"]');
+                        check_c.parentNode.removeChild(check_c);
+                        contribution_content.push(row.outerHTML);
+                        row.parentNode.replaceChild(newrow,row);
+                    }
+
+                //delete table entry mandate
+                for(var mandate_check in mandates)
+                    if(mandates.hasOwnProperty(mandate_check))
+                    {
+                        var checkbox_m = mandates[mandate_check];
+                        var row_m = checkbox_m.closest('.contrib_table-row');
+
+                        const newrow = document.createElement('div');
+                        newrow.innerHTML = '<div class="contrib_table-row">' +
+                            '<div class="contrib_table-cell col-md-auto"></div>'+
+                            '<div class="contrib_table-cell col-md-fix-small"></div>'+
+                            '<div class="contrib_table-cell col-md-fix-small"></div>'+
+                            '<div class="contrib_table-cell col-md-fix-big"></div>'+
+                            '<div class="contrib_table-cell col-md-fix-big"></div>'+
+                            '<div class="contrib_table-cell col-md-fix-tiny"></div></div>';
+
+                        var check_m = row_m.querySelector('input[type="checkbox"]');
+                        check_m.parentNode.removeChild(check_m);
+                        mandate_content.push(row_m.outerHTML);
+                        row_m.parentNode.replaceChild(newrow,row_m);
+                    }
+
+                //show entries in last row
+                var innerContentContrib = '';
+                var innerMandate = '';
+                var last_row = local.rows[ local.rows.length - 1 ];
+                    if(mandate_content.length === 1) {
+                        for (var div_c in contribution_content) {
+                            innerContentContrib += contribution_content[div_c];
+                        }
+                        innerMandate += mandate_content[0];
+                    }
+
+                    else if(contribution_content.length === 1) {
+                        for (var div_m in mandate_content) {
+                            innerMandate += mandate_content[div_m];
+                        }
+                        innerContentContrib += contribution_content[0];
+                    }
+
+                const newNode = document.createElement('tr');
+                        if(last_row.class === 'odd-row')
+                            newNode.setAttribute('class','even-row');
+                        else
+                            newNode.setAttribute('class','odd-row');
+                newNode.innerHTML ='<td class="contrib_table">' + innerContentContrib + '</td>' +
+                                    '<td><div class="crm-i fa-exchange"></div></td>' +
+                                    '<td>'+ innerMandate +'</td>';
+
+                last_row.parentNode.insertBefore(newNode, last_row.nextSibling);
+
+                e.preventDefault();
+
+
+
+            }
+            catch (e)
+            {
+
+                CRM.alert(e, ts('SEPA cross link relation'), 'error');
+
+            }
+
+
         });
 
-});
+
+    });
+
