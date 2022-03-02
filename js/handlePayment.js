@@ -482,10 +482,7 @@ CRM.$(function($) {
                     }
 
                 const newNode = document.createElement('tr');
-                        if(last_row.class === 'odd-row')
-                            newNode.setAttribute('class','even-row');
-                        else
-                            newNode.setAttribute('class','odd-row');
+                    newNode.setAttribute('class','cm-newrow');
                 newNode.innerHTML ='<td class="contrib_table">' + innerContentContrib + '</td>' +
                                     '<td><div class="crm-i fa-exchange"></div></td>' +
                                     '<td>'+ innerMandate +'</td>';

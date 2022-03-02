@@ -126,3 +126,8 @@
     -o-transition: ease .3s;
 }
 
+.crm-container .cm-newrow {
+    background-color: lavender;
+    border-bottom: lightskyblue;
+    border-bottom-style:dotted;
+}
