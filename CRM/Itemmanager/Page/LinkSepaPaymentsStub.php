@@ -90,7 +90,6 @@ class CRM_Itemmanager_Page_LinkSepaPaymentsStub extends CRM_Core_Page {
                     //check here transaction relation
                     $istrxn = !$trxn['is_error'] && count($trxn['values']) > 0;
 
-
                     if ($istrxn) {
                         foreach ($trxn['values'] as $trx) {
                             $needle = 'SDD@';
@@ -102,6 +101,9 @@ class CRM_Itemmanager_Page_LinkSepaPaymentsStub extends CRM_Core_Page {
                             if ($finance_sdd_id == (int)$financial_id) {
                                 $foundtrxfinance = true;
                             }
+
+
+
                         }
                     }
 
@@ -170,6 +172,7 @@ class CRM_Itemmanager_Page_LinkSepaPaymentsStub extends CRM_Core_Page {
                             'is_trxn' => !$trxn['is_error'] && count($trxn['values']) > 0,
                             'is_direct_trxn' => $foundtrxfinance ? 1 : 0,
                             'reference_month' => $reference_month,
+                            'cross_payment' => null,
                         );
 
 
@@ -191,6 +194,10 @@ class CRM_Itemmanager_Page_LinkSepaPaymentsStub extends CRM_Core_Page {
                         $this->_relation['contributions'][$reference_month]['related_total']);
                     $this->_relation['contributions'][$reference_month]['related_total_display'] =
                         $summary_related.' '.$currency;
+
+                    //add this value into reference
+                    $reference = &$this->_back_ward_search[$contrib_entry['element_cross_name']];
+                    $reference['cross_payment'] = $this->copyPaymentFragment($contrib_base[$contribution_id]);
 
                     //flag multilines
                     if(count($contrib_base ) > 1)
@@ -263,6 +270,7 @@ class CRM_Itemmanager_Page_LinkSepaPaymentsStub extends CRM_Core_Page {
                             'financial_id' => $financial_id,
                             'sdd_id' => $sdd_contribution_id,
                             'reference_month' => $reference_month,
+                            'add_payment' => $this->addPaymentFragment($contrib['sdd']),
 
                         );
 
@@ -338,6 +346,7 @@ class CRM_Itemmanager_Page_LinkSepaPaymentsStub extends CRM_Core_Page {
                         'financial_id' => $financial_id,
                         'sdd_id' => $sdd_contribution_id,
                         'reference_month' => $reference_month,
+                        'add_payment' => $this->addPaymentFragment($contrib['sdd']),
                     );
 
 
@@ -429,6 +438,51 @@ class CRM_Itemmanager_Page_LinkSepaPaymentsStub extends CRM_Core_Page {
             'contribution_date_copy' => $rel_contribution['contribution_date_raw'],
             //'order_reference' => ,
 
+        );
+
+        return $pay_param;
+    }
+
+
+    /**
+     *  Creates the set of the payment information
+     *
+     */
+    private function addPaymentFragment($mandate)
+    {
+
+        //has to be filled up for the payment
+        $pay_param = array(
+            //'check_number',
+            //'payment_processor_id',
+            'fee_amount'=>  (float) $mandate['sdd_fee_amount'],
+            'total_amount' => (float) $mandate['sdd_total'],
+            'contribution_id' => 0,
+            'net_amount' => (float)$mandate['sdd_net_amount'],
+            //'card_type_id',
+            //'pan_truncation',
+            'trxn_result_code'=>2,
+            'payment_instrument_id'=> (int) $mandate['payment_instrument_id'],
+            'trxn_id' => 'SDD@'.$mandate['sdd_mandate'].'#finance#'.$this->_financial_id,
+            'trxn_date' => $mandate['sdd_contribution_raw'],
+            'contribution_date_copy' => null,
+            //'order_reference' => ,
+
+        );
+
+        return $pay_param;
+    }
+
+    private function copyPaymentFragment($contribution)
+    {
+
+        $pay_param = array(
+
+            'total' => $contribution['total'],
+            'fee_amount' => $contribution['fee_amount'],
+            'fee_net_ratio' => $contribution['fee_net_ratio'],
+            'net_amount' => $contribution['net_amount'],
+            'contribution_date_raw' => $contribution['contribution_date_raw'],
         );
 
         return $pay_param;

@@ -67,7 +67,7 @@
                                     {if $related.empty}
                                         -
                                     {else}
-                                        <label><input type="checkbox" id="SelectContribution" data-ident=="{$element_contrib_cross_name}"></label>
+                                        <label><input type="checkbox" id="SelectContribution" data-ident="{$element_contrib_cross_name}"></label>
                                     {/if}
 
                                 </div>
