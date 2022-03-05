@@ -246,6 +246,18 @@ function itemmanager_civicrm_navigationMenu(&$menu) {
         'active' => 1
     ));
 
+    $items_options_url = 'civicrm/admin/setting/itemmanageroptions';
+
+    _sepa_civix_insert_navigation_menu($menu, 'Administer/CiviMember',array (
+        'label' => ts('Itemmanager Options',array('domain' => 'org.stadtlandbeides.itemmanager')),
+        'name' => 'Itemmanager Options',
+        'url' => $items_options_url,
+        'permission' => 'administer CiviCRM',
+        'operator' => NULL,
+        'separator' => 2,
+        'active' => 1
+    ));
+
   _itemmanager_civix_navigationMenu($menu);
 }
 

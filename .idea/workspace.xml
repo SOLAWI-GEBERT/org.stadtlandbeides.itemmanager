@@ -7,13 +7,18 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="8a4e2072-c43d-4029-bc01-730e5001dde6" name="Default Changelist" comment="ENH Add filter options for the SEPA wrapper">
+    <list default="true" id="8a4e2072-c43d-4029-bc01-730e5001dde6" name="Default Changelist" comment="ENH Use itemmangersettings to differentiate periods">
+      <change afterPath="$PROJECT_DIR$/settings/Itemmanager.setting.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CRM/Itemmanager/Form/ItemmanagerSetting.php" beforeDir="false" afterPath="$PROJECT_DIR$/CRM/Itemmanager/Form/ItemmanagerSetting.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CRM/Itemmanager/Page/LinkSepaPaymentsStub.php" beforeDir="false" afterPath="$PROJECT_DIR$/CRM/Itemmanager/Page/LinkSepaPaymentsStub.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CRM/Itemmanager/Form/LinkSepaPayments.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CRM/Itemmanager/Logic/RenewalMultipleInstallmentPlan.php" beforeDir="false" afterPath="$PROJECT_DIR$/CRM/Itemmanager/Logic/RenewalMultipleInstallmentPlan.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CRM/Itemmanager/Logic/RenewalPaymentPlanBase.php" beforeDir="false" afterPath="$PROJECT_DIR$/CRM/Itemmanager/Logic/RenewalPaymentPlanBase.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CRM/Itemmanager/Logic/RenewalSingleInstallmentPlan.php" beforeDir="false" afterPath="$PROJECT_DIR$/CRM/Itemmanager/Logic/RenewalSingleInstallmentPlan.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CRM/Itemmanager/Util.php" beforeDir="false" afterPath="$PROJECT_DIR$/CRM/Itemmanager/Util.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/CRM/Itemmanager/Form/ItemmanagerSetting.tpl" beforeDir="false" afterPath="$PROJECT_DIR$/templates/CRM/Itemmanager/Form/ItemmanagerSetting.tpl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/CRM/Itemmanager/Page/LinkSepaPaymentsStub.tpl" beforeDir="false" afterPath="$PROJECT_DIR$/templates/CRM/Itemmanager/Page/LinkSepaPaymentsStub.tpl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/itemmanager.php" beforeDir="false" afterPath="$PROJECT_DIR$/itemmanager.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/CRM/Itemmanager/Form/LinkSepaPayments.tpl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/xml/Menu/itemmanager.xml" beforeDir="false" afterPath="$PROJECT_DIR$/xml/Menu/itemmanager.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -170,7 +175,8 @@
       <workItem from="1646244551807" duration="11580000" />
       <workItem from="1646320948741" duration="11371000" />
       <workItem from="1646418312166" duration="20095000" />
-      <workItem from="1646470933978" duration="29192000" />
+      <workItem from="1646470933978" duration="31725000" />
+      <workItem from="1646509420290" duration="1604000" />
     </task>
     <task id="LOCAL-00001" summary="ENH Intermittent changes to analyze the price items">
       <created>1612779470217</created>
@@ -452,7 +458,14 @@
       <option name="project" value="LOCAL" />
       <updated>1646492031895</updated>
     </task>
-    <option name="localTasksCounter" value="41" />
+    <task id="LOCAL-00041" summary="ENH Use itemmangersettings to differentiate periods">
+      <created>1646506906320</created>
+      <option name="number" value="00041" />
+      <option name="presentableId" value="LOCAL-00041" />
+      <option name="project" value="LOCAL" />
+      <updated>1646506906320</updated>
+    </task>
+    <option name="localTasksCounter" value="42" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -471,7 +484,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="ENH Add duplication function to repair missing contributions." />
     <MESSAGE value="ENH Init version for new sepa link app" />
     <MESSAGE value="FIX Cahnge accordion wrapper to separate collapse behavior" />
     <MESSAGE value="ENH Init contribution list for SEPA Link App" />
@@ -496,7 +508,8 @@
     <MESSAGE value="FIX Relate payments correctly" />
     <MESSAGE value="FIX Relation mismatch solved according to multiline SEPA assignments to just one contribution" />
     <MESSAGE value="ENH Add filter options for the SEPA wrapper" />
-    <option name="LAST_COMMIT_MESSAGE" value="ENH Add filter options for the SEPA wrapper" />
+    <MESSAGE value="ENH Use itemmangersettings to differentiate periods" />
+    <option name="LAST_COMMIT_MESSAGE" value="ENH Use itemmangersettings to differentiate periods" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -516,6 +529,7 @@
     <watches-manager>
       <configuration name="index.php">
         <watch expression="$SDD_reference_trxn_id" />
+        <watch expression="$sdd_base" />
       </configuration>
     </watches-manager>
   </component>
