@@ -101,8 +101,7 @@
                             ></label>
                     </td>
 
-                    {if $contribution.sdd}
-                        {assign var="sdd" value=$contribution.sdd}
+                    {foreach from=$contribution.related_sdds item=sdd}
                         {assign var="element_sdd_cross_name" value=$sdd.element_cross_name}
                         {* right page *}
                         <td class="contrib_table">
@@ -122,7 +121,7 @@
 
 
                         </td>
-                    {/if}
+                    {/foreach}
 
 
                 </tr>

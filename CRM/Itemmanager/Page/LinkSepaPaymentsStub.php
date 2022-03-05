@@ -8,6 +8,7 @@ class CRM_Itemmanager_Page_LinkSepaPaymentsStub extends CRM_Core_Page {
     public $_relation;
     private $_errormessages;
     private $_back_ward_search;
+    private $_currency;
 
 
     /**
@@ -19,6 +20,7 @@ class CRM_Itemmanager_Page_LinkSepaPaymentsStub extends CRM_Core_Page {
         $this->_relation = array('contributions'=>array());
         $this->_errormessages = array();
         $this->_back_ward_search = array();
+        $this->_currency = Civi::settings()->get('defaultCurrency');
     }
 
     public function run() {
@@ -41,6 +43,10 @@ class CRM_Itemmanager_Page_LinkSepaPaymentsStub extends CRM_Core_Page {
             $this->processError("ERROR",E::ts('Retrieve memberships'),$member_array['error_message']);
             return;
         }
+
+        //get the SDD Data
+        $SDD_transformed = $this->transformMandateData();
+        $inserted_by_accident = array();
 
         //Create a logical form reference
         foreach ($member_array['values'] As $membership) {
@@ -78,6 +84,35 @@ class CRM_Itemmanager_Page_LinkSepaPaymentsStub extends CRM_Core_Page {
                 }
 
                 $foundtrxfinance = false;
+                $SDD_reference_trxn_id = null;
+
+                //check here transaction relation
+                $istrxn = !$trxn['is_error'] && count($trxn['values']) > 0;
+
+                if ($istrxn) {
+                    foreach ($trxn['values'] as $trx) {
+                        $needle = 'SDD@';
+                        $length = strlen($needle);
+                        if (!substr($trx['trxn_id'], 0, $length) === $needle) continue;
+                        $split_adds = explode("#finance#", $trx['trxn_id']);
+                        if (count($split_adds) != 2) continue;
+
+                        $split_ids = explode("#contribution#", $split_adds[1]);
+                        if (count($split_ids) != 2) continue;
+
+                        $finance_sdd_id = (int)$split_ids[0];
+                        $sdd_contrib_id = (int)$split_ids[1];
+                        if ($finance_sdd_id === $this->_financial_id) {
+                            $foundtrxfinance = true;
+                            $SDD_reference_trxn_id = $trx['trxn_id'];
+                        }
+
+
+                    }
+                }
+
+                $reference_id = $foundtrxfinance ? $SDD_reference_trxn_id : $reference_month;
+
                 foreach ($linerecords as $lineitem) {
 
                     $price_field_value_id = CRM_Utils_Array::value('price_field_value_id', $lineitem['linedata']);
@@ -87,37 +122,16 @@ class CRM_Itemmanager_Page_LinkSepaPaymentsStub extends CRM_Core_Page {
                     $line_total = CRM_Utils_Array::value('line_total',$lineitem['linedata']);
                     $line_tax = CRM_Utils_Array::value('tax_amount',$lineitem['linedata']);
 
-                    //check here transaction relation
-                    $istrxn = !$trxn['is_error'] && count($trxn['values']) > 0;
-
-                    if ($istrxn) {
-                        foreach ($trxn['values'] as $trx) {
-                            $needle = 'SDD@';
-                            $length = strlen($needle);
-                            if (!substr($trx['trxn_id'], 0, $length) === $needle) continue;
-                            $split = explode("#finance#", $trx['trxn_id']);
-                            if (count($split) != 2) continue;
-                            $finance_sdd_id = (int)$split[1];
-                            if ($finance_sdd_id == (int)$financial_id) {
-                                $foundtrxfinance = true;
-                            }
-
-
-
-                        }
-                    }
-
-
-                    //if($line_total == 0.0) continue;
-
                     $this->_relation['valid'] = True;
 
                     //create entry just once per contribution
-                    if(!array_key_exists($reference_month, $this->_relation['contributions'])) {
-                        $this->_relation['contributions'][$reference_month] = array(
+                    if(!array_key_exists($reference_id, $this->_relation['contributions'])) {
+                        $this->_relation['contributions'][$reference_id] = array(
                             'reference_month' => $reference_month,
-                            'element_link_name' => 'link_' . $financial_id . '_' . $reference_month,
+                            'reference_id' => $reference_id,
+                            'element_link_name' => 'link_' . $this->_financial_id . '_' . $reference_id,
                             'related_contributions' => array(),
+                            'related_sdds' => array(),
                             'related_total_display' => '-',
                             'related_total' => 0,
                             'is_trxn' => $istrxn,
@@ -126,21 +140,49 @@ class CRM_Itemmanager_Page_LinkSepaPaymentsStub extends CRM_Core_Page {
                         );
 
                         //fill form backward search
-                        $this->_back_ward_search[$this->_relation['contributions'][$reference_month]['element_link_name']] = array(
+                        $this->_back_ward_search[$this->_relation['contributions'][$reference_id]['element_link_name']] = array(
                             'entity' => 'link',
-                            'element' => $this->_relation['contributions'][$reference_month]['element_link_name'],
+                            'element' => $this->_relation['contributions'][$reference_id]['element_link_name'],
                             'financial_id' => $financial_id,
                             'reference_month' => $reference_month,
+                            'reference_id' => $reference_id,
                             'is_trxn' => $istrxn,
                             'is_direct_trxn' => $foundtrxfinance ? 1 : 0,
                         );
 
+                        $sdd_base = &$this->_relation['contributions'][$reference_id]['related_sdds'];
+                        //insert all related SDD data
+                        foreach($SDD_transformed as $sdd_key => $sdd_value)
+                        {
+                            //enter if reference_month ===
+                            if((!$foundtrxfinance && $reference_month != $sdd_value['reference_month'] ||
+                                $SDD_transformed[$sdd_key]['direct_linked'])) continue;
+
+                            //enter if Payment
+                            if($foundtrxfinance && $SDD_reference_trxn_id != $sdd_key) continue;
+                            $sdd_base[$sdd_key] = $sdd_value;
+                            if($foundtrxfinance) {
+                                $SDD_transformed[$sdd_key]['direct_linked'] = true;
+                                if($SDD_transformed[$sdd_key]['date_linked'])
+                                {
+                                    //remove SDD value if accidentally linked by date
+                                    $inserted_by_accident[] = $sdd_value['reference_month'];
+                                    $contrib_date = &$this->_relation['contributions']
+                                                [$sdd_value['reference_month']]['related_sdds'];
+                                    unset($contrib_date[$sdd_key]);
+
+                                }
+
+                            }
+                            else
+                                $SDD_transformed[$sdd_key]['date_linked'] = true;
+
+                        }
+
                     }
 
-
-
                     //we want to collect all items of the same month
-                    $contrib_base = &$this->_relation['contributions'][$reference_month]['related_contributions'];
+                    $contrib_base = &$this->_relation['contributions'][$reference_id]['related_contributions'];
 
                     if(!array_key_exists($contribution_id, $contrib_base)) {
                         $contrib_base[$contribution_id] = array(
@@ -148,7 +190,7 @@ class CRM_Itemmanager_Page_LinkSepaPaymentsStub extends CRM_Core_Page {
                             'contribution_date_raw' => $contrib_date_raw,
                             'contribution_date' => $contrib_date,
                             'item_label' => $price_set_name,
-                            'element_cross_name' => 'contribution_' . $financial_id . '_' . $reference_month . '_' . $contribution_id,
+                            'element_cross_name' => 'contribution_' . $financial_id . '_' . $reference_id . '_' . $contribution_id,
                             'total' => 0.0,
                             'total_display' => '-',
                             'fee_amount' => $contrib_fee_amount,
@@ -169,12 +211,14 @@ class CRM_Itemmanager_Page_LinkSepaPaymentsStub extends CRM_Core_Page {
                             'element' => $contrib_base[$contribution_id]['element_cross_name'],
                             'financial_id' => $financial_id,
                             'contribution_id' => $contribution_id,
+                            'contribution_date_raw' => $contrib_date_raw,
                             'is_trxn' => !$trxn['is_error'] && count($trxn['values']) > 0,
                             'is_direct_trxn' => $foundtrxfinance ? 1 : 0,
                             'reference_month' => $reference_month,
+                            'reference_id' => $reference_id,
                             'cross_payment' => null,
+                            'add_payment' => array(),
                         );
-
 
                     }
 
@@ -189,19 +233,28 @@ class CRM_Itemmanager_Page_LinkSepaPaymentsStub extends CRM_Core_Page {
                     $contrib_entry['line_count'] += 1;
 
                     //sum also all related
-                    $this->_relation['contributions'][$reference_month]['related_total'] += $contrib_entry['total'];
+                    $this->_relation['contributions'][$reference_id]['related_total'] += $contrib_entry['total'];
                     $summary_related = CRM_Utils_Money::formatLocaleNumericRoundedForDefaultCurrency(
-                        $this->_relation['contributions'][$reference_month]['related_total']);
-                    $this->_relation['contributions'][$reference_month]['related_total_display'] =
+                        $this->_relation['contributions'][$reference_id]['related_total']);
+                    $this->_relation['contributions'][$reference_id]['related_total_display'] =
                         $summary_related.' '.$currency;
 
                     //add this value into reference
                     $reference = &$this->_back_ward_search[$contrib_entry['element_cross_name']];
                     $reference['cross_payment'] = $this->copyPaymentFragment($contrib_base[$contribution_id]);
 
+                    $sdd_base = &$this->_relation['contributions'][$reference_id]['related_sdds'];
+                    $add_payment = &$reference['add_payment'];
+                    //insert all related SDD data
+                    foreach($sdd_base as $sdd_key => $sdd_value)
+                    {
+                        $add_payment[$sdd_key] = $this->addPaymentbyLink($sdd_value, $contrib_entry,$sdd_value['sdd_id']);
+
+                    }
+
                     //flag multilines
                     if(count($contrib_base ) > 1)
-                        $this->_relation['contributions'][$reference_month]['multiline'] = True;
+                        $this->_relation['contributions'][$reference_id]['multiline'] = True;
 
                 }//foreach ($linerecords as $lineitem)
 
@@ -210,182 +263,9 @@ class CRM_Itemmanager_Page_LinkSepaPaymentsStub extends CRM_Core_Page {
         }//foreach ($member_array['values'] As $membership)
 
 
-        // Get the given memberships
-        $sdd_array = CRM_Itemmanager_Util::getSDDFullRecordByContactId($this->_contact_id, $this->_financial_id);
 
-        if($sdd_array['is_error'])
-        {
-            $this->processError("ERROR",E::ts('Retrieve SEPA mandate'),$sdd_array['error_message']);
-            return;
-        }
-
-        foreach ($sdd_array['values'] As $sddmandate) {
-            $index = 0;
-            foreach ($sddmandate['payinfo'] as $sdd_contribution) {
-
-                $sdd_contribution_id = (int)CRM_Utils_Array::value('id', $sdd_contribution);
-
-                $sdd_contrib_date_raw = CRM_Utils_Array::value('receive_date', $sdd_contribution);
-                $sdd_contrib_date = CRM_Utils_Date::customFormat(date_create($sdd_contrib_date_raw)->format('Y-m-d'),
-                    Civi::settings()->get('dateformatshortdate'));
-                $reference_date = date_create($sdd_contrib_date);
-                $reference_month = $reference_date->format('Y-m');
-
-                $financial_id = CRM_Utils_Array::value('financial_type_id', $sdd_contribution);
-
-                //don't relate foreign SDD contributions
-                if($financial_id != $this->_financial_id) continue;
-
-                $relation_found = False;
-                foreach ($this->_relation['contributions'] as $contribution_base)
-                {
-
-                    if($contribution_base['reference_month'] == $reference_month)
-                    {
-                        $summary_display = CRM_Utils_Money::formatLocaleNumericRoundedForDefaultCurrency(
-                            CRM_Utils_Array::value('total_amount', $sdd_contribution));
-                        $contrib = &$this->_relation['contributions'][$reference_month];
-                        $contrib['sdd'] = array(
-                            'sdd_id' => $sdd_contribution_id,
-                            'sdd_contribution_date' => $sdd_contrib_date,
-                            'sdd_contribution_raw' => $sdd_contrib_date_raw,
-                            'element_cross_name' => 'mandate_'.$financial_id.'_'.$reference_month.'_'.$sdd_contribution_id,
-                            'sdd_mandate_id' => CRM_Utils_Array::value('id', $sddmandate['sdddata']),
-                            'sdd_mandate' => CRM_Utils_Array::value('reference', $sddmandate['sdddata']),
-                            'payment_instrument_id' => CRM_Utils_Array::value('payment_instrument_id', $sdd_contribution),
-                            'sdd_source' => CRM_Utils_Array::value('source', $sddmandate['sdddata']),
-                            'sdd_total' => CRM_Utils_Array::value('total_amount', $sdd_contribution),
-                            'sdd_fee_amount' => CRM_Utils_Array::value('fee_amount', $sdd_contribution),
-                            'sdd_net_amount' => CRM_Utils_Array::value('net_amount', $sdd_contribution),
-                            'sdd_total_display' => $summary_display.' '.$currency,
-                            'statusclass' => $this->getcssClassforPaystatus(
-                                (int)CRM_Utils_Array::value('contribution_status_id', $sdd_contribution), true),
-                        );
-
-
-                        //fill form backward search
-                        $this->_back_ward_search[$contrib['sdd']['element_cross_name']] = array(
-                            'entity' => 'sdd_cross',
-                            'element' => $contrib['sdd']['element_cross_name'],
-                            'financial_id' => $financial_id,
-                            'sdd_id' => $sdd_contribution_id,
-                            'reference_month' => $reference_month,
-                            'add_payment' => $this->addPaymentFragment($contrib['sdd']),
-
-                        );
-
-                        //we need the payment info down in the relations
-                        foreach ($contribution_base['related_contributions'] as $rel_contribution)
-                        {
-
-                            $reference = &$this->_back_ward_search[$rel_contribution['element_cross_name']];
-                            $reference['add_payment'] = $this->addPaymentbyLink($contrib['sdd'], $rel_contribution);
-                        }
-
-
-
-                        $relation_found = True;
-                        break;
-
-                    }
-
-
-                }// foreach ($this->_relation['contributions'] as $contribution_base)
-
-                //alonesome contribution
-                if(!$relation_found)
-                {
-                    $summary_display = CRM_Utils_Money::formatLocaleNumericRoundedForDefaultCurrency(
-                        CRM_Utils_Array::value('total_amount', $sdd_contribution));
-
-                    //create entry just once per contribution
-                    if(!array_key_exists($reference_month, $this->_relation['contributions'])) {
-                        $this->_relation['contributions'][$reference_month] = array(
-                            'reference_month' => $reference_month,
-                            'related_contributions' => array(),
-                            'element_link_name' => 'link_'.$financial_id.'_'. $reference_month,
-
-                        );
-
-                        //fill form backward search
-                        $this->_back_ward_search[$this->_relation['contributions'][$reference_month]['element_link_name']] = array(
-                            'entity' => 'link',
-                            'element' => $this->_relation['contributions'][$reference_month]['element_link_name'],
-                            'financial_id' => $financial_id,
-                            'sdd_id' => $sdd_contribution_id,
-                            'reference_month' => $reference_month,
-                        );
-
-
-                    }
-
-                    $sdd_contrib_base = &$this->_relation['contributions'][$reference_month];
-                    $sdd_contrib_rel = &$this->_relation['contributions'][$reference_month]['related_contributions'];
-
-                    $sdd_contrib_base['sdd'] = array(
-                        'sdd_id' => $sdd_contribution_id,
-                        'sdd_contribution_date' => $sdd_contrib_date,
-                        'sdd_contribution_raw' => $sdd_contrib_date_raw,
-                        'element_cross_name' => 'mandate_'.$financial_id.'_'.$reference_month.'_'.$sdd_contribution_id,
-                        'sdd_mandate_id' => CRM_Utils_Array::value('id', $sddmandate['sdddata']),
-                        'sdd_mandate' => CRM_Utils_Array::value('reference', $sddmandate['sdddata']),
-                        'payment_instrument_id' => CRM_Utils_Array::value('payment_instrument_id', $sdd_contribution),
-                        'sdd_source' => CRM_Utils_Array::value('source', $sddmandate['sdddata']),
-                        'sdd_total' => CRM_Utils_Array::value('total_amount', $sdd_contribution),
-                        'sdd_fee_amount' => CRM_Utils_Array::value('fee_amount', $sdd_contribution),
-                        'sdd_net_amount' => CRM_Utils_Array::value('net_amount', $sdd_contribution),
-                        'sdd_total_display' => $summary_display.' '.$currency,
-                        'statusclass' => $this->getcssClassforPaystatus(
-                            (int)CRM_Utils_Array::value('contribution_status_id', $sdd_contribution), true),
-                    );
-
-                    //fill form backward search
-                    $this->_back_ward_search[$sdd_contrib_base['sdd']['element_cross_name']] = array(
-                        'entity' => 'sdd_cross',
-                        'element' => $sdd_contrib_base['sdd']['element_cross_name'],
-                        'financial_id' => $financial_id,
-                        'sdd_id' => $sdd_contribution_id,
-                        'reference_month' => $reference_month,
-                        'add_payment' => $this->addPaymentFragment($contrib['sdd']),
-                    );
-
-
-                    if(!array_key_exists($sdd_contribution_id, $sdd_contrib_rel)) {
-                        $sdd_contrib_rel[$sdd_contribution_id] = array(
-
-                            'contribution_id' => 0,
-                            'element_cross_name' => 'empty_'.$financial_id.'_'. $reference_month . '_' . $sdd_contribution_id,
-                            'contribution_date' => '-',
-                            'contribution_date_raw' => '-',
-                            'item_label' => '-',
-                            'total' => 0.0,
-                            'total_display' => '-',
-                            'fee_amount' => 0.0,
-                            'fee_net_ratio' => 1.0,
-                            'net_amount' => 0.0,
-                            'line_count' => 0,
-                            'is_trxn' => 0,
-                            'is_direct_trxn' => 0,
-                            'empty' => True,
-                            'statusclass' => $this->getcssClassforPaystatus(0, false),
-
-                        );
-
-                        //fill form backward search
-                        $this->_back_ward_search[$sdd_contrib_rel[$sdd_contribution_id]['element_cross_name']] = array(
-                            'entity' => 'empty',
-                            'element' => $sdd_contrib_rel[$sdd_contribution_id]['element_cross_name'],
-                            'financial_id' => $financial_id,
-                            'reference_month' => $reference_month,
-                        );
-
-                    }
-                }
-            }
-
-        }//foreach ($sdd_array['values'] As $sddmandate)
-
-
+        //add the rest
+        $this->addMissingSDD($SDD_transformed);
 
         $this->assign('relation', $this->_relation);
         // export form elements
@@ -400,12 +280,114 @@ class CRM_Itemmanager_Page_LinkSepaPaymentsStub extends CRM_Core_Page {
     }
 
 
+    /*
+     * Simply add the non related SDD as standalone
+     */
+    private function addMissingSDD(&$SDD_transformed)
+    {
+        foreach ($SDD_transformed as $sdd_key => $sdd_value) {
+            $reference_month = $sdd_value['reference_month'];
+
+            if($SDD_transformed[$sdd_key]['date_linked'] || $SDD_transformed[$sdd_key]['direct_linked']) continue;
+            //create entry just once per contribution
+            if (!array_key_exists($reference_month, $this->_relation['contributions'])) {
+                $this->_relation['contributions'][$reference_month] = array(
+                    'reference_month' => $reference_month,
+                    'reference_id' => $reference_month,
+                    'related_contributions' => array(),
+                    'related_sdds' => array(),
+                    'element_link_name' => 'link_' . $this->_financial_id . '_' . $reference_month,
+                    'related_total_display' => '-',
+                    'related_total' => 0,
+                    'is_trxn' => false,
+                    'is_direct_trxn' => 0,
+
+                );
+
+                $sdd_base = &$this->_relation['contributions'][$reference_month]['related_sdds'];
+                $sdd_base[$sdd_key] = $sdd_value;
+                unset($SDD_transformed[$sdd_key]);
+            }
+        }
+        return;
+    }
+
+
+    /*
+     * Give us just a transformed version of the SDD data
+     */
+    private function transformMandateData()
+    {
+        // Get the given memberships
+        $SDD_transform = array();
+
+        $sdd_array = CRM_Itemmanager_Util::getSDDFullRecordByContactId($this->_contact_id, $this->_financial_id);
+
+        if($sdd_array['is_error'])
+        {
+            $this->processError("ERROR",E::ts('Retrieve SEPA mandate'),$sdd_array['error_message']);
+            return $SDD_transform;
+        }
+
+        foreach ($sdd_array['values'] As $sddmandate) {
+            foreach ($sddmandate['payinfo'] as $sdd_contribution) {
+
+                //head data
+                $sdd_contribution_id = (int)CRM_Utils_Array::value('id', $sdd_contribution);
+                $sdd_mandate = CRM_Utils_Array::value('reference', $sddmandate['sdddata']);
+                $trxnid = $this->createMandateTrxnId($sdd_mandate, $sdd_contribution_id);
+
+                $sdd_contrib_date_raw = CRM_Utils_Array::value('receive_date', $sdd_contribution);
+                $sdd_contrib_date = CRM_Utils_Date::customFormat(date_create($sdd_contrib_date_raw)->format('Y-m-d'),
+                    Civi::settings()->get('dateformatshortdate'));
+                $reference_date = date_create($sdd_contrib_date);
+                $reference_month = $reference_date->format('Y-m');
+
+                $summary_display = CRM_Utils_Money::formatLocaleNumericRoundedForDefaultCurrency(
+                    CRM_Utils_Array::value('total_amount', $sdd_contribution));
+                $SDD_transform[$trxnid] = array(
+                    'date_linked' => false,
+                    'direct_linked' => false,
+                    'sdd_id' => $sdd_contribution_id,
+                    'reference_month' => $reference_month,
+                    'sdd_contribution_date' => $sdd_contrib_date,
+                    'sdd_contribution_raw' => $sdd_contrib_date_raw,
+                    'element_cross_name' => 'mandate_' . $this->_financial_id . '_' . $reference_month . '_' . $sdd_contribution_id,
+                    'sdd_mandate_id' => CRM_Utils_Array::value('id', $sddmandate['sdddata']),
+                    'sdd_mandate' => CRM_Utils_Array::value('reference', $sddmandate['sdddata']),
+                    'payment_instrument_id' => CRM_Utils_Array::value('payment_instrument_id', $sdd_contribution),
+                    'sdd_source' => CRM_Utils_Array::value('source', $sddmandate['sdddata']),
+                    'sdd_total' => CRM_Utils_Array::value('total_amount', $sdd_contribution),
+                    'sdd_fee_amount' => CRM_Utils_Array::value('fee_amount', $sdd_contribution),
+                    'sdd_net_amount' => CRM_Utils_Array::value('net_amount', $sdd_contribution),
+                    'sdd_total_display' => $summary_display . ' ' . $this->_currency,
+                    'statusclass' => $this->getcssClassforPaystatus(
+                        (int)CRM_Utils_Array::value('contribution_status_id', $sdd_contribution), true),
+                );
+
+
+                //fill form backward search
+                $this->_back_ward_search[$SDD_transform[$trxnid]['element_cross_name']] = array(
+                    'entity' => 'sdd_cross',
+                    'element' => $SDD_transform[$trxnid]['element_cross_name'],
+                    'financial_id' => $this->_financial_id,
+                    'sdd_id' => $sdd_contribution_id,
+                    'reference_month' => $reference_month,
+                    'add_payment' => $this->addPaymentFragment($SDD_transform[$trxnid],$sdd_contribution_id),
+
+                );
+            }
+        }
+
+        return $SDD_transform;
+    }
+
     /**
      *  Creates the set of the payment information
      *
      * @param $base_contribution
      */
-    private function addPaymentbyLink($mandate, $rel_contribution)
+    private function addPaymentbyLink($mandate, $rel_contribution,$sdd_contribution_id)
     {
 
         if((float) $mandate['sdd_total'] < (float)$rel_contribution['total'])
@@ -433,7 +415,7 @@ class CRM_Itemmanager_Page_LinkSepaPaymentsStub extends CRM_Core_Page {
             //'pan_truncation',
             'trxn_result_code'=>2,
             'payment_instrument_id'=> (int) $mandate['payment_instrument_id'],
-            'trxn_id' => 'SDD@'.$mandate['sdd_mandate'].'#finance#'.$this->_financial_id,
+            'trxn_id' => $this->createMandateTrxnId($mandate['sdd_mandate'],$sdd_contribution_id),
             'trxn_date' => $mandate['sdd_contribution_raw'],
             'contribution_date_copy' => $rel_contribution['contribution_date_raw'],
             //'order_reference' => ,
@@ -443,12 +425,19 @@ class CRM_Itemmanager_Page_LinkSepaPaymentsStub extends CRM_Core_Page {
         return $pay_param;
     }
 
-
+    /*
+     * Just create the trxn id for purpose
+     */
+    private function createMandateTrxnId($mandate,$sdd_contribution_id)
+    {
+        return 'SDD@'.$mandate.'#finance#'.
+            $this->_financial_id.'#contribution#'.$sdd_contribution_id;
+    }
     /**
      *  Creates the set of the payment information
      *
      */
-    private function addPaymentFragment($mandate)
+    private function addPaymentFragment($mandate, $sdd_contribution_id)
     {
 
         //has to be filled up for the payment
@@ -463,7 +452,7 @@ class CRM_Itemmanager_Page_LinkSepaPaymentsStub extends CRM_Core_Page {
             //'pan_truncation',
             'trxn_result_code'=>2,
             'payment_instrument_id'=> (int) $mandate['payment_instrument_id'],
-            'trxn_id' => 'SDD@'.$mandate['sdd_mandate'].'#finance#'.$this->_financial_id,
+            'trxn_id' => $this->createMandateTrxnId($mandate['sdd_mandate'], $sdd_contribution_id),
             'trxn_date' => $mandate['sdd_contribution_raw'],
             'contribution_date_copy' => null,
             //'order_reference' => ,

@@ -81,7 +81,7 @@ CRM.$(function($) {
      * Call the api function to relate a payment
      * @param back_reference reference with the payment infos
      */
-    async function createPaymentbyLink(pay_reference)
+    async function createPaymentbyLink(pay_reference, receive_date)
     {
 
         // show busy indicator
@@ -105,7 +105,7 @@ CRM.$(function($) {
 
             let update_param = {};
             update_param['id'] = payparam['contribution_id'];
-            update_param['receive_date'] =  payparam['contribution_date_copy']
+            update_param['receive_date'] =  receive_date;
 
             console.log('Update Contribution ' + payparam['contribution_id']);
             CRM.api3('Contribution', 'create',update_param).done(function(result) {
@@ -172,10 +172,14 @@ CRM.$(function($) {
                     //check if we set the reference for ourself
                     if(!item.hasOwnProperty('trxn_id')) continue;
                     if (!item['trxn_id'].startsWith('SDD@')) continue;
-                    let elements = item['trxn_id'].split('#finance#');
-                    if(elements.length !== 2) continue;
+                    let elements_add = item['trxn_id'].split('#finance#');
+                    if(elements_add.length !== 2) continue;
 
-                    var finance_sdd_id = elements[1];
+                    let elements_ids = elements_add[1].split('#contribution#');
+                    if(elements_ids.length !== 2) continue;
+
+                    var finance_sdd_id = elements_ids[0];
+                    var sdd_contribution_id = elements_ids[1];
 
 
                     let param = {};
@@ -289,9 +293,11 @@ CRM.$(function($) {
                             if(back.hasOwnProperty(key))
                             {
                                 if (back[key]['entity'] !== 'contr_cross' ||
-                                    back[key]['reference_month'] !== reference['reference_month'])
+                                    back[key]['reference_id'] !== reference['reference_id'])
                                         continue;
-                                createPaymentbyLink(back[key]['add_payment']);
+                                for(var pay in back[key]['add_payment'])
+                                    if(back[key]['add_payment'].hasOwnProperty(pay))
+                                        createPaymentbyLink(back[key]['add_payment'][pay],back[key]['contribution_date_raw']);
                             }
 
                     }
@@ -306,7 +312,7 @@ CRM.$(function($) {
 
 
                             if (back[key_del]['entity'] !== 'contr_cross' ||
-                                back[key_del]['reference_month'] !== reference['reference_month'])
+                                back[key_del]['reference_id'] !== reference['reference_id'])
                                 continue;
                             //double check
 
@@ -316,7 +322,9 @@ CRM.$(function($) {
                             deleteparam['contribution_id'] = back[key_del]['contribution_id'];
                             deleteparam['financial_id'] = reference['financial_id'];
 
-                            deletePaymentbyLink(deleteparam, back[key_del]['add_payment']['contribution_date_copy']);
+                            deletePaymentbyLink(deleteparam, back[key_del]['contribution_date_raw']);
+
+
                         }
 
                     }
@@ -326,7 +334,7 @@ CRM.$(function($) {
                 this.disabled = false;
 
             } catch (e) {
-                CRM.alert(e, ts('Try to add the payment failed'), 'error');
+                CRM.alert(e, ts('Try to add/delete the payment failed'), 'error');
                 this.disabled = false;
                 globalsepalinkwait = false;
             }
@@ -381,7 +389,10 @@ CRM.$(function($) {
                         if (ischecked && !back[key]['is_direct_trxn'])
                         {
 
-                            createPaymentbyLink(back[key]);
+                            for(var pay in back[key]['add_payment'])
+                                if(back[key]['add_payment'].hasOwnProperty(pay))
+                                    createPaymentbyLink(back[key]['add_payment'][pay],back[key]['contribution_date_raw']);
+
                         }
 
                     }
@@ -503,7 +514,7 @@ CRM.$(function($) {
 
                             //last references
                             new_payment['contribution_id'] = con_reference['contribution_id'];
-                            new_payment['contribution_date_copy'] = con_payment['contribution_date_raw'];
+                            new_payment['contribution_date_raw'] = con_reference['contribution_date_raw'];
                             payments.push(new_payment);
 
                             if(total <= 0) break;
@@ -556,7 +567,7 @@ CRM.$(function($) {
 
                             //last references
                             new_payment['contribution_id'] = con_payment_vs['contribution_id'];
-                            new_payment['contribution_date_copy'] = con_payment_vs['contribution_date_raw'];
+                            new_payment['contribution_date_raw'] = con_reference_vs['contribution_date_raw'];
                             payments.push(new_payment);
 
                             if(con_total <= 0) break;
@@ -568,15 +579,21 @@ CRM.$(function($) {
 
 
                 //delete table entry contribution
+
                 for(var contribution_check in contributions)
                     if(contributions.hasOwnProperty(contribution_check))
                     {
                         var checkbox = contributions[contribution_check];
                         var row = checkbox.closest('.contrib_table-row');
-                        var row_tr = row.closest('tr');
-                        var link_check = row_tr.querySelector('input[id="LinkPayment"]');
-                        var link_label = link_check.closest('label');
-                        link_label.parentNode.removeChild(link_label);
+
+                        try {
+                            var row_tr = row.closest('tr');
+                            var link_check = row_tr.querySelector('input[id="LinkPayment"]');
+                            var link_label = link_check.closest('label');
+                            link_label.parentNode.removeChild(link_label);
+                        } catch (e) {
+                            // do nothing
+                        }
 
                         const newrow = document.createElement('div');
                         newrow.innerHTML = '<div class="contrib_table-row"><div class="contrib_table-cell col-md-fix-tiny"></div>' +
@@ -645,7 +662,9 @@ CRM.$(function($) {
                 while (payments.length) {
 
                     var payparam = payments.pop();
-                    createPaymentbyLink(payparam)
+                    var receive_date = payparam['contribution_date_raw'];
+                    delete payparam['contribution_date_raw'];
+                    createPaymentbyLink(payparam, receive_date)
                 }
 
 

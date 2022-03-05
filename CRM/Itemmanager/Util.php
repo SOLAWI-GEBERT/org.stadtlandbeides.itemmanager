@@ -444,10 +444,17 @@ class CRM_Itemmanager_Util
                     'id' => (int) $id,
                 );
 
-                $contribution = civicrm_api3('Contribution', 'getsingle', $param);
+                if($financial_id)
+                   $param['financial_type_id'] = $financial_id;
 
                 $paydata = array();
-                $paydata[$id] = $contribution;
+
+                $contribution = civicrm_api3('Contribution', 'get', $param);
+
+                if($contribution['is_error']) return $sddarray;
+                $counter = count($contribution['values']);
+                if($counter)
+                    $paydata[$id] = reset($contribution['values']);
 
                 $collection = array(
                     'sdddata' => $sdd,
