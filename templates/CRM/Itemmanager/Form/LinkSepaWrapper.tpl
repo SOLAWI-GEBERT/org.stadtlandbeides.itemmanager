@@ -22,11 +22,11 @@
 
 <div class="crm-block crm-form-block crm-form-title-here-form-block" style="margin: auto">
     <label class="crm-form-checkbox">
-        <input type="checkbox" id="SEPAFilterOpen">
+        <input type="checkbox" id="SEPAFilterOpen" {$filteropencheck} >
         {ts domain="org.stadtlandbeides.itemmanager"}Filter open payments{/ts}
     </label>
     <label class="crm-form-checkbox">
-        <input type="checkbox" id="SEPAFilterPast">
+        <input type="checkbox" id="SEPAFilterPast" {$filterpastcheck}>
         {ts domain="org.stadtlandbeides.itemmanager"}Filter past contributions{/ts}
     </label>
 </div>

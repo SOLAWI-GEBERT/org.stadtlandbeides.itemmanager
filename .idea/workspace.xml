@@ -7,18 +7,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="8a4e2072-c43d-4029-bc01-730e5001dde6" name="Default Changelist" comment="ENH Use itemmangersettings to differentiate periods">
-      <change afterPath="$PROJECT_DIR$/settings/Itemmanager.setting.php" afterDir="false" />
+    <list default="true" id="8a4e2072-c43d-4029-bc01-730e5001dde6" name="Default Changelist" comment="ENH Introduce setting options for the Itemmanager">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CRM/Itemmanager/Form/ItemmanagerSetting.php" beforeDir="false" afterPath="$PROJECT_DIR$/CRM/Itemmanager/Form/ItemmanagerSetting.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CRM/Itemmanager/Form/LinkSepaPayments.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CRM/Itemmanager/Logic/RenewalMultipleInstallmentPlan.php" beforeDir="false" afterPath="$PROJECT_DIR$/CRM/Itemmanager/Logic/RenewalMultipleInstallmentPlan.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CRM/Itemmanager/Logic/RenewalPaymentPlanBase.php" beforeDir="false" afterPath="$PROJECT_DIR$/CRM/Itemmanager/Logic/RenewalPaymentPlanBase.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CRM/Itemmanager/Logic/RenewalSingleInstallmentPlan.php" beforeDir="false" afterPath="$PROJECT_DIR$/CRM/Itemmanager/Logic/RenewalSingleInstallmentPlan.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CRM/Itemmanager/Util.php" beforeDir="false" afterPath="$PROJECT_DIR$/CRM/Itemmanager/Util.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/itemmanager.php" beforeDir="false" afterPath="$PROJECT_DIR$/itemmanager.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/CRM/Itemmanager/Form/LinkSepaPayments.tpl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/xml/Menu/itemmanager.xml" beforeDir="false" afterPath="$PROJECT_DIR$/xml/Menu/itemmanager.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CRM/Itemmanager/Form/LinkSepaWrapper.php" beforeDir="false" afterPath="$PROJECT_DIR$/CRM/Itemmanager/Form/LinkSepaWrapper.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/CRM/Itemmanager/Form/LinkSepaWrapper.tpl" beforeDir="false" afterPath="$PROJECT_DIR$/templates/CRM/Itemmanager/Form/LinkSepaWrapper.tpl" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -176,7 +168,7 @@
       <workItem from="1646320948741" duration="11371000" />
       <workItem from="1646418312166" duration="20095000" />
       <workItem from="1646470933978" duration="31725000" />
-      <workItem from="1646509420290" duration="1604000" />
+      <workItem from="1646509420290" duration="2414000" />
     </task>
     <task id="LOCAL-00001" summary="ENH Intermittent changes to analyze the price items">
       <created>1612779470217</created>
@@ -465,7 +457,21 @@
       <option name="project" value="LOCAL" />
       <updated>1646506906320</updated>
     </task>
-    <option name="localTasksCounter" value="42" />
+    <task id="LOCAL-00042" summary="ENH Introduce setting options for the Itemmanager">
+      <created>1646511240221</created>
+      <option name="number" value="00042" />
+      <option name="presentableId" value="LOCAL-00042" />
+      <option name="project" value="LOCAL" />
+      <updated>1646511240221</updated>
+    </task>
+    <task id="LOCAL-00043" summary="ENH Introduce setting options for the Itemmanager">
+      <created>1646511267071</created>
+      <option name="number" value="00043" />
+      <option name="presentableId" value="LOCAL-00043" />
+      <option name="project" value="LOCAL" />
+      <updated>1646511267071</updated>
+    </task>
+    <option name="localTasksCounter" value="44" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -484,7 +490,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="ENH Init version for new sepa link app" />
     <MESSAGE value="FIX Cahnge accordion wrapper to separate collapse behavior" />
     <MESSAGE value="ENH Init contribution list for SEPA Link App" />
     <MESSAGE value="ENH Init sepa add for SEPA Link App" />
@@ -509,7 +514,8 @@
     <MESSAGE value="FIX Relation mismatch solved according to multiline SEPA assignments to just one contribution" />
     <MESSAGE value="ENH Add filter options for the SEPA wrapper" />
     <MESSAGE value="ENH Use itemmangersettings to differentiate periods" />
-    <option name="LAST_COMMIT_MESSAGE" value="ENH Use itemmangersettings to differentiate periods" />
+    <MESSAGE value="ENH Introduce setting options for the Itemmanager" />
+    <option name="LAST_COMMIT_MESSAGE" value="ENH Introduce setting options for the Itemmanager" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

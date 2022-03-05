@@ -105,24 +105,31 @@ class CRM_Itemmanager_Form_LinkSepaWrapper extends CRM_Core_Form {
 
     public function buildQuickForm() {
 
+        $filter_open = CRM_Itemmanager_Util::getSetting('itemmanager_filter_open_payments');
+        $filter_past = CRM_Itemmanager_Util::getSetting('itemmanager_filter_past_payments');
 
-    $this->addButtons(array(
-      array(
-        'type' => 'cancel',
-        'name' => E::ts('Complete'),
-        'isDefault' => TRUE,
-      ),
-    ));
+        $this->addButtons(array(
+          array(
+            'type' => 'cancel',
+            'name' => E::ts('Complete'),
+            'isDefault' => TRUE,
+          ),
+        ));
 
-    // export form elements
-    CRM_Core_Resources::singleton()
-        ->addScriptFile('org.stadtlandbeides.itemmanager', 'js/expandAccordion.js')
-        ->addScriptFile('org.stadtlandbeides.itemmanager','js/filterSEPAOptions.js')
-        ->addStyleFile('org.stadtlandbeides.itemmanager', 'css/sepaLink.css');
-    $this->assign('relations', $this->_relations);
-    $this->assign('SEPAFilterOptions','filteropen=0&filterfuture=0');
-    $this->assign('elementNames', $this->getRenderableElementNames());
-    parent::buildQuickForm();
+        // export form elements
+        CRM_Core_Resources::singleton()
+            ->addScriptFile('org.stadtlandbeides.itemmanager', 'js/expandAccordion.js')
+            ->addScriptFile('org.stadtlandbeides.itemmanager','js/filterSEPAOptions.js')
+            ->addStyleFile('org.stadtlandbeides.itemmanager', 'css/sepaLink.css');
+        $this->assign('relations', $this->_relations);
+        $this->assign('SEPAFilterOptions','filteropen='.$filter_open.'&filterfuture='.$filter_past);
+        $this->assign('filteropencheck',$filter_open ? 'checked':'');
+        $this->assign('filterpastcheck',$filter_past ? 'checked': '');
+        $this->assign('elementNames', $this->getRenderableElementNames());
+
+
+
+        parent::buildQuickForm();
   }
 
   public function postProcess() {
