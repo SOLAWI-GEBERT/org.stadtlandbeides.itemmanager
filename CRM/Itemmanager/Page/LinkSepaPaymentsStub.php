@@ -9,6 +9,8 @@ class CRM_Itemmanager_Page_LinkSepaPaymentsStub extends CRM_Core_Page {
     private $_errormessages;
     private $_back_ward_search;
     private $_currency;
+    private $_filteropen;
+    private $_filterfuture;
 
 
     /**
@@ -21,6 +23,8 @@ class CRM_Itemmanager_Page_LinkSepaPaymentsStub extends CRM_Core_Page {
         $this->_errormessages = array();
         $this->_back_ward_search = array();
         $this->_currency = Civi::settings()->get('defaultCurrency');
+        $this->_filteropen = false;
+        $this->_filterfuture = false;
     }
 
     public function run() {
@@ -30,10 +34,13 @@ class CRM_Itemmanager_Page_LinkSepaPaymentsStub extends CRM_Core_Page {
         $this->_contact_id = CRM_Utils_Request::retrieve('cid', 'Integer');
         $this->_action = CRM_Utils_Request::retrieve('action', 'String', $this, FALSE, 'browse');
         $this->assign('contact_id', $this->_contact_id);
-        $currency = Civi::settings()->get('defaultCurrency');
 
         $this->_financial_id = CRM_Utils_Request::retrieve('fid', 'Integer');
         $this->assign('financial_id', $this->_financial_id);
+
+        //get our options
+        $this->_filteropen = CRM_Utils_Request::retrieve('filteropen', 'Integer',$this,0) === 1;
+        $this->_filterfuture = CRM_Utils_Request::retrieve('filterfuture', 'Integer',$this,0) === 1;
 
         // Get the given memberships
         $member_array = CRM_Itemmanager_Util::getLastMemberShipsFullRecordByContactId($this->_contact_id);
@@ -57,6 +64,11 @@ class CRM_Itemmanager_Page_LinkSepaPaymentsStub extends CRM_Core_Page {
                 $contribution_id = (int)$contribution_link['contribution_id'];
 
                 $current_contribution = civicrm_api3('Contribution', 'getsingle', array('id' => (int)$contribution_id));
+                $current_contr_status = (int)CRM_Utils_Array::value('contribution_status_id', $current_contribution);
+
+                //check here the filter options
+                if($this->_filteropen && $current_contr_status === 1) continue;
+
                 $contrib_fee_amount = CRM_Utils_Array::value('fee_amount', $current_contribution);
                 $contrib_net_amount = CRM_Utils_Array::value('net_amount', $current_contribution);
 
@@ -68,11 +80,14 @@ class CRM_Itemmanager_Page_LinkSepaPaymentsStub extends CRM_Core_Page {
                 $reference_date = date_create( $contrib_date);
                 $reference_month = $reference_date->format('Y-m');
 
-                $trxn = civicrm_api3('Payment','get',array('entity_id' => (int)$contribution_id));
-                if ($trxn['is_error']) {
-                    $this->_errormessages[] = 'Could not get the payments for the contribution ' .(int)$contribution_id;
-                    continue;
+
+                //check here date filter
+                if($this->_filterfuture)
+                {
+                    $today = CRM_Utils_Date::getToday(NULL,'Y-m');
+                    if($today < $reference_month) continue;
                 }
+
 
                 //get the line items of the contribution
                 $linerecords = CRM_Itemmanager_Util::getLineitemFullRecordByContributionId(
@@ -82,6 +97,17 @@ class CRM_Itemmanager_Page_LinkSepaPaymentsStub extends CRM_Core_Page {
                     $this->_errormessages[] = 'Could not get the line items for contribution ' .(int)$contribution_id;
                     continue;
                 }
+
+                if(count($linerecords) === 0) continue;
+
+                $trxn = civicrm_api3('Payment','get',array('entity_id' => (int)$contribution_id));
+                if ($trxn['is_error']) {
+                    $this->_errormessages[] = 'Could not get the payments for the contribution ' .(int)$contribution_id;
+                    continue;
+                }
+
+
+
 
                 $foundtrxfinance = false;
                 $SDD_reference_trxn_id = array();
@@ -114,6 +140,7 @@ class CRM_Itemmanager_Page_LinkSepaPaymentsStub extends CRM_Core_Page {
                 $reference_id = $foundtrxfinance ? $SDD_reference_trxn_id[0] : $reference_month;
 
                 foreach ($linerecords as $lineitem) {
+
 
                     $price_field_value_id = CRM_Utils_Array::value('price_field_value_id', $lineitem['linedata']);
                     $price_set_name = CRM_Utils_Array::value('title',$lineitem['setdata']);
@@ -154,7 +181,6 @@ class CRM_Itemmanager_Page_LinkSepaPaymentsStub extends CRM_Core_Page {
                         //insert all related SDD data
                         foreach($SDD_transformed as $sdd_key => $sdd_value)
                         {
-
 
                             if($foundtrxfinance) {
 
@@ -210,8 +236,7 @@ class CRM_Itemmanager_Page_LinkSepaPaymentsStub extends CRM_Core_Page {
                             'line_count' => 0,
                             'is_trxn' => !$trxn['is_error'] && count($trxn['values']) > 0,
                             'is_direct_trxn' => $foundtrxfinance ? 1 : 0,
-                            'statusclass' => $this->getcssClassforPaystatus(
-                                (int)CRM_Utils_Array::value('contribution_status_id', $current_contribution),
+                            'statusclass' => $this->getcssClassforPaystatus($current_contr_status,
                                 !$trxn['is_error'] && count($trxn['values']) > 0),
 
                         );
@@ -240,7 +265,7 @@ class CRM_Itemmanager_Page_LinkSepaPaymentsStub extends CRM_Core_Page {
                     $contrib_entry['net_amount'] += $line_total;
                     $summary_display = CRM_Utils_Money::formatLocaleNumericRoundedForDefaultCurrency(
                         $contrib_entry['total']);
-                    $contrib_entry['total_display'] = $summary_display.' '.$currency;
+                    $contrib_entry['total_display'] = $summary_display.' '.$this->_currency;
                     $contrib_entry['line_count'] += 1;
 
                     //sum also all related
@@ -248,7 +273,7 @@ class CRM_Itemmanager_Page_LinkSepaPaymentsStub extends CRM_Core_Page {
                     $summary_related = CRM_Utils_Money::formatLocaleNumericRoundedForDefaultCurrency(
                         $this->_relation['contributions'][$reference_id]['related_total']);
                     $this->_relation['contributions'][$reference_id]['related_total_display'] =
-                        $summary_related.' '.$currency;
+                        $summary_related.' '.$this->_currency;
 
                     //add this value into reference
                     $reference = &$this->_back_ward_search[$contrib_entry['element_cross_name']];
@@ -352,6 +377,13 @@ class CRM_Itemmanager_Page_LinkSepaPaymentsStub extends CRM_Core_Page {
                     Civi::settings()->get('dateformatshortdate'));
                 $reference_date = date_create($sdd_contrib_date);
                 $reference_month = $reference_date->format('Y-m');
+
+                //check here date filter
+                if($this->_filterfuture)
+                {
+                    $today = CRM_Utils_Date::getToday(NULL,'Y-m');
+                    if($today < $reference_month) continue;
+                }
 
                 $summary_display = CRM_Utils_Money::formatLocaleNumericRoundedForDefaultCurrency(
                     CRM_Utils_Array::value('total_amount', $sdd_contribution));

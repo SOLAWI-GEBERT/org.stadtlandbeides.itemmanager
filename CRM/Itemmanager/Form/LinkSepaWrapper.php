@@ -103,7 +103,6 @@ class CRM_Itemmanager_Form_LinkSepaWrapper extends CRM_Core_Form {
 
     }
 
-
     public function buildQuickForm() {
 
 
@@ -118,8 +117,10 @@ class CRM_Itemmanager_Form_LinkSepaWrapper extends CRM_Core_Form {
     // export form elements
     CRM_Core_Resources::singleton()
         ->addScriptFile('org.stadtlandbeides.itemmanager', 'js/expandAccordion.js')
+        ->addScriptFile('org.stadtlandbeides.itemmanager','js/filterSEPAOptions.js')
         ->addStyleFile('org.stadtlandbeides.itemmanager', 'css/sepaLink.css');
     $this->assign('relations', $this->_relations);
+    $this->assign('SEPAFilterOptions','filteropen=0&filterfuture=0');
     $this->assign('elementNames', $this->getRenderableElementNames());
     parent::buildQuickForm();
   }

@@ -218,7 +218,7 @@ class CRM_Itemmanager_Util
      *
      * @return array
      */
-    public static function getMemberShipPaymentByMembershipId($membership_id) {
+    public static function getMemberShipPaymentByMembershipId($membership_id,$payfilter=null) {
         $params = [
         'membership_id' => $membership_id,
         'options' => array(
@@ -226,6 +226,10 @@ class CRM_Itemmanager_Util
             'sort' => "id DESC",
         ),
         ];
+
+        if($payfilter)
+            foreach ($payfilter as $filter_key => $filter_value)
+                $params[$filter_key] = $filter_value;
 
         try{
         $result = civicrm_api3('MembershipPayment', 'get', $params);
@@ -524,7 +528,7 @@ class CRM_Itemmanager_Util
      * @param $contactId
      * @return array Returns the membership together with type and payment
      */
-    public static function getLastMemberShipsFullRecordByContactId($contactId)
+    public static function getLastMemberShipsFullRecordByContactId($contactId, $payfilter=null)
     {
 
         $memberarray = array();
@@ -537,7 +541,7 @@ class CRM_Itemmanager_Util
             {
                 $typedata = self::getMembershipTypeById($memberitem['membership_type_id']);
                 if($typedata['is_error']) return $typedata;
-                $paydata = self::getMemberShipPaymentByMembershipId($memberitem['id']);
+                $paydata = self::getMemberShipPaymentByMembershipId($memberitem['id'],$payfilter);
                 if($paydata['is_error']) return $paydata;
 
                 $statusparams = [

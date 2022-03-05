@@ -88,8 +88,9 @@ CRM.$(function($) {
         cj("#separetry-text").hide();
         cj("#separetry-busy").show();
 
-        var payparam = pay_reference;
+        let payparam = pay_reference;
         var working = true;
+        let saved_date = receive_date;
 
         console.log('Create Payment ' + payparam['contribution_id']);
 
@@ -105,7 +106,7 @@ CRM.$(function($) {
 
             let update_param = {};
             update_param['id'] = payparam['contribution_id'];
-            update_param['receive_date'] =  receive_date;
+            update_param['receive_date'] =  saved_date;
 
             console.log('Update Contribution ' + payparam['contribution_id']);
             CRM.api3('Contribution', 'create',update_param).done(function(result) {
@@ -147,9 +148,11 @@ CRM.$(function($) {
 
 
         var working = true;
+        let saved_date = receive_date;
+        let delete_params = delete_param;
         let entity = {}
-        entity['entity_id'] = delete_param['contribution_id']
-        console.log('Get Payment for contribution ' + delete_param['contribution_id']);
+        entity['entity_id'] = delete_params['contribution_id']
+        console.log('Get Payment for contribution ' + delete_params['contribution_id']);
 
         var workarray = []
         CRM.api3('Payment', 'get', entity).done(function(result) {
@@ -218,10 +221,10 @@ CRM.$(function($) {
         working = true;
 
         let update_param = {};
-        update_param['id'] = delete_param['contribution_id'];
-        update_param['receive_date'] =  receive_date
+        update_param['id'] = delete_params['contribution_id'];
+        update_param['receive_date'] =  saved_date;
 
-        console.log('Update Contribution ' + delete_param['contribution_id']);
+        console.log('Update Contribution ' + delete_params['contribution_id']);
         CRM.api3('Contribution', 'create',update_param).done(function(result) {
 
             if(result['iserror']) {
@@ -230,7 +233,7 @@ CRM.$(function($) {
                 return;
             }
 
-            CRM.alert(ts('Date')+' '+ receive_date, ts('Contribution updated'), 'success');
+            CRM.alert(ts('Date')+' '+ saved_date, ts('Contribution updated'), 'success');
             working = false;
 
         });
@@ -238,7 +241,7 @@ CRM.$(function($) {
         while(working)
             await Sleep(1000);
 
-        console.log('Delete payment completed for contribution ' +  delete_param['contribution_id']);
+        console.log('Delete payment completed for contribution ' +  delete_params['contribution_id']);
 
         // show busy indicator
         cj("#separetry-text").show();
@@ -301,6 +304,8 @@ CRM.$(function($) {
                             }
 
                     }
+                    reference['is_direct_trxn'] = true;
+
                 }
                 else if(!ischecked && reference['is_direct_trxn'])
                 {
@@ -328,6 +333,7 @@ CRM.$(function($) {
                         }
 
                     }
+                    reference['is_direct_trxn'] = false;
 
                 }
 
@@ -393,6 +399,8 @@ CRM.$(function($) {
                                 if(back[key]['add_payment'].hasOwnProperty(pay))
                                     createPaymentbyLink(back[key]['add_payment'][pay],back[key]['contribution_date_raw']);
 
+
+                            back[key]['is_direct_trxn'] = true;
                         }
 
                     }

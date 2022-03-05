@@ -16,25 +16,27 @@
  */
 
 CRM.$(function($) {
-    $('body')
-        .on('click.crm-accordion-header', 'div.crm-accordion-header','#AccordionExpander', function(e) {
+    $('#SEPAFilterOpen')
+        .on('click', function(e) {
 
-            var $body = $(this).next('div.crm-accordion-body').children('div');
-            var $link = this.dataset.url;
+            console.log('click open option');
             var option_element = document.getElementById('SEPAFilterOptionUrl');
-            if(option_element)
-                $link += '&'+option_element.dataset.filter;
+            var openfilter = this.checked ? 'filteropen=1':'filteropen=0';
+            var past_element = document.getElementById('SEPAFilterPast');
+            var pastfilter = past_element.checked ? 'filterfuture=1':'filterfuture=0';
+            option_element.dataset.filter =openfilter+'&'+ pastfilter;
 
-            console.log($link)
+        });
 
-            if ($(this).hasClass('loaded'))
-                return;
+    $('#SEPAFilterPast')
+        .on('click', function(e) {
 
-            CRM.loadPage($link, {target: $('div', $body).animate({minHeight: '3em'}, 'fast')});
-
-            $(this).toggleClass('loaded');
-            e.preventDefault();
+            console.log('click past option');
+            var option_element = document.getElementById('SEPAFilterOptionUrl');
+            var pastfilter = this.checked ? 'filterfuture=1':'filterfuture=0';
+            var open_element = document.getElementById('SEPAFilterOpen');
+            var openfilter = open_element.checked ? 'filteropen=1':'filteropen=0';
+            option_element.dataset.filter =openfilter+'&'+ pastfilter;
 
         });
 });
-

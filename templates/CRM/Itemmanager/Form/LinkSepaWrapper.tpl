@@ -18,26 +18,31 @@
 
 {/if}
 
+<div hidden data-filter="{$SEPAFilterOptions}" id="SEPAFilterOptionUrl"></div>
 
 <div class="crm-block crm-form-block crm-form-title-here-form-block" style="margin: auto">
-    <label>
-        <input type="checkbox" >
-        Differ
+    <label class="crm-form-checkbox">
+        <input type="checkbox" id="SEPAFilterOpen">
+        {ts domain="org.stadtlandbeides.itemmanager"}Filter open payments{/ts}
     </label>
-    <span class="label">Checkbox</span>
+    <label class="crm-form-checkbox">
+        <input type="checkbox" id="SEPAFilterPast">
+        {ts domain="org.stadtlandbeides.itemmanager"}Filter past contributions{/ts}
+    </label>
 </div>
 
 {if $relations}
     {foreach from=$relations item=relation}
 
         {* make here some better access *}
+        {* &smartyDebug=1 *}
         {assign var="element_group_relation_name" value=$relation.element_link_name}
 
         <div class="crm-accordion-wrapper collapsed"
              style="padding: 5px;"
                      >
                 <div class="crm-accordion-header" id="AccordionExpander"
-                     data-url="{crmURL p='civicrm/sepastub' q="action=browse&cid=`$contact_id`&fid=`$relation.financial_id`&smartyDebug=1"}"
+                     data-url="{crmURL p='civicrm/sepastub' q="action=browse&cid=`$contact_id`&fid=`$relation.financial_id`"}"
 
                 >{ts}Contribution Type{/ts} {$relation.financial_name}</div>
                 <div class="crm-accordion-body">
