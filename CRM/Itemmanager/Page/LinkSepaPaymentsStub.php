@@ -84,7 +84,7 @@ class CRM_Itemmanager_Page_LinkSepaPaymentsStub extends CRM_Core_Page {
                 }
 
                 $foundtrxfinance = false;
-                $SDD_reference_trxn_id = null;
+                $SDD_reference_trxn_id = array();
 
                 //check here transaction relation
                 $istrxn = !$trxn['is_error'] && count($trxn['values']) > 0;
@@ -104,14 +104,14 @@ class CRM_Itemmanager_Page_LinkSepaPaymentsStub extends CRM_Core_Page {
                         $sdd_contrib_id = (int)$split_ids[1];
                         if ($finance_sdd_id === $this->_financial_id) {
                             $foundtrxfinance = true;
-                            $SDD_reference_trxn_id = $trx['trxn_id'];
+                            $SDD_reference_trxn_id[] = $trx['trxn_id'];
                         }
 
 
                     }
                 }
 
-                $reference_id = $foundtrxfinance ? $SDD_reference_trxn_id : $reference_month;
+                $reference_id = $foundtrxfinance ? $SDD_reference_trxn_id[0] : $reference_month;
 
                 foreach ($linerecords as $lineitem) {
 
@@ -154,28 +154,39 @@ class CRM_Itemmanager_Page_LinkSepaPaymentsStub extends CRM_Core_Page {
                         //insert all related SDD data
                         foreach($SDD_transformed as $sdd_key => $sdd_value)
                         {
-                            //enter if reference_month ===
-                            if((!$foundtrxfinance && $reference_month != $sdd_value['reference_month'] ||
-                                $SDD_transformed[$sdd_key]['direct_linked'])) continue;
 
-                            //enter if Payment
-                            if($foundtrxfinance && $SDD_reference_trxn_id != $sdd_key) continue;
-                            $sdd_base[$sdd_key] = $sdd_value;
+
                             if($foundtrxfinance) {
-                                $SDD_transformed[$sdd_key]['direct_linked'] = true;
-                                if($SDD_transformed[$sdd_key]['date_linked'])
-                                {
-                                    //remove SDD value if accidentally linked by date
-                                    $inserted_by_accident[] = $sdd_value['reference_month'];
-                                    $contrib_date = &$this->_relation['contributions']
-                                                [$sdd_value['reference_month']]['related_sdds'];
-                                    unset($contrib_date[$sdd_key]);
 
+                                //enter if direct link
+                                foreach ($SDD_reference_trxn_id as $direct_trxn)
+                                {
+                                    if ($direct_trxn != $sdd_key) continue;
+                                    $sdd_base[$sdd_key] = $sdd_value;
+
+                                    $SDD_transformed[$sdd_key]['direct_linked'] = true;
+                                    if ($SDD_transformed[$sdd_key]['date_linked']) {
+                                        //remove SDD value if accidentally linked by date
+                                        $inserted_by_accident[] = $sdd_value['reference_month'];
+                                        $contrib_related_date = &$this->_relation['contributions']
+                                        [$sdd_value['reference_month']]['related_sdds'];
+                                        unset($contrib_related_date[$sdd_key]);
+
+                                    }
                                 }
 
                             }
-                            else
+                            else {
+
+                                //enter if reference_month ===
+                                if(($reference_month != $sdd_value['reference_month'] ||
+                                    $SDD_transformed[$sdd_key]['direct_linked'])) continue;
+
+                                $sdd_base[$sdd_key] = $sdd_value;
                                 $SDD_transformed[$sdd_key]['date_linked'] = true;
+
+
+                            }
 
                         }
 
@@ -306,7 +317,6 @@ class CRM_Itemmanager_Page_LinkSepaPaymentsStub extends CRM_Core_Page {
 
                 $sdd_base = &$this->_relation['contributions'][$reference_month]['related_sdds'];
                 $sdd_base[$sdd_key] = $sdd_value;
-                unset($SDD_transformed[$sdd_key]);
             }
         }
         return;

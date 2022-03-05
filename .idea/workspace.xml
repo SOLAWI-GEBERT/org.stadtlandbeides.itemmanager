@@ -7,12 +7,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="8a4e2072-c43d-4029-bc01-730e5001dde6" name="Default Changelist" comment="ENH Add crosslink functionality">
+    <list default="true" id="8a4e2072-c43d-4029-bc01-730e5001dde6" name="Default Changelist" comment="FIX Relate payments correctly">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CRM/Itemmanager/Page/LinkSepaPaymentsStub.php" beforeDir="false" afterPath="$PROJECT_DIR$/CRM/Itemmanager/Page/LinkSepaPaymentsStub.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CRM/Itemmanager/Util.php" beforeDir="false" afterPath="$PROJECT_DIR$/CRM/Itemmanager/Util.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/js/handlePayment.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/handlePayment.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/CRM/Itemmanager/Page/LinkSepaPaymentsStub.tpl" beforeDir="false" afterPath="$PROJECT_DIR$/templates/CRM/Itemmanager/Page/LinkSepaPaymentsStub.tpl" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -168,7 +166,8 @@
       <workItem from="1646074282555" duration="16635000" />
       <workItem from="1646244551807" duration="11580000" />
       <workItem from="1646320948741" duration="11371000" />
-      <workItem from="1646418312166" duration="19361000" />
+      <workItem from="1646418312166" duration="20095000" />
+      <workItem from="1646470933978" duration="5499000" />
     </task>
     <task id="LOCAL-00001" summary="ENH Intermittent changes to analyze the price items">
       <created>1612779470217</created>
@@ -429,7 +428,14 @@
       <option name="project" value="LOCAL" />
       <updated>1646333977558</updated>
     </task>
-    <option name="localTasksCounter" value="38" />
+    <task id="LOCAL-00038" summary="FIX Relate payments correctly">
+      <created>1646438445012</created>
+      <option name="number" value="00038" />
+      <option name="presentableId" value="LOCAL-00038" />
+      <option name="project" value="LOCAL" />
+      <updated>1646438445012</updated>
+    </task>
+    <option name="localTasksCounter" value="39" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -448,7 +454,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="FIX Use another field value for sorting" />
     <MESSAGE value="FIX Also sort payments" />
     <MESSAGE value="MNT version info" />
     <MESSAGE value="ENH Add duplication function to repair missing contributions." />
@@ -473,7 +478,8 @@
     <MESSAGE value="ENH First logic to create crosslinks" />
     <MESSAGE value="MNT Minor optical changes" />
     <MESSAGE value="ENH Add crosslink functionality" />
-    <option name="LAST_COMMIT_MESSAGE" value="ENH Add crosslink functionality" />
+    <MESSAGE value="FIX Relate payments correctly" />
+    <option name="LAST_COMMIT_MESSAGE" value="FIX Relate payments correctly" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -493,6 +499,7 @@
     <watches-manager>
       <configuration name="index.php">
         <watch expression="$SDD_reference_trxn_id" />
+        <watch expression="$sdd_base" />
       </configuration>
     </watches-manager>
   </component>

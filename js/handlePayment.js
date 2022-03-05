@@ -101,7 +101,7 @@ CRM.$(function($) {
                 return;
             }
 
-            var trx = result;
+            let trx = result;
 
             let update_param = {};
             update_param['id'] = payparam['contribution_id'];
@@ -116,7 +116,7 @@ CRM.$(function($) {
                     return;
                 }
 
-                CRM.alert(payparam['trxn_id'] + trx['id'] , ts('SEPA payment relation added'), 'success');
+                CRM.alert(payparam['trxn_id'] + '@' +trx['id'] , ts('SEPA payment relation added'), 'success');
                 working = false;
 
             });
@@ -475,9 +475,11 @@ CRM.$(function($) {
                     var mad_ident = mad_element.dataset.ident;
                     var mad_reference = back[mad_ident];
                     var mad_payment = mad_reference['add_payment'];
-                    var total = mad_payment['total_amount'];
-                    var net = mad_payment['net_amount'];
-                    var fee = mad_payment['fee_amount'];
+                    var total = parseFloat(mad_payment['total_amount']);
+                    var net = parseFloat(mad_payment['net_amount']);
+                    var fee = parseFloat(mad_payment['fee_amount']);
+                    if(total < net)
+                        net = total;
 
 
                     for (var contr_entry in contributions)
@@ -494,9 +496,12 @@ CRM.$(function($) {
 
                             //change calculation base
                             if (total >= con_payment['total']) {
-                                new_payment['total_amount'] = con_payment['total'];
-                                new_payment['net_amount'] = con_payment['net_amount'];
-                                new_payment['fee_amount'] = con_payment['net_amount'] * con_payment['fee_net_ratio']
+                                new_payment['total_amount'] = parseFloat(con_payment['total']);
+                                new_payment['net_amount'] = parseFloat(con_payment['net_amount']);
+                                new_payment['fee_amount'] = parseFloat(con_payment['net_amount']) *
+                                    parseFloat(con_payment['fee_net_ratio']);
+                                if(new_payment['total_amount'] < new_payment['net_amount'])
+                                    new_payment['net_amount'] = new_payment['total_amount'];
                                 total -= new_payment['total_amount'];
                                 net -= new_payment['net_amount'];
                                 fee -= new_payment['fee_amount'];
@@ -528,9 +533,11 @@ CRM.$(function($) {
                     var con_ident_vs = con_element_vs.dataset.ident;
                     var con_reference_vs = back[con_ident_vs];
                     var con_payment_vs = con_reference_vs['cross_payment'];
-                    var con_total = con_payment_vs['total'];
-                    var con_net = con_payment_vs['net_amount'];
-                    var con_fee = con_payment_vs['fee_amount'];
+                    var con_total = parseFloat(con_payment_vs['total']);
+                    var con_net = parseFloat(con_payment_vs['net_amount']);
+                    var con_fee = parseFloat(con_payment_vs['fee_amount']);
+                    if(con_total < con_net)
+                        con_net = con_total;
 
 
                     for (var mad_entry in mandates)
@@ -547,9 +554,13 @@ CRM.$(function($) {
 
                             //change calculation base
                             if (con_total >= mad_payment_vs['total_amount']) {
-                                new_payment['total_amount'] = mad_payment_vs['total_amount'];
-                                new_payment['net_amount'] = mad_payment_vs['net_amount'];
-                                new_payment['fee_amount'] = mad_payment_vs['net_amount'] * con_payment_vs['fee_net_ratio']
+                                new_payment['total_amount'] = parseFloat(mad_payment_vs['total_amount']);
+                                new_payment['net_amount'] = parseFloat(mad_payment_vs['net_amount']);
+                                new_payment['fee_amount'] = parseFloat(mad_payment_vs['net_amount'])
+                                    * parseFloat(con_payment_vs['fee_net_ratio']);
+                                if(new_payment['total_amount'] < new_payment['net_amount'])
+                                    new_payment['net_amount'] = new_payment['total_amount'];
+
                                 con_total -= new_payment['total_amount'];
                                 con_net -= new_payment['net_amount'];
                                 con_fee -= new_payment['fee_amount'];
@@ -566,7 +577,7 @@ CRM.$(function($) {
                             }
 
                             //last references
-                            new_payment['contribution_id'] = con_payment_vs['contribution_id'];
+                            new_payment['contribution_id'] = con_reference_vs['contribution_id'];
                             new_payment['contribution_date_raw'] = con_reference_vs['contribution_date_raw'];
                             payments.push(new_payment);
 
@@ -663,7 +674,6 @@ CRM.$(function($) {
 
                     var payparam = payments.pop();
                     var receive_date = payparam['contribution_date_raw'];
-                    delete payparam['contribution_date_raw'];
                     createPaymentbyLink(payparam, receive_date)
                 }
 
