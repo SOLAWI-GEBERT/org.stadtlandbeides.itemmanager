@@ -22,6 +22,24 @@ class CRM_Itemmanager_Util
 {
 
 
+    public static function getReferenceDate(DateTime $date,int $period_unit)
+    {
+        switch($period_unit)
+        {
+            case 0:
+                return $date->format('Y-m-d');
+            case 1:
+                return $date->format('Y-W');
+            case 2:
+                return $date->format('Y-m');
+            case 3:
+                return $date->format('Y');
+        }
+
+        return $date->format('Y-m-d');
+
+    }
+
     /**
      * Check if there is tax value for selected financial type.
      * @param $financialTypeId

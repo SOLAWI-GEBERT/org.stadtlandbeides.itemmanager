@@ -12,6 +12,7 @@ class CRM_Itemmanager_Form_ItemmanagerSetting extends CRM_Core_Form {
 
     private $_itemSettings;
     private $_errormessages;
+    private $_duration_options;
 
     /**
      * Constructor
@@ -23,7 +24,14 @@ class CRM_Itemmanager_Form_ItemmanagerSetting extends CRM_Core_Form {
         parent::__construct();
         $this->_itemSettings = array();
         $this->_errormessages = array();
+        $this->_duration_options = CRM_Core_OptionGroup::values('recur_frequency_units');
 
+    }
+
+    private function getIndexFromDurationKey($duration_key)
+    {
+        $keys = array_keys($this->_duration_options);
+        return array_search($duration_key,$keys);
     }
 
     /**
@@ -75,6 +83,15 @@ class CRM_Itemmanager_Form_ItemmanagerSetting extends CRM_Core_Form {
                 ['placeholder' => 'select','value' => $period['period_start_on_raw']->format('Y-m-d')],
                 False,
                 $params);
+
+            $this->add(
+                'select',
+                $period['element_period_type'],
+                E::ts('Duration Unit'),
+                $this->_duration_options, // list of options
+                False, // is required
+                [],
+            )->setSelected(array_keys($this->_duration_options)[$period['period_type']]);
 
             foreach ($period['fields'] as $field)
             {
@@ -341,6 +358,7 @@ class CRM_Itemmanager_Form_ItemmanagerSetting extends CRM_Core_Form {
                   'element_period_start_on' => 'period_'.$itemmanager_id.'_period_start_on',
                   'element_period_periods' => 'period_'.$itemmanager_id.'_periods',
                   'element_period_interval' => 'period_'.$itemmanager_id.'_interval',
+                  'element_period_type' => 'period_'.$itemmanager_id.'_type',
               );
 
               $this->_itemSettings[$itemmanager_period_id] = $form_collection;
@@ -524,6 +542,10 @@ class CRM_Itemmanager_Form_ItemmanagerSetting extends CRM_Core_Form {
                 $periods = isset($formvalues[$period['element_period_periods']]) ?
                     (int)$formvalues[$period['element_period_periods']] : (int)$period['periods'];
 
+                $type = isset($formvalues[$period['element_period_type']]) ?
+                    $this->getIndexFromDurationKey($formvalues[$period['element_period_type']])
+                        : (int)$period['period_type'];
+
                 if (isset($formvalues[$period['element_period_start_on']])) {
                     $start_on = date_create($formvalues[$period['element_period_start_on']]);
                 } else {
@@ -535,14 +557,10 @@ class CRM_Itemmanager_Form_ItemmanagerSetting extends CRM_Core_Form {
                 $update_period->id = (int)$period['periods_id'];
                 $update_period->periods = $periods;
                 $update_period->period_start_on = $start_on->format('Ymd');
+                $update_period->period_type = $type;
                 $update_period->update();
 
                 foreach ($period['fields'] as $field) {
-
-
-
-
-
 
                     $successor = isset($formvalues[$field['element_period_field_successor']])? (int)$formvalues[$field['element_period_field_successor']]: (int)$field['successor'];
 

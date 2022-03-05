@@ -7,16 +7,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="8a4e2072-c43d-4029-bc01-730e5001dde6" name="Default Changelist" comment="FIX Relation mismatch solved according to multiline SEPA assignments to just one contribution">
-      <change afterPath="$PROJECT_DIR$/js/filterSEPAOptions.js" afterDir="false" />
+    <list default="true" id="8a4e2072-c43d-4029-bc01-730e5001dde6" name="Default Changelist" comment="ENH Add filter options for the SEPA wrapper">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CRM/Itemmanager/Form/LinkSepaWrapper.php" beforeDir="false" afterPath="$PROJECT_DIR$/CRM/Itemmanager/Form/LinkSepaWrapper.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CRM/Itemmanager/Form/ItemmanagerSetting.php" beforeDir="false" afterPath="$PROJECT_DIR$/CRM/Itemmanager/Form/ItemmanagerSetting.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CRM/Itemmanager/Page/LinkSepaPaymentsStub.php" beforeDir="false" afterPath="$PROJECT_DIR$/CRM/Itemmanager/Page/LinkSepaPaymentsStub.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CRM/Itemmanager/Util.php" beforeDir="false" afterPath="$PROJECT_DIR$/CRM/Itemmanager/Util.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/js/expandAccordion.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/expandAccordion.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/js/handlePayment.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/handlePayment.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/CRM/Itemmanager/Form/LinkSepaWrapper.tpl" beforeDir="false" afterPath="$PROJECT_DIR$/templates/CRM/Itemmanager/Form/LinkSepaWrapper.tpl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/CRM/Itemmanager/Page/Dashboard.tpl" beforeDir="false" afterPath="$PROJECT_DIR$/templates/CRM/Itemmanager/Page/Dashboard.tpl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/CRM/Itemmanager/Form/ItemmanagerSetting.tpl" beforeDir="false" afterPath="$PROJECT_DIR$/templates/CRM/Itemmanager/Form/ItemmanagerSetting.tpl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/CRM/Itemmanager/Page/LinkSepaPaymentsStub.tpl" beforeDir="false" afterPath="$PROJECT_DIR$/templates/CRM/Itemmanager/Page/LinkSepaPaymentsStub.tpl" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -173,7 +170,7 @@
       <workItem from="1646244551807" duration="11580000" />
       <workItem from="1646320948741" duration="11371000" />
       <workItem from="1646418312166" duration="20095000" />
-      <workItem from="1646470933978" duration="19724000" />
+      <workItem from="1646470933978" duration="29192000" />
     </task>
     <task id="LOCAL-00001" summary="ENH Intermittent changes to analyze the price items">
       <created>1612779470217</created>
@@ -448,7 +445,14 @@
       <option name="project" value="LOCAL" />
       <updated>1646477175816</updated>
     </task>
-    <option name="localTasksCounter" value="40" />
+    <task id="LOCAL-00040" summary="ENH Add filter options for the SEPA wrapper">
+      <created>1646492031895</created>
+      <option name="number" value="00040" />
+      <option name="presentableId" value="LOCAL-00040" />
+      <option name="project" value="LOCAL" />
+      <updated>1646492031895</updated>
+    </task>
+    <option name="localTasksCounter" value="41" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -467,7 +471,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="MNT version info" />
     <MESSAGE value="ENH Add duplication function to repair missing contributions." />
     <MESSAGE value="ENH Init version for new sepa link app" />
     <MESSAGE value="FIX Cahnge accordion wrapper to separate collapse behavior" />
@@ -492,7 +495,8 @@
     <MESSAGE value="ENH Add crosslink functionality" />
     <MESSAGE value="FIX Relate payments correctly" />
     <MESSAGE value="FIX Relation mismatch solved according to multiline SEPA assignments to just one contribution" />
-    <option name="LAST_COMMIT_MESSAGE" value="FIX Relation mismatch solved according to multiline SEPA assignments to just one contribution" />
+    <MESSAGE value="ENH Add filter options for the SEPA wrapper" />
+    <option name="LAST_COMMIT_MESSAGE" value="ENH Add filter options for the SEPA wrapper" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -509,6 +513,11 @@
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
+    <watches-manager>
+      <configuration name="index.php">
+        <watch expression="$SDD_reference_trxn_id" />
+      </configuration>
+    </watches-manager>
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

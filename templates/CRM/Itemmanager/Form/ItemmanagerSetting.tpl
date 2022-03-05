@@ -21,6 +21,7 @@
     <div class="crm-accordion-wrapper open">
         {assign var="element_period_periods" value=$priceset.element_period_periods}
         {assign var="element_period_start_on" value=$priceset.element_period_start_on}
+        {assign var="element_period_type" value=$priceset.element_period_type}
 
         <div class="crm-accordion-header">
         {ts}Priceset{/ts} {$priceset.price_label}
@@ -30,6 +31,8 @@
 
             <span class="label">{$form.$element_period_periods.label}</span>
             <span class="content">{$form.$element_period_periods.html}</span>
+            <span class="label">{$form.$element_period_type.label}</span>
+            <span class="content">{$form.$element_period_type.html}</span>
             <span class="label">{$form.$element_period_start_on.label}</span>
             <span class="content">{$form.$element_period_start_on.html}</span>
         </div>

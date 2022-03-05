@@ -1,5 +1,5 @@
 <div id="SEPALINKSTUB{$financial_id}"
-     data-callback-url="{crmURL p='civicrm/sepastub' q="action=browse&cid=`$contact_id`&fid=`$financial_id`&smartyDebug=1"}">
+     data-callback-url="{crmURL p='civicrm/sepastub' q="action=browse&cid=`$contact_id`&fid=`$financial_id`"}">
     {* make here some better access *}
     {assign var="contributions" value=$relation.contributions}
 

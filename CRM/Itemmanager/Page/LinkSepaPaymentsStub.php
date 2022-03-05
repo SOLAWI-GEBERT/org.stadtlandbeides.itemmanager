@@ -106,9 +106,6 @@ class CRM_Itemmanager_Page_LinkSepaPaymentsStub extends CRM_Core_Page {
                     continue;
                 }
 
-
-
-
                 $foundtrxfinance = false;
                 $SDD_reference_trxn_id = array();
 
@@ -137,12 +134,24 @@ class CRM_Itemmanager_Page_LinkSepaPaymentsStub extends CRM_Core_Page {
                     }
                 }
 
-                $reference_id = $foundtrxfinance ? $SDD_reference_trxn_id[0] : $reference_month;
 
                 foreach ($linerecords as $lineitem) {
 
-
+                    $itemmanager = new CRM_Itemmanager_BAO_ItemmanagerSettings();
                     $price_field_value_id = CRM_Utils_Array::value('price_field_value_id', $lineitem['linedata']);
+                    $valid = $itemmanager->get('price_field_value_id', $price_field_value_id );
+                    if(!$valid)
+                    {
+                        $this->_errormessages[] = 'Could not get itemmanger data from ' .(int)$price_field_value_id;
+                        continue;
+                    }
+                    $periodbase = new CRM_Itemmanager_BAO_ItemmanagerPeriods();
+                    $periodbase->get('id',$itemmanager->itemmanager_periods_id);
+
+                    $reference_id = $foundtrxfinance ? $SDD_reference_trxn_id[0] :
+                        CRM_Itemmanager_Util::getReferenceDate($reference_date,(int)$periodbase->period_type );
+
+
                     $price_set_name = CRM_Utils_Array::value('title',$lineitem['setdata']);
                     $financial_id = CRM_Utils_Array::value('financial_type_id', $lineitem['valuedata']);
 
@@ -204,9 +213,16 @@ class CRM_Itemmanager_Page_LinkSepaPaymentsStub extends CRM_Core_Page {
                             }
                             else {
 
+
+                                $reference_cmp = CRM_Itemmanager_Util::getReferenceDate($reference_date,
+                                    (int)$periodbase->period_type );
+                                $ssd_date_convert = date_create($sdd_value['sdd_contribution_raw']);
+                                $sdd_reference_cmp = CRM_Itemmanager_Util::getReferenceDate($ssd_date_convert,
+                                    (int)$periodbase->period_type );
+
+
                                 //enter if reference_month ===
-                                if(($reference_month != $sdd_value['reference_month'] ||
-                                    $SDD_transformed[$sdd_key]['direct_linked'])) continue;
+                                if($reference_cmp != $sdd_reference_cmp|| $SDD_transformed[$sdd_key]['direct_linked']) continue;
 
                                 $sdd_base[$sdd_key] = $sdd_value;
                                 $SDD_transformed[$sdd_key]['date_linked'] = true;
