@@ -22,6 +22,30 @@ class CRM_Itemmanager_Util
 {
 
 
+    /**
+     *  Just get our settings with API
+     * @param $settingName
+     * @return mixed
+     * @throws CiviCRM_API3_Exception
+     */
+    public static function getSetting($settingName) {
+        $result = civicrm_api3('setting', 'get', array(
+            'return' => [$settingName],
+            'sequential' => 1,
+        ));
+        $settingValue = $result['values'][0][$settingName];
+
+        return $settingValue;
+    }
+
+
+    /**
+     *  Returns a date format according to the period type
+     *
+     * @param DateTime $date
+     * @param int $period_unit period type (0 day, 1 week, 2 month, 3 year )
+     * @return string
+     */
     public static function getReferenceDate(DateTime $date,int $period_unit)
     {
         switch($period_unit)

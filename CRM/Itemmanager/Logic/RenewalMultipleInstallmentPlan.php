@@ -14,6 +14,9 @@
  * | copyright header is strictly prohibited without                    |
  * | written permission from the original author(s).                   |
  * +-------------------------------------------------------------
+ *
+ * Borrowed heavily from
+ * https://civicrm.org/extensions/membership-extras
  */
 
 //use CRM_MembershipExtras_Service_MembershipInstallmentsHandler as MembershipInstallmentsHandler;

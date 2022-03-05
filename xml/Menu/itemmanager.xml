@@ -40,12 +40,6 @@
     <access_arguments>access CiviCRM</access_arguments>
   </item>
   <item>
-    <path>civicrm/items/linksepapayment</path>
-    <page_callback>CRM_Itemmanager_Form_LinkSepaPayments</page_callback>
-    <title>LinkSepaPayments</title>
-    <access_arguments>access CiviCRM</access_arguments>
-  </item>
-  <item>
     <path>civicrm/items/linksepawrapper</path>
     <page_callback>CRM_Itemmanager_Form_LinkSepaWrapper</page_callback>
     <title>LinkSepaWrapper</title>
@@ -58,5 +52,14 @@
     <path_arguments>action=edit</path_arguments>
     <access_arguments>access CiviContribute</access_arguments>
     <page_type>1</page_type>
+  </item>
+  <item>
+    <path>civicrm/admin/setting/itemmanageroptions</path>
+    <page_callback>CRM_Itemmanager_Form_ItemmanagerOptions</page_callback>
+    <title>Itemmanager Options</title>
+    <desc>Option settings for the Itemmanager module</desc>
+    <adminGroup>CiviContribute</adminGroup>
+    <access_arguments>administer CiviCRM</access_arguments>
+    <icon>admin/small/online_contribution_pages.png</icon>
   </item>
 </menu>

@@ -161,6 +161,13 @@ class CRM_Itemmanager_Form_ItemmanagerSetting extends CRM_Core_Form {
     ));
 
     $this->assign('elementNames', $this->getRenderableElementNames());
+
+    $breadCrumb = array(
+        'title' => E::ts('Itemmanager Settings'),
+        'url' => CRM_Utils_System::url('civicrm/admin/setting/itemmanager', 'reset=1'),
+    );
+    CRM_Utils_System::appendBreadCrumb(array($breadCrumb));
+
     parent::buildQuickForm();
   }
 
