@@ -5,7 +5,6 @@
 
     <div hidden id="financial_id" data-financial="{$financial_id}"></div>
 
-    {debug}
 
     <div class="crm-block crm-form-block crm-form-title-here-form-block" style="margin: auto">
         <a id="SepaCrossLink"

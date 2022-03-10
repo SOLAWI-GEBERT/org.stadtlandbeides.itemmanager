@@ -476,6 +476,7 @@ class CRM_Itemmanager_Page_LinkSepaPaymentsStub extends CRM_Core_Page {
             'trxn_id' => $this->createMandateTrxnId($mandate['sdd_mandate'],$sdd_contribution_id),
             'trxn_date' => $mandate['sdd_contribution_raw'],
             'contribution_date_copy' => $rel_contribution['contribution_date_raw'],
+            'is_send_contribution_notification' => false,
             //'order_reference' => ,
 
         );
@@ -513,6 +514,7 @@ class CRM_Itemmanager_Page_LinkSepaPaymentsStub extends CRM_Core_Page {
             'trxn_id' => $this->createMandateTrxnId($mandate['sdd_mandate'], $sdd_contribution_id),
             'trxn_date' => $mandate['sdd_contribution_raw'],
             'contribution_date_copy' => null,
+            'is_send_contribution_notification' => false,
             //'order_reference' => ,
 
         );

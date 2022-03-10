@@ -7,8 +7,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="8a4e2072-c43d-4029-bc01-730e5001dde6" name="Default Changelist" comment="ENH Use filter saved options in template">
-      <change beforePath="$PROJECT_DIR$/info.xml" beforeDir="false" afterPath="$PROJECT_DIR$/info.xml" afterDir="false" />
+    <list default="true" id="8a4e2072-c43d-4029-bc01-730e5001dde6" name="Default Changelist" comment="MNT Update version">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CRM/Itemmanager/Page/LinkSepaPaymentsStub.php" beforeDir="false" afterPath="$PROJECT_DIR$/CRM/Itemmanager/Page/LinkSepaPaymentsStub.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/CRM/Itemmanager/Page/LinkSepaPaymentsStub.tpl" beforeDir="false" afterPath="$PROJECT_DIR$/templates/CRM/Itemmanager/Page/LinkSepaPaymentsStub.tpl" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -166,7 +168,8 @@
       <workItem from="1646320948741" duration="11371000" />
       <workItem from="1646418312166" duration="20095000" />
       <workItem from="1646470933978" duration="31725000" />
-      <workItem from="1646509420290" duration="2595000" />
+      <workItem from="1646509420290" duration="3212000" />
+      <workItem from="1646933175981" duration="4986000" />
     </task>
     <task id="LOCAL-00001" summary="ENH Intermittent changes to analyze the price items">
       <created>1612779470217</created>
@@ -476,7 +479,14 @@
       <option name="project" value="LOCAL" />
       <updated>1646511930110</updated>
     </task>
-    <option name="localTasksCounter" value="45" />
+    <task id="LOCAL-00045" summary="MNT Update version">
+      <created>1646512043591</created>
+      <option name="number" value="00045" />
+      <option name="presentableId" value="LOCAL-00045" />
+      <option name="project" value="LOCAL" />
+      <updated>1646512043591</updated>
+    </task>
+    <option name="localTasksCounter" value="46" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -495,7 +505,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="ENH Init contribution list for SEPA Link App" />
     <MESSAGE value="ENH Init sepa add for SEPA Link App" />
     <MESSAGE value="MNT Some basic style setting for SEPA App" />
     <MESSAGE value="ENH Show member status ind itemmanager forms" />
@@ -520,7 +529,8 @@
     <MESSAGE value="ENH Use itemmangersettings to differentiate periods" />
     <MESSAGE value="ENH Introduce setting options for the Itemmanager" />
     <MESSAGE value="ENH Use filter saved options in template" />
-    <option name="LAST_COMMIT_MESSAGE" value="ENH Use filter saved options in template" />
+    <MESSAGE value="MNT Update version" />
+    <option name="LAST_COMMIT_MESSAGE" value="MNT Update version" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -534,6 +544,51 @@
           <url>file://$PROJECT_DIR$/../Stadt-Land-Beides/JML3/administrator/components/com_civicrm/civicrm/CRM/Contribute/Page/ContributionPage.php</url>
           <line>267</line>
           <option name="timeStamp" value="12" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="php">
+          <url>file://$PROJECT_DIR$/../Stadt-Land-Beides/JML3/administrator/components/com_civicrm/civicrm/CRM/Contribute/BAO/Contribution.php</url>
+          <line>5742</line>
+          <option name="timeStamp" value="13" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="php">
+          <url>file://$PROJECT_DIR$/../civicrm-core/CRM/Financial/BAO/Payment.php</url>
+          <line>151</line>
+          <option name="timeStamp" value="14" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="php">
+          <url>file://$PROJECT_DIR$/../Stadt-Land-Beides/JML3/administrator/components/com_civicrm/civicrm/CRM/Financial/BAO/Payment.php</url>
+          <line>145</line>
+          <option name="timeStamp" value="16" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="php">
+          <url>file://$PROJECT_DIR$/../Stadt-Land-Beides/JML3/administrator/components/com_civicrm/civicrm/api/v3/Contribution.php</url>
+          <line>656</line>
+          <option name="timeStamp" value="17" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="php">
+          <url>file://$PROJECT_DIR$/../Stadt-Land-Beides/JML3/administrator/components/com_civicrm/civicrm/CRM/Contribute/BAO/Contribution.php</url>
+          <line>4530</line>
+          <option name="timeStamp" value="18" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="php">
+          <url>file://$PROJECT_DIR$/../Stadt-Land-Beides/JML3/administrator/components/com_civicrm/civicrm/CRM/Contribute/BAO/Contribution.php</url>
+          <line>4514</line>
+          <option name="timeStamp" value="19" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="php">
+          <url>file://$PROJECT_DIR$/../civicrm-core/CRM/Financial/BAO/Payment.php</url>
+          <line>44</line>
+          <option name="timeStamp" value="22" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="php">
+          <url>file://$PROJECT_DIR$/../Stadt-Land-Beides/JML3/administrator/components/com_civicrm/civicrm/api/v3/Contribution.php</url>
+          <line>475</line>
+          <option name="timeStamp" value="23" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="php">
+          <url>file://$PROJECT_DIR$/../Stadt-Land-Beides/JML3/administrator/components/com_civicrm/civicrm/api/v3/Contribution.php</url>
+          <line>578</line>
+          <option name="timeStamp" value="24" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
