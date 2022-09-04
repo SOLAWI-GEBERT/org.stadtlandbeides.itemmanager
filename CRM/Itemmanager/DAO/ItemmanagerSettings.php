@@ -71,6 +71,20 @@ class CRM_Itemmanager_DAO_ItemmanagerSettings extends CRM_Core_DAO {
   public $novitiate;
 
   /**
+   * The parent period should not used
+   *
+   * @var bool
+   */
+  public $enable_period_exception;
+
+  /**
+   * The exceptional periods
+   *
+   * @var int
+   */
+  public $exception_periods;
+
+  /**
    * Class constructor.
    */
   public function __construct() {
@@ -175,6 +189,33 @@ class CRM_Itemmanager_DAO_ItemmanagerSettings extends CRM_Core_DAO {
           'bao' => 'CRM_Itemmanager_DAO_ItemmanagerSettings',
           'localizable' => 0,
         ],
+      'enable_period_exception' => [
+          'name' => 'enable_period_exception',
+          'type' => CRM_Utils_Type::T_BOOLEAN,
+          'title' => CRM_Itemmanager_ExtensionUtil::ts('Enable Period Exception Case'),
+          'description' => CRM_Itemmanager_ExtensionUtil::ts('The parent period should not used'),
+          'where' => 'civicrm_itemmanager_settings.enable_period_exception',
+          'default' => 'false',
+          'table_name' => 'civicrm_itemmanager_settings',
+          'entity' => 'ItemmanagerSettings',
+          'bao' => 'CRM_Itemmanager_DAO_ItemmanagerSettings',
+          'localizable' => 0,
+      ],
+          'exception_periods' => [
+              'name' => 'exception_periods',
+              'type' => CRM_Utils_Type::T_INT,
+              'title' => CRM_Itemmanager_ExtensionUtil::ts('Exception Periods'),
+              'description' => CRM_Itemmanager_ExtensionUtil::ts('The exceptional periods'),
+              'where' => 'civicrm_itemmanager_settings.exception_periods',
+              'default' => 'NULL',
+              'table_name' => 'civicrm_itemmanager_settings',
+              'entity' => 'ItemmanagerSettings',
+              'bao' => 'CRM_Itemmanager_DAO_ItemmanagerSettings',
+              'localizable' => 0,
+              'html' => [
+                  'type' => 'Text',
+              ],
+          ],
       ];
       CRM_Core_DAO_AllCoreTables::invoke(__CLASS__, 'fields_callback', Civi::$statics[__CLASS__]['fields']);
     }

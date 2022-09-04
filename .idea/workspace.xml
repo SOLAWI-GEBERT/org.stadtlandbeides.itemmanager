@@ -7,10 +7,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="8a4e2072-c43d-4029-bc01-730e5001dde6" name="Default Changelist" comment="MNT Update version">
+    <list default="true" id="8a4e2072-c43d-4029-bc01-730e5001dde6" name="Default Changelist" comment="FIX Avoid sending an email after pay after payment is installed">
+      <change afterPath="$PROJECT_DIR$/sql/upgrade_4000.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/deployment.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/deployment.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CRM/Itemmanager/Page/LinkSepaPaymentsStub.php" beforeDir="false" afterPath="$PROJECT_DIR$/CRM/Itemmanager/Page/LinkSepaPaymentsStub.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/CRM/Itemmanager/Page/LinkSepaPaymentsStub.tpl" beforeDir="false" afterPath="$PROJECT_DIR$/templates/CRM/Itemmanager/Page/LinkSepaPaymentsStub.tpl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CRM/Itemmanager/DAO/ItemmanagerSettings.php" beforeDir="false" afterPath="$PROJECT_DIR$/CRM/Itemmanager/DAO/ItemmanagerSettings.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CRM/Itemmanager/Upgrader.php" beforeDir="false" afterPath="$PROJECT_DIR$/CRM/Itemmanager/Upgrader.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/info.xml" beforeDir="false" afterPath="$PROJECT_DIR$/info.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/xml/schema/CRM/Itemmanager/ItemmanagerSettings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/xml/schema/CRM/Itemmanager/ItemmanagerSettings.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -76,7 +80,7 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/l10n/de_DE" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/sql" />
     <property name="list.type.of.created.stylesheet" value="CSS" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
@@ -85,12 +89,13 @@
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
     <property name="nodejs_package_manager_path" value="npm" />
-    <property name="settings.editor.selected.configurable" value="IntelliLang.Configuration" />
+    <property name="settings.editor.selected.configurable" value="web-ide.project.structure" />
     <property name="two.files.diff.last.used.folder" value="$PROJECT_DIR$/../Stadt-Land-Beides/JML3/media/civicrm/ext/org.stadtlandbeides.itemmanager" />
     <property name="vue.rearranger.settings.migration" value="true" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/sql" />
       <recent name="$PROJECT_DIR$/l10n/de_DE" />
       <recent name="$PROJECT_DIR$/CRM/Itemmanager" />
       <recent name="$PROJECT_DIR$" />
@@ -169,7 +174,11 @@
       <workItem from="1646418312166" duration="20095000" />
       <workItem from="1646470933978" duration="31725000" />
       <workItem from="1646509420290" duration="3212000" />
-      <workItem from="1646933175981" duration="4986000" />
+      <workItem from="1646933175981" duration="5027000" />
+      <workItem from="1662200443195" duration="511000" />
+      <workItem from="1662200970757" duration="8232000" />
+      <workItem from="1662307568155" duration="755000" />
+      <workItem from="1662308536168" duration="2377000" />
     </task>
     <task id="LOCAL-00001" summary="ENH Intermittent changes to analyze the price items">
       <created>1612779470217</created>
@@ -486,7 +495,14 @@
       <option name="project" value="LOCAL" />
       <updated>1646512043591</updated>
     </task>
-    <option name="localTasksCounter" value="46" />
+    <task id="LOCAL-00046" summary="FIX Avoid sending an email after pay after payment is installed">
+      <created>1646938205963</created>
+      <option name="number" value="00046" />
+      <option name="presentableId" value="LOCAL-00046" />
+      <option name="project" value="LOCAL" />
+      <updated>1646938205963</updated>
+    </task>
+    <option name="localTasksCounter" value="47" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -505,8 +521,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="ENH Init sepa add for SEPA Link App" />
-    <MESSAGE value="MNT Some basic style setting for SEPA App" />
     <MESSAGE value="ENH Show member status ind itemmanager forms" />
     <MESSAGE value="ENH Introduce some checkboxes to the Link Form" />
     <MESSAGE value="ENH First prototype of payment SEPA relation" />
@@ -530,14 +544,16 @@
     <MESSAGE value="ENH Introduce setting options for the Itemmanager" />
     <MESSAGE value="ENH Use filter saved options in template" />
     <MESSAGE value="MNT Update version" />
-    <option name="LAST_COMMIT_MESSAGE" value="MNT Update version" />
+    <MESSAGE value="FIX Avoid sending an email after pay after payment is installed" />
+    <MESSAGE value="ENH Add additional field to the database to handle exceptional periods" />
+    <option name="LAST_COMMIT_MESSAGE" value="ENH Add additional field to the database to handle exceptional periods" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="php">
           <url>file://$PROJECT_DIR$/../Stadt-Land-Beides/JML3/administrator/components/com_civicrm/civicrm/CRM/Contribute/Form/ContributionView.php</url>
-          <line>26</line>
+          <line>31</line>
           <option name="timeStamp" value="6" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php">
@@ -547,7 +563,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php">
           <url>file://$PROJECT_DIR$/../Stadt-Land-Beides/JML3/administrator/components/com_civicrm/civicrm/CRM/Contribute/BAO/Contribution.php</url>
-          <line>5742</line>
+          <line>4589</line>
           <option name="timeStamp" value="13" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php">
@@ -556,23 +572,18 @@
           <option name="timeStamp" value="14" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php">
-          <url>file://$PROJECT_DIR$/../Stadt-Land-Beides/JML3/administrator/components/com_civicrm/civicrm/CRM/Financial/BAO/Payment.php</url>
-          <line>145</line>
-          <option name="timeStamp" value="16" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="php">
           <url>file://$PROJECT_DIR$/../Stadt-Land-Beides/JML3/administrator/components/com_civicrm/civicrm/api/v3/Contribution.php</url>
-          <line>656</line>
+          <line>728</line>
           <option name="timeStamp" value="17" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php">
           <url>file://$PROJECT_DIR$/../Stadt-Land-Beides/JML3/administrator/components/com_civicrm/civicrm/CRM/Contribute/BAO/Contribution.php</url>
-          <line>4530</line>
+          <line>3828</line>
           <option name="timeStamp" value="18" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php">
           <url>file://$PROJECT_DIR$/../Stadt-Land-Beides/JML3/administrator/components/com_civicrm/civicrm/CRM/Contribute/BAO/Contribution.php</url>
-          <line>4514</line>
+          <line>3826</line>
           <option name="timeStamp" value="19" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php">
@@ -582,12 +593,12 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php">
           <url>file://$PROJECT_DIR$/../Stadt-Land-Beides/JML3/administrator/components/com_civicrm/civicrm/api/v3/Contribution.php</url>
-          <line>475</line>
+          <line>479</line>
           <option name="timeStamp" value="23" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php">
           <url>file://$PROJECT_DIR$/../Stadt-Land-Beides/JML3/administrator/components/com_civicrm/civicrm/api/v3/Contribution.php</url>
-          <line>578</line>
+          <line>618</line>
           <option name="timeStamp" value="24" />
         </line-breakpoint>
       </breakpoints>

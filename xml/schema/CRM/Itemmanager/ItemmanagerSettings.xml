@@ -66,5 +66,21 @@
     <default>false</default>
     <comment>This item is for try out only</comment>
   </field>
+  <field>
+    <name>enable_period_exception</name>
+    <title>Enable Period Exception Case</title>
+    <type>boolean</type>
+    <default>false</default>
+    <comment>The parent period should not used</comment>
+    <add>4.0</add>
+  </field>
+  <field>
+    <name>exception_periods</name>
+    <title>Exception Periods</title>
+    <type>int unsigned</type>
+    <default>NULL</default>
+    <comment>The exceptional periods</comment>
+    <add>4.0</add>
+  </field>
 
 </table>

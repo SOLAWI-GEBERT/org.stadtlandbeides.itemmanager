@@ -75,12 +75,12 @@ class CRM_Itemmanager_Upgrader extends CRM_Itemmanager_Upgrader_Base {
    * @return TRUE on success
    * @throws Exception
    */
-  // public function upgrade_4201() {
-  //   $this->ctx->log->info('Applying update 4201');
-  //   // this path is relative to the extension base dir
-  //   $this->executeSqlFile('sql/upgrade_4201.sql');
-  //   return TRUE;
-  // }
+  public function upgrade_4000() {
+     $this->ctx->log->info('Applying update 4000');
+     // this path is relative to the extension base dir
+     $this->executeSqlFile('sql/upgrade_4000.sql');
+     return TRUE;
+  }
 
 
   /**
