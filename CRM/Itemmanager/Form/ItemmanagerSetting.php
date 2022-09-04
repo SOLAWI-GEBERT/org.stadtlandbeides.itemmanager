@@ -127,6 +127,36 @@ class CRM_Itemmanager_Form_ItemmanagerSetting extends CRM_Core_Form {
                     $novitiate
                 );
 
+                $enable_period_exception = array('value' => $field['enable_period_exception']);
+                if($field['enable_period_exception'] == 1)
+                {
+                    $enable_period_exception['checked'] = 1;
+                }
+
+
+                $this->add(
+                    'checkbox',
+                    $field['element_enable_period_exception'],
+                    ts('Enable Period Exception Case'),
+                    Null,
+                    False,
+                    $enable_period_exception
+                );
+
+                $exception_periodsattributes = array(
+                    'placeholder' => 1,
+                    'size'=>"5",
+                    'value' => $field['exception_periods'] ,
+                );
+
+                $this->add(
+                    'text',
+                    $field['element_exception_periods']  ,
+                    E::ts('Exception Periods'),
+                    $exception_periodsattributes,
+                    False,
+                );
+
                 $this->add(
                     'select',
                     $field['element_period_field_successor'],
@@ -337,6 +367,8 @@ class CRM_Itemmanager_Form_ItemmanagerSetting extends CRM_Core_Form {
                       'isactive' => CRM_Utils_Array::value('is_active',$pricefield) == 1? ts('Active'):'',
                       'ignore' => (int)$itemmanager_price_field['ignore'],
                       'novitiate' => (int)$itemmanager_price_field['novitiate'],
+                      'enable_period_exception' => (int)$itemmanager_price_field['enable_period_exception'],
+                      'exception_periods' => (int)$itemmanager_price_field['exception_periods'],
                       'successor' => (int)$itemmanager_price_field['itemmanager_successor_id'],
                       'selection' => $this->getItemSelection($priceset,$pricefield,$pricefieldvalue),
                       'element_period_field_successor' => 'period_'.$itemmanager_id.
@@ -345,6 +377,10 @@ class CRM_Itemmanager_Form_ItemmanagerSetting extends CRM_Core_Form {
                          '_field_'.$itemmanager_id.'_ignore',
                      'element_period_field_novitiate' => 'period_'.$itemmanager_id.
                          '_field_'.$itemmanager_id.'_novitiate',
+                      'element_enable_period_exception' => 'period_'.$itemmanager_id.
+                          '_field_'.$itemmanager_id.'_enable_period_exception',
+                      'element_exception_periods' => 'period_'.$itemmanager_id.
+                          '_field_'.$itemmanager_id.'_exception_periods',
 
 
                  );
@@ -576,12 +612,18 @@ class CRM_Itemmanager_Form_ItemmanagerSetting extends CRM_Core_Form {
 
                     $novitiate = isset($formvalues[$field['element_period_field_novitiate']]) ?
                         (int)$formvalues[$field['element_period_field_novitiate']] : (int)$field['novitiate'];
+                    $enable_period_exception = isset($formvalues[$field['element_enable_period_exception']]) ?
+                        (int)$formvalues[$field['element_enable_period_exception']] : (int)$field['enable_period_exception'];
+                    $exception_periods = isset($formvalues[$field['element_exception_periods']]) ?
+                        (int)$formvalues[$field['element_exception_periods']] : (int)$field['exception_periods'];
 
                     $update_manager = new CRM_Itemmanager_BAO_ItemmanagerSettings();
                     $update_manager->id = (int)$field['manager_id'];
                     $update_manager->itemmanager_successor_id = $successor;
                     $update_manager->ignore = $ignore == 1;
                     $update_manager->novitiate = $novitiate == 1;
+                    $update_manager->enable_period_exception = $enable_period_exception == 1;
+                    $update_manager->exception_periods = $exception_periods;
                     $update_manager->update();
 
 

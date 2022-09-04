@@ -45,6 +45,8 @@
               <th width="2%">{ts}Active{/ts}</th>
               <th width="2%">{ts}Ignore{/ts}</th>
               <th width="2%">{ts}Novitiate{/ts}</th>
+              <th width="2%">{ts}Exception{/ts}</th>
+              <th width="2%">{ts}Exception Periods{/ts}</th>
               <th>{ts}Successor{/ts}</th>
             </tr>
 
@@ -54,6 +56,8 @@
             {foreach from=$priceset.fields item=field}
               {assign var="element_period_field_ignore" value=$field.element_period_field_ignore}
               {assign var="element_period_field_novitiate" value=$field.element_period_field_novitiate}
+              {assign var="element_enable_period_exception" value=$field.element_enable_period_exception}
+              {assign var="element_exception_periods" value=$field.element_exception_periods}
               {assign var="element_period_field_successor" value=$field.element_period_field_successor}
               <tr class="{cycle values="odd-row,even-row"}">
                 <td width="20%">{$field.field_label}</td>
@@ -62,6 +66,8 @@
                 <td width="2%">{$field.isactive}</td>
                 <td width="2%">{$form.$element_period_field_ignore.html}</td>
                 <td width="2%">{$form.$element_period_field_novitiate.html}</td>
+                <td width="2%">{$form.$element_enable_period_exception.html}</td>
+                <td width="2%">{$form.$element_exception_periods.html}</td>
                 <td>{$form.$element_period_field_successor.html}</td>
 
               </tr>
