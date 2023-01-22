@@ -280,12 +280,10 @@ class CRM_Itemmanager_Util
             // Handle error here.
             $errorMessage = $e->getMessage();
             $errorCode = $e->getErrorCode();
-            $errorData = $e->getExtraParams();
             return [
                 'is_error' => 1,
                 'error_message' => $errorMessage,
                 'error_code' => $errorCode,
-                'error_data' => $errorData,
             ];
         }
 
@@ -616,12 +614,10 @@ class CRM_Itemmanager_Util
             // Handle error here.
             $errorMessage = $e->getMessage();
             $errorCode = $e->getErrorCode();
-            $errorData = $e->getExtraParams();
             return [
                 'is_error' => 1,
                 'error_message' => $errorMessage,
                 'error_code' => $errorCode,
-                'error_data' => $errorData,
             ];
         }
 

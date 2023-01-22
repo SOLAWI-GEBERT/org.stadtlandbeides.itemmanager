@@ -8,9 +8,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8a4e2072-c43d-4029-bc01-730e5001dde6" name="Default Changelist" comment="FIX Avoid sending an email after pay after payment is installed">
+      <change beforePath="$PROJECT_DIR$/.idea/php.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/php.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CRM/Itemmanager/Form/ItemmanagerSetting.php" beforeDir="false" afterPath="$PROJECT_DIR$/CRM/Itemmanager/Form/ItemmanagerSetting.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/CRM/Itemmanager/Form/ItemmanagerSetting.tpl" beforeDir="false" afterPath="$PROJECT_DIR$/templates/CRM/Itemmanager/Form/ItemmanagerSetting.tpl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CRM/Itemmanager/Util.php" beforeDir="false" afterPath="$PROJECT_DIR$/CRM/Itemmanager/Util.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/itemmanager.php" beforeDir="false" afterPath="$PROJECT_DIR$/itemmanager.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -174,7 +175,11 @@
       <workItem from="1662200443195" duration="511000" />
       <workItem from="1662200970757" duration="8232000" />
       <workItem from="1662307568155" duration="755000" />
-      <workItem from="1662308536168" duration="5081000" />
+      <workItem from="1662308536168" duration="5188000" />
+      <workItem from="1671227023964" duration="675000" />
+      <workItem from="1671645518713" duration="1867000" />
+      <workItem from="1672252410703" duration="54000" />
+      <workItem from="1674401148789" duration="443000" />
     </task>
     <task id="LOCAL-00001" summary="ENH Intermittent changes to analyze the price items">
       <created>1612779470217</created>
@@ -505,7 +510,14 @@
       <option name="project" value="LOCAL" />
       <updated>1662311167618</updated>
     </task>
-    <option name="localTasksCounter" value="48" />
+    <task id="LOCAL-00048" summary="ENH Include additional fields in form and update function">
+      <created>1662315264283</created>
+      <option name="number" value="00048" />
+      <option name="presentableId" value="LOCAL-00048" />
+      <option name="project" value="LOCAL" />
+      <updated>1662315264283</updated>
+    </task>
+    <option name="localTasksCounter" value="49" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -524,7 +536,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="ENH Show member status ind itemmanager forms" />
     <MESSAGE value="ENH Introduce some checkboxes to the Link Form" />
     <MESSAGE value="ENH First prototype of payment SEPA relation" />
     <MESSAGE value="ENH Add lazy load payment details to SEPA App" />
@@ -549,7 +560,8 @@
     <MESSAGE value="MNT Update version" />
     <MESSAGE value="FIX Avoid sending an email after pay after payment is installed" />
     <MESSAGE value="ENH Add additional field to the database to handle exceptional periods" />
-    <option name="LAST_COMMIT_MESSAGE" value="ENH Add additional field to the database to handle exceptional periods" />
+    <MESSAGE value="ENH Include additional fields in form and update function" />
+    <option name="LAST_COMMIT_MESSAGE" value="ENH Include additional fields in form and update function" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -566,32 +578,32 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php">
           <url>file://$PROJECT_DIR$/../Stadt-Land-Beides/JML3/administrator/components/com_civicrm/civicrm/CRM/Contribute/BAO/Contribution.php</url>
-          <line>4589</line>
+          <line>4581</line>
           <option name="timeStamp" value="13" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php">
           <url>file://$PROJECT_DIR$/../civicrm-core/CRM/Financial/BAO/Payment.php</url>
-          <line>151</line>
+          <line>185</line>
           <option name="timeStamp" value="14" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php">
           <url>file://$PROJECT_DIR$/../Stadt-Land-Beides/JML3/administrator/components/com_civicrm/civicrm/api/v3/Contribution.php</url>
-          <line>728</line>
+          <line>704</line>
           <option name="timeStamp" value="17" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php">
           <url>file://$PROJECT_DIR$/../Stadt-Land-Beides/JML3/administrator/components/com_civicrm/civicrm/CRM/Contribute/BAO/Contribution.php</url>
-          <line>3828</line>
+          <line>3820</line>
           <option name="timeStamp" value="18" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php">
           <url>file://$PROJECT_DIR$/../Stadt-Land-Beides/JML3/administrator/components/com_civicrm/civicrm/CRM/Contribute/BAO/Contribution.php</url>
-          <line>3826</line>
+          <line>3818</line>
           <option name="timeStamp" value="19" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php">
           <url>file://$PROJECT_DIR$/../civicrm-core/CRM/Financial/BAO/Payment.php</url>
-          <line>44</line>
+          <line>47</line>
           <option name="timeStamp" value="22" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php">
@@ -601,7 +613,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php">
           <url>file://$PROJECT_DIR$/../Stadt-Land-Beides/JML3/administrator/components/com_civicrm/civicrm/api/v3/Contribution.php</url>
-          <line>618</line>
+          <line>610</line>
           <option name="timeStamp" value="24" />
         </line-breakpoint>
       </breakpoints>

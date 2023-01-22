@@ -146,6 +146,19 @@ function itemmanager_civicrm_themes(&$themes) {
 // --- Functions below this ship commented out. Uncomment as required. ---
 
 
+/**
+ * Implements hook_civicrm_pre().
+ *
+ * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_pre
+ */
+function itemmanager_civicrm_pre($op, $objectName, $id, &$params) {
+
+    if ($objectName === 'Membership' && $op == 'edit') {
+
+    }
+
+}
+
 
 /**
  * Implements hook_civicrm_preProcess().
@@ -201,7 +214,7 @@ function itemmanager_civicrm_links($op, $objectName, $objectId, &$links, &$mask,
     }
 
 
-
+/* is now doubled
     if ($op == 'contribution.selector.row' && $objectName == 'Contribution') {
         $links[] = array(
             'name' => ts('Duplicate contribution'),
@@ -209,7 +222,7 @@ function itemmanager_civicrm_links($op, $objectName, $objectId, &$links, &$mask,
             'qs' => 'id=%%id%%&cid=%%cid%%&context=%%cxt%%',
             'title' => 'Repair missing contribution.',
         );
-    }
+    } */
 }
 
 
