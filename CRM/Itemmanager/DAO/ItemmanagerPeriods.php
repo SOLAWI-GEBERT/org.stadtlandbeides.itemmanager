@@ -86,6 +86,14 @@ class CRM_Itemmanager_DAO_ItemmanagerPeriods extends CRM_Core_DAO {
     return Civi::$statics[__CLASS__]['links'];
   }
 
+    /**
+     * Returns localized title of this entity.
+     */
+    public static function getEntityTitle() {
+        return ts('Itemmanager Periods');
+    }
+
+
   /**
    * Returns all the column names of this table
    *

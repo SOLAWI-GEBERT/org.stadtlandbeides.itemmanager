@@ -92,6 +92,13 @@ class CRM_Itemmanager_DAO_ItemmanagerSettings extends CRM_Core_DAO {
     parent::__construct();
   }
 
+    /**
+     * Returns localized title of this entity.
+     */
+    public static function getEntityTitle() {
+        return ts('Itemmanager Settings');
+    }
+
   /**
    * Returns foreign keys and entity references.
    *

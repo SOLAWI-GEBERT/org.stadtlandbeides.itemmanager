@@ -9,7 +9,6 @@
   <component name="ChangeListManager">
     <list default="true" id="8a4e2072-c43d-4029-bc01-730e5001dde6" name="Default Changelist" comment="FIX Avoid sending an email after pay after payment is installed">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/info.xml" beforeDir="false" afterPath="$PROJECT_DIR$/info.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -178,7 +177,8 @@
       <workItem from="1671645518713" duration="1867000" />
       <workItem from="1672252410703" duration="54000" />
       <workItem from="1674401148789" duration="443000" />
-      <workItem from="1674401799410" duration="47000" />
+      <workItem from="1674401799410" duration="113000" />
+      <workItem from="1674425583966" duration="202000" />
     </task>
     <task id="LOCAL-00001" summary="ENH Intermittent changes to analyze the price items">
       <created>1612779470217</created>
@@ -516,7 +516,14 @@
       <option name="project" value="LOCAL" />
       <updated>1662315264283</updated>
     </task>
-    <option name="localTasksCounter" value="49" />
+    <task id="LOCAL-00049" summary="MNT update version info">
+      <created>1674401868113</created>
+      <option name="number" value="00049" />
+      <option name="presentableId" value="LOCAL-00049" />
+      <option name="project" value="LOCAL" />
+      <updated>1674401868113</updated>
+    </task>
+    <option name="localTasksCounter" value="50" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -535,7 +542,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="ENH Introduce some checkboxes to the Link Form" />
     <MESSAGE value="ENH First prototype of payment SEPA relation" />
     <MESSAGE value="ENH Add lazy load payment details to SEPA App" />
     <MESSAGE value="FIX Some delete and create bugs for the SEPA App" />
@@ -560,7 +566,8 @@
     <MESSAGE value="FIX Avoid sending an email after pay after payment is installed" />
     <MESSAGE value="ENH Add additional field to the database to handle exceptional periods" />
     <MESSAGE value="ENH Include additional fields in form and update function" />
-    <option name="LAST_COMMIT_MESSAGE" value="ENH Include additional fields in form and update function" />
+    <MESSAGE value="MNT update version info" />
+    <option name="LAST_COMMIT_MESSAGE" value="MNT update version info" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
