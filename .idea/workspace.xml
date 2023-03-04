@@ -9,6 +9,8 @@
   <component name="ChangeListManager">
     <list default="true" id="8a4e2072-c43d-4029-bc01-730e5001dde6" name="Default Changelist" comment="FIX Avoid sending an email after pay after payment is installed">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CRM/Itemmanager/Logic/RenewalPaymentPlanBase.php" beforeDir="false" afterPath="$PROJECT_DIR$/CRM/Itemmanager/Logic/RenewalPaymentPlanBase.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/info.xml" beforeDir="false" afterPath="$PROJECT_DIR$/info.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -179,13 +181,9 @@
       <workItem from="1674401148789" duration="443000" />
       <workItem from="1674401799410" duration="113000" />
       <workItem from="1674425583966" duration="202000" />
-    </task>
-    <task id="LOCAL-00001" summary="ENH Intermittent changes to analyze the price items">
-      <created>1612779470217</created>
-      <option name="number" value="00001" />
-      <option name="presentableId" value="LOCAL-00001" />
-      <option name="project" value="LOCAL" />
-      <updated>1612779470217</updated>
+      <workItem from="1674513069002" duration="998000" />
+      <workItem from="1674770144993" duration="22000" />
+      <workItem from="1677933798043" duration="970000" />
     </task>
     <task id="LOCAL-00002" summary="ENH Final working version of the admin settings form for the itemmanager">
       <created>1616943443196</created>
@@ -523,7 +521,14 @@
       <option name="project" value="LOCAL" />
       <updated>1674401868113</updated>
     </task>
-    <option name="localTasksCounter" value="50" />
+    <task id="LOCAL-00050" summary="FIX Update DAO for API 4 access">
+      <created>1674513267142</created>
+      <option name="number" value="00050" />
+      <option name="presentableId" value="LOCAL-00050" />
+      <option name="project" value="LOCAL" />
+      <updated>1674513267142</updated>
+    </task>
+    <option name="localTasksCounter" value="51" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -542,7 +547,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="ENH First prototype of payment SEPA relation" />
     <MESSAGE value="ENH Add lazy load payment details to SEPA App" />
     <MESSAGE value="FIX Some delete and create bugs for the SEPA App" />
     <MESSAGE value="FIX correct context for backward search function in SEPA App" />
@@ -567,14 +571,15 @@
     <MESSAGE value="ENH Add additional field to the database to handle exceptional periods" />
     <MESSAGE value="ENH Include additional fields in form and update function" />
     <MESSAGE value="MNT update version info" />
-    <option name="LAST_COMMIT_MESSAGE" value="MNT update version info" />
+    <MESSAGE value="FIX Update DAO for API 4 access" />
+    <option name="LAST_COMMIT_MESSAGE" value="FIX Update DAO for API 4 access" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="php">
           <url>file://$PROJECT_DIR$/../Stadt-Land-Beides/JML3/administrator/components/com_civicrm/civicrm/CRM/Contribute/Form/ContributionView.php</url>
-          <line>31</line>
+          <line>30</line>
           <option name="timeStamp" value="6" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php">
@@ -584,7 +589,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php">
           <url>file://$PROJECT_DIR$/../Stadt-Land-Beides/JML3/administrator/components/com_civicrm/civicrm/CRM/Contribute/BAO/Contribution.php</url>
-          <line>4581</line>
+          <line>4570</line>
           <option name="timeStamp" value="13" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php">
@@ -594,17 +599,17 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php">
           <url>file://$PROJECT_DIR$/../Stadt-Land-Beides/JML3/administrator/components/com_civicrm/civicrm/api/v3/Contribution.php</url>
-          <line>704</line>
+          <line>701</line>
           <option name="timeStamp" value="17" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php">
           <url>file://$PROJECT_DIR$/../Stadt-Land-Beides/JML3/administrator/components/com_civicrm/civicrm/CRM/Contribute/BAO/Contribution.php</url>
-          <line>3820</line>
+          <line>3811</line>
           <option name="timeStamp" value="18" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php">
           <url>file://$PROJECT_DIR$/../Stadt-Land-Beides/JML3/administrator/components/com_civicrm/civicrm/CRM/Contribute/BAO/Contribution.php</url>
-          <line>3818</line>
+          <line>3809</line>
           <option name="timeStamp" value="19" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php">
@@ -614,12 +619,12 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php">
           <url>file://$PROJECT_DIR$/../Stadt-Land-Beides/JML3/administrator/components/com_civicrm/civicrm/api/v3/Contribution.php</url>
-          <line>479</line>
+          <line>477</line>
           <option name="timeStamp" value="23" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php">
           <url>file://$PROJECT_DIR$/../Stadt-Land-Beides/JML3/administrator/components/com_civicrm/civicrm/api/v3/Contribution.php</url>
-          <line>610</line>
+          <line>608</line>
           <option name="timeStamp" value="24" />
         </line-breakpoint>
       </breakpoints>

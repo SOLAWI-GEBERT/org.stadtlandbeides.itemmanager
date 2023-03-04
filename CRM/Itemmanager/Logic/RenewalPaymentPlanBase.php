@@ -735,7 +735,7 @@ abstract class CRM_Itemmanager_Logic_RenewalPaymentPlanBase {
 
     $new_end_date = clone $this->newPeriodStartOn;
     //overcome last period
-    $new_end_date->add(new DateInterval('P'.($this->periods + 1).'M'));
+    $new_end_date->add(new DateInterval('P'.($this->periods).'M'));
     //go to the last day - 1
     $new_end_date->sub(new DateInterval('P1D'));
 
