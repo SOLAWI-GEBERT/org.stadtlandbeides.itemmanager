@@ -9,7 +9,9 @@
   <component name="ChangeListManager">
     <list default="true" id="8a4e2072-c43d-4029-bc01-730e5001dde6" name="Default Changelist" comment="FIX Avoid sending an email after pay after payment is installed">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CRM/Itemmanager/Logic/RenewalMultipleInstallmentPlan.php" beforeDir="false" afterPath="$PROJECT_DIR$/CRM/Itemmanager/Logic/RenewalMultipleInstallmentPlan.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CRM/Itemmanager/Logic/RenewalPaymentPlanBase.php" beforeDir="false" afterPath="$PROJECT_DIR$/CRM/Itemmanager/Logic/RenewalPaymentPlanBase.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CRM/Itemmanager/Page/UpdateItems.php" beforeDir="false" afterPath="$PROJECT_DIR$/CRM/Itemmanager/Page/UpdateItems.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/info.xml" beforeDir="false" afterPath="$PROJECT_DIR$/info.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -45,7 +47,6 @@
     <scope name="Database" pattern="file[org.stadtlandbeides.itemmanager]:xml/schema//*||file[org.stadtlandbeides.itemmanager]:CRM/Itemmanager/DAO//*||file[org.stadtlandbeides.itemmanager]:CRM/Itemmanager/BAO//*" />
     <scope name="HTML" pattern="file[org.stadtlandbeides.itemmanager]:templates//*" />
   </component>
-  <component name="PhpDebugGeneral" listening_started="true" />
   <component name="PhpServers">
     <servers>
       <server host="localhost" id="803f8716-bd15-4fed-9bc9-04d846abe046" name="localhost" use_path_mappings="true">
@@ -183,14 +184,8 @@
       <workItem from="1674425583966" duration="202000" />
       <workItem from="1674513069002" duration="998000" />
       <workItem from="1674770144993" duration="22000" />
-      <workItem from="1677933798043" duration="970000" />
-    </task>
-    <task id="LOCAL-00002" summary="ENH Final working version of the admin settings form for the itemmanager">
-      <created>1616943443196</created>
-      <option name="number" value="00002" />
-      <option name="presentableId" value="LOCAL-00002" />
-      <option name="project" value="LOCAL" />
-      <updated>1616943443196</updated>
+      <workItem from="1677933798043" duration="1614000" />
+      <workItem from="1678297283194" duration="4392000" />
     </task>
     <task id="LOCAL-00003" summary="FIX Add Debug infos">
       <created>1616953315734</created>
@@ -528,7 +523,14 @@
       <option name="project" value="LOCAL" />
       <updated>1674513267142</updated>
     </task>
-    <option name="localTasksCounter" value="51" />
+    <task id="LOCAL-00051" summary="FIX calculation of end of membership">
+      <created>1677934856753</created>
+      <option name="number" value="00051" />
+      <option name="presentableId" value="LOCAL-00051" />
+      <option name="project" value="LOCAL" />
+      <updated>1677934856754</updated>
+    </task>
+    <option name="localTasksCounter" value="52" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -547,7 +549,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="ENH Add lazy load payment details to SEPA App" />
     <MESSAGE value="FIX Some delete and create bugs for the SEPA App" />
     <MESSAGE value="FIX correct context for backward search function in SEPA App" />
     <MESSAGE value="FIX make the contribution update outside of transaction" />
@@ -572,7 +573,8 @@
     <MESSAGE value="ENH Include additional fields in form and update function" />
     <MESSAGE value="MNT update version info" />
     <MESSAGE value="FIX Update DAO for API 4 access" />
-    <option name="LAST_COMMIT_MESSAGE" value="FIX Update DAO for API 4 access" />
+    <MESSAGE value="FIX calculation of end of membership" />
+    <option name="LAST_COMMIT_MESSAGE" value="FIX calculation of end of membership" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -626,6 +628,16 @@
           <url>file://$PROJECT_DIR$/../Stadt-Land-Beides/JML3/administrator/components/com_civicrm/civicrm/api/v3/Contribution.php</url>
           <line>608</line>
           <option name="timeStamp" value="24" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="php">
+          <url>file://$PROJECT_DIR$/../Stadt-Land-Beides/JML3/media/civicrm/ext/org.stadtlandbeides.itemmanager/CRM/Itemmanager/Page/UpdateItems.php</url>
+          <line>384</line>
+          <option name="timeStamp" value="26" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="php">
+          <url>file://$PROJECT_DIR$/../Stadt-Land-Beides/JML3/media/civicrm/ext/org.stadtlandbeides.itemmanager/CRM/Itemmanager/Page/UpdateItems.php</url>
+          <line>379</line>
+          <option name="timeStamp" value="27" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

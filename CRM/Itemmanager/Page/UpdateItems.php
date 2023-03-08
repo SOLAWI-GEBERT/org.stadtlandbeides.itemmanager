@@ -382,9 +382,9 @@ class CRM_Itemmanager_Page_UpdateItems extends CRM_Core_Page {
             {
                 $update_price = True;
 
-                $lineitemInfo['unit_price'] = CRM_Utils_Money::format($change_unit_price, NULL, NULL, TRUE);
-                $lineitemInfo['line_total'] = CRM_Utils_Money::format($changed_total, NULL, NULL, TRUE);
-                $lineitemInfo['tax_amount'] = CRM_Utils_Money::format($changed_tax, NULL, NULL, TRUE);
+                $lineitemInfo['unit_price'] = $change_unit_price;
+                $lineitemInfo['line_total'] = $changed_total;
+                $lineitemInfo['tax_amount'] = $changed_tax;
 
                 //update lineitem
                 try{
