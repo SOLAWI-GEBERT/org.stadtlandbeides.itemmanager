@@ -7,13 +7,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="8a4e2072-c43d-4029-bc01-730e5001dde6" name="Default Changelist" comment="FIX Avoid sending an email after pay after payment is installed">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CRM/Itemmanager/Logic/RenewalMultipleInstallmentPlan.php" beforeDir="false" afterPath="$PROJECT_DIR$/CRM/Itemmanager/Logic/RenewalMultipleInstallmentPlan.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CRM/Itemmanager/Logic/RenewalPaymentPlanBase.php" beforeDir="false" afterPath="$PROJECT_DIR$/CRM/Itemmanager/Logic/RenewalPaymentPlanBase.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CRM/Itemmanager/Page/UpdateItems.php" beforeDir="false" afterPath="$PROJECT_DIR$/CRM/Itemmanager/Page/UpdateItems.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/info.xml" beforeDir="false" afterPath="$PROJECT_DIR$/info.xml" afterDir="false" />
-    </list>
+    <list default="true" id="8a4e2072-c43d-4029-bc01-730e5001dde6" name="Default Changelist" comment="FIX Avoid sending an email after pay after payment is installed" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -185,14 +179,7 @@
       <workItem from="1674513069002" duration="998000" />
       <workItem from="1674770144993" duration="22000" />
       <workItem from="1677933798043" duration="1614000" />
-      <workItem from="1678297283194" duration="4392000" />
-    </task>
-    <task id="LOCAL-00003" summary="FIX Add Debug infos">
-      <created>1616953315734</created>
-      <option name="number" value="00003" />
-      <option name="presentableId" value="LOCAL-00003" />
-      <option name="project" value="LOCAL" />
-      <updated>1616953315734</updated>
+      <workItem from="1678297283194" duration="5041000" />
     </task>
     <task id="LOCAL-00004" summary="MNT Refactoring of the Itemmanager Dashboard to DAO objects">
       <created>1645008468923</created>
@@ -530,7 +517,14 @@
       <option name="project" value="LOCAL" />
       <updated>1677934856754</updated>
     </task>
-    <option name="localTasksCounter" value="52" />
+    <task id="LOCAL-00052" summary="FIX correct currency transformation">
+      <created>1678301787878</created>
+      <option name="number" value="00052" />
+      <option name="presentableId" value="LOCAL-00052" />
+      <option name="project" value="LOCAL" />
+      <updated>1678301787878</updated>
+    </task>
+    <option name="localTasksCounter" value="53" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -549,7 +543,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="FIX Some delete and create bugs for the SEPA App" />
     <MESSAGE value="FIX correct context for backward search function in SEPA App" />
     <MESSAGE value="FIX make the contribution update outside of transaction" />
     <MESSAGE value="ENH Refactoring the form with stubs" />
@@ -574,7 +567,8 @@
     <MESSAGE value="MNT update version info" />
     <MESSAGE value="FIX Update DAO for API 4 access" />
     <MESSAGE value="FIX calculation of end of membership" />
-    <option name="LAST_COMMIT_MESSAGE" value="FIX calculation of end of membership" />
+    <MESSAGE value="FIX correct currency transformation" />
+    <option name="LAST_COMMIT_MESSAGE" value="FIX correct currency transformation" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
