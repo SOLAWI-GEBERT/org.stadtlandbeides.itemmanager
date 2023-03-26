@@ -92,10 +92,11 @@ class CRM_Itemmanager_Page_UpdateItems extends CRM_Core_Page {
         $base_query = "
         SELECT
             member_type.name AS member_name,
-            contribution.id AS contrib_id,
+            member_pay.contribution_id AS contrib_id,
             membership.start_date as member_start,
             membership.end_date as member_end,
-            membership.status_id as member_status
+            membership.status_id as member_status,
+            member_pay.id as pay_id
         FROM civicrm_membership membership
          LEFT JOIN civicrm_membership_payment member_pay ON member_pay.membership_id = membership.id
          LEFT JOIN civicrm_contribution as contribution ON contribution.contact_id = %1 and member_pay.contribution_id = contribution.id
@@ -143,6 +144,40 @@ class CRM_Itemmanager_Page_UpdateItems extends CRM_Core_Page {
 
         //compound both queries together
         while ($base_items->fetch()) {
+            $testcount = civicrm_api3('Contribution', 'getcount', array('id' => (int)$base_items->contrib_id));
+            if($testcount == 0)
+            {
+                // fatal error here
+                $base = array(
+                    'line_id'  => null,
+                    'set_id'        => null,
+                    'field_id'        => null,
+                    'member_name'   => $base_items->member_name,
+                    'item_label'    => null,
+                    'item_quantity' => null,
+                    'item_price' => null,
+                    'item_total' => null,
+                    'item_tax' => null,
+                    'periods' => null,
+                    'contrib_date'  => null,
+                    'update_date' => null,
+                    'change_date' => null,
+                    'update_label' => null,
+                    'change_label' => null,
+                    'update_price' => null,
+                    'change_price' => null,
+                    'change_total' => null,
+                    'change_tax' => null,
+                    'empty_relation_id' => (int)$base_items->pay_id,
+                    'change_error' => 'membership contribution relation'. (int)$base_items->pay_id .' is missing',
+                );
+
+                $base_list[] = $base;
+                continue;
+
+            }
+
+
             $line_items = CRM_Core_DAO::executeQuery($item_query,
                 array( 1 => array($base_items->contrib_id, 'Integer')));
 
@@ -213,6 +248,7 @@ class CRM_Itemmanager_Page_UpdateItems extends CRM_Core_Page {
                     'change_price' => round($change_unit_price,2),
                     'change_total' => round($changed_total,2),
                     'change_tax' => round($changed_tax,2),
+                    'change_error' => null,
                 );
 
                 //just pickup items to be updated
@@ -316,6 +352,9 @@ class CRM_Itemmanager_Page_UpdateItems extends CRM_Core_Page {
 
         foreach ($selected_items As $line_item)
         {
+            //  start here with some repair stuff
+            if($line_item == null) continue;
+            
             $update_contribution = False;
             $update_label = False;
             $update_price = False;

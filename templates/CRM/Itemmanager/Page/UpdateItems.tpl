@@ -61,13 +61,14 @@
             <thead>
             <tr class="columnheader">
                 <td width="5%"><input type="checkbox" name="all" id="select_all" onchange="SelectAll(CRM.$, CRM._)"/></td>
-                <td width="20%">{ts domain="org.stadtlandbeides.itemmanager"}Date{/ts}</td>
+                <td width="10%">{ts domain="org.stadtlandbeides.itemmanager"}Date{/ts}</td>
                 <td width="20%">{ts domain="org.stadtlandbeides.itemmanager"}Referred to{/ts}</td>
-                <td width="35%">{ts domain="org.stadtlandbeides.itemmanager"}Item{/ts}</td>
+                <td width="30%">{ts domain="org.stadtlandbeides.itemmanager"}Item{/ts}</td>
                 <td width="5%">{ts domain="org.stadtlandbeides.itemmanager"}Quantity{/ts}</td>
                 <td width="5%">{ts domain="org.stadtlandbeides.itemmanager"}Unit price{/ts}</td>
                 <td width="5%">{ts domain="org.stadtlandbeides.itemmanager"}Total{/ts}</td>
                 <td width="5%">{ts domain="org.stadtlandbeides.itemmanager"}Tax{/ts}</td>
+                <td width="15%">{ts domain="org.stadtlandbeides.itemmanager"}Error{/ts}</td>
             </tr>
             </thead>
 
@@ -87,7 +88,7 @@
                         <td width="20%" >{$ritem.member_name}</td>
 
                         {if $ritem.update_label}
-                            <td  width="35%"><span class="changed_data">{$ritem.item_label}
+                            <td  width="30%"><span class="changed_data">{$ritem.item_label}
                                     </br> {ts domain="org.stadtlandbeides.itemmanager"}change to{/ts}
                                     </br> {$ritem.change_label}</span></td>
 
@@ -114,7 +115,10 @@
                             <td width="5%">{$ritem.item_price}</td>
                             <td width="5%">{$ritem.item_total}</td>
                             <td width="5%">{$ritem.item_tax}</td>
+
                         {/if}
+
+                        <td width="15%"><span class="changed_data">{$ritem.change_error}</span></td>
 
 
                     </tr>

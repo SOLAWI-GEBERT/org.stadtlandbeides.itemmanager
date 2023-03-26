@@ -89,7 +89,19 @@ class CRM_Itemmanager_Page_Dashboard extends CRM_Core_Page {
                     $linerecords['error_message']);
                 $this->processDetail($membership['typeinfo']['name'],
                     (int)$contribution_link['contribution_id']);
-                return;
+                continue; // better here to go on
+            }
+
+            $testcount = civicrm_api3('Contribution', 'getcount', array('id' => (int)$contribution_link['contribution_id']));
+            if($testcount == 0)
+            {
+                $error = True;
+                $this->assign('data_error',$error);
+                $this->processError("ERROR",E::ts('Missing contribution relation to membership'),
+                    $linerecords[0]);
+                $this->processDetail($membership['typeinfo']['name']. ' with relation ID ' . (int)$contribution_link['id'],
+                    (int)$contribution_link['contribution_id']);
+                continue; // better here to go on
             }
 
             $contribution = civicrm_api3('Contribution', 'getsingle', array('id' => (int)$contribution_link['contribution_id']));
