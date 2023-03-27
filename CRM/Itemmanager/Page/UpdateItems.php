@@ -460,7 +460,7 @@ class CRM_Itemmanager_Page_UpdateItems extends CRM_Core_Page {
                     try {
                         //decide tax or not
                         $financeitem['financeitem']['amount'] = $financeitem['accountinfo']['is_tax'] ?
-                            CRM_Utils_Money::format($changed_tax, NULL, NULL, TRUE) : CRM_Utils_Money::format($changed_total, NULL, NULL, TRUE);
+                            $changed_tax : $changed_total;
 
                         $finalquery = CRM_Core_DAO::composeQuery($update_financial_item,
                             array(1 => array($financeitem['financeitem']['amount'], 'Float'),

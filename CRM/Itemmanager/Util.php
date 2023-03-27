@@ -93,9 +93,9 @@ class CRM_Itemmanager_Util
      * @return money
      *       total tax amount in money format
      */
-    public static function getTaxAmountTotalFromContributionID($contributionID) {
+    public static function getTaxAmountTotalFromContributionID($contributionID):float {
         $taxAmount = CRM_Core_DAO::singleValueQuery("SELECT SUM(COALESCE(tax_amount,0)) FROM civicrm_line_item WHERE contribution_id = $contributionID AND qty > 0 ");
-        return CRM_Utils_Money::format($taxAmount, NULL, NULL, TRUE);
+        return floatval($taxAmount);
     }
 
 
@@ -108,9 +108,9 @@ class CRM_Itemmanager_Util
      * @return money
      *       total tax amount in money format
      */
-    public static function getAmountTotalFromContributionID($contributionID) {
+    public static function getAmountTotalFromContributionID($contributionID):float {
         $taxAmount = CRM_Core_DAO::singleValueQuery("SELECT SUM(COALESCE(line_total,0)) FROM civicrm_line_item WHERE contribution_id = $contributionID AND qty > 0 ");
-        return CRM_Utils_Money::format($taxAmount, NULL, NULL, TRUE);
+        return floatval($taxAmount);
     }
 
     /**
