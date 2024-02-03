@@ -174,7 +174,7 @@ class CRM_Itemmanager_DAO_ItemmanagerPeriods extends CRM_Core_DAO {
             'type' => 'Text',
           ],
         ],
-      'id' => [
+      'itemmanager_period_successor_id' => [
           'name' => 'itemmanager_period_successor_id',
           'type' => CRM_Utils_Type::T_INT,
           'description' => CRM_Itemmanager_ExtensionUtil::ts('Successor ItemmanagerPeriods ID'),

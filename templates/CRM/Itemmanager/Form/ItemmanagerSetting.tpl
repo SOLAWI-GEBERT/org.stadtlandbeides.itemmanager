@@ -35,6 +35,8 @@
             <span class="content">{$form.$element_period_type.html}</span>
             <span class="label">{$form.$element_period_start_on.label}</span>
             <span class="content">{$form.$element_period_start_on.html}</span>
+            <span class="label">{$form.$element_period_hide.label}</span>
+            <span class="content">{$form.$element_period_hide.html}</span>
         </div>
           <table>
             <thead>

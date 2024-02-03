@@ -93,6 +93,22 @@ class CRM_Itemmanager_Form_ItemmanagerSetting extends CRM_Core_Form {
                 [],
             )->setSelected(array_keys($this->_duration_options)[$period['period_type']]);
 
+            $hideparam = array('value' => $period['hide']);
+
+            if($period['hide'] == 1)
+            {
+                $hideparam['checked'] = 1;
+            }
+
+            $this->add(
+                'checkbox',
+                $period['element_period_hide'],
+                ts('Hide'),
+                Null,
+                False,
+                $hideparam
+            );
+
             foreach ($period['fields'] as $field)
             {
                 $ignoreparam = array('value' => $field['ignore']);
@@ -291,6 +307,75 @@ class CRM_Itemmanager_Form_ItemmanagerSetting extends CRM_Core_Form {
 
 
     /**
+     * Returns a drop down selection for the possible successor of a period
+     *
+     * @param $priceset array current priceset array
+     * @param $pricefield array current price field array
+     * @param $pricefieldvalue array current price field value array
+     */
+    private function getPeriodSelection($priceset,$pricefield,$pricefieldvalue)
+    {
+        $selection = $this->getEmptySelection();
+
+        try {
+            $priceset_records = civicrm_api3('PriceSet', 'get',
+                array('sequential' => 1,
+                    'financial_type_id' => CRM_Utils_Array::value('financial_type_id', $priceset),
+                ));
+            if ($priceset_records['is_error'] or $priceset_records['count'] <= 1)
+                return $this->getEmptySelection();
+
+
+            //Now generate the selections
+            foreach ($priceset_records['values'] as $selectedpriceset)
+            {
+                //ignore own dataset
+                if($priceset['id'] == $selectedpriceset['id'])
+                    continue;
+
+                $pricefield_records = civicrm_api3('PriceField', 'get',
+                    array('sequential' => 1,
+                        'price_set_id'=>$selectedpriceset['id']));
+
+                if( $pricefield_records['is_error']) return $selection;
+
+                foreach ($pricefield_records['values'] as $selectedpricefield)
+                {
+                    $pricefield_values_records = civicrm_api3('PriceFieldValue', 'get',
+                        array('sequential' => 1,
+                            'price_field_id' => $selectedpricefield['id'],
+                            'financial_type_id' => CRM_Utils_Array::value('financial_type_id', $pricefieldvalue),
+                            'membership_type_id' => CRM_Utils_Array::value('membership_type_id', $pricefieldvalue),
+                        ));
+
+                    if( $pricefield_values_records['is_error']) return $selection;
+
+                    foreach ($pricefield_values_records['values'] as $selectedpricefieldvalue)
+                    {
+                        $settings = new CRM_Itemmanager_BAO_ItemmanagerSettings();
+                        $settings->get('price_field_value_id',CRM_Utils_Array::value('id', $selectedpricefieldvalue));
+
+                        $selection[(int)$settings->id] = '('.$selectedpriceset['title'].') '.$selectedpricefieldvalue['label'];
+                    }
+
+
+                }
+
+
+            }
+
+
+
+        } catch (CiviCRM_API3_Exception $e) {
+            $this->_errormessages[] = $e->getMessage();
+            return $this->getEmptySelection();
+        }
+
+
+        return $selection;
+    }
+
+    /**
      *  Just make a single selection entry
      *
      * @return array
@@ -324,7 +409,17 @@ class CRM_Itemmanager_Form_ItemmanagerSetting extends CRM_Core_Form {
               ->execute();//now we build the nested array for the form
           foreach ($itemmanager_periods as $itemmanager_period) {
 
+
+
+
               $itemmanager_period_id = CRM_Utils_Array::value('id', $itemmanager_period);
+
+              $hide = CRM_Utils_Array::value('hide', $itemmanager_period);
+
+              if($hide)
+              {
+                  continue;
+              }
 
               $itemmanager_price_fields = \Civi\Api4\ItemmanagerSettings::get()
                   ->addWhere('itemmanager_periods_id', '=', $itemmanager_period_id)
@@ -346,6 +441,8 @@ class CRM_Itemmanager_Form_ItemmanagerSetting extends CRM_Core_Form {
               foreach ($itemmanager_price_fields As $itemmanager_price_field)
               {
                   $itemmanager_id = CRM_Utils_Array::value('id', $itemmanager_price_field);
+
+
 
                   $pricefieldvalue = civicrm_api3('PriceFieldValue', 'getsingle',
                       array('id' => (int)$itemmanager_price_field['price_field_value_id']));
@@ -418,11 +515,15 @@ class CRM_Itemmanager_Form_ItemmanagerSetting extends CRM_Core_Form {
                   'period_start_on_raw' => $period_start_on_raw,
                   'periods' => CRM_Utils_Array::value('periods',$itemmanager_period),
                   'period_type' => CRM_Utils_Array::value('period_type',$itemmanager_period),
+                  'successor' => CRM_Utils_Array::value('itemmanager_period_successor_id',$itemmanager_period),
+                  'hide' => (int)$hide,
                   'fields' => $field_list,
                   'element_period_start_on' => 'period_'.$itemmanager_id.'_period_start_on',
                   'element_period_periods' => 'period_'.$itemmanager_id.'_periods',
                   'element_period_interval' => 'period_'.$itemmanager_id.'_interval',
                   'element_period_type' => 'period_'.$itemmanager_id.'_type',
+                  'element_period_successor' => 'period_'.$itemmanager_id.'_successor',
+                  'element_period_hide' => 'period_'.$itemmanager_id.'_hide',
               );
 
               $this->_itemSettings[$itemmanager_period_id] = $form_collection;
@@ -610,6 +711,9 @@ class CRM_Itemmanager_Form_ItemmanagerSetting extends CRM_Core_Form {
                     $this->getIndexFromDurationKey($formvalues[$period['element_period_type']])
                         : (int)$period['period_type'];
 
+                $hide = isset($formvalues[$period['element_period_hide']]) ?
+                    (int)$formvalues[$period['element_period_hide']] : (int)$period['hide'];
+
                 if (isset($formvalues[$period['element_period_start_on']])) {
                     $start_on = date_create($formvalues[$period['element_period_start_on']]);
                 } else {
@@ -622,6 +726,7 @@ class CRM_Itemmanager_Form_ItemmanagerSetting extends CRM_Core_Form {
                 $update_period->periods = $periods;
                 $update_period->period_start_on = $start_on->format('Ymd');
                 $update_period->period_type = $type;
+                $update_period->hide = $hide;
                 $update_period->update();
 
                 foreach ($period['fields'] as $field) {
