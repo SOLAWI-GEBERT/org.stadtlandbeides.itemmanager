@@ -185,6 +185,18 @@ class CRM_Itemmanager_DAO_ItemmanagerPeriods extends CRM_Core_DAO {
           'bao' => 'CRM_Itemmanager_DAO_ItemmanagerPeriods',
           'localizable' => 0,
       ],
+      'hide' => [
+          'name' => 'hide',
+          'type' => CRM_Utils_Type::T_BOOLEAN,
+          'title' => CRM_Itemmanager_ExtensionUtil::ts('Hide'),
+          'description' => CRM_Itemmanager_ExtensionUtil::ts('Period is not visible in the list'),
+          'where' => 'civicrm_itemmanager_settings.hide',
+          'default' => 'false',
+          'table_name' => 'civicrm_itemmanager_settings',
+          'entity' => 'ItemmanagerSettings',
+          'bao' => 'CRM_Itemmanager_DAO_ItemmanagerSettings',
+          'localizable' => 0,
+      ],
       ];
       CRM_Core_DAO_AllCoreTables::invoke(__CLASS__, 'fields_callback', Civi::$statics[__CLASS__]['fields']);
     }

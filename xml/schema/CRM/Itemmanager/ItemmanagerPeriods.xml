@@ -68,6 +68,14 @@
     <comment>ID to itemmanager period entry which is the successor</comment>
     <add>4.2</add>
   </field>
+  <field>
+    <name>hide</name>
+    <title>Hide</title>
+    <type>boolean</type>
+    <default>false</default>
+    <comment>Don't show the period anymore</comment>
+    <add>4.2.1</add>
+  </field>
 
 
 </table>

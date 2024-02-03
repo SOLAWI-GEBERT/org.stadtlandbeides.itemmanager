@@ -109,6 +109,19 @@ class CRM_Itemmanager_Upgrader extends CRM_Itemmanager_Upgrader_Base {
         return TRUE;
     }
 
+    /**
+     * Example: Run an external SQL script.
+     *
+     * @return TRUE on success
+     * @throws Exception
+     */
+    public function upgrade_4210() {
+        $this->ctx->log->info('Applying update 4210');
+        // this path is relative to the extension base dir
+        $this->executeSqlFile('sql/upgrade_4210.sql');
+        return TRUE;
+    }
+
   /**
    * Example: Run a slow upgrade process by breaking it up into smaller chunk.
    *
