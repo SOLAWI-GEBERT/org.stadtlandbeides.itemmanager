@@ -60,6 +60,14 @@
     <comment>Ignore item for next period</comment>
   </field>
   <field>
+    <name>extend</name>
+    <title>Extend</title>
+    <type>boolean</type>
+    <default>false</default>
+    <comment>Add item for next period</comment>
+    <add>4.1</add>
+  </field>
+  <field>
     <name>novitiate</name>
     <title>Novitiate Item</title>
     <type>boolean</type>

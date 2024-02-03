@@ -8,9 +8,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8a4e2072-c43d-4029-bc01-730e5001dde6" name="Default Changelist" comment="FIX Avoid sending an email after pay after payment is installed">
+      <change afterPath="$PROJECT_DIR$/sql/upgrade_4100.sql" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CRM/Itemmanager/Page/UpdateItems.php" beforeDir="false" afterPath="$PROJECT_DIR$/CRM/Itemmanager/Page/UpdateItems.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CRM/Itemmanager/Util.php" beforeDir="false" afterPath="$PROJECT_DIR$/CRM/Itemmanager/Util.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CRM/Itemmanager/DAO/ItemmanagerSettings.php" beforeDir="false" afterPath="$PROJECT_DIR$/CRM/Itemmanager/DAO/ItemmanagerSettings.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CRM/Itemmanager/Form/ItemmanagerSetting.php" beforeDir="false" afterPath="$PROJECT_DIR$/CRM/Itemmanager/Form/ItemmanagerSetting.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CRM/Itemmanager/Upgrader.php" beforeDir="false" afterPath="$PROJECT_DIR$/CRM/Itemmanager/Upgrader.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/info.xml" beforeDir="false" afterPath="$PROJECT_DIR$/info.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/CRM/Itemmanager/Form/ItemmanagerSetting.tpl" beforeDir="false" afterPath="$PROJECT_DIR$/templates/CRM/Itemmanager/Form/ItemmanagerSetting.tpl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/xml/schema/CRM/Itemmanager/ItemmanagerSettings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/xml/schema/CRM/Itemmanager/ItemmanagerSettings.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -45,6 +50,7 @@
     <scope name="Database" pattern="file[org.stadtlandbeides.itemmanager]:xml/schema//*||file[org.stadtlandbeides.itemmanager]:CRM/Itemmanager/DAO//*||file[org.stadtlandbeides.itemmanager]:CRM/Itemmanager/BAO//*" />
     <scope name="HTML" pattern="file[org.stadtlandbeides.itemmanager]:templates//*" />
   </component>
+  <component name="PhpDebugGeneral" listening_started="true" />
   <component name="PhpServers">
     <servers>
       <server host="localhost" id="803f8716-bd15-4fed-9bc9-04d846abe046" name="localhost" use_path_mappings="true">
@@ -185,14 +191,9 @@
       <workItem from="1677933798043" duration="1614000" />
       <workItem from="1678297283194" duration="5041000" />
       <workItem from="1679836452481" duration="9050000" />
-      <workItem from="1679943988965" duration="548000" />
-    </task>
-    <task id="LOCAL-00004" summary="MNT Refactoring of the Itemmanager Dashboard to DAO objects">
-      <created>1645008468923</created>
-      <option name="number" value="00004" />
-      <option name="presentableId" value="LOCAL-00004" />
-      <option name="project" value="LOCAL" />
-      <updated>1645008468923</updated>
+      <workItem from="1679943988965" duration="1530000" />
+      <workItem from="1679946410857" duration="5000" />
+      <workItem from="1706957842570" duration="3223000" />
     </task>
     <task id="LOCAL-00005" summary="FIX Remove itemmanager settings comparison">
       <created>1645011730052</created>
@@ -530,7 +531,14 @@
       <option name="project" value="LOCAL" />
       <updated>1678301787878</updated>
     </task>
-    <option name="localTasksCounter" value="53" />
+    <task id="LOCAL-00053" summary="FIX correct calculation of tax">
+      <created>1679944565088</created>
+      <option name="number" value="00053" />
+      <option name="presentableId" value="LOCAL-00053" />
+      <option name="project" value="LOCAL" />
+      <updated>1679944565089</updated>
+    </task>
+    <option name="localTasksCounter" value="54" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -549,7 +557,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="FIX correct context for backward search function in SEPA App" />
     <MESSAGE value="FIX make the contribution update outside of transaction" />
     <MESSAGE value="ENH Refactoring the form with stubs" />
     <MESSAGE value="ENH First prototype of a lazy load version of the Sepa Link App" />
@@ -574,7 +581,8 @@
     <MESSAGE value="FIX Update DAO for API 4 access" />
     <MESSAGE value="FIX calculation of end of membership" />
     <MESSAGE value="FIX correct currency transformation" />
-    <option name="LAST_COMMIT_MESSAGE" value="FIX correct currency transformation" />
+    <MESSAGE value="FIX correct calculation of tax" />
+    <option name="LAST_COMMIT_MESSAGE" value="FIX correct calculation of tax" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -638,6 +646,11 @@
           <url>file://$PROJECT_DIR$/../Stadt-Land-Beides/JML3/media/civicrm/ext/org.stadtlandbeides.itemmanager/CRM/Itemmanager/Page/UpdateItems.php</url>
           <line>384</line>
           <option name="timeStamp" value="27" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="php">
+          <url>file://$PROJECT_DIR$/../Stadt-Land-Beides/JML3/media/civicrm/ext/org.stadtlandbeides.itemmanager/CRM/Itemmanager/Form/ItemmanagerSetting.php</url>
+          <line>423</line>
+          <option name="timeStamp" value="30" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

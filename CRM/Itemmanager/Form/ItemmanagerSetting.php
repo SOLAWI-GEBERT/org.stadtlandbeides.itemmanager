@@ -111,6 +111,24 @@ class CRM_Itemmanager_Form_ItemmanagerSetting extends CRM_Core_Form {
                      $ignoreparam
                 );
 
+
+                $extendparam = array('value' => $field['extend']);
+
+                if($field['extend'] == 1)
+                {
+                    $extendparam['checked'] = 1;
+                }
+
+                $this->add(
+                    'checkbox',
+                    $field['element_period_field_extend'],
+                    ts('Extend'),
+                    Null,
+                    False,
+                    $extendparam
+                );
+
+
                 $novitiate = array('value' => $field['novitiate']);
                 if($field['novitiate'] == 1)
                 {
@@ -366,6 +384,7 @@ class CRM_Itemmanager_Form_ItemmanagerSetting extends CRM_Core_Form {
                       'expire_on' => $expire_on,
                       'isactive' => CRM_Utils_Array::value('is_active',$pricefield) == 1? ts('Active'):'',
                       'ignore' => (int)$itemmanager_price_field['ignore'],
+                      'extend' => (int)$itemmanager_price_field['extend'],
                       'novitiate' => (int)$itemmanager_price_field['novitiate'],
                       'enable_period_exception' => (int)$itemmanager_price_field['enable_period_exception'],
                       'exception_periods' => (int)$itemmanager_price_field['exception_periods'],
@@ -375,6 +394,8 @@ class CRM_Itemmanager_Form_ItemmanagerSetting extends CRM_Core_Form {
                           '_field_'.$itemmanager_id.'_successor',
                      'element_period_field_ignore' => 'period_'.$itemmanager_id.
                          '_field_'.$itemmanager_id.'_ignore',
+                     'element_period_field_extend' => 'period_'.$itemmanager_id.
+                          '_field_'.$itemmanager_id.'_extend',
                      'element_period_field_novitiate' => 'period_'.$itemmanager_id.
                          '_field_'.$itemmanager_id.'_novitiate',
                       'element_enable_period_exception' => 'period_'.$itemmanager_id.
@@ -610,6 +631,9 @@ class CRM_Itemmanager_Form_ItemmanagerSetting extends CRM_Core_Form {
                     $ignore = isset($formvalues[$field['element_period_field_ignore']]) ?
                         (int)$formvalues[$field['element_period_field_ignore']] : (int)$field['ignore'];
 
+                    $extend = isset($formvalues[$field['element_period_field_extend']]) ?
+                        (int)$formvalues[$field['element_period_field_extend']] : (int)$field['extend'];
+
                     $novitiate = isset($formvalues[$field['element_period_field_novitiate']]) ?
                         (int)$formvalues[$field['element_period_field_novitiate']] : (int)$field['novitiate'];
                     $enable_period_exception = isset($formvalues[$field['element_enable_period_exception']]) ?
@@ -621,6 +645,7 @@ class CRM_Itemmanager_Form_ItemmanagerSetting extends CRM_Core_Form {
                     $update_manager->id = (int)$field['manager_id'];
                     $update_manager->itemmanager_successor_id = $successor;
                     $update_manager->ignore = $ignore == 1;
+                    $update_manager->extend = $extend == 1;
                     $update_manager->novitiate = $novitiate == 1;
                     $update_manager->enable_period_exception = $enable_period_exception == 1;
                     $update_manager->exception_periods = $exception_periods;
