@@ -174,6 +174,17 @@ class CRM_Itemmanager_DAO_ItemmanagerPeriods extends CRM_Core_DAO {
             'type' => 'Text',
           ],
         ],
+      'id' => [
+          'name' => 'itemmanager_period_successor_id',
+          'type' => CRM_Utils_Type::T_INT,
+          'description' => CRM_Itemmanager_ExtensionUtil::ts('Successor ItemmanagerPeriods ID'),
+          'required' => FALSE,
+          'where' => 'civicrm_itemmanager_periods.itemmanager_period_successor_id',
+          'table_name' => 'civicrm_itemmanager_periods',
+          'entity' => 'ItemmanagerPeriods',
+          'bao' => 'CRM_Itemmanager_DAO_ItemmanagerPeriods',
+          'localizable' => 0,
+      ],
       ];
       CRM_Core_DAO_AllCoreTables::invoke(__CLASS__, 'fields_callback', Civi::$statics[__CLASS__]['fields']);
     }

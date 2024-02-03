@@ -8,14 +8,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8a4e2072-c43d-4029-bc01-730e5001dde6" name="Default Changelist" comment="FIX Avoid sending an email after pay after payment is installed">
-      <change afterPath="$PROJECT_DIR$/sql/upgrade_4100.sql" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sql/upgrade_4200.sql" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CRM/Itemmanager/DAO/ItemmanagerSettings.php" beforeDir="false" afterPath="$PROJECT_DIR$/CRM/Itemmanager/DAO/ItemmanagerSettings.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CRM/Itemmanager/Form/ItemmanagerSetting.php" beforeDir="false" afterPath="$PROJECT_DIR$/CRM/Itemmanager/Form/ItemmanagerSetting.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CRM/Itemmanager/DAO/ItemmanagerPeriods.php" beforeDir="false" afterPath="$PROJECT_DIR$/CRM/Itemmanager/DAO/ItemmanagerPeriods.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CRM/Itemmanager/Upgrader.php" beforeDir="false" afterPath="$PROJECT_DIR$/CRM/Itemmanager/Upgrader.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/info.xml" beforeDir="false" afterPath="$PROJECT_DIR$/info.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/CRM/Itemmanager/Form/ItemmanagerSetting.tpl" beforeDir="false" afterPath="$PROJECT_DIR$/templates/CRM/Itemmanager/Form/ItemmanagerSetting.tpl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/xml/schema/CRM/Itemmanager/ItemmanagerSettings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/xml/schema/CRM/Itemmanager/ItemmanagerSettings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/xml/schema/CRM/Itemmanager/ItemmanagerPeriods.xml" beforeDir="false" afterPath="$PROJECT_DIR$/xml/schema/CRM/Itemmanager/ItemmanagerPeriods.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -193,7 +190,7 @@
       <workItem from="1679836452481" duration="9050000" />
       <workItem from="1679943988965" duration="1530000" />
       <workItem from="1679946410857" duration="5000" />
-      <workItem from="1706957842570" duration="3223000" />
+      <workItem from="1706957842570" duration="4597000" />
     </task>
     <task id="LOCAL-00005" summary="FIX Remove itemmanager settings comparison">
       <created>1645011730052</created>
@@ -646,11 +643,6 @@
           <url>file://$PROJECT_DIR$/../Stadt-Land-Beides/JML3/media/civicrm/ext/org.stadtlandbeides.itemmanager/CRM/Itemmanager/Page/UpdateItems.php</url>
           <line>384</line>
           <option name="timeStamp" value="27" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="php">
-          <url>file://$PROJECT_DIR$/../Stadt-Land-Beides/JML3/media/civicrm/ext/org.stadtlandbeides.itemmanager/CRM/Itemmanager/Form/ItemmanagerSetting.php</url>
-          <line>423</line>
-          <option name="timeStamp" value="30" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
