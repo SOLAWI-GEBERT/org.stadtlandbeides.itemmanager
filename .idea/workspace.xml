@@ -9,8 +9,8 @@
   <component name="ChangeListManager">
     <list default="true" id="8a4e2072-c43d-4029-bc01-730e5001dde6" name="Default Changelist" comment="FIX Avoid sending an email after pay after payment is installed">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CRM/Itemmanager/DAO/ItemmanagerPeriods.php" beforeDir="false" afterPath="$PROJECT_DIR$/CRM/Itemmanager/DAO/ItemmanagerPeriods.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CRM/Itemmanager/Form/ItemmanagerSetting.php" beforeDir="false" afterPath="$PROJECT_DIR$/CRM/Itemmanager/Form/ItemmanagerSetting.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/settings/Itemmanager.setting.php" beforeDir="false" afterPath="$PROJECT_DIR$/settings/Itemmanager.setting.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/CRM/Itemmanager/Form/ItemmanagerSetting.tpl" beforeDir="false" afterPath="$PROJECT_DIR$/templates/CRM/Itemmanager/Form/ItemmanagerSetting.tpl" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -189,7 +189,8 @@
       <workItem from="1679836452481" duration="9050000" />
       <workItem from="1679943988965" duration="1530000" />
       <workItem from="1679946410857" duration="5000" />
-      <workItem from="1706957842570" duration="9751000" />
+      <workItem from="1706957842570" duration="10893000" />
+      <workItem from="1707038315208" duration="13072000" />
     </task>
     <task id="LOCAL-00005" summary="FIX Remove itemmanager settings comparison">
       <created>1645011730052</created>
@@ -645,18 +646,8 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php">
           <url>file://$PROJECT_DIR$/CRM/Itemmanager/Form/ItemmanagerSetting.php</url>
-          <line>540</line>
-          <option name="timeStamp" value="39" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="php">
-          <url>file://$PROJECT_DIR$/CRM/Itemmanager/Form/ItemmanagerSetting.php</url>
-          <line>528</line>
-          <option name="timeStamp" value="42" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="php">
-          <url>file://$PROJECT_DIR$/CRM/Itemmanager/Form/ItemmanagerSetting.php</url>
-          <line>418</line>
-          <option name="timeStamp" value="43" />
+          <line>279</line>
+          <option name="timeStamp" value="64" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

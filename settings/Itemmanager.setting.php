@@ -63,6 +63,21 @@ return array(
         'title' => E::ts('Filter Past payments only'),
         'help_text' => E::ts('Select Yes to hide future contributions for payments'),
     ),
+    'itemmanager_show_hiden_periods' => array(
+        'group_name' => 'Itemmanager Options',
+        'group' => 'org.stadtlandbeides.itemmanager',
+        'name' => 'itemmanager_show_hiden_periods',
+        'type' => 'Boolean',
+        'add' => '5.0',
+        'default' => '0',
+        'quick_form_type' => 'YesNo',
+        'html_type' => 'checkbox',
+        'is_domain' => 1,
+        'is_contact' => 0,
+        'description' => E::ts('Show again the hidden period settings'),
+        'title' => E::ts('Shows the hidden periods in itemmanager settings'),
+        'help_text' => E::ts('Select Yes to to make the hidden periods visible again'),
+    ),
 );
 
 
