@@ -9,7 +9,7 @@
   <component name="ChangeListManager">
     <list default="true" id="8a4e2072-c43d-4029-bc01-730e5001dde6" name="Default Changelist" comment="FIX Avoid sending an email after pay after payment is installed">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CRM/Itemmanager/Form/ItemmanagerSetting.php" beforeDir="false" afterPath="$PROJECT_DIR$/CRM/Itemmanager/Form/ItemmanagerSetting.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CRM/Itemmanager/Logic/RenewalSingleInstallmentPlan.php" beforeDir="false" afterPath="$PROJECT_DIR$/CRM/Itemmanager/Logic/RenewalSingleInstallmentPlan.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -189,7 +189,7 @@
       <workItem from="1679946410857" duration="5000" />
       <workItem from="1706957842570" duration="10893000" />
       <workItem from="1707038315208" duration="13650000" />
-      <workItem from="1707639069496" duration="30807000" />
+      <workItem from="1707639069496" duration="32009000" />
     </task>
     <task id="LOCAL-00005" summary="FIX Remove itemmanager settings comparison">
       <created>1645011730052</created>
@@ -647,6 +647,26 @@
           <url>file://$PROJECT_DIR$/CRM/Itemmanager/Form/RenewItemperiods.php</url>
           <line>399</line>
           <option name="timeStamp" value="52" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="php">
+          <url>file://$PROJECT_DIR$/CRM/Itemmanager/Form/RenewItemperiods.php</url>
+          <line>392</line>
+          <option name="timeStamp" value="56" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="php">
+          <url>file://$PROJECT_DIR$/../Stadt-Land-Beides/JML3/media/civicrm/ext/org.stadtlandbeides.itemmanager/CRM/Itemmanager/Form/RenewItemperiods.php</url>
+          <line>388</line>
+          <option name="timeStamp" value="58" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="php">
+          <url>file://$PROJECT_DIR$/CRM/Itemmanager/Form/RenewItemperiods.php</url>
+          <line>397</line>
+          <option name="timeStamp" value="59" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="php">
+          <url>file://$PROJECT_DIR$/CRM/Itemmanager/Logic/RenewalSingleInstallmentPlan.php</url>
+          <line>162</line>
+          <option name="timeStamp" value="60" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

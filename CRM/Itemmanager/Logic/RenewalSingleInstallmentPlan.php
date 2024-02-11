@@ -153,6 +153,17 @@ class CRM_Itemmanager_Logic_RenewalSingleInstallmentPlan extends CRM_Itemmanager
 
   }
 
+    /**
+     * @inheritdoc
+     */
+    public function clone($contributionParams) {
+
+        $this->setTotalAndTaxAmount();
+        foreach ($this->listofPlannedDates as $date) {
+            $this->recordPaymentPlanFirstContribution($date);
+        }
+    }
+
   /**
    * Sets new recurring contribution from current recurring contribution.
    */
