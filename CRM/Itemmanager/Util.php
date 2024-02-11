@@ -812,8 +812,10 @@ class CRM_Itemmanager_Util
      * @param $index
      * @param $periods
      * @param $start_on
+     * @param bool $help
+     * @param bool $new missing fieldvalues from the successor
      */
-    private static function addChoice(&$choices,$fielvaluedid,$index,$periods,$start_on,$lastDate,$help=false)
+    private static function addChoice(&$choices,$fielvaluedid,$index,$periods,$start_on,$lastDate,$help=false, $new = false)
     {
         if($fielvaluedid == 0)
         {
@@ -966,6 +968,107 @@ class CRM_Itemmanager_Util
         return CRM_Itemmanager_Util::getLastPricefieldSuccessor($successor_item->price_field_value_id);
     }
 
+
+    /**
+     * Returns an array of the successor item settings
+     *
+     * @param int $priceSetId old price set id
+     * @return array
+     * @throws CRM_Core_Exception
+     * @throws \Civi\API\Exception\UnauthorizedException
+     */
+    public static function getSuccessorItemsettingsByPriceId(int $priceSetId):array
+    {
+        $empty = array(array(),array());
+
+        $period_result = \Civi\Api4\ItemmanagerPeriods::get()
+            ->addWhere('price_set_id', '=', $priceSetId)
+            ->setCheckPermissions(FALSE)
+            ->execute();
+
+        $old_selected = $period_result->first();
+
+        if (!isset($old_selected)) {
+            return $empty ;
+        }
+
+        $old_period = new CRM_Itemmanager_BAO_ItemmanagerPeriods();
+        $valid = $old_period->get('id',$old_selected['id']);
+        if(!$valid)
+        {
+            return $empty;
+        }
+
+        //switch to the successor
+        $new_period = new CRM_Itemmanager_BAO_ItemmanagerPeriods();
+        $valid = $new_period->get('id',$old_period->itemmanager_period_successor_id);
+        if(!$valid)
+        {
+            return $empty ;
+        }
+
+        // we need just the relevant items
+        $period_result = \Civi\Api4\ItemmanagerSettings::get()
+            ->addWhere('itemmanager_periods_id', '=', $new_period->id)
+            ->addWhere('ignore', '=',FALSE)
+            ->addWhere('novitiate','=',FALSE)
+            ->setCheckPermissions(FALSE)
+            ->execute();
+        if(!$period_result or $period_result->count() == 0 )
+        {
+            return $empty;
+        }
+
+        return array($new_period, $period_result->getArrayCopy()) ;
+
+    }
+
+    /**
+     *  Returns an array of available Price Fieldvalues for missing or new price field values
+     *
+     * @param $itemmanager_record missing itemmanager item
+     * @param $itemmanager_period related itemmanager period
+     * @param $lastDate
+     * @return array
+     * @throws API_Exception
+     * @throws CRM_Core_Exception
+     * @throws \Civi\API\Exception\UnauthorizedException
+     */
+    public static function getMissingChoicesOfPricefieldsByFieldID(array $itemmanager_record,
+                                               CRM_Itemmanager_BAO_ItemmanagerPeriods $itemmanager_period,
+                                                        $lastDate) : array
+    {
+        $choices = array(
+            'itemmanager_selection' => array(),
+            'price_set_selection'=> array(),
+            'field_value_selection' => array(),
+            'item_selection' => array(),
+            'period_selection' => array(),
+            'period_data' => array(),
+            'help_pre' => array(),
+        );
+
+        $choices['itemmanager_selection'][0] = $itemmanager_record['id'];
+        self::addChoice(
+            $choices,
+            $itemmanager_record['price_field_value_id'],
+            0,
+            $itemmanager_period->periods,
+            $itemmanager_period->period_start_on,
+            $lastDate,
+            true,
+            true
+        );
+
+        $choices['itemmanager_selection'][1] = null;
+        self::addEmptyChoice($choices,1);
+        return $choices;
+
+
+
+
+    }
+
     /**
      *  Returns an array of available Price Fieldvalues and calculates the next period
      *
@@ -1007,6 +1110,8 @@ class CRM_Itemmanager_Util
             self::addEmptyChoice($choices,0,'Missing Itemmanager Period');
             return $choices;
         }
+
+
 
         //if we are the last given data record
         if($old_item->itemmanager_successor_id == 0)

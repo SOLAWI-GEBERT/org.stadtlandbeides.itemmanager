@@ -70,6 +70,14 @@ class CRM_Itemmanager_DAO_ItemmanagerSettings extends CRM_Core_DAO {
    */
   public $novitiate;
 
+
+    /**
+     * This item is for extend the contribution
+     *
+     * @var bool
+     */
+    public $extend;
+
   /**
    * The parent period should not used
    *

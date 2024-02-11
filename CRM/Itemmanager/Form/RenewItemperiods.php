@@ -79,6 +79,7 @@ class CRM_Itemmanager_Form_RenewItemperiods extends CRM_Core_Form {
 
 
             $linelist = array();
+            $reflist = array();
             foreach ($linerecords As $lineitem)
             {
                 //get the itemmanager records
@@ -90,6 +91,12 @@ class CRM_Itemmanager_Form_RenewItemperiods extends CRM_Core_Form {
                 $valid=$item_settings->get('price_field_value_id',
                     CRM_Utils_Array::value('price_field_value_id', $lineitem['linedata']));
                 if($valid and $item_settings->ignore) continue;
+
+                // remember existing successor item manager id's
+                if(count($choices['itemmanager_selection']) > 0)
+                {
+                    $reflist[$choices['itemmanager_selection'][0]] = TRUE;
+                }
 
                 $linecollection = array(
                     'name' =>  '(' .CRM_Utils_Array::value('id', $lineitem['setdata']) .') '.CRM_Utils_Array::value('label', $lineitem['linedata']).' '.
@@ -124,6 +131,68 @@ class CRM_Itemmanager_Form_RenewItemperiods extends CRM_Core_Form {
                     'help_pre' => $choices['help_pre'][0],
                 );
                 $linelist[CRM_Utils_Array::value('price_field_value_id', $lineitem['linedata'])] = $linecollection;
+            }
+
+            // add missing line items
+            if(count($linelist) != 0)
+            {
+                $old_price_set_id = current($linelist)['price_set_id'];
+                $successor_array = CRM_Itemmanager_Util::getSuccessorItemsettingsByPriceId($old_price_set_id);
+                $successor_period =  $successor_array[0];
+                $sucessor_items = $successor_array[1];
+
+                foreach ($sucessor_items as $item_setting)
+                {
+                    if(!array_key_exists($item_setting['id'], $reflist))
+                    {
+                        //get the itemmanager records
+                        $choices = CRM_Itemmanager_Util::getMissingChoicesOfPricefieldsByFieldID($item_setting,
+                            $successor_period,
+                                $last_date );
+
+                        $pricefieldvalue = civicrm_api3('PriceFieldValue', 'getsingle',
+                            array('id' => (int)$item_setting['price_field_value_id']));
+                        $pricefield = civicrm_api3('PriceField', 'getsingle', array('id' => (int)$pricefieldvalue['price_field_id']));
+                        $priceset = civicrm_api3('PriceSet', 'getsingle', array('id' => (int)$successor_period->price_set_id));
+
+                        $linecollection = array(
+                            'name' =>  '(' .CRM_Utils_Array::value('id', $priceset) .') '.CRM_Utils_Array::value('label', $pricefieldvalue).' '.
+                                CRM_Utils_Array::value('title',$priceset),
+                            'price_field_value_id' => CRM_Utils_Array::value('id', $pricefieldvalue),
+                            'price_field_id' => CRM_Utils_Array::value('id', $pricefield),
+                            'price_set_id' => CRM_Utils_Array::value('id', $priceset),
+                            'last_qty' => 0,
+                            'last_price_per_interval' => CRM_Utils_Money::format(0, NULL, NULL, TRUE),
+                            'element_item_name' => 'member_'.$membership['memberdata']['id'].'_'.
+                                'item_'.CRM_Utils_Array::value('id', $pricefield),
+                            'element_hidden_name' => 'member_'.$membership['memberdata']['id'].'_'.
+                                'item_'.CRM_Utils_Array::value('id', $pricefield).'_hidden',
+                            'element_quantity_name' => 'member_'.$membership['memberdata']['id'].'_'.
+                                'item_'.CRM_Utils_Array::value('id', $pricefield).'_'.
+                                'quantity_'.CRM_Utils_Array::value('price_field_value_id', $lineitem['linedata']),
+                            'element_period_name' => 'member_'.$membership['memberdata']['id'].'_'.
+                                'item_'.CRM_Utils_Array::value('id', $pricefield).'_'.
+                                'period_'.CRM_Utils_Array::value('id', $pricefieldvalue),
+                            'choices' => $choices,
+                            'new_active_on' => $choices['period_data'][0][max(
+                                array_keys($choices['period_data'][0]))]['active_on'],
+                            'new_expire_on' => $choices['period_data'][0][max(
+                                array_keys($choices['period_data'][0]))]['expire_on'],
+                            'new_interval_price' => $choices['period_data'][0][
+                            max(array_keys($choices['period_data'][0]))]['interval_price'],
+                            'new_period_start_on' => $choices['period_data'][0][max(
+                                array_keys($choices['period_data']))]['period_start_on'],
+                            'new_period_end_on' => $choices['period_data'][0][max(
+                                array_keys($choices['period_data'][0]))]['period_end_on'],
+                            'help_pre' => $choices['help_pre'][0],
+                        );
+                        $linelist[CRM_Utils_Array::value('id', $pricefieldvalue)] = $linecollection;
+
+                    }
+
+                }
+
+
             }
 
             $form_collection = array(

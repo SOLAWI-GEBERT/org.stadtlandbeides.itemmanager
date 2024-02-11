@@ -63,6 +63,18 @@ class CRM_Itemmanager_DAO_ItemmanagerPeriods extends CRM_Core_DAO {
    */
   public $period_type;
 
+    /**
+     * Success period
+     * @var int
+     */
+  public $itemmanager_period_successor_id;
+
+    /**
+     * Hide the entry in the Settings form
+     * @var hide
+     */
+  public bool $hide;
+
   /**
    * Class constructor.
    */
