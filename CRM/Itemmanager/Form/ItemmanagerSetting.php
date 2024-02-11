@@ -101,12 +101,9 @@ class CRM_Itemmanager_Form_ItemmanagerSetting extends CRM_Core_Form {
             }
 
             $this->addElement(
-                'checkbox',
+                'advcheckbox',
                 $period['element_period_hide'],
-                ts('Hide'),
-                Null,
-                False,
-                $hideparam
+                ts('Hide')
             )->setChecked($period['hide'] == 1);
 
             $this->add(
@@ -128,12 +125,9 @@ class CRM_Itemmanager_Form_ItemmanagerSetting extends CRM_Core_Form {
                 }
 
                  $this->addElement(
-                    'checkbox',
+                    'advcheckbox',
                     $field['element_period_field_ignore'],
-                    ts('Ignore'),
-                    Null,
-                    False,
-                     $ignoreparam
+                    ts('Ignore')
                 )->setChecked($field['ignore'] == 1);;
 
 
@@ -145,12 +139,9 @@ class CRM_Itemmanager_Form_ItemmanagerSetting extends CRM_Core_Form {
                 }
 
                 $this->addElement(
-                    'checkbox',
+                    'advcheckbox',
                     $field['element_period_field_extend'],
-                    ts('Extend'),
-                    Null,
-                    False,
-                    $extendparam
+                    ts('Extend')
                 )->setChecked($field['extend'] == 1);
 
 
@@ -162,12 +153,9 @@ class CRM_Itemmanager_Form_ItemmanagerSetting extends CRM_Core_Form {
 
 
                 $this->addElement(
-                    'checkbox',
+                    'advcheckbox',
                     $field['element_period_field_novitiate'],
-                    ts('Novitiate'),
-                    Null,
-                    False,
-                    $novitiate
+                    ts('Novitiate')
                 )->setChecked($field['novitiate'] == 1);
 
                 $enable_period_exception = array('value' => $field['enable_period_exception']);
@@ -178,12 +166,9 @@ class CRM_Itemmanager_Form_ItemmanagerSetting extends CRM_Core_Form {
 
 
                 $this->addElement(
-                    'checkbox',
+                    'advcheckbox',
                     $field['element_enable_period_exception'],
-                    ts('Enable Period Exception Case'),
-                    Null,
-                    False,
-                    $enable_period_exception
+                    ts('Enable Period Exception Case')
                 )->setChecked($field['enable_period_exception'] == 1);
 
                 $exception_periodsattributes = array(
