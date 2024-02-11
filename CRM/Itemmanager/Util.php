@@ -809,14 +809,33 @@ class CRM_Itemmanager_Util
      *
      * @param $choices
      * @param $fieldid
+     * @param $periodtype type of the range
      * @param $index
      * @param $periods
      * @param $start_on
      * @param bool $help
      * @param bool $new missing fieldvalues from the successor
      */
-    private static function addChoice(&$choices,$fielvaluedid,$index,$periods,$start_on,$lastDate,$help=false, $new = false)
+    private static function addChoice(&$choices,$fielvaluedid,$periodidx,
+                                      $index,$periods,$start_on,$lastDate,
+                                        $help=false, $new = false)
     {
+
+        $typemap = array();
+        $typemap[0] = 'D';
+        $typemap[1] = 'D';
+        $typemap[2] = 'M';
+        $typemap[3] = 'Y';
+        $period_selected = $typemap[$periodidx];
+        $correctionmap = array();
+        $correctionmap[0] = 0;
+        $correctionmap[1] = 7;
+        $correctionmap[2] = 0;
+        $correctionmap[3] = 0;
+        $correction_selected = $correctionmap[$periodidx];
+
+
+
         if($fielvaluedid == 0)
         {
             self::addEmptyChoice($choices, $index, 'Price Field Value 0 ist not allowed');
@@ -883,8 +902,9 @@ class CRM_Itemmanager_Util
 
         for ($i = $periods; $i > 0; $i--) {
 
+            $duration = $i + $correction_selected;
             $end_date = new DateTime($year.'-'.$month.'-'.$new_day);
-            $end_date->add(new DateInterval('P'.$i.'M'));
+            $end_date->add(new DateInterval('P'.$duration.$period_selected));
             $end_date->sub(new DateInterval('P1D'));
             $end_formated = CRM_Utils_Date::customFormat($end_date->format('Y-m-d'),
                 Civi::settings()->get('dateformatshortdate'));
@@ -1053,6 +1073,7 @@ class CRM_Itemmanager_Util
         self::addChoice(
             $choices,
             $itemmanager_record['price_field_value_id'],
+            $itemmanager_period->period_type,
             0,
             $itemmanager_period->periods,
             $itemmanager_period->period_start_on,
@@ -1121,6 +1142,7 @@ class CRM_Itemmanager_Util
             self::addChoice(
                 $choices,
                 $old_item->price_field_value_id,
+                $old_period->period_type,
                 0,
                 $old_period->periods,
                 $old_period->period_start_on,
@@ -1155,6 +1177,7 @@ class CRM_Itemmanager_Util
         self::addChoice(
             $choices,
             $successor_item->price_field_value_id,
+            $successor_period->period_type,
             0,
             $successor_period->periods,
             $successor_period->period_start_on,
@@ -1166,6 +1189,7 @@ class CRM_Itemmanager_Util
         self::addChoice(
             $choices,
             $old_item->price_field_value_id,
+            $old_period-> period_type,
             1,
             $old_period->periods,
             $old_period->period_start_on,
