@@ -43,9 +43,9 @@
             </tr>
             </thead>
             <tbody>
-
+            {if not $lineitem.new_field}
               <tr>
-                <td><div>{ts domain="org.stadtlandbeides.itemmanager"}Old{/ts}</div></td>
+                <td><div>{ts}Old{/ts}</div></td>
                 <td width="40%">{$lineitem.name}</td>
                 <td><div>{$membership.start_date}</div></td>
                 <td><div>{$membership.last_date}</div></td>
@@ -55,8 +55,16 @@
                 <td>{$lineitem.last_price_per_interval}</td>
 
               </tr>
+            {/if}
               <!-- Here we want the input from the user regarding a item -->
-              <tr>
+              <tr
+                      {if $lineitem.new_field and not $lineitem.extend}
+                style="background-color:lightgrey"
+                      {/if}
+                      {if $lineitem.new_field and $lineitem.extend}
+                        style="background-color:lightpink"
+                      {/if}
+              >
                 <td><div>{ts}New{/ts}</div></td>
                 <td><span class="content">{$form.$element_item_name.html}</span></td>
                 <td><span id="{$element_item_name}_start_on">{$lineitem.new_period_start_on}</span></td>

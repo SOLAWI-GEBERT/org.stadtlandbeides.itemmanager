@@ -111,6 +111,8 @@ class CRM_Itemmanager_Form_RenewItemperiods extends CRM_Core_Form {
                         'item_'.CRM_Utils_Array::value('id', $lineitem['fielddata']),
                     'element_hidden_name' => 'member_'.$membership['memberdata']['id'].'_'.
                         'item_'.CRM_Utils_Array::value('id', $lineitem['fielddata']).'_hidden',
+                    'element_new_hidden_name' => 'member_'.$membership['memberdata']['id'].'_'.
+                        'item_'.CRM_Utils_Array::value('id', $lineitem['fielddata']).'_new_hidden',
                     'element_quantity_name' => 'member_'.$membership['memberdata']['id'].'_'.
                         'item_'.CRM_Utils_Array::value('id', $lineitem['fielddata']).'_'.
                         'quantity_'.CRM_Utils_Array::value('price_field_value_id', $lineitem['linedata']),
@@ -129,6 +131,8 @@ class CRM_Itemmanager_Form_RenewItemperiods extends CRM_Core_Form {
                     'new_period_end_on' => $choices['period_data'][0][max(
                         array_keys($choices['period_data'][0]))]['period_end_on'],
                     'help_pre' => $choices['help_pre'][0],
+                    'new_field' => FALSE,
+                    'extend' => FALSE,
                 );
                 $linelist[CRM_Utils_Array::value('price_field_value_id', $lineitem['linedata'])] = $linecollection;
             }
@@ -153,7 +157,12 @@ class CRM_Itemmanager_Form_RenewItemperiods extends CRM_Core_Form {
                         $pricefieldvalue = civicrm_api3('PriceFieldValue', 'getsingle',
                             array('id' => (int)$item_setting['price_field_value_id']));
                         $pricefield = civicrm_api3('PriceField', 'getsingle', array('id' => (int)$pricefieldvalue['price_field_id']));
-                        $priceset = civicrm_api3('PriceSet', 'getsingle', array('id' => (int)$successor_period->price_set_id));
+                        $priceset = civicrm_api3('PriceSet', 'getsingle', array('id' => (int)$pricefield['price_set_id']));
+
+                        // In case of an extension we want entries
+                        $quantity = 0;
+                        if($item_setting['extend'] == TRUE)
+                            $quantity = 1;
 
                         $linecollection = array(
                             'name' =>  '(' .CRM_Utils_Array::value('id', $priceset) .') '.CRM_Utils_Array::value('label', $pricefieldvalue).' '.
@@ -161,15 +170,17 @@ class CRM_Itemmanager_Form_RenewItemperiods extends CRM_Core_Form {
                             'price_field_value_id' => CRM_Utils_Array::value('id', $pricefieldvalue),
                             'price_field_id' => CRM_Utils_Array::value('id', $pricefield),
                             'price_set_id' => CRM_Utils_Array::value('id', $priceset),
-                            'last_qty' => 0,
+                            'last_qty' => $quantity,
                             'last_price_per_interval' => CRM_Utils_Money::format(0, NULL, NULL, TRUE),
                             'element_item_name' => 'member_'.$membership['memberdata']['id'].'_'.
                                 'item_'.CRM_Utils_Array::value('id', $pricefield),
                             'element_hidden_name' => 'member_'.$membership['memberdata']['id'].'_'.
                                 'item_'.CRM_Utils_Array::value('id', $pricefield).'_hidden',
+                            'element_new_hidden_name' => 'member_'.$membership['memberdata']['id'].'_'.
+                                'item_'.CRM_Utils_Array::value('id', $pricefield).'_new_hidden',
                             'element_quantity_name' => 'member_'.$membership['memberdata']['id'].'_'.
                                 'item_'.CRM_Utils_Array::value('id', $pricefield).'_'.
-                                'quantity_'.CRM_Utils_Array::value('price_field_value_id', $lineitem['linedata']),
+                                'quantity_'.CRM_Utils_Array::value('id', $pricefield),
                             'element_period_name' => 'member_'.$membership['memberdata']['id'].'_'.
                                 'item_'.CRM_Utils_Array::value('id', $pricefield).'_'.
                                 'period_'.CRM_Utils_Array::value('id', $pricefieldvalue),
@@ -185,6 +196,8 @@ class CRM_Itemmanager_Form_RenewItemperiods extends CRM_Core_Form {
                             'new_period_end_on' => $choices['period_data'][0][max(
                                 array_keys($choices['period_data'][0]))]['period_end_on'],
                             'help_pre' => $choices['help_pre'][0],
+                            'new_field' => TRUE,
+                            'extend' => $item_setting['extend'] == TRUE,
                         );
                         $linelist[CRM_Utils_Array::value('id', $pricefieldvalue)] = $linecollection;
 
@@ -258,6 +271,13 @@ class CRM_Itemmanager_Form_RenewItemperiods extends CRM_Core_Form {
                 $line_item['price_set_id'],
                 array('id'=> $line_item['element_hidden_name'],)
             );
+
+              $this->addElement(
+                  'hidden',
+                  $line_item['element_new_hidden_name'],
+                  (int)($line_item['new_field'] == TRUE),
+                  array('id'=> $line_item['element_new_hidden_name'],)
+              );
 
 
               //Selection of the period
@@ -448,8 +468,15 @@ class CRM_Itemmanager_Form_RenewItemperiods extends CRM_Core_Form {
                     {
                         //check if all pricesets are equal
                         if($items[$split[1]] != $values[$key])
-                            $errors[$split[0].'_'.$split[1].'_'.$split[2].'_'.$split[3]] =
-                                '</br>'.ts('The price field has been chosen from a different price set!');
+                        {
+                            $new = $values[$split[0].'_'.$split[1].'_'.$split[2].'_'.$split[3].'_new_hidden'] == 1;
+
+                            if(!$new)
+                                $errors[$split[0].'_'.$split[1].'_'.$split[2].'_'.$split[3]] =
+                                    '</br>'.ts('The price field has been chosen from a different price set!');
+
+                        }
+
                     }
 
 

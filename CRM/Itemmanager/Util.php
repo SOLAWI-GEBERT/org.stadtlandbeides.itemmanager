@@ -869,7 +869,7 @@ class CRM_Itemmanager_Util
         $new_day = $new_start_timestamp->format('d');
         $old_end_timestamp = date_create($lastDate);
         $old_month = (int)$old_end_timestamp -> format('n');
-        if ($new_month > $old_month)
+        if ($new_month > $old_month or $new)
             $year = (int)$old_end_timestamp -> format('Y') ;
         else
             $year = (int)$old_end_timestamp -> format('Y') + 1;
@@ -885,6 +885,7 @@ class CRM_Itemmanager_Util
 
             $end_date = new DateTime($year.'-'.$month.'-'.$new_day);
             $end_date->add(new DateInterval('P'.$i.'M'));
+            $end_date->sub(new DateInterval('P1D'));
             $end_formated = CRM_Utils_Date::customFormat($end_date->format('Y-m-d'),
                 Civi::settings()->get('dateformatshortdate'));
             $choices['period_selection'][$index][$i] = $i;
