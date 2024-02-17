@@ -446,7 +446,14 @@ class CRM_Itemmanager_Form_ItemmanagerSetting extends CRM_Core_Form {
               {
                   $itemmanager_id = CRM_Utils_Array::value('id', $itemmanager_price_field);
 
+                  //check still if exists
+                  $fieldcount = civicrm_api3('PriceFieldValue', 'getcount',
+                      array('id' => (int)$itemmanager_price_field['price_field_value_id']));
 
+                  if($fieldcount == 0)
+                  {
+                      continue;
+                  }
 
                   $pricefieldvalue = civicrm_api3('PriceFieldValue', 'getsingle',
                       array('id' => (int)$itemmanager_price_field['price_field_value_id']));
@@ -773,10 +780,13 @@ class CRM_Itemmanager_Form_ItemmanagerSetting extends CRM_Core_Form {
             $this->_errormessages[] = $e->getMessage();
             $this->assign('errormessages',$this->_errormessages);
         }
-        parent::postProcess();
+
 
         CRM_Core_Session::setStatus(ts("Saved"), ts('Success', array('domain' => 'org.stadtlandbeides.itemmanager')),
             'success');
+
+        parent::postProcess();
+        sleep(10);
 
     }
 

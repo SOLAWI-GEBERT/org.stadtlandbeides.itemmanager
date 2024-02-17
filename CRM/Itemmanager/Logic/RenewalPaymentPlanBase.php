@@ -158,6 +158,13 @@ abstract class CRM_Itemmanager_Logic_RenewalPaymentPlanBase {
     protected $periods;
 
     /**
+     * Type of the periods.
+     *
+     * @var int
+     */
+    protected $periodsIdx;
+
+    /**
      * Start of the new period.
      *
      * @var DateTime
@@ -172,7 +179,7 @@ abstract class CRM_Itemmanager_Logic_RenewalPaymentPlanBase {
    *
    * @param $lastMembershipID related membership for the renewal
    */
-  public function __construct($lastMembershipID,$lastContributionID,$periods,$newisodate) {
+  public function __construct($lastMembershipID,$lastContributionID,$periods,$newisodate, $periodsIdx=2) {
 
 
       $this->lastMembershipID = $lastMembershipID;
@@ -182,8 +189,8 @@ abstract class CRM_Itemmanager_Logic_RenewalPaymentPlanBase {
 
       $this->newPeriodStartOn = new DateTime($newisodate);
       $this->newPeriodStartOn->setTime(12,0);
-
       $this->periods = $periods;
+      $this->periodsIdx = $periodsIdx;
 
       //    $this->setContributionPendingStatusValue();
 //    $this->setContributionStatusesNameMap();
@@ -199,6 +206,10 @@ abstract class CRM_Itemmanager_Logic_RenewalPaymentPlanBase {
    */
   private function setCurrentRecurringContribution($recurringContributionID) {
     $this->currentRecurContributionID = (int)$recurringContributionID;
+    if($this->currentRecurContributionID == null)
+    {
+        return;
+    }
     $this->currentRecurringContribution = civicrm_api3('ContributionRecur', 'getsingle', [
       'id' =>(int) $this->currentRecurContributionID,
     ]);
@@ -657,17 +668,17 @@ abstract class CRM_Itemmanager_Logic_RenewalPaymentPlanBase {
 //
 //      $existingMembershipID = $this->getExistingMembershipForLineItem($lineItem, $priceFieldValue);
 //
-      if ($existingMembershipID) {
-        $this->extendExistingMembership($existingMembershipID, $this->membershipsStartDate);
-      } else {
-        $existingMembershipID = $this->createMembership($lineItem, $priceFieldValue);
-      }
-
-      civicrm_api3('LineItem', 'create', [
-        //'id' => $lineItem['id'],
-        'entity_table' => 'civicrm_membership',
-        'entity_id' => $this->lastMembershipID,
-      ]);
+//      if ($existingMembershipID) {
+//        $this->extendExistingMembership($existingMembershipID, $this->membershipsStartDate);
+//      } else {
+//        $existingMembershipID = $this->createMembership($lineItem, $priceFieldValue);
+//      }
+//
+//      civicrm_api3('LineItem', 'create', [
+//        //'id' => $lineItem['id'],
+//        'entity_table' => 'civicrm_membership',
+//        'entity_id' => $this->lastMembershipID,
+//      ]);
    // }
   }
 
@@ -733,9 +744,24 @@ abstract class CRM_Itemmanager_Logic_RenewalPaymentPlanBase {
    */
   protected function extendExistingMembership() {
 
-    $new_end_date = clone $this->newPeriodStartOn;
+      $typemap = array();
+      $typemap[0] = 'D';
+      $typemap[1] = 'D';
+      $typemap[2] = 'M';
+      $typemap[3] = 'Y';
+      $period_selected = $typemap[$this->periodsIdx];
+      $correctionmap = array();
+      $correctionmap[0] = 0;
+      $correctionmap[1] = 7;
+      $correctionmap[2] = 0;
+      $correctionmap[3] = 0;
+      $correction_selected = $correctionmap[$this->periodsIdx];
+
+
+      $new_end_date = clone $this->newPeriodStartOn;
     //overcome last period
-    $new_end_date->add(new DateInterval('P'.($this->periods).'M'));
+    $duration = $this->periods + $correction_selected;
+    $new_end_date->add(new DateInterval('P'.($duration).$period_selected));
     //go to the last day - 1
     $new_end_date->sub(new DateInterval('P1D'));
 

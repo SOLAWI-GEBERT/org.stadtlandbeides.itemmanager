@@ -880,6 +880,7 @@ class CRM_Itemmanager_Util
 
         $choices['field_value_selection'][$index] = (int)$fielvaluedid;
         $choices['price_set_selection'][$index] = (int)$pricefield['price_set_id'];
+        $choices['periodtype'][$index] = (int)$periodidx;
 
         //decide the correct start date
         $new_start_timestamp = date_create($start_on);
@@ -888,7 +889,7 @@ class CRM_Itemmanager_Util
         $new_day = $new_start_timestamp->format('d');
         $old_end_timestamp = date_create($lastDate);
         $old_month = (int)$old_end_timestamp -> format('n');
-        if ($new_month > $old_month or $new)
+        if ($new_month > $old_month)
             $year = (int)$old_end_timestamp -> format('Y') ;
         else
             $year = (int)$old_end_timestamp -> format('Y') + 1;

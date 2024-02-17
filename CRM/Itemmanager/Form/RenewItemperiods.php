@@ -127,7 +127,7 @@ class CRM_Itemmanager_Form_RenewItemperiods extends CRM_Core_Form {
                     'new_interval_price' => $choices['period_data'][0][
                         max(array_keys($choices['period_data'][0]))]['interval_price'],
                     'new_period_start_on' => $choices['period_data'][0][max(
-                        array_keys($choices['period_data']))]['period_start_on'],
+                        array_keys($choices['period_data'][0]))]['period_start_on'],
                     'new_period_end_on' => $choices['period_data'][0][max(
                         array_keys($choices['period_data'][0]))]['period_end_on'],
                     'help_pre' => $choices['help_pre'][0],
@@ -219,6 +219,7 @@ class CRM_Itemmanager_Form_RenewItemperiods extends CRM_Core_Form {
                 'last_date' => CRM_Utils_Date::customFormat(date_create($last_date)->format('Y-m-d'),
                     Civi::settings()->get('dateformatshortdate')),
                 'line_items' => $linelist,
+                'show' => count($linelist) > 0,
 
 
             );
@@ -344,6 +345,7 @@ class CRM_Itemmanager_Form_RenewItemperiods extends CRM_Core_Form {
             $quantity = $line_item['last_qty'];
             $periods = $choices['period_selection'][0][max(
                 array_keys($choices['period_selection'][0]))];
+            $periodsIdx = $choices['periodtype'][0];
             $item_id = 0;
             $fieldValueId = $choices['field_value_selection'][0];
             $startdate = $choices['period_data'][0][max(
@@ -362,6 +364,7 @@ class CRM_Itemmanager_Form_RenewItemperiods extends CRM_Core_Form {
                 $startdate = $choices['period_data'][$item_id][max(
                     array_keys($choices['period_data']))]['period_iso_start_on'];
                 $manager_id = $choices['itemmanager_selection'][$item_id];
+
 
             }
 
@@ -393,7 +396,7 @@ class CRM_Itemmanager_Form_RenewItemperiods extends CRM_Core_Form {
                 if ($periods == 1) {
                     //Single Installments
                     $singleInstallmentRenewal = new CRM_Itemmanager_Logic_RenewalSingleInstallmentPlan($membership['member_id'],
-                        $membership['lastcontribution_id'], $periods, $startdate);
+                        $membership['lastcontribution_id'], $periods, $startdate, $periodsIdx);
 
                     foreach ($item_prototypes as $prototype)
                     {
@@ -407,7 +410,7 @@ class CRM_Itemmanager_Form_RenewItemperiods extends CRM_Core_Form {
 
                     //Multiple Installments
                     $multipleInstallmentRenewal = new CRM_Itemmanager_Logic_RenewalMultipleInstallmentPlan($membership['member_id'],
-                        $membership['lastcontribution_id'],$periods, $startdate);
+                        $membership['lastcontribution_id'],$periods, $startdate, $periodsIdx);
 
                     foreach ($item_prototypes as $prototype) {
                         $multipleInstallmentRenewal->addLineItemPrototype($prototype['manager_id'], $prototype['quantity']);

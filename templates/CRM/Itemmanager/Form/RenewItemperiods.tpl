@@ -7,6 +7,7 @@
 
   {if $memberships}
   {foreach from=$memberships item=membership}
+    {if $membership.show}
     <div class="crm-accordion-wrapper open">
       <div class="crm-accordion-header">
         {ts}Membership{/ts}
@@ -89,8 +90,10 @@
 
       </div>
 </div>
+    {/if}
 {/foreach}
 {/if}
+
 
 <script type="application/javascript">
   {literal}
