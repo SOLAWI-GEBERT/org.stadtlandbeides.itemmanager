@@ -1,5 +1,21 @@
-#: ./CRM/Itemmanager/Form/ItemmanagerSetting.php ./itemmanager.php
+#: ./CRM/Itemmanager/DAO/ItemmanagerPeriods.php
+msgid "Itemmanager Periods"
+msgstr ""
+
+#: ./CRM/Itemmanager/DAO/ItemmanagerSettings.php ./CRM/Itemmanager/Form/ItemmanagerSetting.php ./itemmanager.php
 msgid "Itemmanager Settings"
+msgstr ""
+
+#: ./CRM/Itemmanager/Form/ItemmanagerOptions.php ./CRM/Itemmanager/Form/ItemmanagerSetting.php ./CRM/Itemmanager/Form/RenewItemperiods.php
+msgid "Submit"
+msgstr ""
+
+#: ./CRM/Itemmanager/Form/ItemmanagerOptions.php ./itemmanager.php
+msgid "Itemmanager Options"
+msgstr ""
+
+#: ./CRM/Itemmanager/Form/ItemmanagerOptions.php
+msgid "Settings saved."
 msgstr ""
 
 #: ./CRM/Itemmanager/Form/ItemmanagerSetting.php ./CRM/Itemmanager/Form/RenewItemperiods.php
@@ -10,27 +26,43 @@ msgstr ""
 msgid "Start On"
 msgstr ""
 
-#: ./CRM/Itemmanager/Form/ItemmanagerSetting.php ./templates/CRM/Itemmanager/Form/ItemmanagerSetting.tpl
-msgid "Ignore"
+#: ./CRM/Itemmanager/Form/ItemmanagerSetting.php
+msgid "Duration Unit"
 msgstr ""
 
-#: ./CRM/Itemmanager/Form/ItemmanagerSetting.php ./templates/CRM/Itemmanager/Form/ItemmanagerSetting.tpl
-msgid "Novitiate"
+#: ./CRM/Itemmanager/Form/ItemmanagerSetting.php
+msgid "Hide"
 msgstr ""
 
 #: ./CRM/Itemmanager/Form/ItemmanagerSetting.php ./templates/CRM/Itemmanager/Form/ItemmanagerSetting.tpl
 msgid "Successor"
 msgstr ""
 
-#: ./CRM/Itemmanager/Form/ItemmanagerSetting.php ./CRM/Itemmanager/Form/LinkSepaPayments.php ./CRM/Itemmanager/Form/RenewItemperiods.php
-msgid "Submit"
+#: ./CRM/Itemmanager/Form/ItemmanagerSetting.php ./templates/CRM/Itemmanager/Form/ItemmanagerSetting.tpl
+msgid "Ignore"
+msgstr ""
+
+#: ./CRM/Itemmanager/Form/ItemmanagerSetting.php ./templates/CRM/Itemmanager/Form/ItemmanagerSetting.tpl
+msgid "Extend"
+msgstr ""
+
+#: ./CRM/Itemmanager/Form/ItemmanagerSetting.php ./templates/CRM/Itemmanager/Form/ItemmanagerSetting.tpl
+msgid "Novitiate"
+msgstr ""
+
+#: ./CRM/Itemmanager/Form/ItemmanagerSetting.php
+msgid "Enable Period Exception Case"
+msgstr ""
+
+#: ./CRM/Itemmanager/Form/ItemmanagerSetting.php ./templates/CRM/Itemmanager/Form/ItemmanagerSetting.tpl
+msgid "Exception Periods"
 msgstr ""
 
 #: ./CRM/Itemmanager/Form/ItemmanagerSetting.php
 msgid "Synchronize"
 msgstr ""
 
-#: ./CRM/Itemmanager/Form/ItemmanagerSetting.php ./CRM/Itemmanager/Form/LinkSepaPayments.php ./CRM/Itemmanager/Form/RepairMissingContribution.php
+#: ./CRM/Itemmanager/Form/ItemmanagerSetting.php ./CRM/Itemmanager/Form/RepairMissingContribution.php
 msgid "Cancel"
 msgstr ""
 
@@ -54,56 +86,32 @@ msgstr ""
 msgid "Saved"
 msgstr ""
 
-#: ./CRM/Itemmanager/Form/ItemmanagerSetting.php ./CRM/Itemmanager/Form/LinkSepaPayments.php ./CRM/Itemmanager/Form/LinkSepaWrapper.php ./CRM/Itemmanager/Form/RenewItemperiods.php ./CRM/Itemmanager/Form/RepairMissingContribution.php ./CRM/Itemmanager/Page/LinkSepaPaymentsStub.php ./CRM/Itemmanager/Page/UpdateItems.php
+#: ./CRM/Itemmanager/Form/ItemmanagerSetting.php ./CRM/Itemmanager/Form/LinkSepaWrapper.php ./CRM/Itemmanager/Form/RenewItemperiods.php ./CRM/Itemmanager/Form/RepairMissingContribution.php ./CRM/Itemmanager/Page/LinkSepaPaymentsStub.php ./CRM/Itemmanager/Page/UpdateItems.php
 msgid "Success"
 msgstr ""
 
-#: ./CRM/Itemmanager/Form/LinkSepaPayments.php ./CRM/Itemmanager/Form/LinkSepaWrapper.php ./CRM/Itemmanager/Page/UpdateItems.php
+#: ./CRM/Itemmanager/Form/LinkSepaWrapper.php ./CRM/Itemmanager/Page/UpdateItems.php
 msgid "Couldn't find contact #%s"
 msgstr ""
 
-#: ./CRM/Itemmanager/Form/LinkSepaPayments.php ./CRM/Itemmanager/Form/LinkSepaWrapper.php ./CRM/Itemmanager/Form/RenewItemperiods.php ./CRM/Itemmanager/Form/RepairMissingContribution.php ./CRM/Itemmanager/Page/Dashboard.php ./CRM/Itemmanager/Page/LinkSepaPaymentsStub.php ./CRM/Itemmanager/Page/UpdateItems.php
+#: ./CRM/Itemmanager/Form/LinkSepaWrapper.php ./CRM/Itemmanager/Form/RenewItemperiods.php ./CRM/Itemmanager/Form/RepairMissingContribution.php ./CRM/Itemmanager/Page/Dashboard.php ./CRM/Itemmanager/Page/LinkSepaPaymentsStub.php ./CRM/Itemmanager/Page/UpdateItems.php ./templates/CRM/Itemmanager/Page/UpdateItems.tpl
 msgid "Error"
 msgstr ""
 
-#: ./CRM/Itemmanager/Form/LinkSepaPayments.php ./CRM/Itemmanager/Form/LinkSepaWrapper.php
+#: ./CRM/Itemmanager/Form/LinkSepaWrapper.php
 msgid "Payments relation for"
-msgstr ""
-
-#: ./CRM/Itemmanager/Form/LinkSepaPayments.php ./CRM/Itemmanager/Form/RenewItemperiods.php ./CRM/Itemmanager/Form/RepairMissingContribution.php ./CRM/Itemmanager/Page/Dashboard.php ./CRM/Itemmanager/Page/LinkSepaPaymentsStub.php
-msgid "Retrieve memberships"
-msgstr ""
-
-#: ./CRM/Itemmanager/Form/LinkSepaPayments.php ./CRM/Itemmanager/Page/LinkSepaPaymentsStub.php
-msgid "Retrieve SEPA mandate"
-msgstr ""
-
-#: ./CRM/Itemmanager/Form/LinkSepaPayments.php
-msgid "Relation"
-msgstr ""
-
-#: ./CRM/Itemmanager/Form/LinkSepaPayments.php
-msgid "Crosslink"
-msgstr ""
-
-#: ./CRM/Itemmanager/Form/LinkSepaPayments.php
-msgid "Add SEPA payment relation"
-msgstr ""
-
-#: ./CRM/Itemmanager/Form/LinkSepaPayments.php
-msgid "Delete SEPA payment relation"
-msgstr ""
-
-#: ./CRM/Itemmanager/Form/LinkSepaPayments.php
-msgid "Update status contribution"
-msgstr ""
-
-#: ./CRM/Itemmanager/Form/LinkSepaPayments.php ./CRM/Itemmanager/Form/LinkSepaWrapper.php ./CRM/Itemmanager/Form/RenewItemperiods.php ./CRM/Itemmanager/Form/RepairMissingContribution.php ./CRM/Itemmanager/Page/LinkSepaPaymentsStub.php ./CRM/Itemmanager/Page/UpdateItems.php
-msgid "Info"
 msgstr ""
 
 #: ./CRM/Itemmanager/Form/LinkSepaWrapper.php
 msgid "Complete"
+msgstr ""
+
+#: ./CRM/Itemmanager/Form/LinkSepaWrapper.php ./CRM/Itemmanager/Form/RenewItemperiods.php ./CRM/Itemmanager/Form/RepairMissingContribution.php ./CRM/Itemmanager/Page/LinkSepaPaymentsStub.php ./CRM/Itemmanager/Page/UpdateItems.php
+msgid "Info"
+msgstr ""
+
+#: ./CRM/Itemmanager/Form/RenewItemperiods.php ./CRM/Itemmanager/Form/RepairMissingContribution.php ./CRM/Itemmanager/Page/Dashboard.php ./CRM/Itemmanager/Page/LinkSepaPaymentsStub.php
+msgid "Retrieve memberships"
 msgstr ""
 
 #: ./CRM/Itemmanager/Form/RenewItemperiods.php
@@ -118,7 +126,7 @@ msgstr ""
 msgid "Renew periods for booked items for contact "
 msgstr ""
 
-#: ./CRM/Itemmanager/Form/RenewItemperiods.php ./templates/CRM/Itemmanager/Form/LinkSepaPayments.tpl ./templates/CRM/Itemmanager/Page/Dashboard.tpl ./templates/CRM/Itemmanager/Page/LinkSepaPaymentsStub.tpl ./templates/CRM/Itemmanager/Page/UpdateItems.tpl
+#: ./CRM/Itemmanager/Form/RenewItemperiods.php ./templates/CRM/Itemmanager/Page/Dashboard.tpl ./templates/CRM/Itemmanager/Page/LinkSepaPaymentsStub.tpl ./templates/CRM/Itemmanager/Page/UpdateItems.tpl
 msgid "Item"
 msgstr ""
 
@@ -163,11 +171,19 @@ msgid "Items Dashboard"
 msgstr ""
 
 #: ./CRM/Itemmanager/Page/Dashboard.php
+msgid "Missing contribution relation to membership"
+msgstr ""
+
+#: ./CRM/Itemmanager/Page/Dashboard.php
 msgid "Combine line items"
 msgstr ""
 
 #: ./CRM/Itemmanager/Page/ItemMaintenance.php
 msgid "ItemMaintenance"
+msgstr ""
+
+#: ./CRM/Itemmanager/Page/LinkSepaPaymentsStub.php
+msgid "Retrieve SEPA mandate"
 msgstr ""
 
 #: ./CRM/Itemmanager/Page/UpdateItems.php ./templates/CRM/Itemmanager/Page/Dashboard.tpl ./templates/CRM/Itemmanager/Page/UpdateItems.tpl
@@ -218,8 +234,96 @@ msgstr ""
 msgid "Renew periods"
 msgstr ""
 
-#: ./itemmanager.php
-msgid "Duplicate contribution"
+#: ./js/handlePayment.js
+msgid "Add SEPA payment relation"
+msgstr ""
+
+#: ./js/handlePayment.js
+msgid "SEPA payment relation added"
+msgstr ""
+
+#: ./js/handlePayment.js
+msgid "Delete SEPA payment relation"
+msgstr ""
+
+#: ./js/handlePayment.js
+msgid "SEPA payment relation deleted"
+msgstr ""
+
+#: ./js/handlePayment.js
+msgid "Update Contribution"
+msgstr ""
+
+#: ./js/handlePayment.js ./templates/CRM/Itemmanager/Page/UpdateItems.tpl
+msgid "Date"
+msgstr ""
+
+#: ./js/handlePayment.js
+msgid "Contribution updated"
+msgstr ""
+
+#: ./js/handlePayment.js
+msgid "Try to add/delete the payment failed"
+msgstr ""
+
+#: ./js/handlePayment.js
+msgid "Please select on both sides a cross link relation."
+msgstr ""
+
+#: ./js/handlePayment.js
+msgid "SEPA cross link relation"
+msgstr ""
+
+#: ./js/handlePayment.js
+msgid "Please select a 1:n or n:1 relation."
+msgstr ""
+
+#: ./settings/Itemmanager.setting.php
+msgid "Keep receive date after payment relation"
+msgstr ""
+
+#: ./settings/Itemmanager.setting.php
+msgid "Keep receive date of the contribution after processing the payment"
+msgstr ""
+
+#: ./settings/Itemmanager.setting.php
+msgid "Select Yes to keep the origin receive date untouched after a payment relation"
+msgstr ""
+
+#: ./settings/Itemmanager.setting.php
+msgid "Filter the SEPA relation for open payments only"
+msgstr ""
+
+#: ./settings/Itemmanager.setting.php
+msgid "Filter Open payments only"
+msgstr ""
+
+#: ./settings/Itemmanager.setting.php
+msgid "Select Yes to hide already paid contributions for payments"
+msgstr ""
+
+#: ./settings/Itemmanager.setting.php
+msgid "Filter the SEPA relation for past payments only"
+msgstr ""
+
+#: ./settings/Itemmanager.setting.php
+msgid "Filter Past payments only"
+msgstr ""
+
+#: ./settings/Itemmanager.setting.php
+msgid "Select Yes to hide future contributions for payments"
+msgstr ""
+
+#: ./settings/Itemmanager.setting.php
+msgid "Show again the hidden period settings"
+msgstr ""
+
+#: ./settings/Itemmanager.setting.php
+msgid "Shows the hidden periods in itemmanager settings"
+msgstr ""
+
+#: ./settings/Itemmanager.setting.php
+msgid "Select Yes to to make the hidden periods visible again"
 msgstr ""
 
 #: ./templates/CRM/Itemmanager/Form/ItemmanagerSetting.tpl
@@ -242,32 +346,28 @@ msgstr ""
 msgid "Expire On"
 msgstr ""
 
-#: ./templates/CRM/Itemmanager/Form/LinkSepaPayments.tpl ./templates/CRM/Itemmanager/Form/LinkSepaWrapper.tpl
+#: ./templates/CRM/Itemmanager/Form/ItemmanagerSetting.tpl
+msgid "Exception"
+msgstr ""
+
+#: ./templates/CRM/Itemmanager/Form/LinkSepaWrapper.tpl
 msgid "SEPA Payment Assignments"
-msgstr ""
-
-#: ./templates/CRM/Itemmanager/Form/LinkSepaPayments.tpl
-msgid "\n    Link here the SEPA payments to the payment plan contributions.\n    You can also set the payment contributions manually to paid here.\n  "
-msgstr ""
-
-#: ./templates/CRM/Itemmanager/Form/LinkSepaPayments.tpl ./templates/CRM/Itemmanager/Form/LinkSepaWrapper.tpl
-msgid "Contribution Type"
-msgstr ""
-
-#: ./templates/CRM/Itemmanager/Form/LinkSepaPayments.tpl ./templates/CRM/Itemmanager/Page/LinkSepaPaymentsStub.tpl
-msgid "Contribution"
-msgstr ""
-
-#: ./templates/CRM/Itemmanager/Form/LinkSepaPayments.tpl ./templates/CRM/Itemmanager/Page/LinkSepaPaymentsStub.tpl
-msgid "Payments"
-msgstr ""
-
-#: ./templates/CRM/Itemmanager/Form/LinkSepaPayments.tpl ./templates/CRM/Itemmanager/Page/LinkSepaPaymentsStub.tpl
-msgid "view payments"
 msgstr ""
 
 #: ./templates/CRM/Itemmanager/Form/LinkSepaWrapper.tpl
 msgid "\n        Link here the SEPA payments to the payment plan contributions.\n        You can also set the payment contributions manually to paid here.\n    "
+msgstr ""
+
+#: ./templates/CRM/Itemmanager/Form/LinkSepaWrapper.tpl
+msgid "Filter open payments"
+msgstr ""
+
+#: ./templates/CRM/Itemmanager/Form/LinkSepaWrapper.tpl
+msgid "Filter past contributions"
+msgstr ""
+
+#: ./templates/CRM/Itemmanager/Form/LinkSepaWrapper.tpl
+msgid "Contribution Type"
 msgstr ""
 
 #: ./templates/CRM/Itemmanager/Form/LinkSepaWrapper.tpl
@@ -338,6 +438,18 @@ msgstr ""
 msgid "(In your native language) The current time is %1."
 msgstr ""
 
+#: ./templates/CRM/Itemmanager/Page/LinkSepaPaymentsStub.tpl
+msgid "Contribution"
+msgstr ""
+
+#: ./templates/CRM/Itemmanager/Page/LinkSepaPaymentsStub.tpl
+msgid "Payments"
+msgstr ""
+
+#: ./templates/CRM/Itemmanager/Page/LinkSepaPaymentsStub.tpl
+msgid "view payments"
+msgstr ""
+
 #: ./templates/CRM/Itemmanager/Page/UpdateItems.tpl
 msgid "Sync price items"
 msgstr ""
@@ -352,10 +464,6 @@ msgstr ""
 
 #: ./templates/CRM/Itemmanager/Page/UpdateItems.tpl
 msgid "Found items to be updated"
-msgstr ""
-
-#: ./templates/CRM/Itemmanager/Page/UpdateItems.tpl
-msgid "Date"
 msgstr ""
 
 #: ./templates/CRM/Itemmanager/Page/UpdateItems.tpl

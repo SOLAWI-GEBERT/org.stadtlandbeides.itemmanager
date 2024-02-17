@@ -48,22 +48,22 @@ msgstr ""
 
 #: CRM/Itemmanager/Form/ItemmanagerSetting.php
 msgid "Synchronize"
-msgstr ""
+msgstr "Synchronisieren"
 
 #: CRM/Itemmanager/Form/ItemmanagerSetting.php
 #: CRM/Itemmanager/Form/LinkSepaPayments.php
 #: CRM/Itemmanager/Form/RepairMissingContribution.php
 msgid "Cancel"
-msgstr ""
+msgstr "Abbrechen"
 
 #: CRM/Itemmanager/Form/ItemmanagerSetting.php
 msgid "No Successor"
-msgstr ""
+msgstr "Kein Nachfolger"
 
 #: CRM/Itemmanager/Form/ItemmanagerSetting.php
 #: templates/CRM/Itemmanager/Form/ItemmanagerSetting.tpl
 msgid "Active"
-msgstr ""
+msgstr "Aktiv"
 
 #: CRM/Itemmanager/Form/ItemmanagerSetting.php
 msgid "Synchronized."
@@ -71,11 +71,11 @@ msgstr ""
 
 #: CRM/Itemmanager/Form/ItemmanagerSetting.php
 msgid "Start"
-msgstr ""
+msgstr "Start"
 
 #: CRM/Itemmanager/Form/ItemmanagerSetting.php
 msgid "Saved"
-msgstr ""
+msgstr "Gespeichert"
 
 #: CRM/Itemmanager/Form/ItemmanagerSetting.php
 #: CRM/Itemmanager/Form/LinkSepaPayments.php
@@ -85,13 +85,13 @@ msgstr ""
 #: CRM/Itemmanager/Page/LinkSepaPaymentsStub.php
 #: CRM/Itemmanager/Page/UpdateItems.php
 msgid "Success"
-msgstr ""
+msgstr "Erfolgreich"
 
 #: CRM/Itemmanager/Form/LinkSepaPayments.php
 #: CRM/Itemmanager/Form/LinkSepaWrapper.php
 #: CRM/Itemmanager/Page/UpdateItems.php
 msgid "Couldn't find contact #%s"
-msgstr ""
+msgstr "Konnte den Kontakt #%s nicht finden"
 
 #: CRM/Itemmanager/Form/LinkSepaPayments.php
 #: CRM/Itemmanager/Form/LinkSepaWrapper.php
@@ -101,7 +101,7 @@ msgstr ""
 #: CRM/Itemmanager/Page/LinkSepaPaymentsStub.php
 #: CRM/Itemmanager/Page/UpdateItems.php
 msgid "Error"
-msgstr ""
+msgstr "Fehler"
 
 #: CRM/Itemmanager/Form/LinkSepaPayments.php
 #: CRM/Itemmanager/Form/LinkSepaWrapper.php
@@ -181,7 +181,7 @@ msgstr "Posten"
 #: templates/CRM/Itemmanager/Page/Dashboard.tpl
 #: templates/CRM/Itemmanager/Page/UpdateItems.tpl
 msgid "Quantity"
-msgstr ""
+msgstr "Menge"
 
 #: CRM/Itemmanager/Form/RenewItemperiods.php
 msgid "The price field has been chosen from a different price set!"
@@ -271,11 +271,11 @@ msgstr ""
 
 #: itemmanager.php
 msgid "Renew Items Periods"
-msgstr ""
+msgstr "Solawi Verlängerung"
 
 #: itemmanager.php
 msgid "Renew periods"
-msgstr "Neue Buchungsperiode"
+msgstr "Solawi Verlängerung"
 
 #: itemmanager.php
 msgid "Duplicate contribution"
@@ -296,15 +296,15 @@ msgstr ""
 
 #: templates/CRM/Itemmanager/Form/ItemmanagerSetting.tpl
 msgid "Item Name"
-msgstr ""
+msgstr "Posten Name"
 
 #: templates/CRM/Itemmanager/Form/ItemmanagerSetting.tpl
 msgid "Active On"
-msgstr ""
+msgstr "Aktiv ab"
 
 #: templates/CRM/Itemmanager/Form/ItemmanagerSetting.tpl
 msgid "Expire On"
-msgstr ""
+msgstr "Endet am"
 
 #: templates/CRM/Itemmanager/Form/LinkSepaPayments.tpl
 #: templates/CRM/Itemmanager/Form/LinkSepaWrapper.tpl
@@ -322,17 +322,17 @@ msgstr ""
 #: templates/CRM/Itemmanager/Form/LinkSepaPayments.tpl
 #: templates/CRM/Itemmanager/Form/LinkSepaWrapper.tpl
 msgid "Contribution Type"
-msgstr ""
+msgstr "Zuwendungstyp"
 
 #: templates/CRM/Itemmanager/Form/LinkSepaPayments.tpl
 #: templates/CRM/Itemmanager/Page/LinkSepaPaymentsStub.tpl
 msgid "Contribution"
-msgstr ""
+msgstr "Zuwendung"
 
 #: templates/CRM/Itemmanager/Form/LinkSepaPayments.tpl
 #: templates/CRM/Itemmanager/Page/LinkSepaPaymentsStub.tpl
 msgid "Payments"
-msgstr ""
+msgstr "Bezahlungen"
 
 #: templates/CRM/Itemmanager/Form/LinkSepaPayments.tpl
 #: templates/CRM/Itemmanager/Page/LinkSepaPaymentsStub.tpl
@@ -363,11 +363,11 @@ msgstr ""
 
 #: templates/CRM/Itemmanager/Form/RenewItemperiods.tpl
 msgid "Old"
-msgstr ""
+msgstr "Alt"
 
 #: templates/CRM/Itemmanager/Form/RenewItemperiods.tpl
 msgid "New"
-msgstr ""
+msgstr "Neu"
 
 #: templates/CRM/Itemmanager/Form/RepairMissingContribution.tpl
 msgid "Are you sure, create a clone of this contribution?"
@@ -382,7 +382,7 @@ msgstr ""
 
 #: templates/CRM/Itemmanager/Form/RepairMissingContribution.tpl
 msgid "Lineitem"
-msgstr ""
+msgstr "Posten"
 
 #: templates/CRM/Itemmanager/Form/RepairMissingContribution.tpl
 #: templates/CRM/Itemmanager/Page/UpdateItems.tpl
@@ -391,11 +391,11 @@ msgstr ""
 
 #: templates/CRM/Itemmanager/Page/Dashboard.tpl
 msgid "Item Dashboard"
-msgstr ""
+msgstr "Anteil Übersicht"
 
 #: templates/CRM/Itemmanager/Page/Dashboard.tpl
 msgid "Renew Periods"
-msgstr ""
+msgstr "Solawi Verlängerung"
 
 #: templates/CRM/Itemmanager/Page/Dashboard.tpl
 msgid "Link Sepa Payments"
@@ -403,14 +403,14 @@ msgstr ""
 
 #: templates/CRM/Itemmanager/Page/Dashboard.tpl
 msgid "Refresh"
-msgstr ""
+msgstr "Neu Laden"
 
 #: templates/CRM/Itemmanager/Page/Dashboard.tpl
 msgid "To start with a new set of monthly contributions click Renew Periods"
-msgstr ""
+msgstr "Um mit eine neue Mitgliedschaftsperiode zu beginnen, bitte 'Solawi Verlängern' klicken"
 
 #: templates/CRM/Itemmanager/Page/Dashboard.tpl
-msgid "Booked"
+msgid "Gebucht"
 msgstr ""
 
 #: templates/CRM/Itemmanager/Page/Dashboard.tpl
@@ -431,7 +431,7 @@ msgstr ""
 
 #: templates/CRM/Itemmanager/Page/UpdateItems.tpl
 msgid "Preview"
-msgstr ""
+msgstr "Vorschau"
 
 #: templates/CRM/Itemmanager/Page/UpdateItems.tpl
 msgid "Found items to be updated"
@@ -439,7 +439,7 @@ msgstr ""
 
 #: templates/CRM/Itemmanager/Page/UpdateItems.tpl
 msgid "Date"
-msgstr ""
+msgstr "Datum"
 
 #: templates/CRM/Itemmanager/Page/UpdateItems.tpl
 msgid "Referred to"
@@ -451,7 +451,7 @@ msgstr ""
 
 #: templates/CRM/Itemmanager/Page/UpdateItems.tpl
 msgid "Tax"
-msgstr ""
+msgstr "Steuer"
 
 #: templates/CRM/Itemmanager/Page/UpdateItems.tpl
 msgid "change to"

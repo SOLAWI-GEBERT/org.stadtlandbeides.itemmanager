@@ -205,6 +205,18 @@ function itemmanager_civicrm_links($op, $objectName, $objectId, &$links, &$mask,
 
     if (($op == 'membership.selector.row' || $op == 'membership.tab.row') && $objectName == 'Membership') {
 
+        $i = 0;
+        foreach ($links as $link) {
+
+            $qs = $link['qs'];
+            if( strpos( $qs, 'renew' ) !== false) {
+               unset($links[$i]);
+            }
+
+            $i++;
+
+        }
+
         $links[] = array(
             'name' => ts('Renew periods'),
             'url' => 'civicrm/items/renewperiods',
