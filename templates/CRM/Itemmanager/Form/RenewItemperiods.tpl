@@ -42,14 +42,14 @@
             <tr>
               <th></th>
               <th width="40%"><span class="label">{$form.$element_item_name.label}</span></th>
-              <th>Start</th>
-              <th>End</th>
+              <th>{ts}Start{/ts}</th>
+              <th>{ts}End{/ts}</th>
               <th><span class="label">{$form.$element_quantity_name.label}</span></th>
               <th><span class="label">{$form.$element_period_name.label}</span></th>
-              <th>Interval</th>
-              <th>Price per Interval</th>
-              <th>Active ON</th>
-              <th>Active Until</th>
+              <th>{ts}Interval{/ts}</th>
+              <th>{ts}Price per Interval{/ts}</th>
+              <th>{ts}Active ON{/ts}</th>
+              <th>{ts}Active Until{/ts}</th>
             </tr>
             </thead>
             <tbody>
@@ -81,7 +81,7 @@
                 <td><span id="{$element_item_name}_end_on">{$lineitem.new_period_end_on}</span></td>
                 <td><span class="content">{$form.$element_quantity_name.html}</span></td>
                 <td><span class="content">{$form.$element_period_name.html}</span></td>
-                <td>Interval</td>
+                <td>{ts}Interval{/ts}</td>
                 <td><span id="{$element_item_name}_interval_price">{$lineitem.new_interval_price}</span></td>
                 <td><span id="{$element_item_name}_active_on">{$lineitem.new_active_on}</span></td>
                 <td><span id="{$element_item_name}_expire_on">{$lineitem.new_expire_on}</span></td>

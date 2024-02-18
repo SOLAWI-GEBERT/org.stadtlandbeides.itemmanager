@@ -255,7 +255,7 @@ msgstr ""
 
 #: CRM/Itemmanager/Page/UpdateItems.php
 msgid "Items updated"
-msgstr ""
+msgstr "Posten aktualisiert"
 
 #: CRM/Itemmanager/Page/UpdateItems.php
 msgid "Nothing to be done"
