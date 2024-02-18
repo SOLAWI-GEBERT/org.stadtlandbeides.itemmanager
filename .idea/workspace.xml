@@ -9,10 +9,9 @@
   <component name="ChangeListManager">
     <list default="true" id="8a4e2072-c43d-4029-bc01-730e5001dde6" name="Default Changelist" comment="FIX Avoid sending an email after pay after payment is installed">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/itemmanager.php" beforeDir="false" afterPath="$PROJECT_DIR$/itemmanager.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/l10n/de_DE/LC_MESSAGES/itemmanager.mo" beforeDir="false" afterPath="$PROJECT_DIR$/l10n/de_DE/LC_MESSAGES/itemmanager.mo" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/l10n/de_DE/LC_MESSAGES/itemmanager.po" beforeDir="false" afterPath="$PROJECT_DIR$/l10n/de_DE/LC_MESSAGES/itemmanager.po" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/l10n/org.stadtlandbeides.itemmanager.pot" beforeDir="false" afterPath="$PROJECT_DIR$/l10n/org.stadtlandbeides.itemmanager.pot" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CRM/Itemmanager/Form/ItemmanagerSetting.php" beforeDir="false" afterPath="$PROJECT_DIR$/CRM/Itemmanager/Form/ItemmanagerSetting.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CRM/Itemmanager/Form/RenewItemperiods.php" beforeDir="false" afterPath="$PROJECT_DIR$/CRM/Itemmanager/Form/RenewItemperiods.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/CRM/Itemmanager/Form/RenewItemperiods.tpl" beforeDir="false" afterPath="$PROJECT_DIR$/templates/CRM/Itemmanager/Form/RenewItemperiods.tpl" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -194,7 +193,8 @@
       <workItem from="1707038315208" duration="13650000" />
       <workItem from="1707639069496" duration="32206000" />
       <workItem from="1708179722054" duration="2022000" />
-      <workItem from="1708183640554" duration="18735000" />
+      <workItem from="1708183640554" duration="18922000" />
+      <workItem from="1708213632932" duration="2029000" />
     </task>
     <task id="LOCAL-00005" summary="FIX Remove itemmanager settings comparison">
       <created>1645011730052</created>

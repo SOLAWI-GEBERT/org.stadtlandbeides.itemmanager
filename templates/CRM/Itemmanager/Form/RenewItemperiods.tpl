@@ -4,6 +4,15 @@
 {include file="CRM/common/formButtons.tpl" location="top"}
 </div>
 
+{if $errormessages}
+  <div class="crm-error">
+    {foreach from=$errormessages item=message}
+      <span>{$message}</br></span>
+    {/foreach}
+  </div>
+
+{/if}
+
 
   {if $memberships}
   {foreach from=$memberships item=membership}

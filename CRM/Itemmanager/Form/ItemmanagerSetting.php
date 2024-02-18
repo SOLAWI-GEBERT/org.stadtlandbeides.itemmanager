@@ -549,6 +549,10 @@ class CRM_Itemmanager_Form_ItemmanagerSetting extends CRM_Core_Form {
       } catch (CiviCRM_API3_Exception $e) {
           $this->_errormessages[] = $e->$this->_errormessages;
       }
+     catch (Exception $e)
+     {
+         $this->_errormessages[] = $e->$this->_errormessages;
+     }
 
       $this->assign('errormessages',$this->_errormessages);
       $this->assign('itemsettings',$this->_itemSettings);
