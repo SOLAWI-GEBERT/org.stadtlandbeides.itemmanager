@@ -1,0 +1,93 @@
+<?php
+use CRM_Itemmanager_ExtensionUtil as E;
+return [
+  'name' => 'ItemmanagerSettings',
+  'table' => 'civicrm_itemmanager_settings',
+  'class' => 'CRM_Itemmanager_DAO_ItemmanagerSettings',
+  'getInfo' => fn() => [
+    'title' => E::ts('Itemmanager Settings'),
+    'title_plural' => E::ts('Itemmanager Settingses'),
+    'description' => E::ts('Stores the successor of an item'),
+    'log' => TRUE,
+  ],
+  'getFields' => fn() => [
+    'id' => [
+      'title' => E::ts('ID'),
+      'sql_type' => 'int unsigned',
+      'input_type' => 'Number',
+      'required' => TRUE,
+      'description' => E::ts('Unique ItemmanagerSettings ID'),
+      'primary_key' => TRUE,
+      'auto_increment' => TRUE,
+    ],
+    'price_field_value_id' => [
+      'title' => E::ts('Price Field Value'),
+      'sql_type' => 'int unsigned',
+      'input_type' => 'EntityRef',
+      'required' => TRUE,
+      'description' => E::ts('FK to civicrm_price_field_value'),
+      'entity_reference' => [
+        'entity' => 'PriceFieldValue',
+        'key' => 'id',
+        'on_delete' => 'CASCADE',
+      ],
+    ],
+    'itemmanager_periods_id' => [
+      'title' => E::ts('Price Field Value'),
+      'sql_type' => 'int unsigned',
+      'input_type' => 'EntityRef',
+      'required' => TRUE,
+      'description' => E::ts('FK to civicrm_itemmanager_periods'),
+      'entity_reference' => [
+        'entity' => 'ItemmanagerPeriods',
+        'key' => 'id',
+        'on_delete' => 'CASCADE',
+      ],
+    ],
+    'itemmanager_successor_id' => [
+      'title' => E::ts('Successor'),
+      'sql_type' => 'int unsigned',
+      'input_type' => 'Number',
+      'description' => E::ts('ID to itemmanager entry which is the successor'),
+      'default' => 0,
+    ],
+    'ignore' => [
+      'title' => E::ts('Ignore'),
+      'sql_type' => 'boolean',
+      'input_type' => 'CheckBox',
+      'description' => E::ts('Ignore item for next period'),
+      'default' => TRUE,
+    ],
+    'extend' => [
+      'title' => E::ts('Extend'),
+      'sql_type' => 'boolean',
+      'input_type' => 'CheckBox',
+      'description' => E::ts('Add item for next period'),
+      'add' => '4.1',
+      'default' => TRUE,
+    ],
+    'novitiate' => [
+      'title' => E::ts('Novitiate Item'),
+      'sql_type' => 'boolean',
+      'input_type' => 'CheckBox',
+      'description' => E::ts('This item is for try out only'),
+      'default' => TRUE,
+    ],
+    'enable_period_exception' => [
+      'title' => E::ts('Enable Period Exception Case'),
+      'sql_type' => 'boolean',
+      'input_type' => 'CheckBox',
+      'description' => E::ts('The parent period should not used'),
+      'add' => '4.0',
+      'default' => TRUE,
+    ],
+    'exception_periods' => [
+      'title' => E::ts('Exception Periods'),
+      'sql_type' => 'int unsigned',
+      'input_type' => 'Number',
+      'description' => E::ts('The exceptional periods'),
+      'add' => '4.0',
+      'default' => NULL,
+    ],
+  ],
+];

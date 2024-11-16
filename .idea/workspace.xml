@@ -7,10 +7,27 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="8a4e2072-c43d-4029-bc01-730e5001dde6" name="Default Changelist" comment="FIX Avoid sending an email after pay after payment is installed">
+    <list default="true" id="8a4e2072-c43d-4029-bc01-730e5001dde6" name="Default Changelist" comment="FIX Run civix upgrade">
+      <change afterPath="$PROJECT_DIR$/mixin/entity-types-php@2.0.0.mixin.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mixin/lib/civimix-schema@5.78.beta1.phar" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mixin/lib/pathload-0.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mixin/smarty-v2@1.0.3.mixin.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/schema/ItemmanagerPeriods.entityType.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/schema/ItemmanagerSettings.entityType.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/l10n/de_DE/LC_MESSAGES/itemmanager.po" beforeDir="false" afterPath="$PROJECT_DIR$/l10n/de_DE/LC_MESSAGES/itemmanager.po" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/CRM/Itemmanager/Form/RenewItemperiods.tpl" beforeDir="false" afterPath="$PROJECT_DIR$/templates/CRM/Itemmanager/Form/RenewItemperiods.tpl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CRM/Itemmanager/DAO/ItemmanagerPeriods.php" beforeDir="false" afterPath="$PROJECT_DIR$/CRM/Itemmanager/DAO/ItemmanagerPeriods.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CRM/Itemmanager/DAO/ItemmanagerSettings.php" beforeDir="false" afterPath="$PROJECT_DIR$/CRM/Itemmanager/DAO/ItemmanagerSettings.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CRM/Itemmanager/Upgrader.php" beforeDir="false" afterPath="$PROJECT_DIR$/CRM/Itemmanager/Upgrader.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CRM/Itemmanager/Upgrader/Base.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/info.xml" beforeDir="false" afterPath="$PROJECT_DIR$/info.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/itemmanager.civix.php" beforeDir="false" afterPath="$PROJECT_DIR$/itemmanager.civix.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/itemmanager.php" beforeDir="false" afterPath="$PROJECT_DIR$/itemmanager.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sql/auto_install.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/sql/auto_uninstall.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/xml/schema/CRM/Itemmanager/ItemmanagerPeriods.entityType.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/xml/schema/CRM/Itemmanager/ItemmanagerPeriods.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/xml/schema/CRM/Itemmanager/ItemmanagerSettings.entityType.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/xml/schema/CRM/Itemmanager/ItemmanagerSettings.xml" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -193,7 +210,20 @@
       <workItem from="1707639069496" duration="32206000" />
       <workItem from="1708179722054" duration="2022000" />
       <workItem from="1708183640554" duration="18922000" />
-      <workItem from="1708213632932" duration="2800000" />
+      <workItem from="1708213632932" duration="3467000" />
+      <workItem from="1708801995361" duration="236000" />
+      <workItem from="1708803641930" duration="174000" />
+      <workItem from="1708804153601" duration="154000" />
+      <workItem from="1708804454861" duration="40000" />
+      <workItem from="1708804678034" duration="57000" />
+      <workItem from="1710094011652" duration="2500000" />
+      <workItem from="1711715582966" duration="1871000" />
+      <workItem from="1711722046275" duration="1419000" />
+      <workItem from="1712396495522" duration="47000" />
+      <workItem from="1731524681048" duration="1147000" />
+      <workItem from="1731528495807" duration="236000" />
+      <workItem from="1731528749619" duration="570000" />
+      <workItem from="1731775040047" duration="5837000" />
     </task>
     <task id="LOCAL-00005" summary="FIX Remove itemmanager settings comparison">
       <created>1645011730052</created>
@@ -557,7 +587,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="FIX make the contribution update outside of transaction" />
     <MESSAGE value="ENH Refactoring the form with stubs" />
     <MESSAGE value="ENH First prototype of a lazy load version of the Sepa Link App" />
     <MESSAGE value="FIX Improve collapse and expand behavior" />
@@ -582,59 +611,60 @@
     <MESSAGE value="FIX calculation of end of membership" />
     <MESSAGE value="FIX correct currency transformation" />
     <MESSAGE value="FIX correct calculation of tax" />
-    <option name="LAST_COMMIT_MESSAGE" value="FIX correct calculation of tax" />
+    <MESSAGE value="FIX Run civix upgrade" />
+    <option name="LAST_COMMIT_MESSAGE" value="FIX Run civix upgrade" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="php">
           <url>file://$PROJECT_DIR$/../Stadt-Land-Beides/JML3/administrator/components/com_civicrm/civicrm/CRM/Contribute/Form/ContributionView.php</url>
-          <line>30</line>
+          <line>31</line>
           <option name="timeStamp" value="6" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php">
           <url>file://$PROJECT_DIR$/../Stadt-Land-Beides/JML3/administrator/components/com_civicrm/civicrm/CRM/Contribute/Page/ContributionPage.php</url>
-          <line>267</line>
+          <line>287</line>
           <option name="timeStamp" value="12" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php">
           <url>file://$PROJECT_DIR$/../Stadt-Land-Beides/JML3/administrator/components/com_civicrm/civicrm/CRM/Contribute/BAO/Contribution.php</url>
-          <line>4570</line>
+          <line>4576</line>
           <option name="timeStamp" value="13" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php">
           <url>file://$PROJECT_DIR$/../civicrm-core/CRM/Financial/BAO/Payment.php</url>
-          <line>185</line>
+          <line>148</line>
           <option name="timeStamp" value="14" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php">
           <url>file://$PROJECT_DIR$/../Stadt-Land-Beides/JML3/administrator/components/com_civicrm/civicrm/api/v3/Contribution.php</url>
-          <line>701</line>
+          <line>705</line>
           <option name="timeStamp" value="17" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php">
           <url>file://$PROJECT_DIR$/../Stadt-Land-Beides/JML3/administrator/components/com_civicrm/civicrm/CRM/Contribute/BAO/Contribution.php</url>
-          <line>3811</line>
+          <line>3799</line>
           <option name="timeStamp" value="18" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php">
           <url>file://$PROJECT_DIR$/../Stadt-Land-Beides/JML3/administrator/components/com_civicrm/civicrm/CRM/Contribute/BAO/Contribution.php</url>
-          <line>3809</line>
+          <line>3797</line>
           <option name="timeStamp" value="19" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php">
           <url>file://$PROJECT_DIR$/../civicrm-core/CRM/Financial/BAO/Payment.php</url>
-          <line>47</line>
+          <line>54</line>
           <option name="timeStamp" value="22" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php">
           <url>file://$PROJECT_DIR$/../Stadt-Land-Beides/JML3/administrator/components/com_civicrm/civicrm/api/v3/Contribution.php</url>
-          <line>477</line>
+          <line>481</line>
           <option name="timeStamp" value="23" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php">
           <url>file://$PROJECT_DIR$/../Stadt-Land-Beides/JML3/administrator/components/com_civicrm/civicrm/api/v3/Contribution.php</url>
-          <line>608</line>
+          <line>612</line>
           <option name="timeStamp" value="24" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php">
@@ -651,6 +681,11 @@
           <url>file://$PROJECT_DIR$/../Stadt-Land-Beides/JML3/administrator/components/com_civicrm/civicrm/CRM/Member/Page/Tab.php</url>
           <line>256</line>
           <option name="timeStamp" value="67" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="php">
+          <url>file://$PROJECT_DIR$/../Stadt-Land-Beides/JML3/media/civicrm/ext/biz.jmaconsulting.lineitemedit/CRM/Lineitemedit/Form/Edit.php</url>
+          <line>168</line>
+          <option name="timeStamp" value="68" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
