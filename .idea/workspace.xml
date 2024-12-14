@@ -8,26 +8,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8a4e2072-c43d-4029-bc01-730e5001dde6" name="Default Changelist" comment="FIX Run civix upgrade">
-      <change afterPath="$PROJECT_DIR$/mixin/entity-types-php@2.0.0.mixin.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/mixin/lib/civimix-schema@5.78.beta1.phar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/mixin/lib/pathload-0.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/mixin/smarty-v2@1.0.3.mixin.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/schema/ItemmanagerPeriods.entityType.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/schema/ItemmanagerSettings.entityType.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CRM/Itemmanager/DAO/ItemmanagerPeriods.php" beforeDir="false" afterPath="$PROJECT_DIR$/CRM/Itemmanager/DAO/ItemmanagerPeriods.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CRM/Itemmanager/DAO/ItemmanagerSettings.php" beforeDir="false" afterPath="$PROJECT_DIR$/CRM/Itemmanager/DAO/ItemmanagerSettings.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CRM/Itemmanager/Upgrader.php" beforeDir="false" afterPath="$PROJECT_DIR$/CRM/Itemmanager/Upgrader.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CRM/Itemmanager/Upgrader/Base.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/info.xml" beforeDir="false" afterPath="$PROJECT_DIR$/info.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/itemmanager.civix.php" beforeDir="false" afterPath="$PROJECT_DIR$/itemmanager.civix.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/itemmanager.php" beforeDir="false" afterPath="$PROJECT_DIR$/itemmanager.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sql/auto_install.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/sql/auto_uninstall.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/xml/schema/CRM/Itemmanager/ItemmanagerPeriods.entityType.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/xml/schema/CRM/Itemmanager/ItemmanagerPeriods.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/xml/schema/CRM/Itemmanager/ItemmanagerSettings.entityType.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/xml/schema/CRM/Itemmanager/ItemmanagerSettings.xml" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -102,7 +83,7 @@
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
     <property name="nodejs_package_manager_path" value="npm" />
-    <property name="settings.editor.selected.configurable" value="preferences.externalTools" />
+    <property name="settings.editor.selected.configurable" value="settings.php.debug.servers" />
     <property name="two.files.diff.last.used.folder" value="$PROJECT_DIR$/../Stadt-Land-Beides/JML3/media/civicrm/ext/org.stadtlandbeides.itemmanager" />
     <property name="vue.rearranger.settings.migration" value="true" />
   </component>
@@ -223,14 +204,10 @@
       <workItem from="1731524681048" duration="1147000" />
       <workItem from="1731528495807" duration="236000" />
       <workItem from="1731528749619" duration="570000" />
-      <workItem from="1731775040047" duration="5837000" />
-    </task>
-    <task id="LOCAL-00005" summary="FIX Remove itemmanager settings comparison">
-      <created>1645011730052</created>
-      <option name="number" value="00005" />
-      <option name="presentableId" value="LOCAL-00005" />
-      <option name="project" value="LOCAL" />
-      <updated>1645011730052</updated>
+      <workItem from="1731775040047" duration="5951000" />
+      <workItem from="1731802380842" duration="465000" />
+      <workItem from="1731804029308" duration="65000" />
+      <workItem from="1733063570787" duration="178000" />
     </task>
     <task id="LOCAL-00006" summary="ENH Redesign Itemmanager dashboard">
       <created>1645023684110</created>
@@ -568,7 +545,14 @@
       <option name="project" value="LOCAL" />
       <updated>1679944565089</updated>
     </task>
-    <option name="localTasksCounter" value="54" />
+    <task id="LOCAL-00054" summary="FIX Run civix upgrade">
+      <created>1731788187982</created>
+      <option name="number" value="00054" />
+      <option name="presentableId" value="LOCAL-00054" />
+      <option name="project" value="LOCAL" />
+      <updated>1731788187982</updated>
+    </task>
+    <option name="localTasksCounter" value="55" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
