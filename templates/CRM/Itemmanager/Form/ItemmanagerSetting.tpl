@@ -23,6 +23,7 @@
         {assign var="element_period_start_on" value=$priceset.element_period_start_on}
         {assign var="element_period_type" value=$priceset.element_period_type}
         {assign var="element_period_hide" value=$priceset.element_period_hide}
+        {assign var="element_period_reverse" value=$priceset.element_period_reverse}
         {assign var="element_period_successor" value=$priceset.element_period_successor}
 
         <div class="crm-accordion-header">
@@ -39,21 +40,24 @@
             <span class="content">{$form.$element_period_start_on.html}</span>
             <span class="label">{$form.$element_period_hide.label}</span>
             <span class="content">{$form.$element_period_hide.html}</span>
+            <span class="label">{$form.$element_period_reverse.label}</span>
+            <span class="content">{$form.$element_period_reverse.html}</span>
             <span class="label">{$form.$element_period_successor.label}</span>
             <span class="content">{$form.$element_period_successor.html}</span>
         </div>
           <table>
             <thead>
             <tr class="columnheader">
-              <th width="20%">{ts}Item Name{/ts}</th>
-              <th width="2%">{ts}Active On{/ts}</th>
-              <th width="2%">{ts}Expire On{/ts}</th>
-              <th width="2%">{ts}Active{/ts}</th>
-              <th width="2%">{ts}Ignore{/ts}</th>
-              <th width="2%">{ts}Extend{/ts}</th>
-              <th width="2%">{ts}Novitiate{/ts}</th>
-              <th width="2%">{ts}Exception{/ts}</th>
-              <th width="2%">{ts}Exception Periods{/ts}</th>
+              <th class="medium">{ts}Item Name{/ts}</th>
+              <th class="small">{ts}Active On{/ts}</th>
+              <thclass="small">{ts}Expire On{/ts}</th>
+              <th class="small">{ts}Active{/ts}</th>
+              <th class="small">{ts}Ignore{/ts}</th>
+              <th class="small">{ts}Extend{/ts}</th>
+              <th class="small">{ts}Novitiate{/ts}</th>
+              <th class="small">{ts}Bidding Round{/ts}</th>
+              <th class="small">{ts}Exception{/ts}</th>
+              <th class="small">{ts}Exception Periods{/ts}</th>
               <th>{ts}Successor{/ts}</th>
             </tr>
 
@@ -64,19 +68,21 @@
               {assign var="element_period_field_ignore" value=$field.element_period_field_ignore}
               {assign var="element_period_field_extend" value=$field.element_period_field_extend}
               {assign var="element_period_field_novitiate" value=$field.element_period_field_novitiate}
+              {assign var="element_period_field_bidding" value=$field.element_period_field_bidding}
               {assign var="element_enable_period_exception" value=$field.element_enable_period_exception}
               {assign var="element_exception_periods" value=$field.element_exception_periods}
               {assign var="element_period_field_successor" value=$field.element_period_field_successor}
               <tr class="{cycle values="odd-row,even-row"}">
-                <td width="20%">{$field.field_label}</td>
-                <td width="2%">{$field.active_on}</td>
-                <td width="2%">{$field.expire_on}</td>
-                <td width="2%">{$field.isactive}</td>
-                <td width="2%">{$form.$element_period_field_ignore.html}</td>
-                <td width="2%">{$form.$element_period_field_extend.html}</td>
-                <td width="2%">{$form.$element_period_field_novitiate.html}</td>
-                <td width="2%">{$form.$element_enable_period_exception.html}</td>
-                <td width="2%">{$form.$element_exception_periods.html}</td>
+                <td class="medium">{$field.field_label}</td>
+                <td class="small">{$field.active_on}</td>
+                <td class="small">{$field.expire_on}</td>
+                <td class="small">{$field.isactive}</td>
+                <td class="small">{$form.$element_period_field_ignore.html}</td>
+                <td class="small">{$form.$element_period_field_extend.html}</td>
+                <td class="small">{$form.$element_period_field_novitiate.html}</td>
+                <td class="small">{$form.$element_period_field_bidding.html}</td>
+                <td class="small">{$form.$element_enable_period_exception.html}</td>
+                <td class="small">{$form.$element_exception_periods.html}</td>
                 <td>{$form.$element_period_field_successor.html}</td>
 
               </tr>
@@ -100,5 +106,5 @@
 {* FOOTER *}
 <div class="clear"></div>
 <div class="crm-submit-buttons">
-{include file="CRM/common/formButtons.tpl" location="bottom"}
+    {include file="CRM/common/formButtons.tpl" location="bottom"}
 </div>

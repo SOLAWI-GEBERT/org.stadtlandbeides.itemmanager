@@ -14,7 +14,8 @@
  * @property string $periods 
  * @property string $period_type 
  * @property string $itemmanager_period_successor_id 
- * @property bool|string $hide 
+ * @property bool|string $hide
+ * @property bool|string $reverse
  */
 class CRM_Itemmanager_DAO_ItemmanagerPeriods extends CRM_Itemmanager_DAO_Base {
 

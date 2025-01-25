@@ -103,8 +103,21 @@ class CRM_Itemmanager_Form_ItemmanagerSetting extends CRM_Core_Form {
             $this->addElement(
                 'advcheckbox',
                 $period['element_period_hide'],
-                ts('Hide')
+                E::ts('Hide'),
             )->setChecked($period['hide'] == 1);
+
+            $reverseparam = array('value' => $period['reverse']);
+
+            if($period['reverse'] == 1)
+            {
+                $reverseparam['checked'] = 1;
+            }
+
+            $this->addElement(
+                'advcheckbox',
+                $period['element_period_reverse'],
+                E::ts('Reverse'),
+            )->setChecked($period['reverse'] == 1);
 
             $this->add(
                 'select',
@@ -127,8 +140,8 @@ class CRM_Itemmanager_Form_ItemmanagerSetting extends CRM_Core_Form {
                  $this->addElement(
                     'advcheckbox',
                     $field['element_period_field_ignore'],
-                    ts('Ignore')
-                )->setChecked($field['ignore'] == 1);;
+                     E::ts('Ignore'),
+                )->setChecked($field['ignore'] == 1);
 
 
                 $extendparam = array('value' => $field['extend']);
@@ -141,7 +154,7 @@ class CRM_Itemmanager_Form_ItemmanagerSetting extends CRM_Core_Form {
                 $this->addElement(
                     'advcheckbox',
                     $field['element_period_field_extend'],
-                    ts('Extend')
+                    E::ts('Extend'),
                 )->setChecked($field['extend'] == 1);
 
 
@@ -155,8 +168,21 @@ class CRM_Itemmanager_Form_ItemmanagerSetting extends CRM_Core_Form {
                 $this->addElement(
                     'advcheckbox',
                     $field['element_period_field_novitiate'],
-                    ts('Novitiate')
+                    E::ts('Novitiate'),
                 )->setChecked($field['novitiate'] == 1);
+
+
+                $bidding = array('value' => $field['bidding']);
+                if($field['bidding'] == 1)
+                {
+                    $bidding['checked'] = 1;
+                }
+
+                $this->addElement(
+                    'advcheckbox',
+                    $field['element_period_field_bidding'],
+                    E::ts('Bidding round'),
+                )->setChecked($field['bidding'] == 1);
 
                 $enable_period_exception = array('value' => $field['enable_period_exception']);
                 if($field['enable_period_exception'] == 1)
@@ -168,7 +194,7 @@ class CRM_Itemmanager_Form_ItemmanagerSetting extends CRM_Core_Form {
                 $this->addElement(
                     'advcheckbox',
                     $field['element_enable_period_exception'],
-                    ts('Enable Period Exception Case')
+                    E::ts('Enable Period Exception Case'),
                 )->setChecked($field['enable_period_exception'] == 1);
 
                 $exception_periodsattributes = array(
@@ -218,6 +244,9 @@ class CRM_Itemmanager_Form_ItemmanagerSetting extends CRM_Core_Form {
         ],
     ));
 
+    CRM_Core_Resources::singleton()
+         ->addStyleFile('org.stadtlandbeides.itemmanager', 'css/setting.css', 200, 'html-header');
+
     $this->assign('elementNames', $this->getRenderableElementNames());
 
     $breadCrumb = array(
@@ -225,6 +254,8 @@ class CRM_Itemmanager_Form_ItemmanagerSetting extends CRM_Core_Form {
         'url' => CRM_Utils_System::url('civicrm/admin/setting/itemmanager', 'reset=1'),
     );
     CRM_Utils_System::appendBreadCrumb(array($breadCrumb));
+
+
 
     parent::buildQuickForm();
   }
@@ -413,13 +444,15 @@ class CRM_Itemmanager_Form_ItemmanagerSetting extends CRM_Core_Form {
 
               $itemmanager_period_id = CRM_Utils_Array::value('id', $itemmanager_period);
 
-              $hide = CRM_Utils_Array::value('hide', $itemmanager_period);
+              $hide = $itemmanager_period['hide'];
 
               if($hide and !$hiddenshowoption)
               {
 
                   continue;
               }
+
+              $reverse = $itemmanager_period['reverse'];
 
               $itemmanager_price_fields = \Civi\Api4\ItemmanagerSettings::get()
                   ->addWhere('itemmanager_periods_id', '=', $itemmanager_period_id)
@@ -494,6 +527,7 @@ class CRM_Itemmanager_Form_ItemmanagerSetting extends CRM_Core_Form {
                       'ignore' => (int)$itemmanager_price_field['ignore'],
                       'extend' => (int)$itemmanager_price_field['extend'],
                       'novitiate' => (int)$itemmanager_price_field['novitiate'],
+                      'bidding' => (int)$itemmanager_price_field['bidding'],
                       'enable_period_exception' => (int)$itemmanager_price_field['enable_period_exception'],
                       'exception_periods' => (int)$itemmanager_price_field['exception_periods'],
                       'successor' => (int)$itemmanager_price_field['itemmanager_successor_id'],
@@ -506,6 +540,8 @@ class CRM_Itemmanager_Form_ItemmanagerSetting extends CRM_Core_Form {
                           '_field_'.$itemmanager_id.'_extend',
                      'element_period_field_novitiate' => 'period_'.$itemmanager_id.
                          '_field_'.$itemmanager_id.'_novitiate',
+                      'element_period_field_bidding' => 'period_'.$itemmanager_id.
+                          '_field_'.$itemmanager_id.'_bidding',
                       'element_enable_period_exception' => 'period_'.$itemmanager_id.
                           '_field_'.$itemmanager_id.'_enable_period_exception',
                       'element_exception_periods' => 'period_'.$itemmanager_id.
@@ -528,6 +564,7 @@ class CRM_Itemmanager_Form_ItemmanagerSetting extends CRM_Core_Form {
                   'period_type' => CRM_Utils_Array::value('period_type',$itemmanager_period),
                   'successor' => CRM_Utils_Array::value('itemmanager_period_successor_id',$itemmanager_period),
                   'hide' => (int)$hide,
+                  'reverse' => (int)$reverse,
                   'selection' => $successor_selection,
                   'fields' => $field_list,
                   'element_period_start_on' => 'period_'.$itemmanager_id.'_period_start_on',
@@ -536,6 +573,7 @@ class CRM_Itemmanager_Form_ItemmanagerSetting extends CRM_Core_Form {
                   'element_period_type' => 'period_'.$itemmanager_id.'_type',
                   'element_period_successor' => 'period_'.$itemmanager_id.'_successor',
                   'element_period_hide' => 'period_'.$itemmanager_id.'_hide',
+                  'element_period_reverse' => 'period_'.$itemmanager_id.'_reverse',
               );
 
               $this->_itemSettings[$itemmanager_period_id] = $form_collection;
@@ -731,6 +769,9 @@ class CRM_Itemmanager_Form_ItemmanagerSetting extends CRM_Core_Form {
                 $hide = isset($formvalues[$period['element_period_hide']]) ?
                     (int)$formvalues[$period['element_period_hide']] : (int)$period['hide'];
 
+                $reverse = isset($formvalues[$period['element_period_reverse']]) ?
+                    (int)$formvalues[$period['element_period_reverse']] : (int)$period['reverse'];
+
                 if (isset($formvalues[$period['element_period_start_on']])) {
                     $start_on = date_create($formvalues[$period['element_period_start_on']]);
                 } else {
@@ -745,6 +786,7 @@ class CRM_Itemmanager_Form_ItemmanagerSetting extends CRM_Core_Form {
                 $update_period->period_start_on = $start_on->format('Ymd');
                 $update_period->period_type = $type;
                 $update_period->hide = $hide == 1;
+                $update_period->reverse = $reverse == 1;
                 $update_period->itemmanager_period_successor_id = $period_successor;
                 $update_period->update();
 
@@ -760,6 +802,8 @@ class CRM_Itemmanager_Form_ItemmanagerSetting extends CRM_Core_Form {
 
                     $novitiate = isset($formvalues[$field['element_period_field_novitiate']]) ?
                         (int)$formvalues[$field['element_period_field_novitiate']] : (int)$field['novitiate'];
+                    $bidding = isset($formvalues[$field['element_period_field_bidding']]) ?
+                        (int)$formvalues[$field['element_period_field_bidding']] : (int)$field['bidding'];
                     $enable_period_exception = isset($formvalues[$field['element_enable_period_exception']]) ?
                         (int)$formvalues[$field['element_enable_period_exception']] : (int)$field['enable_period_exception'];
                     $exception_periods = isset($formvalues[$field['element_exception_periods']]) ?
@@ -771,6 +815,7 @@ class CRM_Itemmanager_Form_ItemmanagerSetting extends CRM_Core_Form {
                     $update_manager->ignore = $ignore == 1;
                     $update_manager->extend = $extend == 1;
                     $update_manager->novitiate = $novitiate == 1;
+                    $update_manager->bidding = $bidding == 1;
                     $update_manager->enable_period_exception = $enable_period_exception == 1;
                     $update_manager->exception_periods = $exception_periods;
                     $update_manager->update();

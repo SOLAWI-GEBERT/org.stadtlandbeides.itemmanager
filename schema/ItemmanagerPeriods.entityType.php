@@ -75,5 +75,13 @@ return [
       'add' => '4.2.1',
       'default' => TRUE,
     ],
+    'reverse' => [
+        'title' => E::ts('Reverse'),
+        'sql_type' => 'boolean',
+        'input_type' => 'CheckBox',
+        'description' => E::ts('Reverse the period'),
+        'add' => '4.3',
+        'default' => FALSE,
+     ],
   ],
 ];

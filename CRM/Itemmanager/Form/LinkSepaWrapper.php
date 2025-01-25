@@ -118,9 +118,9 @@ class CRM_Itemmanager_Form_LinkSepaWrapper extends CRM_Core_Form {
 
         // export form elements
         CRM_Core_Resources::singleton()
-            ->addScriptFile('org.stadtlandbeides.itemmanager', 'js/expandAccordion.js')
-            ->addScriptFile('org.stadtlandbeides.itemmanager','js/filterSEPAOptions.js')
-            ->addStyleFile('org.stadtlandbeides.itemmanager', 'css/sepaLink.css');
+            ->addScriptFile('org.stadtlandbeides.itemmanager', 'js/expandAccordion.js', 200, 'html-header')
+            ->addScriptFile('org.stadtlandbeides.itemmanager','js/filterSEPAOptions.js', 200, 'html-header')
+            ->addStyleFile('org.stadtlandbeides.itemmanager', 'css/sepaLink.css', 200, 'html-header');
         $this->assign('relations', $this->_relations);
         $this->assign('SEPAFilterOptions','filteropen='.$filter_open.'&filterfuture='.$filter_past);
         $this->assign('filteropencheck',$filter_open ? 'checked':'');

@@ -81,6 +81,14 @@ return [
       'add' => '4.0',
       'default' => TRUE,
     ],
+    'bidding' => [
+        'title' => E::ts('Enable bidding round'),
+        'sql_type' => 'boolean',
+        'input_type' => 'CheckBox',
+        'description' => E::ts('The item is a related to a bidding round'),
+        'add' => '4.3',
+        'default' => FALSE,
+     ],
     'exception_periods' => [
       'title' => E::ts('Exception Periods'),
       'sql_type' => 'int unsigned',

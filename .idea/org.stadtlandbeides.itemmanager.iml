@@ -2,7 +2,48 @@
 <module type="WEB_MODULE" version="4">
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$/../PEAR_Exception-1.0.0" />
-    <content url="file://$MODULE_DIR$/../civicrm-core" />
+    <content url="file://$MODULE_DIR$/../civicrm-core">
+      <sourceFolder url="file://$MODULE_DIR$/../civicrm-core" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../civicrm-core" isTestSource="false" packagePrefix="Civi" />
+      <sourceFolder url="file://$MODULE_DIR$/../civicrm-core/ext/afform/admin" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../civicrm-core/ext/afform/core" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../civicrm-core/ext/afform/core/tests/phpunit" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../civicrm-core/ext/afform/login_token" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../civicrm-core/ext/afform/mock/tests/phpunit" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../civicrm-core/ext/authx" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../civicrm-core/ext/authx/tests/phpunit" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../civicrm-core/ext/chart_kit" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../civicrm-core/ext/civi_campaign" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../civicrm-core/ext/civi_case" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../civicrm-core/ext/civi_contribute" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../civicrm-core/ext/civi_contribute/tests/phpunit" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../civicrm-core/ext/civi_event" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../civicrm-core/ext/civi_mail" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../civicrm-core/ext/civi_member" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../civicrm-core/ext/civi_pledge" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../civicrm-core/ext/civi_report" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../civicrm-core/ext/civigrant" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../civicrm-core/ext/civigrant/tests/phpunit" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../civicrm-core/ext/civiimport" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../civicrm-core/ext/eventcart" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../civicrm-core/ext/financialacls/tests/phpunit" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../civicrm-core/ext/flexmailer/tests/phpunit" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../civicrm-core/ext/iframe" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../civicrm-core/ext/legacycustomsearches/tests/phpunit" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../civicrm-core/ext/oauth-client" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../civicrm-core/ext/oauth-client/tests/phpunit" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../civicrm-core/ext/oembed" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../civicrm-core/ext/recaptcha" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../civicrm-core/ext/scheduled_communications" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../civicrm-core/ext/scheduled_communications/tests/phpunit" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../civicrm-core/ext/search_kit" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../civicrm-core/ext/search_kit/tests/phpunit" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../civicrm-core/ext/standaloneusers" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../civicrm-core/ext/standaloneusers/tests/phpunit" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../civicrm-core/setup/src" isTestSource="false" packagePrefix="Civi" />
+      <sourceFolder url="file://$MODULE_DIR$/../civicrm-core/tests/phpunit" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../civicrm-core/tools/extensions/phpstorm" isTestSource="false" />
+    </content>
     <content url="file://$MODULE_DIR$" />
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

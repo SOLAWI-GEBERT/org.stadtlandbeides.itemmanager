@@ -15,7 +15,8 @@
  * @property bool|string $ignore 
  * @property bool|string $extend 
  * @property bool|string $novitiate 
- * @property bool|string $enable_period_exception 
+ * @property bool|string $enable_period_exception
+ * @property bool|string $bidding
  * @property string $exception_periods 
  */
 class CRM_Itemmanager_DAO_ItemmanagerSettings extends CRM_Itemmanager_DAO_Base {
