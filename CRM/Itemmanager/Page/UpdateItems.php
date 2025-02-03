@@ -200,7 +200,8 @@ class CRM_Itemmanager_Page_UpdateItems extends CRM_Core_Page {
                     $periods = $period_item->periods;
                     if ($manager_item->enable_period_exception)
                         $periods = $manager_item->exception_periods;
-                    if (!$valid or $periods == 0) $periods = 1;
+                    # take a reverse option into account
+                    if (!$valid or $periods == 0 or $period_item->reverse) $periods = 1;
 
                     $change_timestamp = $period_item->period_start_on;
                     if (!$valid) $change_timestamp = $line_items->contrib_date;
@@ -384,7 +385,7 @@ class CRM_Itemmanager_Page_UpdateItems extends CRM_Core_Page {
             $periods = (int)$period_item->periods;
             if ($manager_item->enable_period_exception)
                 $periods = $manager_item->exception_periods;
-            if (!$valid or $periods == 0) $periods = 1;
+            if (!$valid or $periods == 0 or $period_item->reverse) $periods = 1;
 
             $change_timestamp = $period_item->period_start_on;
             if (!$valid)  $change_timestamp = $contributionInfo['receive_date'];

@@ -123,12 +123,14 @@
 
             $('#crm-content')
                 .on('click', 'a.button, a.action-item[href*="action=refresh"]', CRM.popup)
-                .on('crmPopupFormSuccess', 'a.button, a.action-item[href*="action=refresh"], function() {
+                .on('crmPopupFormSuccess', function() {
                     // Refresh datatable when form completes
-                    $('#crm-ajax-container').crmSnippet('refresh');
+
+                        CRM.reloadPage();
+
                 });
 
-        });
+        })
 
 
     {/literal}

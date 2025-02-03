@@ -19,7 +19,7 @@ span.content {
     margin-bottom: 0; /* Abstand nach unten */
     position: relative; /* Ermöglicht eine unter dem Span positionierte Linie */
     vertical-align: middle;
-    padding: 0 5px 0 5px;
+    padding: 0 10px 0 5px;
 
 }
 
@@ -28,6 +28,7 @@ span.label {
     margin-bottom: 0; /* Abstand nach unten */
     position: relative; /* Ermöglicht eine unter dem Span positionierte Linie */
     vertical-align: middle;
+    padding: 0 10px  0 10px;
 }
 
 span.content::after {

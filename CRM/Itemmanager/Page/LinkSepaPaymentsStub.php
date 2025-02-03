@@ -71,9 +71,25 @@ class CRM_Itemmanager_Page_LinkSepaPaymentsStub extends CRM_Core_Page {
 
                 $contrib_fee_amount = CRM_Utils_Array::value('fee_amount', $current_contribution);
                 $contrib_net_amount = CRM_Utils_Array::value('net_amount', $current_contribution);
-
+                $contrib_net_fee_ratio = 0;
                 //needed to make a asumption for part payments
-                $contrib_net_fee_ratio = $contrib_fee_amount / $contrib_net_amount;
+                try {
+                    if ($contrib_net_amount == 0) {
+                        $contrib_net_fee_ratio = -1.0;
+                        $this->_errormessages[] = 'Net amount is Zero ' .$contrib_net_amount;
+                    }
+                    else {$contrib_net_fee_ratio = $contrib_fee_amount / $contrib_net_amount;}
+
+                } catch (DivisionByZeroError $e) {
+                    $contrib_net_fee_ratio = -1.0;
+                }
+
+                if(!empty($this->_errormessages))
+                {
+                    $this->processError("ERROR",E::ts('Retrieve payinfo from memberships'),$this->_errormessages[0]);
+                    return;
+                }
+
                 $contrib_date_raw = CRM_Utils_Array::value('receive_date', $current_contribution);
                 $contrib_date = CRM_Utils_Date::customFormat(date_create( $contrib_date_raw)->format('Y-m-d'),
                     Civi::settings()->get('dateformatshortdate'));
@@ -322,8 +338,8 @@ class CRM_Itemmanager_Page_LinkSepaPaymentsStub extends CRM_Core_Page {
         $this->assign('relation', $this->_relation);
         // export form elements
         CRM_Core_Resources::singleton()
-            ->addScriptFile('org.stadtlandbeides.itemmanager', 'js/handlePayment.js')
-            ->addStyleFile('org.stadtlandbeides.itemmanager', 'css/sepaLink.css');
+            ->addScriptFile('org.stadtlandbeides.itemmanager', 'js/handlePayment.js', 999, 'html-header')
+            ->addStyleFile('org.stadtlandbeides.itemmanager', 'css/sepaLink.css', 999, 'html-header');
 
         Civi::resources()->addVars('itemmanager_SEPA_backward_search'.$this->_financial_id, $this->_back_ward_search);
 

@@ -135,3 +135,5 @@
 </div>
 
 {crmScript file='js/crm.expandRow.js'}
+{crmScript ext="org.stadtlandbeides.itemmanager" file="js/handlePayment.js"}
+{crmStyle ext="org.stadtlandbeides.itemmanager" file="css/sepaLink.css"}

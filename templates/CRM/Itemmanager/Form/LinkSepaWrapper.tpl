@@ -62,7 +62,11 @@
 <div class="crm-submit-buttons">
 {include file="CRM/common/formButtons.tpl" location="bottom"}
 </div>
-{include file='js/expandAccordion.js'}
+{crmScript ext="org.stadtlandbeides.itemmanager" file="js/expandAccordion.js"}
+{crmScript ext="org.stadtlandbeides.itemmanager" file="js/filterSEPAOptions.js"}
+{crmScript ext="org.stadtlandbeides.itemmanager" file="js/handlePayment.js"}
+
+
 
 
 
