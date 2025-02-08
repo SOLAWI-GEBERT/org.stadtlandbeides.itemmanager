@@ -15,7 +15,7 @@ class CRM_Itemmanager_BAO_ItemmanagerPeriods extends CRM_Itemmanager_DAO_Itemman
     $entityName = 'ItemmanagerPeriods';
     $hook = empty($params['id']) ? 'create' : 'edit';
 
-    CRM_Utils_Hook::pre($hook, $entityName, CRM_Utils_Array::value('id', $params), $params);
+    CRM_Utils_Hook::pre($hook, $entityName, $params['id'], $params);
     $instance = new $className();
     $instance->copyValues($params);
     $instance->save();

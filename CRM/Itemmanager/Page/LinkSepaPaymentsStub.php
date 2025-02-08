@@ -64,13 +64,13 @@ class CRM_Itemmanager_Page_LinkSepaPaymentsStub extends CRM_Core_Page {
                 $contribution_id = (int)$contribution_link['contribution_id'];
 
                 $current_contribution = civicrm_api3('Contribution', 'getsingle', array('id' => (int)$contribution_id));
-                $current_contr_status = (int)CRM_Utils_Array::value('contribution_status_id', $current_contribution);
+                $current_contr_status = (int)$current_contribution['contribution_status_id'];
 
                 //check here the filter options
                 if($this->_filteropen && $current_contr_status === 1) continue;
 
-                $contrib_fee_amount = CRM_Utils_Array::value('fee_amount', $current_contribution);
-                $contrib_net_amount = CRM_Utils_Array::value('net_amount', $current_contribution);
+                $contrib_fee_amount = $current_contribution['fee_amount'];
+                $contrib_net_amount = $current_contribution['net_amount'];
                 $contrib_net_fee_ratio = 0;
                 //needed to make a asumption for part payments
                 try {
@@ -90,7 +90,7 @@ class CRM_Itemmanager_Page_LinkSepaPaymentsStub extends CRM_Core_Page {
                     return;
                 }
 
-                $contrib_date_raw = CRM_Utils_Array::value('receive_date', $current_contribution);
+                $contrib_date_raw = $current_contribution['receive_date'];
                 $contrib_date = CRM_Utils_Date::customFormat(date_create( $contrib_date_raw)->format('Y-m-d'),
                     Civi::settings()->get('dateformatshortdate'));
                 $reference_date = date_create( $contrib_date);
@@ -154,7 +154,7 @@ class CRM_Itemmanager_Page_LinkSepaPaymentsStub extends CRM_Core_Page {
                 foreach ($linerecords as $lineitem) {
 
                     $itemmanager = new CRM_Itemmanager_BAO_ItemmanagerSettings();
-                    $price_field_value_id = CRM_Utils_Array::value('price_field_value_id', $lineitem['linedata']);
+                    $price_field_value_id = $lineitem['linedata']['price_field_value_id'];
                     $valid = $itemmanager->get('price_field_value_id', $price_field_value_id );
                     if(!$valid)
                     {
@@ -168,11 +168,11 @@ class CRM_Itemmanager_Page_LinkSepaPaymentsStub extends CRM_Core_Page {
                         CRM_Itemmanager_Util::getReferenceDate($reference_date,(int)$periodbase->period_type );
 
 
-                    $price_set_name = CRM_Utils_Array::value('title',$lineitem['setdata']);
-                    $financial_id = CRM_Utils_Array::value('financial_type_id', $lineitem['valuedata']);
+                    $price_set_name = $lineitem['setdata']['title'];
+                    $financial_id = $lineitem['valuedata']['financial_type_id'];
 
-                    $line_total = CRM_Utils_Array::value('line_total',$lineitem['linedata']);
-                    $line_tax = CRM_Utils_Array::value('tax_amount',$lineitem['linedata']);
+                    $line_total = $lineitem['linedata']['line_total'];
+                    $line_tax = $lineitem['linedata']['tax_amount'];
 
                     $this->_relation['valid'] = True;
 
@@ -400,11 +400,11 @@ class CRM_Itemmanager_Page_LinkSepaPaymentsStub extends CRM_Core_Page {
             foreach ($sddmandate['payinfo'] as $sdd_contribution) {
 
                 //head data
-                $sdd_contribution_id = (int)CRM_Utils_Array::value('id', $sdd_contribution);
-                $sdd_mandate = CRM_Utils_Array::value('reference', $sddmandate['sdddata']);
+                $sdd_contribution_id = (int)$sdd_contribution['id'];
+                $sdd_mandate = $sddmandate['sdddata']['reference'];
                 $trxnid = $this->createMandateTrxnId($sdd_mandate, $sdd_contribution_id);
 
-                $sdd_contrib_date_raw = CRM_Utils_Array::value('receive_date', $sdd_contribution);
+                $sdd_contrib_date_raw = $sdd_contribution['receive_date'];
                 $sdd_contrib_date = CRM_Utils_Date::customFormat(date_create($sdd_contrib_date_raw)->format('Y-m-d'),
                     Civi::settings()->get('dateformatshortdate'));
                 $reference_date = date_create($sdd_contrib_date);
@@ -418,7 +418,7 @@ class CRM_Itemmanager_Page_LinkSepaPaymentsStub extends CRM_Core_Page {
                 }
 
                 $summary_display = CRM_Utils_Money::formatLocaleNumericRoundedForDefaultCurrency(
-                    CRM_Utils_Array::value('total_amount', $sdd_contribution));
+                    $sdd_contribution['total_amount']);
                 $SDD_transform[$trxnid] = array(
                     'date_linked' => false,
                     'direct_linked' => false,
@@ -427,16 +427,16 @@ class CRM_Itemmanager_Page_LinkSepaPaymentsStub extends CRM_Core_Page {
                     'sdd_contribution_date' => $sdd_contrib_date,
                     'sdd_contribution_raw' => $sdd_contrib_date_raw,
                     'element_cross_name' => 'mandate_' . $this->_financial_id . '_' . $reference_month . '_' . $sdd_contribution_id,
-                    'sdd_mandate_id' => CRM_Utils_Array::value('id', $sddmandate['sdddata']),
-                    'sdd_mandate' => CRM_Utils_Array::value('reference', $sddmandate['sdddata']),
-                    'payment_instrument_id' => CRM_Utils_Array::value('payment_instrument_id', $sdd_contribution),
-                    'sdd_source' => CRM_Utils_Array::value('source', $sddmandate['sdddata']),
-                    'sdd_total' => CRM_Utils_Array::value('total_amount', $sdd_contribution),
-                    'sdd_fee_amount' => CRM_Utils_Array::value('fee_amount', $sdd_contribution),
-                    'sdd_net_amount' => CRM_Utils_Array::value('net_amount', $sdd_contribution),
+                    'sdd_mandate_id' => $sddmandate['sdddata']['id'],
+                    'sdd_mandate' => $sddmandate['sdddata']['reference'],
+                    'payment_instrument_id' => $sdd_contribution['payment_instrument_id'],
+                    'sdd_source' => $sddmandate['sdddata']['source'],
+                    'sdd_total' => $sdd_contribution['total_amount'],
+                    'sdd_fee_amount' => $sdd_contribution['fee_amount'],
+                    'sdd_net_amount' => $sdd_contribution['net_amount'],
                     'sdd_total_display' => $summary_display . ' ' . $this->_currency,
                     'statusclass' => $this->getcssClassforPaystatus(
-                        (int)CRM_Utils_Array::value('contribution_status_id', $sdd_contribution), true),
+                        (int)$sdd_contribution['contribution_status_id'], true),
                 );
 
 

@@ -275,12 +275,12 @@ class CRM_Itemmanager_Form_ItemmanagerSetting extends CRM_Core_Form {
       try {
           $priceset_records = civicrm_api3('PriceSet', 'get',
               array('sequential' => 1,
-                  'financial_type_id' => CRM_Utils_Array::value('financial_type_id', $priceset),
+                  'financial_type_id' => $priceset['financial_type_id'],
               ));
           if ($priceset_records['is_error'] or $priceset_records['count'] <= 1)
               return $this->getEmptySelection();
 
-          $successor_id = CRM_Utils_Array::value('itemmanager_period_successor_id',$itemmanager_period);
+          $successor_id = $itemmanager_period['itemmanager_period_successor_id'];
 
           $period_successor_result = \Civi\Api4\ItemmanagerPeriods::get()
               ->addWhere('id', '=', $successor_id)
@@ -310,8 +310,8 @@ class CRM_Itemmanager_Form_ItemmanagerSetting extends CRM_Core_Form {
                   $pricefield_values_records = civicrm_api3('PriceFieldValue', 'get',
                       array('sequential' => 1,
                           'price_field_id' => $selectedpricefield['id'],
-                          'financial_type_id' => CRM_Utils_Array::value('financial_type_id', $pricefieldvalue),
-                          'membership_type_id' => CRM_Utils_Array::value('membership_type_id', $pricefieldvalue),
+                          'financial_type_id' => $pricefieldvalue['financial_type_id'],
+                          'membership_type_id' => $pricefieldvalue['membership_type_id'],
                           ));
 
                   if( $pricefield_values_records['is_error']) return $selection;
@@ -319,7 +319,7 @@ class CRM_Itemmanager_Form_ItemmanagerSetting extends CRM_Core_Form {
                   foreach ($pricefield_values_records['values'] as $selectedpricefieldvalue)
                   {
                       $settings = new CRM_Itemmanager_BAO_ItemmanagerSettings();
-                      $settings->get('price_field_value_id',CRM_Utils_Array::value('id', $selectedpricefieldvalue));
+                      $settings->get('price_field_value_id',$selectedpricefieldvalue['id']);
 
                       $selection[(int)$settings->id] = '('.$selectedpriceset['title'].') '.$selectedpricefieldvalue['label'];
                   }
@@ -356,7 +356,7 @@ class CRM_Itemmanager_Form_ItemmanagerSetting extends CRM_Core_Form {
 
                 $priceset_records = civicrm_api3('PriceSet', 'get',
                     array('sequential' => 1,
-                        'financial_type_id' => CRM_Utils_Array::value('financial_type_id', $priceset),
+                        'financial_type_id' => $priceset['financial_type_id'],
                     ));
 
                 if ($priceset_records['is_error'] or $priceset_records['count'] <= 1)
@@ -442,7 +442,7 @@ class CRM_Itemmanager_Form_ItemmanagerSetting extends CRM_Core_Form {
 
 
 
-              $itemmanager_period_id = CRM_Utils_Array::value('id', $itemmanager_period);
+              $itemmanager_period_id = $itemmanager_period['id'];
 
               $hide = $itemmanager_period['hide'];
 
@@ -469,7 +469,7 @@ class CRM_Itemmanager_Form_ItemmanagerSetting extends CRM_Core_Form {
               //populate the priceset successor selection
               $successor_selection = $this->getPeriodSelection($itemmanager_period,$priceset);
 
-              $period_start_on_raw = date_create(CRM_Utils_Array::value('period_start_on',$itemmanager_period));
+              $period_start_on_raw = date_create($itemmanager_period['period_start_on']);
 
               $period_start_on = CRM_Utils_Date::customFormat($period_start_on_raw->format('Y-m-d'),
                   Civi::settings()->get('dateformatshortdate'));
@@ -477,7 +477,7 @@ class CRM_Itemmanager_Form_ItemmanagerSetting extends CRM_Core_Form {
               $field_list = array();
               foreach ($itemmanager_price_fields As $itemmanager_price_field)
               {
-                  $itemmanager_id = CRM_Utils_Array::value('id', $itemmanager_price_field);
+                  $itemmanager_id = $itemmanager_price_field['id'];
 
                   //check still if exists
                   $fieldcount = civicrm_api3('PriceFieldValue', 'getcount',
@@ -497,33 +497,33 @@ class CRM_Itemmanager_Form_ItemmanagerSetting extends CRM_Core_Form {
                   }
 
                   $pricefield = civicrm_api3('PriceField', 'getsingle',
-                      array('id' => (int)CRM_Utils_Array::value('price_field_id', $pricefieldvalue)));
+                      array('id' => (int)$pricefieldvalue['price_field_id']));
                   if (!isset($pricefield)) {
                       $this->_errormessages[] = 'Could not get the price field ' .
-                          (int)CRM_Utils_Array::value('price_field_id', $pricefieldvalue);
+                          (int)$pricefieldvalue['price_field_id'];
                       continue;
                   }
 
                   //just copy field data for info
                   if(isset($pricefield['active_on']))
                       $active_on = CRM_Utils_Date::customFormat(date_create(
-                          CRM_Utils_Array::value('active_on',$pricefield))->format('Y-m-d'),
+                          $pricefield['active_on'])->format('Y-m-d'),
                           Civi::settings()->get('dateformatshortdate'));
                   else
                       $active_on = "-";
                   if(isset($pricefield['expire_on']))
                       $expire_on = CRM_Utils_Date::customFormat(date_create(
-                          CRM_Utils_Array::value('expire_on',$pricefield))->format('Y-m-d'),
+                          $pricefield['expire_on'])->format('Y-m-d'),
                           Civi::settings()->get('dateformatshortdate'));
                   else
                       $expire_on = "-";
 
                   $field_collection = array(
                       'manager_id' => (int)$itemmanager_id,
-                      'field_label' => CRM_Utils_Array::value('label',$pricefieldvalue),
+                      'field_label' => $pricefieldvalue['label'],
                       'active_on' => $active_on,
                       'expire_on' => $expire_on,
-                      'isactive' => CRM_Utils_Array::value('is_active',$pricefield) == 1? ts('Active'):'',
+                      'isactive' => $pricefield['is_active'] == 1? ts('Active'):'',
                       'ignore' => (int)$itemmanager_price_field['ignore'],
                       'extend' => (int)$itemmanager_price_field['extend'],
                       'novitiate' => (int)$itemmanager_price_field['novitiate'],
@@ -560,9 +560,9 @@ class CRM_Itemmanager_Form_ItemmanagerSetting extends CRM_Core_Form {
                   'periods_id' => (int)$itemmanager_period_id,
                   'period_start_on' => $period_start_on,
                   'period_start_on_raw' => $period_start_on_raw,
-                  'periods' => CRM_Utils_Array::value('periods',$itemmanager_period),
-                  'period_type' => CRM_Utils_Array::value('period_type',$itemmanager_period),
-                  'successor' => CRM_Utils_Array::value('itemmanager_period_successor_id',$itemmanager_period),
+                  'periods' => $itemmanager_period['periods'],
+                  'period_type' => $itemmanager_period['period_type'],
+                  'successor' => $itemmanager_period['itemmanager_period_successor_id'],
                   'hide' => (int)$hide,
                   'reverse' => (int)$reverse,
                   'selection' => $successor_selection,

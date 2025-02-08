@@ -130,7 +130,7 @@ class CRM_Itemmanager_Util
         );
         $result = array();
         CRM_Financial_BAO_FinancialTypeAccount::retrieve($searchParams, $result);
-        return CRM_Utils_Array::value('financial_account_id', $result);
+        return $result['financial_account_id'];
     }
 
     /**
@@ -482,7 +482,7 @@ class CRM_Itemmanager_Util
             if($sddarray['is_error']) return $sddarray;
             foreach ($sddarray['ooff_values'] As $sdd)
             {
-                $id = CRM_Utils_Array::value('entity_id', $sdd);
+                $id = $sdd['entity_id'];
 
                 $param = array(
                     'id' => (int) $id,
@@ -511,7 +511,7 @@ class CRM_Itemmanager_Util
 
             foreach ($sddarray['rcur_values'] As $sdd)
             {
-                $id = CRM_Utils_Array::value('entity_id', $sdd);
+                $id = $sdd['entity_id'];
 
                 $param = array(
                     'contribution_recur_id' => (int) $id,
@@ -526,7 +526,7 @@ class CRM_Itemmanager_Util
 
                 $paydata = array();
                 foreach ($contributions['values'] as $contribution)
-                    $paydata[(int)CRM_Utils_Array::value('id', $contribution)] = $contribution;
+                    $paydata[(int)$contribution['id']] = $contribution;
 
 
                 $collection = array(
@@ -594,8 +594,8 @@ class CRM_Itemmanager_Util
                     'memberdata' => $memberitem,
                     'typeinfo' => reset($typedata['values']),
                     'payinfo' => $paydata['values'],
-                    'status' => CRM_Utils_Array::value('label',$statusdata),
-                    'member_active' => CRM_Utils_Array::value('is_current_member',$statusdata),
+                    'status' => $statusdata['label'],
+                    'member_active' => $statusdata['is_current_member'],
                 );
 
                 $memberarray[] = $membercollection;
@@ -815,10 +815,11 @@ class CRM_Itemmanager_Util
      * @param $start_on
      * @param bool $help
      * @param bool $new missing fieldvalues from the successor
+     * @param bool $reverse periods are planed reverse
      */
     private static function addChoice(&$choices,$fielvaluedid,$periodidx,
                                       $index,$periods,$start_on,$lastDate,
-                                        $help=false, $new = false)
+                                        $help=false, $new = false, $reverse = false)
     {
 
         $typemap = array();
@@ -863,20 +864,20 @@ class CRM_Itemmanager_Util
             return;
         }
 
-        $choices['help_pre'][$index] =  CRM_Utils_Array::value('help_pre',$pricefield) .'</br>'.
-            CRM_Utils_Array::value('help_pre',$pricefieldvalue);
+        $choices['help_pre'][$index] =  $pricefield['help_pre'] .'</br>'.
+            $pricefieldvalue['help_pre'];
 
         //calculate the interval price
-        $summary_price = CRM_Utils_Array::value('amount',$pricefieldvalue)/$periods;
+        $summary_price = $reverse ?  $pricefieldvalue['amount']: $pricefieldvalue['amount']/$periods;
         $summary_display = CRM_Utils_Money::format($summary_price, NULL, NULL, TRUE);
         //just copy field data for info
-        $active_on = CRM_Utils_Date::customFormat(date_create( CRM_Utils_Array::value('active_on',$pricefield))->format('Y-m-d'),
+        $active_on = CRM_Utils_Date::customFormat(date_create( $pricefield['active_on'])->format('Y-m-d'),
             Civi::settings()->get('dateformatshortdate'));
-        $expire_on = CRM_Utils_Date::customFormat(date_create( CRM_Utils_Array::value('expire_on',$pricefield))->format('Y-m-d'),
+        $expire_on = CRM_Utils_Date::customFormat(date_create( $pricefield['expire_on'])->format('Y-m-d'),
             Civi::settings()->get('dateformatshortdate'));
 
-        $choices['item_selection'][$index] = '('.(int)$pricefield['price_set_id'].') '.CRM_Utils_Array::value('label',$pricefieldvalue).' '.
-                                                        CRM_Utils_Array::value('title',$priceset);
+        $choices['item_selection'][$index] = '('.(int)$pricefield['price_set_id'].') '.$pricefieldvalue['label'].' '.
+                                                        $priceset['title'];
 
         $choices['field_value_selection'][$index] = (int)$fielvaluedid;
         $choices['price_set_selection'][$index] = (int)$pricefield['price_set_id'];
@@ -1148,7 +1149,10 @@ class CRM_Itemmanager_Util
                 $old_period->periods,
                 $old_period->period_start_on,
                 $lastDate,
-                true
+                true,
+                false,
+                (bool)$old_period->reverse
+
             );
 
             $choices['itemmanager_selection'][1] = null;
@@ -1183,7 +1187,9 @@ class CRM_Itemmanager_Util
             $successor_period->periods,
             $successor_period->period_start_on,
             $lastDate,
-            true
+            true,
+            false,
+            (bool)$successor_period->reverse
         );
 
         $choices['itemmanager_selection'][1] = $old_item->id;
@@ -1194,7 +1200,10 @@ class CRM_Itemmanager_Util
             1,
             $old_period->periods,
             $old_period->period_start_on,
-            $lastDate
+            $lastDate,
+            false,
+            false,
+            (bool)$old_period->reverse
 
         );
 

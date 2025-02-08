@@ -86,6 +86,21 @@
                 <td><span id="{$element_item_name}_active_on">{$lineitem.new_active_on}</span></td>
                 <td><span id="{$element_item_name}_expire_on">{$lineitem.new_expire_on}</span></td>
               </tr>
+            {if $lineitem.bidding}
+              <tr style="background-color:lightsalmon">
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td><span class="content">{ts}Bidding round{/ts}</span></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+
+              </tr>
+            {/if}
 
             </tbody>
 

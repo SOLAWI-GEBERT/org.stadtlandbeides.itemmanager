@@ -50,7 +50,7 @@
             <tr class="columnheader">
               <th class="medium">{ts}Item Name{/ts}</th>
               <th class="small">{ts}Active On{/ts}</th>
-              <thclass="small">{ts}Expire On{/ts}</th>
+              <th class="small">{ts}Expire On{/ts}</th>
               <th class="small">{ts}Active{/ts}</th>
               <th class="small">{ts}Ignore{/ts}</th>
               <th class="small">{ts}Extend{/ts}</th>

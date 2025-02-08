@@ -165,6 +165,13 @@ abstract class CRM_Itemmanager_Logic_RenewalPaymentPlanBase {
     protected $periodsIdx;
 
     /**
+     * Periods are based on basic price
+     *
+     * @var bool
+     */
+    protected $reverse;
+
+    /**
      * Start of the new period.
      *
      * @var DateTime
@@ -179,7 +186,7 @@ abstract class CRM_Itemmanager_Logic_RenewalPaymentPlanBase {
    *
    * @param $lastMembershipID related membership for the renewal
    */
-  public function __construct($lastMembershipID,$lastContributionID,$periods,$newisodate, $periodsIdx=2) {
+  public function __construct($lastMembershipID,$lastContributionID,$periods,$newisodate, $periodsIdx=2, $reverse=FALSE) {
 
 
       $this->lastMembershipID = $lastMembershipID;
@@ -191,6 +198,7 @@ abstract class CRM_Itemmanager_Logic_RenewalPaymentPlanBase {
       $this->newPeriodStartOn->setTime(12,0);
       $this->periods = $periods;
       $this->periodsIdx = $periodsIdx;
+      $this->reverse = $reverse;
 
       //    $this->setContributionPendingStatusValue();
 //    $this->setContributionStatusesNameMap();
@@ -483,7 +491,7 @@ abstract class CRM_Itemmanager_Logic_RenewalPaymentPlanBase {
 
     $membershipMinimumFee = $this->getMembershipMinimumFeeFromLineItem($lineItem, $priceFieldValue);
     if ($this->isUseLatestPriceForMembership($lineItem)) {
-      $unitPrice = $this->calculateSingleInstallmentAmount($membershipMinimumFee);
+      $unitPrice = $this->calculateSingleInstallmentAmount($membershipMinimumFee, (bool)$this->reverse);
     }
     else {
       $unitPrice = $lineItem['unit_price'];
@@ -588,11 +596,12 @@ abstract class CRM_Itemmanager_Logic_RenewalPaymentPlanBase {
    *
    * @return mixed
    */
-  private function calculateSingleInstallmentAmount($amount) {
+  private function calculateSingleInstallmentAmount($amount, $reverse) {
     $resultAmount =  $amount;
 
     if ($this->currentRecurringContribution['installments'] > 1) {
-      $resultAmount = MoneyUtilities::roundToCurrencyPrecision(($amount / $this->currentRecurringContribution['installments']));
+      $resultAmount = $reverse ? MoneyUtilities::roundToCurrencyPrecision($amount)
+          :MoneyUtilities::roundToCurrencyPrecision(($amount / $this->currentRecurringContribution['installments']));
     }
 
     return $resultAmount;
@@ -795,8 +804,13 @@ abstract class CRM_Itemmanager_Logic_RenewalPaymentPlanBase {
       $pricefieldvalue = civicrm_api3('PriceFieldValue', 'getsingle',
           array('id' => (int)$manager_item->price_field_value_id));
 
+      $periods = (int)$period_item->periods;
+      if ($manager_item->enable_period_exception)
+          $periods = $manager_item->exception_periods;
+      if (!$valid or $periods == 0 or $period_item->reverse) $periods = 1;
+
       //calculate the interval price
-      $unit_price = CRM_Utils_Array::value('amount',$pricefieldvalue)/(int)$period_item->periods;
+      $unit_price = $pricefieldvalue['amount']/$periods;
 
       $tax = 0.0;
       if(CRM_Itemmanager_Util::isTaxEnabledInFinancialType((int) $pricefieldvalue['financial_type_id']))
@@ -932,7 +946,7 @@ abstract class CRM_Itemmanager_Logic_RenewalPaymentPlanBase {
 
     $contribution = CRM_Contribute_BAO_Contribution::create($params);
 
-    $contributionSoftParams = CRM_Utils_Array::value('soft_credit', $params);
+    $contributionSoftParams = $params['soft_credit'];
     if (!empty($contributionSoftParams)) {
       $contributionSoftParams['contribution_id'] = $contribution->id;
       $contributionSoftParams['currency'] = $contribution->currency;
@@ -990,16 +1004,16 @@ abstract class CRM_Itemmanager_Logic_RenewalPaymentPlanBase {
    * @throws \CiviCRM_API3_Exception
    */
   private function isDuplicateLineItem($lineItem) {
-    $priceFieldID = CRM_Utils_Array::value('price_field_id', $lineItem);
-    $priceFieldValueID = CRM_Utils_Array::value('price_field_value_id', $lineItem);
+    $priceFieldID = $lineItem['price_field_id'];
+    $priceFieldValueID = $lineItem['price_field_value_id'];
     if (!$priceFieldID || !$priceFieldValueID) {
       return FALSE;
     }
 
     $result = civicrm_api3('LineItem', 'get', [
-      'entity_table' => CRM_Utils_Array::value('entity_table', $lineItem),
-      'entity_id' => CRM_Utils_Array::value('entity_id', $lineItem),
-      'contribution_id' => CRM_Utils_Array::value('contribution_id', $lineItem),
+      'entity_table' => $lineItem['entity_table'],
+      'entity_id' => $lineItem['entity_id'],
+      'contribution_id' => $lineItem['contribution_id'],
       'price_field_id' => $priceFieldID,
       'price_field_value_id' => $priceFieldValueID,
     ]);

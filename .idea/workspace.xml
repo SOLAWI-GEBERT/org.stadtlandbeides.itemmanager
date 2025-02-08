@@ -7,16 +7,104 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="8a4e2072-c43d-4029-bc01-730e5001dde6" name="Default Changelist" comment="ENH connect new settings to database">
+    <list default="true" id="8a4e2072-c43d-4029-bc01-730e5001dde6" name="Default Changelist" comment="ENH use reverse period calculation for updates">
+      <change beforePath="$PROJECT_DIR$/../civicrm-core/CRM/Activity/Form/ActivityFilter.php" beforeDir="false" afterPath="$PROJECT_DIR$/../civicrm-core/CRM/Activity/Form/ActivityFilter.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../civicrm-core/CRM/Activity/Page/AJAX.php" beforeDir="false" afterPath="$PROJECT_DIR$/../civicrm-core/CRM/Activity/Page/AJAX.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../civicrm-core/CRM/Admin/Form/Options.php" beforeDir="false" afterPath="$PROJECT_DIR$/../civicrm-core/CRM/Admin/Form/Options.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../civicrm-core/CRM/Admin/Form/Setting/Localization.php" beforeDir="false" afterPath="$PROJECT_DIR$/../civicrm-core/CRM/Admin/Form/Setting/Localization.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../civicrm-core/CRM/Admin/Form/Setting/Mail.php" beforeDir="false" afterPath="$PROJECT_DIR$/../civicrm-core/CRM/Admin/Form/Setting/Mail.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../civicrm-core/CRM/Admin/Form/Setting/Smtp.php" beforeDir="false" afterPath="$PROJECT_DIR$/../civicrm-core/CRM/Admin/Form/Setting/Smtp.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../civicrm-core/CRM/Admin/Page/AJAX.php" beforeDir="false" afterPath="$PROJECT_DIR$/../civicrm-core/CRM/Admin/Page/AJAX.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../civicrm-core/CRM/Badge/BAO/Badge.php" beforeDir="false" afterPath="$PROJECT_DIR$/../civicrm-core/CRM/Badge/BAO/Badge.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../civicrm-core/CRM/Badge/Form/Layout.php" beforeDir="false" afterPath="$PROJECT_DIR$/../civicrm-core/CRM/Badge/Form/Layout.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../civicrm-core/CRM/Campaign/Page/Petition/ThankYou.php" beforeDir="false" afterPath="$PROJECT_DIR$/../civicrm-core/CRM/Campaign/Page/Petition/ThankYou.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../civicrm-core/CRM/Case/XMLProcessor/Report.php" beforeDir="false" afterPath="$PROJECT_DIR$/../civicrm-core/CRM/Case/XMLProcessor/Report.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../civicrm-core/CRM/Contact/BAO/Relationship.php" beforeDir="false" afterPath="$PROJECT_DIR$/../civicrm-core/CRM/Contact/BAO/Relationship.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../civicrm-core/CRM/Contact/Form/Contact.php" beforeDir="false" afterPath="$PROJECT_DIR$/../civicrm-core/CRM/Contact/Form/Contact.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../civicrm-core/CRM/Contact/Form/DedupeRules.php" beforeDir="false" afterPath="$PROJECT_DIR$/../civicrm-core/CRM/Contact/Form/DedupeRules.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../civicrm-core/CRM/Contact/Form/Search/Builder.php" beforeDir="false" afterPath="$PROJECT_DIR$/../civicrm-core/CRM/Contact/Form/Search/Builder.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../civicrm-core/CRM/Contact/Form/Task/EmailTrait.php" beforeDir="false" afterPath="$PROJECT_DIR$/../civicrm-core/CRM/Contact/Form/Task/EmailTrait.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../civicrm-core/CRM/Contact/Form/Task/PDFTrait.php" beforeDir="false" afterPath="$PROJECT_DIR$/../civicrm-core/CRM/Contact/Form/Task/PDFTrait.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../civicrm-core/CRM/Contact/Import/Form/MapField.php" beforeDir="false" afterPath="$PROJECT_DIR$/../civicrm-core/CRM/Contact/Import/Form/MapField.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../civicrm-core/CRM/Contact/Page/AJAX.php" beforeDir="false" afterPath="$PROJECT_DIR$/../civicrm-core/CRM/Contact/Page/AJAX.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../civicrm-core/CRM/Contribute/BAO/Contribution.php" beforeDir="false" afterPath="$PROJECT_DIR$/../civicrm-core/CRM/Contribute/BAO/Contribution.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../civicrm-core/CRM/Contribute/BAO/FinancialProcessor.php" beforeDir="false" afterPath="$PROJECT_DIR$/../civicrm-core/CRM/Contribute/BAO/FinancialProcessor.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../civicrm-core/CRM/Contribute/BAO/Query.php" beforeDir="false" afterPath="$PROJECT_DIR$/../civicrm-core/CRM/Contribute/BAO/Query.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../civicrm-core/CRM/Contribute/Form/AbstractEditPayment.php" beforeDir="false" afterPath="$PROJECT_DIR$/../civicrm-core/CRM/Contribute/Form/AbstractEditPayment.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../civicrm-core/CRM/Contribute/Form/Contribution.php" beforeDir="false" afterPath="$PROJECT_DIR$/../civicrm-core/CRM/Contribute/Form/Contribution.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../civicrm-core/CRM/Contribute/Form/ContributionPage.php" beforeDir="false" afterPath="$PROJECT_DIR$/../civicrm-core/CRM/Contribute/Form/ContributionPage.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../civicrm-core/CRM/Contribute/Form/ContributionPage/Amount.php" beforeDir="false" afterPath="$PROJECT_DIR$/../civicrm-core/CRM/Contribute/Form/ContributionPage/Amount.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../civicrm-core/CRM/Contribute/Form/ContributionView.php" beforeDir="false" afterPath="$PROJECT_DIR$/../civicrm-core/CRM/Contribute/Form/ContributionView.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../civicrm-core/CRM/Core/BAO/Navigation.php" beforeDir="false" afterPath="$PROJECT_DIR$/../civicrm-core/CRM/Core/BAO/Navigation.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../civicrm-core/CRM/Core/Form.php" beforeDir="false" afterPath="$PROJECT_DIR$/../civicrm-core/CRM/Core/Form.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../civicrm-core/CRM/Core/Form/RecurringEntity.php" beforeDir="false" afterPath="$PROJECT_DIR$/../civicrm-core/CRM/Core/Form/RecurringEntity.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../civicrm-core/CRM/Core/Form/ShortCode.php" beforeDir="false" afterPath="$PROJECT_DIR$/../civicrm-core/CRM/Core/Form/ShortCode.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../civicrm-core/CRM/Core/Form/Task/PDFLetterCommon.php" beforeDir="false" afterPath="$PROJECT_DIR$/../civicrm-core/CRM/Core/Form/Task/PDFLetterCommon.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../civicrm-core/CRM/Core/OptionValue.php" beforeDir="false" afterPath="$PROJECT_DIR$/../civicrm-core/CRM/Core/OptionValue.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../civicrm-core/CRM/Core/Payment/FirstData.php" beforeDir="false" afterPath="$PROJECT_DIR$/../civicrm-core/CRM/Core/Payment/FirstData.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../civicrm-core/CRM/Core/Payment/Realex.php" beforeDir="false" afterPath="$PROJECT_DIR$/../civicrm-core/CRM/Core/Payment/Realex.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../civicrm-core/CRM/Core/Task.php" beforeDir="false" afterPath="$PROJECT_DIR$/../civicrm-core/CRM/Core/Task.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../civicrm-core/CRM/Custom/Form/Option.php" beforeDir="false" afterPath="$PROJECT_DIR$/../civicrm-core/CRM/Custom/Form/Option.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../civicrm-core/CRM/Custom/Form/Preview.php" beforeDir="false" afterPath="$PROJECT_DIR$/../civicrm-core/CRM/Custom/Form/Preview.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../civicrm-core/CRM/Event/BAO/Event.php" beforeDir="false" afterPath="$PROJECT_DIR$/../civicrm-core/CRM/Event/BAO/Event.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../civicrm-core/CRM/Event/Form/ManageEvent/Fee.php" beforeDir="false" afterPath="$PROJECT_DIR$/../civicrm-core/CRM/Event/Form/ManageEvent/Fee.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../civicrm-core/CRM/Event/Form/ManageEvent/Registration.php" beforeDir="false" afterPath="$PROJECT_DIR$/../civicrm-core/CRM/Event/Form/ManageEvent/Registration.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../civicrm-core/CRM/Event/Form/Participant.php" beforeDir="false" afterPath="$PROJECT_DIR$/../civicrm-core/CRM/Event/Form/Participant.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../civicrm-core/CRM/Event/Form/Registration/AdditionalParticipant.php" beforeDir="false" afterPath="$PROJECT_DIR$/../civicrm-core/CRM/Event/Form/Registration/AdditionalParticipant.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../civicrm-core/CRM/Event/Form/Registration/Register.php" beforeDir="false" afterPath="$PROJECT_DIR$/../civicrm-core/CRM/Event/Form/Registration/Register.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../civicrm-core/CRM/Event/Form/Task/Batch.php" beforeDir="false" afterPath="$PROJECT_DIR$/../civicrm-core/CRM/Event/Form/Task/Batch.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../civicrm-core/CRM/Export/BAO/ExportProcessor.php" beforeDir="false" afterPath="$PROJECT_DIR$/../civicrm-core/CRM/Export/BAO/ExportProcessor.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../civicrm-core/CRM/Import/Parser.php" beforeDir="false" afterPath="$PROJECT_DIR$/../civicrm-core/CRM/Import/Parser.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../civicrm-core/CRM/Member/BAO/Query.php" beforeDir="false" afterPath="$PROJECT_DIR$/../civicrm-core/CRM/Member/BAO/Query.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../civicrm-core/CRM/Member/Form.php" beforeDir="false" afterPath="$PROJECT_DIR$/../civicrm-core/CRM/Member/Form.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../civicrm-core/CRM/Member/Form/MembershipBlock.php" beforeDir="false" afterPath="$PROJECT_DIR$/../civicrm-core/CRM/Member/Form/MembershipBlock.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../civicrm-core/CRM/Member/Form/MembershipRenewal.php" beforeDir="false" afterPath="$PROJECT_DIR$/../civicrm-core/CRM/Member/Form/MembershipRenewal.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../civicrm-core/CRM/Member/Form/MembershipType.php" beforeDir="false" afterPath="$PROJECT_DIR$/../civicrm-core/CRM/Member/Form/MembershipType.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../civicrm-core/CRM/Member/Form/Task/Batch.php" beforeDir="false" afterPath="$PROJECT_DIR$/../civicrm-core/CRM/Member/Form/Task/Batch.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../civicrm-core/CRM/Member/Form/Task/PDFLetter.php" beforeDir="false" afterPath="$PROJECT_DIR$/../civicrm-core/CRM/Member/Form/Task/PDFLetter.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../civicrm-core/CRM/PCP/Form/Contribute.php" beforeDir="false" afterPath="$PROJECT_DIR$/../civicrm-core/CRM/PCP/Form/Contribute.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../civicrm-core/CRM/Pledge/BAO/Pledge.php" beforeDir="false" afterPath="$PROJECT_DIR$/../civicrm-core/CRM/Pledge/BAO/Pledge.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../civicrm-core/CRM/Pledge/BAO/PledgeBlock.php" beforeDir="false" afterPath="$PROJECT_DIR$/../civicrm-core/CRM/Pledge/BAO/PledgeBlock.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../civicrm-core/CRM/Price/BAO/PriceFieldValue.php" beforeDir="false" afterPath="$PROJECT_DIR$/../civicrm-core/CRM/Price/BAO/PriceFieldValue.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../civicrm-core/CRM/Price/Form/Field.php" beforeDir="false" afterPath="$PROJECT_DIR$/../civicrm-core/CRM/Price/Form/Field.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../civicrm-core/CRM/Price/Form/Set.php" beforeDir="false" afterPath="$PROJECT_DIR$/../civicrm-core/CRM/Price/Form/Set.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../civicrm-core/CRM/Report/Form.php" beforeDir="false" afterPath="$PROJECT_DIR$/../civicrm-core/CRM/Report/Form.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../civicrm-core/CRM/Report/Form/Contribute/HouseholdSummary.php" beforeDir="false" afterPath="$PROJECT_DIR$/../civicrm-core/CRM/Report/Form/Contribute/HouseholdSummary.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../civicrm-core/CRM/Report/Form/Contribute/OrganizationSummary.php" beforeDir="false" afterPath="$PROJECT_DIR$/../civicrm-core/CRM/Report/Form/Contribute/OrganizationSummary.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../civicrm-core/CRM/Report/Form/Contribute/Summary.php" beforeDir="false" afterPath="$PROJECT_DIR$/../civicrm-core/CRM/Report/Form/Contribute/Summary.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../civicrm-core/CRM/Report/Form/Member/ContributionDetail.php" beforeDir="false" afterPath="$PROJECT_DIR$/../civicrm-core/CRM/Report/Form/Member/ContributionDetail.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../civicrm-core/CRM/Report/Page/Report.php" beforeDir="false" afterPath="$PROJECT_DIR$/../civicrm-core/CRM/Report/Page/Report.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../civicrm-core/CRM/Report/Utils/Get.php" beforeDir="false" afterPath="$PROJECT_DIR$/../civicrm-core/CRM/Report/Utils/Get.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../civicrm-core/CRM/Report/Utils/Report.php" beforeDir="false" afterPath="$PROJECT_DIR$/../civicrm-core/CRM/Report/Utils/Report.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../civicrm-core/CRM/SMS/Form/Upload.php" beforeDir="false" afterPath="$PROJECT_DIR$/../civicrm-core/CRM/SMS/Form/Upload.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../civicrm-core/CRM/UF/Form/Field.php" beforeDir="false" afterPath="$PROJECT_DIR$/../civicrm-core/CRM/UF/Form/Field.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../civicrm-core/CRM/Utils/Chart.php" beforeDir="false" afterPath="$PROJECT_DIR$/../civicrm-core/CRM/Utils/Chart.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../civicrm-core/api/v3/Generic.php" beforeDir="false" afterPath="$PROJECT_DIR$/../civicrm-core/api/v3/Generic.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../civicrm-core/ext/civigrant/CRM/Report/Form/Grant/Statistics.php" beforeDir="false" afterPath="$PROJECT_DIR$/../civicrm-core/ext/civigrant/CRM/Report/Form/Grant/Statistics.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../civicrm-core/ext/ckeditor4/CRM/Ckeditor4/Form/CKEditorConfig.php" beforeDir="false" afterPath="$PROJECT_DIR$/../civicrm-core/ext/ckeditor4/CRM/Ckeditor4/Form/CKEditorConfig.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../civicrm-core/ext/elavon/CRM/Core/Payment/Elavon.php" beforeDir="false" afterPath="$PROJECT_DIR$/../civicrm-core/ext/elavon/CRM/Core/Payment/Elavon.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../civicrm-core/ext/eventcart/CRM/Event/Cart/Form/Checkout/Payment.php" beforeDir="false" afterPath="$PROJECT_DIR$/../civicrm-core/ext/eventcart/CRM/Event/Cart/Form/Checkout/Payment.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../civicrm-core/ext/ewaysingle/CRM/Core/Payment/eWAY.php" beforeDir="false" afterPath="$PROJECT_DIR$/../civicrm-core/ext/ewaysingle/CRM/Core/Payment/eWAY.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../civicrm-core/ext/legacycustomsearches/CRM/Contact/Form/Search/Custom/FullText/AbstractPartialQuery.php" beforeDir="false" afterPath="$PROJECT_DIR$/../civicrm-core/ext/legacycustomsearches/CRM/Contact/Form/Search/Custom/FullText/AbstractPartialQuery.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../civicrm-core/ext/payflowpro/CRM/Core/Payment/PayflowPro.php" beforeDir="false" afterPath="$PROJECT_DIR$/../civicrm-core/ext/payflowpro/CRM/Core/Payment/PayflowPro.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../civicrm-core/ext/tellafriend/CRM/Friend/Form.php" beforeDir="false" afterPath="$PROJECT_DIR$/../civicrm-core/ext/tellafriend/CRM/Friend/Form.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../civicrm-core/tests/extensions/shimmy/shimmy.civix.php" beforeDir="false" afterPath="$PROJECT_DIR$/../civicrm-core/tests/extensions/shimmy/shimmy.civix.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../civicrm-core/tests/phpunit/Civi/Payment/PropertyBagTest.php" beforeDir="false" afterPath="$PROJECT_DIR$/../civicrm-core/tests/phpunit/Civi/Payment/PropertyBagTest.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CRM/Itemmanager/BAO/ItemmanagerPeriods.php" beforeDir="false" afterPath="$PROJECT_DIR$/CRM/Itemmanager/BAO/ItemmanagerPeriods.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CRM/Itemmanager/BAO/ItemmanagerSettings.php" beforeDir="false" afterPath="$PROJECT_DIR$/CRM/Itemmanager/BAO/ItemmanagerSettings.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CRM/Itemmanager/Form/ItemmanagerOptions.php" beforeDir="false" afterPath="$PROJECT_DIR$/CRM/Itemmanager/Form/ItemmanagerOptions.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CRM/Itemmanager/Form/ItemmanagerSetting.php" beforeDir="false" afterPath="$PROJECT_DIR$/CRM/Itemmanager/Form/ItemmanagerSetting.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CRM/Itemmanager/Form/LinkSepaWrapper.php" beforeDir="false" afterPath="$PROJECT_DIR$/CRM/Itemmanager/Form/LinkSepaWrapper.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CRM/Itemmanager/Form/RenewItemperiods.php" beforeDir="false" afterPath="$PROJECT_DIR$/CRM/Itemmanager/Form/RenewItemperiods.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CRM/Itemmanager/Form/RepairMissingContribution.php" beforeDir="false" afterPath="$PROJECT_DIR$/CRM/Itemmanager/Form/RepairMissingContribution.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CRM/Itemmanager/Logic/RenewalPaymentPlanBase.php" beforeDir="false" afterPath="$PROJECT_DIR$/CRM/Itemmanager/Logic/RenewalPaymentPlanBase.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CRM/Itemmanager/Page/Dashboard.php" beforeDir="false" afterPath="$PROJECT_DIR$/CRM/Itemmanager/Page/Dashboard.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CRM/Itemmanager/Page/LinkSepaPaymentsStub.php" beforeDir="false" afterPath="$PROJECT_DIR$/CRM/Itemmanager/Page/LinkSepaPaymentsStub.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CRM/Itemmanager/Page/UpdateItems.php" beforeDir="false" afterPath="$PROJECT_DIR$/CRM/Itemmanager/Page/UpdateItems.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CRM/Itemmanager/Upgrader.php" beforeDir="false" afterPath="$PROJECT_DIR$/CRM/Itemmanager/Upgrader.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/css/setting.css" beforeDir="false" afterPath="$PROJECT_DIR$/css/setting.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/CRM/Itemmanager/Form/LinkSepaWrapper.tpl" beforeDir="false" afterPath="$PROJECT_DIR$/templates/CRM/Itemmanager/Form/LinkSepaWrapper.tpl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/CRM/Itemmanager/Page/Dashboard.tpl" beforeDir="false" afterPath="$PROJECT_DIR$/templates/CRM/Itemmanager/Page/Dashboard.tpl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/CRM/Itemmanager/Page/LinkSepaPaymentsStub.tpl" beforeDir="false" afterPath="$PROJECT_DIR$/templates/CRM/Itemmanager/Page/LinkSepaPaymentsStub.tpl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CRM/Itemmanager/Util.php" beforeDir="false" afterPath="$PROJECT_DIR$/CRM/Itemmanager/Util.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/CRM/Itemmanager/Form/ItemmanagerSetting.tpl" beforeDir="false" afterPath="$PROJECT_DIR$/templates/CRM/Itemmanager/Form/ItemmanagerSetting.tpl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/CRM/Itemmanager/Form/RenewItemperiods.tpl" beforeDir="false" afterPath="$PROJECT_DIR$/templates/CRM/Itemmanager/Form/RenewItemperiods.tpl" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -92,19 +180,19 @@
     <option name="showLibraryContents" value="true" />
     <option name="showMembers" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/Users/linus/Documents/0_Development/org.stadtlandbeides.itemmanager/sql&quot;,
-    &quot;list.type.of.created.stylesheet&quot;: &quot;CSS&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "git-widget-placeholder": "main",
+    "last_opened_file_path": "/Users/linus/Documents/0_Development/org.stadtlandbeides.itemmanager/sql",
+    "list.type.of.created.stylesheet": "CSS",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/sql" />
@@ -239,7 +327,8 @@
       <workItem from="1737303557167" duration="9337000" />
       <workItem from="1737782405064" duration="7086000" />
       <workItem from="1737818163882" duration="10809000" />
-      <workItem from="1738572314674" duration="2301000" />
+      <workItem from="1738572314674" duration="3022000" />
+      <workItem from="1739013045416" duration="20658000" />
     </task>
     <task id="LOCAL-00006" summary="ENH Redesign Itemmanager dashboard">
       <created>1645023684110</created>
@@ -584,7 +673,7 @@
       <option name="project" value="LOCAL" />
       <updated>1731788187982</updated>
     </task>
-    <option name="localTasksCounter" value="56" />
+    <option name="localTasksCounter" value="57" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -602,7 +691,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="ENH First prototype of a lazy load version of the Sepa Link App" />
     <MESSAGE value="FIX Improve collapse and expand behavior" />
     <MESSAGE value="ENH Add javascript api handler to get interactive SEPA LINK App" />
     <MESSAGE value="FIX Remove wrong wait cycle" />
@@ -627,7 +715,8 @@
     <MESSAGE value="FIX correct calculation of tax" />
     <MESSAGE value="FIX Run civix upgrade" />
     <MESSAGE value="ENH connect new settings to database" />
-    <option name="LAST_COMMIT_MESSAGE" value="ENH connect new settings to database" />
+    <MESSAGE value="ENH use reverse period calculation for updates" />
+    <option name="LAST_COMMIT_MESSAGE" value="ENH use reverse period calculation for updates" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -684,18 +773,13 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php">
           <url>file://$PROJECT_DIR$/../Stadt-Land-Beides/JML3/media/civicrm/ext/org.stadtlandbeides.itemmanager/CRM/Itemmanager/Page/UpdateItems.php</url>
-          <line>427</line>
+          <line>428</line>
           <option name="timeStamp" value="26" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php">
           <url>file://$PROJECT_DIR$/../Stadt-Land-Beides/JML3/media/civicrm/ext/org.stadtlandbeides.itemmanager/CRM/Itemmanager/Page/UpdateItems.php</url>
-          <line>422</line>
+          <line>423</line>
           <option name="timeStamp" value="27" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="php">
-          <url>file://$PROJECT_DIR$/../Stadt-Land-Beides/JML3/administrator/components/com_civicrm/civicrm/CRM/Member/Page/Tab.php</url>
-          <line>256</line>
-          <option name="timeStamp" value="67" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php">
           <url>file://$PROJECT_DIR$/../Stadt-Land-Beides/JML3/media/civicrm/ext/biz.jmaconsulting.lineitemedit/CRM/Lineitemedit/Form/Edit.php</url>
@@ -708,21 +792,6 @@
           <option name="timeStamp" value="69" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php">
-          <url>file://$PROJECT_DIR$/../Stadt-Land-Beides/JML3/media/civicrm/ext/org.stadtlandbeides.itemmanager/CRM/Itemmanager/Form/ItemmanagerSetting.php</url>
-          <line>43</line>
-          <option name="timeStamp" value="70" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="php">
-          <url>file://$PROJECT_DIR$/../Stadt-Land-Beides/JML3/media/civicrm/ext/org.stadtlandbeides.itemmanager/CRM/Itemmanager/Form/ItemmanagerSetting.php</url>
-          <line>110</line>
-          <option name="timeStamp" value="71" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="php">
-          <url>file://$PROJECT_DIR$/../Stadt-Land-Beides/JML3/media/civicrm/ext/org.stadtlandbeides.itemmanager/CRM/Itemmanager/Form/ItemmanagerSetting.php</url>
-          <line>444</line>
-          <option name="timeStamp" value="72" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="php">
           <url>file://$PROJECT_DIR$/../Stadt-Land-Beides/JML3/media/civicrm/ext/org.stadtlandbeides.itemmanager/CRM/Itemmanager/Page/LinkSepaPaymentsStub.php</url>
           <line>33</line>
           <option name="timeStamp" value="73" />
@@ -731,6 +800,26 @@
           <url>file://$PROJECT_DIR$/../Stadt-Land-Beides/JML3/media/civicrm/ext/org.stadtlandbeides.itemmanager/CRM/Itemmanager/Page/LinkSepaPaymentsStub.php</url>
           <line>346</line>
           <option name="timeStamp" value="75" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="php">
+          <url>file://$PROJECT_DIR$/../Stadt-Land-Beides/JML3/media/civicrm/ext/org.stadtlandbeides.itemmanager/CRM/Itemmanager/Form/RenewItemperiods.php</url>
+          <line>206</line>
+          <option name="timeStamp" value="97" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="php">
+          <url>file://$PROJECT_DIR$/../Stadt-Land-Beides/JML3/media/civicrm/ext/org.stadtlandbeides.itemmanager/CRM/Itemmanager/Util.php</url>
+          <line>1173</line>
+          <option name="timeStamp" value="104" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="php">
+          <url>file://$PROJECT_DIR$/../Stadt-Land-Beides/JML3/media/civicrm/ext/org.stadtlandbeides.itemmanager/CRM/Itemmanager/Logic/RenewalPaymentPlanBase.php</url>
+          <line>601</line>
+          <option name="timeStamp" value="110" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="php">
+          <url>file://$PROJECT_DIR$/../Stadt-Land-Beides/JML3/media/civicrm/ext/org.stadtlandbeides.itemmanager/CRM/Itemmanager/Logic/RenewalPaymentPlanBase.php</url>
+          <line>493</line>
+          <option name="timeStamp" value="111" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

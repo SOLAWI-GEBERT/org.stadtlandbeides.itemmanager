@@ -39,7 +39,7 @@ class CRM_Itemmanager_Form_LinkSepaWrapper extends CRM_Core_Form {
             return;
         }
 
-        CRM_Utils_System::setTitle(E::ts('Payments relation for').' '.CRM_Utils_Array::value('display_name', $contact));
+        CRM_Utils_System::setTitle(E::ts('Payments relation for').' '.$contact['display_name']);
 
         $this->assign('contact_id', $this->_contact_id);
 
@@ -53,9 +53,9 @@ class CRM_Itemmanager_Form_LinkSepaWrapper extends CRM_Core_Form {
         foreach ($itemmanager_price_fields as $item)
         {
 
-            $price_id = CRM_Utils_Array::value('price_field_value_id', $item);
-            $ignore = CRM_Utils_Array::value('ignore', $item);
-            $novitiate = CRM_Utils_Array::value('novitiate', $item);
+            $price_id = $item['price_field_value_id'];
+            $ignore = $item['ignore'];
+            $novitiate = $item['novitiate'];
             //avoid general contribution amount etc.
             if($ignore && !$novitiate) continue;
 
@@ -71,7 +71,7 @@ class CRM_Itemmanager_Form_LinkSepaWrapper extends CRM_Core_Form {
             if(!$price_origin)
                 continue;
 
-            $financial_id = CRM_Utils_Array::value('financial_type_id', $price_origin);
+            $financial_id = $price_origin['financial_type_id'];
 
             //check further efforts first
             if(array_key_exists($financial_id, $this->_relations)) continue;
@@ -83,7 +83,7 @@ class CRM_Itemmanager_Form_LinkSepaWrapper extends CRM_Core_Form {
                 continue;
             }
 
-            $finance_name = CRM_Utils_Array::value('name', $finance_type);
+            $finance_name = $finance_type['name'];
 
             //basic dictionary with default settings
             $this->_relations[(int)$financial_id] = array(

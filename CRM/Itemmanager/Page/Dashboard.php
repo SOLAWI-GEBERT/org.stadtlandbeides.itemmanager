@@ -105,7 +105,7 @@ class CRM_Itemmanager_Page_Dashboard extends CRM_Core_Page {
             }
 
             $contribution = civicrm_api3('Contribution', 'getsingle', array('id' => (int)$contribution_link['contribution_id']));
-            $contrib_date = CRM_Utils_Array::value('receive_date', $contribution);
+            $contrib_date = $contribution['receive_date'];
             $line_timestamp = date_create($contrib_date);
 
             foreach ($linerecords As $lineitem) {
@@ -113,11 +113,11 @@ class CRM_Itemmanager_Page_Dashboard extends CRM_Core_Page {
                 try {
 
                     $max_field_id = CRM_Itemmanager_Util::getLastPricefieldSuccessor(
-                        CRM_Utils_Array::value('id', $lineitem['valuedata']));
+                        $lineitem['valuedata']['id']);
 
                     $line_date = $line_timestamp->format('Y-M');
-                    $field_id = CRM_Utils_Array::value('id', $lineitem['fielddata']);
-                    $item_quantity = CRM_Utils_Array::value('qty', $lineitem['linedata']);
+                    $field_id = $lineitem['fielddata']['id'];
+                    $item_quantity = $lineitem['linedata']['qty'];
 
                     //new stuff
                     if (!array_key_exists($max_field_id, $field_data))
@@ -126,7 +126,7 @@ class CRM_Itemmanager_Page_Dashboard extends CRM_Core_Page {
                     if (!array_key_exists($item_quantity, $_field)) {
                         $_details = array(
                             'item_quantity' => (string)$item_quantity,
-                            'item_label' => CRM_Utils_Array::value('label', $lineitem['linedata']),
+                            'item_label' => $lineitem['linedata']['label'],
                             'item_dates' => array(),
                             'min' => null,
                             'max' => null,
@@ -147,7 +147,7 @@ class CRM_Itemmanager_Page_Dashboard extends CRM_Core_Page {
                         $e->getMessage());
                     $this->processDetail($membership['typeinfo']['name'],
                         (int)$contribution_link['contribution_id'],
-                        CRM_Utils_Array::value('label', $lineitem['linedata']));
+                        $lineitem['linedata']['label']);
                     return;
                 }
 

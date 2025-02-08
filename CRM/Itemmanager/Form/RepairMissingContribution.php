@@ -73,7 +73,7 @@ class CRM_Itemmanager_Form_RepairMissingContribution extends CRM_Core_Form {
 
 
         $clone_contribution = civicrm_api3('Contribution', 'getsingle', array('id' => (int) $id));
-        $clone_date = CRM_Utils_Array::value('receive_date', $clone_contribution);
+        $clone_date = $clone_contribution['receive_date'];
 
         // Get the given memberships
         $member_array = CRM_Itemmanager_Util::getLastMemberShipsFullRecordByContactId($contact_id);
@@ -117,10 +117,13 @@ class CRM_Itemmanager_Form_RepairMissingContribution extends CRM_Core_Form {
             //get the itemmanager records
             $item_settings = new CRM_Itemmanager_BAO_ItemmanagerSettings();
             $valid=$item_settings->get('price_field_value_id',
-                CRM_Utils_Array::value('price_field_value_id', $line_item['linedata']));
+                $line_item['linedata']['price_field_value_id']);
+
+            $period = new CRM_Itemmanager_BAO_ItemmanagerPeriods();
+            $valid = $period->get('id',$item_settings->itemmanager_periods_id);
 
 
-            $quantity = CRM_Utils_Array::value('qty', $line_item['linedata']);
+            $quantity = $line_item['linedata']['qty'];
             $choices = $line_item['choices'];
             $periods = $choices['period_selection'][0][max(
                 array_keys($choices['period_selection'][0]))];
@@ -149,7 +152,7 @@ class CRM_Itemmanager_Form_RepairMissingContribution extends CRM_Core_Form {
                 if ($periods == 1) {
                     //Single Installments
                     $singleInstallmentRenewal = new CRM_Itemmanager_Logic_RenewalSingleInstallmentPlan((int)$current_membership['memberdata']['id'],
-                        (int) $id, $periods, $clone_date);
+                        (int) $id, $periods, $clone_date, (bool)$period->reverse);
 
                     foreach ($item_prototypes as $prototype)
                     {

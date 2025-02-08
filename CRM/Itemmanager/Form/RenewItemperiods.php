@@ -63,9 +63,9 @@ class CRM_Itemmanager_Form_RenewItemperiods extends CRM_Core_Form {
                     }
 
                     $last_contribution = civicrm_api3('Contribution', 'getsingle', array('id' => (int)$lastid));
-                    $last_date = CRM_Utils_Array::value('receive_date', $last_contribution);
+                    $last_date = $last_contribution['receive_date'];
                     $first_contribution = civicrm_api3('Contribution', 'getsingle', array('id' => (int)$firstid));
-                    $first_date = CRM_Utils_Array::value('receive_date', $first_contribution);
+                    $first_date = $first_contribution['receive_date'];
                     //endregion
 
 
@@ -82,13 +82,14 @@ class CRM_Itemmanager_Form_RenewItemperiods extends CRM_Core_Form {
                     foreach ($linerecords as $lineitem) {
                         //get the itemmanager records
                         $choices = CRM_Itemmanager_Util::getChoicesOfPricefieldsByFieldID(
-                            CRM_Utils_Array::value('price_field_value_id', $lineitem['linedata']), $last_date);
+                            $lineitem['linedata']['price_field_value_id'], $last_date);
 
                         //ignore
                         $item_settings = new CRM_Itemmanager_BAO_ItemmanagerSettings();
                         $valid = $item_settings->get('price_field_value_id',
-                            CRM_Utils_Array::value('price_field_value_id', $lineitem['linedata']));
+                            $lineitem['linedata']['price_field_value_id']);
                         if ($valid and $item_settings->ignore) continue;
+
 
                         // remember existing successor item manager id's
                         if (count($choices['itemmanager_selection']) > 0) {
@@ -96,26 +97,26 @@ class CRM_Itemmanager_Form_RenewItemperiods extends CRM_Core_Form {
                         }
 
                         $linecollection = array(
-                            'name' => '(' . CRM_Utils_Array::value('id', $lineitem['setdata']) . ') ' . CRM_Utils_Array::value('label', $lineitem['linedata']) . ' ' .
-                                CRM_Utils_Array::value('title', $lineitem['setdata']),
-                            'price_field_value_id' => CRM_Utils_Array::value('price_field_value_id', $lineitem['linedata']),
-                            'price_field_id' => CRM_Utils_Array::value('id', $lineitem['fielddata']),
-                            'price_set_id' => CRM_Utils_Array::value('id', $lineitem['setdata']),
-                            'last_qty' => CRM_Utils_Array::value('qty', $lineitem['linedata']),
+                            'name' => '(' . $lineitem['setdata']['id'] . ') ' . $lineitem['linedata']['label'] . ' ' .
+                                $lineitem['setdata']['title'],
+                            'price_field_value_id' => $lineitem['linedata']['price_field_value_id'],
+                            'price_field_id' => $lineitem['fielddata']['id'],
+                            'price_set_id' => $lineitem['setdata']['id'],
+                            'last_qty' => $lineitem['linedata']['qty'],
                             'last_price_per_interval' => CRM_Utils_Money::format(
-                                CRM_Utils_Array::value('unit_price', $lineitem['linedata']), NULL, NULL, TRUE),
+                                $lineitem['linedata']['unit_price'], NULL, NULL, TRUE),
                             'element_item_name' => 'member_' . $membership['memberdata']['id'] . '_' .
-                                'item_' . CRM_Utils_Array::value('id', $lineitem['fielddata']),
+                                'item_' . $lineitem['fielddata']['id'],
                             'element_hidden_name' => 'member_' . $membership['memberdata']['id'] . '_' .
-                                'item_' . CRM_Utils_Array::value('id', $lineitem['fielddata']) . '_hidden',
+                                'item_' . $lineitem['fielddata']['id'] . '_hidden',
                             'element_new_hidden_name' => 'member_' . $membership['memberdata']['id'] . '_' .
-                                'item_' . CRM_Utils_Array::value('id', $lineitem['fielddata']) . '_new_hidden',
+                                'item_' . $lineitem['fielddata']['id'] . '_new_hidden',
                             'element_quantity_name' => 'member_' . $membership['memberdata']['id'] . '_' .
-                                'item_' . CRM_Utils_Array::value('id', $lineitem['fielddata']) . '_' .
-                                'quantity_' . CRM_Utils_Array::value('price_field_value_id', $lineitem['linedata']),
+                                'item_' . $lineitem['fielddata']['id'] . '_' .
+                                'quantity_' . $lineitem['linedata']['price_field_value_id'],
                             'element_period_name' => 'member_' . $membership['memberdata']['id'] . '_' .
-                                'item_' . CRM_Utils_Array::value('id', $lineitem['fielddata']) . '_' .
-                                'period_' . CRM_Utils_Array::value('price_field_value_id', $lineitem['linedata']),
+                                'item_' . $lineitem['fielddata']['id'] . '_' .
+                                'period_' . $lineitem['linedata']['price_field_value_id'],
                             'choices' => $choices,
                             'new_active_on' => $choices['period_data'][0][max(
                                 array_keys($choices['period_data'][0]))]['active_on'],
@@ -128,9 +129,10 @@ class CRM_Itemmanager_Form_RenewItemperiods extends CRM_Core_Form {
                                 array_keys($choices['period_data'][0]))]['period_end_on'],
                             'help_pre' => $choices['help_pre'][0],
                             'new_field' => FALSE,
-                            'extend' => FALSE,
+                            'extend' => $item_settings->extend == TRUE,
+                            'bidding' => $item_settings->bidding == TRUE,
                         );
-                        $linelist[CRM_Utils_Array::value('price_field_value_id', $lineitem['linedata'])] = $linecollection;
+                        $linelist[$lineitem['linedata']['price_field_value_id']] = $linecollection;
                     }
 
                     // add missing line items
@@ -168,25 +170,25 @@ class CRM_Itemmanager_Form_RenewItemperiods extends CRM_Core_Form {
                                     $quantity = 1;
 
                                 $linecollection = array(
-                                    'name' => '(' . CRM_Utils_Array::value('id', $priceset) . ') ' . CRM_Utils_Array::value('label', $pricefieldvalue) . ' ' .
-                                        CRM_Utils_Array::value('title', $priceset),
-                                    'price_field_value_id' => CRM_Utils_Array::value('id', $pricefieldvalue),
-                                    'price_field_id' => CRM_Utils_Array::value('id', $pricefield),
-                                    'price_set_id' => CRM_Utils_Array::value('id', $priceset),
+                                    'name' => '(' . $priceset['id'] . ') ' . $pricefieldvalue['label'] . ' ' .
+                                        $priceset['title'],
+                                    'price_field_value_id' => $pricefieldvalue['id'],
+                                    'price_field_id' => $pricefield['id'],
+                                    'price_set_id' => $priceset['id'],
                                     'last_qty' => $quantity,
                                     'last_price_per_interval' => CRM_Utils_Money::format(0, NULL, NULL, TRUE),
                                     'element_item_name' => 'member_' . $membership['memberdata']['id'] . '_' .
-                                        'item_' . CRM_Utils_Array::value('id', $pricefield),
+                                        'item_' . $pricefield['id'],
                                     'element_hidden_name' => 'member_' . $membership['memberdata']['id'] . '_' .
-                                        'item_' . CRM_Utils_Array::value('id', $pricefield) . '_hidden',
+                                        'item_' . $pricefield['id'] . '_hidden',
                                     'element_new_hidden_name' => 'member_' . $membership['memberdata']['id'] . '_' .
-                                        'item_' . CRM_Utils_Array::value('id', $pricefield) . '_new_hidden',
+                                        'item_' . $pricefield['id'] . '_new_hidden',
                                     'element_quantity_name' => 'member_' . $membership['memberdata']['id'] . '_' .
-                                        'item_' . CRM_Utils_Array::value('id', $pricefield) . '_' .
-                                        'quantity_' . CRM_Utils_Array::value('id', $pricefield),
+                                        'item_' . $pricefield['id'] . '_' .
+                                        'quantity_' . $pricefield['id'],
                                     'element_period_name' => 'member_' . $membership['memberdata']['id'] . '_' .
-                                        'item_' . CRM_Utils_Array::value('id', $pricefield) . '_' .
-                                        'period_' . CRM_Utils_Array::value('id', $pricefieldvalue),
+                                        'item_' . $pricefield['id'] . '_' .
+                                        'period_' . $pricefieldvalue['id'],
                                     'choices' => $choices,
                                     'new_active_on' => $choices['period_data'][0][max(
                                         array_keys($choices['period_data'][0]))]['active_on'],
@@ -199,9 +201,10 @@ class CRM_Itemmanager_Form_RenewItemperiods extends CRM_Core_Form {
                                         array_keys($choices['period_data'][0]))]['period_end_on'],
                                     'help_pre' => $choices['help_pre'][0],
                                     'new_field' => TRUE,
-                                    'extend' => $item_setting['extend'] == TRUE,
+                                    'extend' => $item_settings->extend == TRUE,
+                                    'bidding' => $item_settings->bidding == TRUE,
                                 );
-                                $linelist[CRM_Utils_Array::value('id', $pricefieldvalue)] = $linecollection;
+                                $linelist[$pricefieldvalue['id']] = $linecollection;
 
                             }
 
@@ -406,6 +409,14 @@ class CRM_Itemmanager_Form_RenewItemperiods extends CRM_Core_Form {
             );
         }
 
+        //get the itemmanager records
+        $item_settings = new CRM_Itemmanager_BAO_ItemmanagerSettings();
+        $valid=$item_settings->get('price_field_value_id',
+            $fieldValueId);
+
+        $period = new CRM_Itemmanager_BAO_ItemmanagerPeriods();
+        $valid = $period->get('id',$item_settings->itemmanager_periods_id);
+
 
         if(count($item_prototypes)>0)
         {
@@ -414,7 +425,7 @@ class CRM_Itemmanager_Form_RenewItemperiods extends CRM_Core_Form {
                 if ($periods == 1) {
                     //Single Installments
                     $singleInstallmentRenewal = new CRM_Itemmanager_Logic_RenewalSingleInstallmentPlan($membership['member_id'],
-                        $membership['lastcontribution_id'], $periods, $startdate, $periodsIdx);
+                        $membership['lastcontribution_id'], $periods, $startdate, $periodsIdx, (bool)$period->reverse);
 
                     foreach ($item_prototypes as $prototype)
                     {
@@ -428,7 +439,7 @@ class CRM_Itemmanager_Form_RenewItemperiods extends CRM_Core_Form {
 
                     //Multiple Installments
                     $multipleInstallmentRenewal = new CRM_Itemmanager_Logic_RenewalMultipleInstallmentPlan($membership['member_id'],
-                        $membership['lastcontribution_id'],$periods, $startdate, $periodsIdx);
+                        $membership['lastcontribution_id'],$periods, $startdate, $periodsIdx, (bool)$period->reverse);
 
                     foreach ($item_prototypes as $prototype) {
                         $multipleInstallmentRenewal->addLineItemPrototype($prototype['manager_id'], $prototype['quantity']);
