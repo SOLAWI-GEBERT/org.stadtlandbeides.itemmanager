@@ -280,7 +280,7 @@ CRM.$(function($) {
 
                 this.disabled = true;
 
-                if (!ident in back) {
+                if (!(ident in back)) {
                     console.log('Could not relate the element' + ident + ' in backward search')
                     CRM.alert('Unknown element' + ident);
                     return;
