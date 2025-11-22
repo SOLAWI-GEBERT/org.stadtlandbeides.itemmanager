@@ -3,8 +3,8 @@ use CRM_Itemmanager_ExtensionUtil as E;
 
 class CRM_Itemmanager_Page_UpdateItems extends CRM_Core_Page {
 
-    var $base_list = array();
-    var $old_backid = 0;
+    protected array $base_list = [];
+    protected int $old_backid = 0;
 
   public function run() {
     // Example: Set the page-title dynamically; alternatively, declare a static title in xml/Menu/*.xml

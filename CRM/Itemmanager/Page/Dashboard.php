@@ -20,6 +20,8 @@ use CRM_Itemmanager_ExtensionUtil as E;
 
 class CRM_Itemmanager_Page_Dashboard extends CRM_Core_Page {
 
+    protected ?int $_contact_id = null;
+
     //results for array1 (when it is in more, it is in array1 and not in array2. same for less)
     public static function compare_multi_Arrays($array1, $array2){
 
