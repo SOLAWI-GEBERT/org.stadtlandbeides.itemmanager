@@ -31,7 +31,7 @@ class CRM_Itemmanager_Form_LinkSepaWrapper extends CRM_Core_Form {
     {
         $this->_contact_id = CRM_Utils_Request::retrieve('cid', 'Integer');
 
-        $contact = civicrm_api('Contact', 'getsingle', array('version' => 3, 'id' => $this->_contact_id));
+        $contact = civicrm_api3('Contact', 'getsingle', array('id' => $this->_contact_id));
         if (isset($contact['is_error']) && $contact['is_error']) {
             CRM_Core_Session::setStatus(sprintf(ts("Couldn't find contact #%s", array('domain' => 'org.stadtlandbeides.itemmanager')),
                 $this->_contact_id), ts('Error', array('domain' => 'org.stadtlandbeides.itemmanager')), 'error');
