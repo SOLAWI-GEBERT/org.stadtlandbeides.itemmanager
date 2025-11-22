@@ -17,6 +17,18 @@
  */
 
 use CRM_Itemmanager_ExtensionUtil as E;
+use Civi\Api4\Contribution;
+use Civi\Api4\EntityFinancialTrxn;
+use Civi\Api4\FinancialAccount;
+use Civi\Api4\FinancialItem;
+use Civi\Api4\LineItem;
+use Civi\Api4\MembershipPayment;
+use Civi\Api4\MembershipStatus;
+use Civi\Api4\MembershipType;
+use Civi\Api4\PriceField;
+use Civi\Api4\PriceFieldValue;
+use Civi\Api4\PriceSet;
+use Civi\Api4\Setting;
 
 class CRM_Itemmanager_Util
 {
@@ -26,16 +38,16 @@ class CRM_Itemmanager_Util
      *  Just get our settings with API
      * @param $settingName
      * @return mixed
-     * @throws CiviCRM_API3_Exception
+     * @throws API_Exception
      */
     public static function getSetting($settingName) {
-        $result = civicrm_api3('setting', 'get', array(
-            'return' => [$settingName],
-            'sequential' => 1,
-        ));
-        $settingValue = $result['values'][0][$settingName];
+        $result = Setting::get(FALSE)
+            ->addSelect($settingName)
+            ->setCheckPermissions(FALSE)
+            ->execute()
+            ->first();
 
-        return $settingValue;
+        return $result[$settingName] ?? NULL;
     }
 
 
@@ -149,22 +161,26 @@ class CRM_Itemmanager_Util
         );
 
         try{
-            $result = civicrm_api3('FinancialItem', 'get', $searchParams);
+            $result = FinancialItem::get()
+                ->addWhere('entity_table', '=', $searchParams['entity_table'])
+                ->addWhere('entity_id', '=', $searchParams['entity_id'])
+                ->setCheckPermissions(FALSE)
+                ->execute();
         }
-        catch (CiviCRM_API3_Exception $e) {
-            // Handle error here.
-            $errorMessage = $e->getMessage();
-            $errorCode = $e->getErrorCode();
-            $errorData = $e->getExtraParams();
+        catch (\API_Exception $e) {
             return [
                 'is_error' => 1,
-                'error_message' => $errorMessage,
-                'error_code' => $errorCode,
-                'error_data' => $errorData,
+                'error_message' => $e->getMessage(),
+                'error_code' => $e->getErrorCode(),
+                'error_data' => method_exists($e, 'getExtraParams') ? $e->getExtraParams() : [],
             ];
         }
 
-        return $result;
+        return [
+            'is_error' => 0,
+            'count' => $result->count(),
+            'values' => $result->getArrayCopy(),
+        ];
     }
 
 
@@ -235,22 +251,30 @@ class CRM_Itemmanager_Util
         ];
 
         try{
-            $result = civicrm_api3('MembershipType', 'get', $params);
+            $result = MembershipType::get()
+                ->addWhere('id', '=', $params['id'])
+                ->setCheckPermissions(FALSE)
+                ->execute();
         }
-        catch (CiviCRM_API3_Exception $e) {
-            // Handle error here.
-            $errorMessage = $e->getMessage();
-            $errorCode = $e->getErrorCode();
-            $errorData = $e->getExtraParams();
+        catch (\API_Exception $e) {
             return [
                 'is_error' => 1,
-                'error_message' => $errorMessage,
-                'error_code' => $errorCode,
-                'error_data' => $errorData,
+                'error_message' => $e->getMessage(),
+                'error_code' => $e->getErrorCode(),
+                'error_data' => method_exists($e, 'getExtraParams') ? $e->getExtraParams() : [],
             ];
         }
 
-        return $result;
+        $values = [];
+        foreach ($result as $row) {
+            $values[$row['id']] = $row;
+        }
+
+        return [
+            'is_error' => 0,
+            'count' => $result->count(),
+            'values' => $values,
+        ];
     }
 
 
@@ -269,25 +293,34 @@ class CRM_Itemmanager_Util
         ),
         ];
 
-        if($payfilter)
-            foreach ($payfilter as $filter_key => $filter_value)
-                $params[$filter_key] = $filter_value;
+        $query = MembershipPayment::get()
+            ->addWhere('membership_id', '=', $membership_id)
+            ->setLimit($params['options']['limit'])
+            ->addOrderBy('id', 'DESC')
+            ->setCheckPermissions(FALSE);
+
+        if ($payfilter) {
+            foreach ($payfilter as $filter_key => $filter_value) {
+                $query->addWhere($filter_key, '=', $filter_value);
+            }
+        }
 
         try{
-        $result = civicrm_api3('MembershipPayment', 'get', $params);
+            $result = $query->execute();
         }
-        catch (CiviCRM_API3_Exception $e) {
-            // Handle error here.
-            $errorMessage = $e->getMessage();
-            $errorCode = $e->getErrorCode();
+        catch (\API_Exception $e) {
             return [
                 'is_error' => 1,
-                'error_message' => $errorMessage,
-                'error_code' => $errorCode,
+                'error_message' => $e->getMessage(),
+                'error_code' => $e->getErrorCode(),
             ];
         }
 
-        return $result;
+        return [
+            'is_error' => 0,
+            'count' => $result->count(),
+            'values' => $result->getArrayCopy(),
+        ];
     }
 
 
@@ -314,15 +347,67 @@ class CRM_Itemmanager_Util
         $linearray = array();
 
         try{
-            $lineitems = civicrm_api3('LineItem', 'get', $params);
+            $lineitems = LineItem::get()
+                ->addSelect('*')
+                ->addWhere('contribution_id', '=', $contribution_id)
+                ->addOrderBy('price_field_value_id', 'DESC')
+                ->setLimit($params['options']['limit'])
+                ->setCheckPermissions(FALSE);
 
-            if( $lineitems['is_error']) return  $lineitems;
+            if ($financial_id) {
+                $lineitems->addWhere('financial_type_id', '=', $financial_id);
+            }
 
-            foreach ($lineitems['values'] As $lineitem)
+            $lineitems = $lineitems->execute();
+            $priceFieldValueCache = [];
+            $priceFieldCache = [];
+            $priceSetCache = [];
+
+            foreach ($lineitems as $lineitem)
             {
-                $pricefieldvalue = civicrm_api3('PriceFieldValue', 'getsingle', array('id' => (int) $lineitem['price_field_value_id']));
-                $pricefield = civicrm_api3('PriceField', 'getsingle', array('id' => (int) $lineitem['price_field_id']));
-                $priceset = civicrm_api3('PriceSet', 'getsingle', array('id' => (int) $pricefield['price_set_id']));
+                $priceFieldValueId = (int) $lineitem['price_field_value_id'];
+                if (!isset($priceFieldValueCache[$priceFieldValueId])) {
+                    $priceFieldValueCache[$priceFieldValueId] = PriceFieldValue::get()
+                        ->addWhere('id', '=', $priceFieldValueId)
+                        ->setCheckPermissions(FALSE)
+                        ->execute()
+                        ->first();
+                }
+                $pricefieldvalue = $priceFieldValueCache[$priceFieldValueId];
+                if (!$pricefieldvalue) {
+                    return [
+                        'is_error' => 1,
+                        'error_message' => 'Price field value not found: ' . $priceFieldValueId,
+                        'error_code' => 'not_found',
+                    ];
+                }
+
+                $priceFieldId = (int) $lineitem['price_field_id'];
+                if (!isset($priceFieldCache[$priceFieldId])) {
+                    $priceFieldCache[$priceFieldId] = PriceField::get()
+                        ->addWhere('id', '=', $priceFieldId)
+                        ->setCheckPermissions(FALSE)
+                        ->execute()
+                        ->first();
+                }
+                $pricefield = $priceFieldCache[$priceFieldId];
+                if (!$pricefield) {
+                    return [
+                        'is_error' => 1,
+                        'error_message' => 'Price field not found: ' . $priceFieldId,
+                        'error_code' => 'not_found',
+                    ];
+                }
+
+                $priceSetId = (int) $pricefield['price_set_id'];
+                if (!isset($priceSetCache[$priceSetId])) {
+                    $priceSetCache[$priceSetId] = PriceSet::get()
+                        ->addWhere('id', '=', $priceSetId)
+                        ->setCheckPermissions(FALSE)
+                        ->execute()
+                        ->first();
+                }
+                $priceset = $priceSetCache[$priceSetId];
 
                 $itemcollection = array(
                     'linedata' => $lineitem,
@@ -336,16 +421,12 @@ class CRM_Itemmanager_Util
             }
 
         }
-        catch (CiviCRM_API3_Exception $e) {
-            // Handle error here.
-            $errorMessage = $e->getMessage();
-            $errorCode = $e->getErrorCode();
-            $errorData = $e->getExtraParams();
+        catch (\API_Exception $e) {
             return [
                 'is_error' => 1,
-                'error_message' => $errorMessage,
-                'error_code' => $errorCode,
-                'error_data' => $errorData,
+                'error_message' => $e->getMessage(),
+                'error_code' => $e->getErrorCode(),
+                'error_data' => method_exists($e, 'getExtraParams') ? $e->getExtraParams() : [],
             ];
         }
 
@@ -484,21 +565,19 @@ class CRM_Itemmanager_Util
             {
                 $id = $sdd['entity_id'];
 
-                $param = array(
-                    'id' => (int) $id,
-                );
+                $query = Contribution::get()
+                    ->addWhere('id', '=', (int) $id)
+                    ->setCheckPermissions(FALSE);
 
                 if($financial_id)
-                   $param['financial_type_id'] = $financial_id;
+                   $query->addWhere('financial_type_id', '=', $financial_id);
 
                 $paydata = array();
 
-                $contribution = civicrm_api3('Contribution', 'get', $param);
+                $contribution = $query->execute();
 
-                if($contribution['is_error']) return $sddarray;
-                $counter = count($contribution['values']);
-                if($counter)
-                    $paydata[$id] = reset($contribution['values']);
+                if($contribution->count())
+                    $paydata[$id] = $contribution->first();
 
                 $collection = array(
                     'sdddata' => $sdd,
@@ -513,19 +592,17 @@ class CRM_Itemmanager_Util
             {
                 $id = $sdd['entity_id'];
 
-                $param = array(
-                    'contribution_recur_id' => (int) $id,
-                );
+                $query = Contribution::get()
+                    ->addWhere('contribution_recur_id', '=', (int) $id)
+                    ->setCheckPermissions(FALSE);
 
                 if($financial_id)
-                    $param['financial_type_id'] = $financial_id;
+                    $query->addWhere('financial_type_id', '=', $financial_id);
 
-                $contributions = civicrm_api3('Contribution', 'get', $param);
-
-                if($contributions['is_error']) return $sddarray;
+                $contributions = $query->execute();
 
                 $paydata = array();
-                foreach ($contributions['values'] as $contribution)
+                foreach ($contributions as $contribution)
                     $paydata[(int)$contribution['id']] = $contribution;
 
 
@@ -545,16 +622,12 @@ class CRM_Itemmanager_Util
 
 
         }
-        catch (CiviCRM_API3_Exception $e) {
-            // Handle error here.
-            $errorMessage = $e->getMessage();
-            $errorCode = $e->getErrorCode();
-            $errorData = $e->getExtraParams();
+        catch (\API_Exception $e) {
             return [
                 'is_error' => 1,
-                'error_message' => $errorMessage,
-                'error_code' => $errorCode,
-                'error_data' => $errorData,
+                'error_message' => $e->getMessage(),
+                'error_code' => $e->getErrorCode(),
+                'error_data' => method_exists($e, 'getExtraParams') ? $e->getExtraParams() : [],
             ];
         }
 
@@ -588,7 +661,18 @@ class CRM_Itemmanager_Util
                     'id' => $memberitem['status_id'],
                 ];
 
-                $statusdata = civicrm_api3('MembershipStatus', 'getsingle', $statusparams);
+                $statusdata = MembershipStatus::get()
+                    ->addWhere('id', '=', $statusparams['id'])
+                    ->setCheckPermissions(FALSE)
+                    ->execute()
+                    ->first();
+                if (!$statusdata) {
+                    return [
+                        'is_error' => 1,
+                        'error_message' => 'Membership status not found: ' . $statusparams['id'],
+                        'error_code' => 'not_found',
+                    ];
+                }
 
                 $membercollection = array(
                     'memberdata' => $memberitem,
@@ -610,14 +694,11 @@ class CRM_Itemmanager_Util
 
 
         }
-        catch (CiviCRM_API3_Exception $e) {
-            // Handle error here.
-            $errorMessage = $e->getMessage();
-            $errorCode = $e->getErrorCode();
+        catch (\API_Exception $e) {
             return [
                 'is_error' => 1,
-                'error_message' => $errorMessage,
-                'error_code' => $errorCode,
+                'error_message' => $e->getMessage(),
+                'error_code' => $e->getErrorCode(),
             ];
         }
 
@@ -640,18 +721,28 @@ class CRM_Itemmanager_Util
         );
 
         try{
-            $result = civicrm_api3('EntityFinancialTrxn', 'get', $searchParams);
+            $result = EntityFinancialTrxn::get()
+                ->addWhere('entity_table', '=', $searchParams['entity_table'])
+                ->addWhere('entity_id', '=', $searchParams['entity_id'])
+                ->setLimit(1)
+                ->setCheckPermissions(FALSE)
+                ->execute()
+                ->first();
         }
-        catch (CiviCRM_API3_Exception $e) {
-            // Handle error here.
-            $errorMessage = $e->getMessage();
-            $errorCode = $e->getErrorCode();
-            $errorData = $e->getExtraParams();
+        catch (\API_Exception $e) {
             return [
                 'is_error' => 1,
-                'error_message' => $errorMessage,
-                'error_code' => $errorCode,
-                'error_data' => $errorData,
+                'error_message' => $e->getMessage(),
+                'error_code' => $e->getErrorCode(),
+                'error_data' => method_exists($e, 'getExtraParams') ? $e->getExtraParams() : [],
+            ];
+        }
+
+        if (!$result) {
+            return [
+                'is_error' => 1,
+                'error_message' => 'EntityFinancialTrxn not found for financial item ' . $financialItemId,
+                'error_code' => 'not_found',
             ];
         }
 
@@ -671,18 +762,28 @@ class CRM_Itemmanager_Util
         );
 
         try{
-            $result = civicrm_api3('EntityFinancialTrxn', 'get', $searchParams);
+            $result = EntityFinancialTrxn::get()
+                ->addWhere('entity_table', '=', $searchParams['entity_table'])
+                ->addWhere('entity_id', '=', $searchParams['entity_id'])
+                ->setLimit(1)
+                ->setCheckPermissions(FALSE)
+                ->execute()
+                ->first();
         }
-        catch (CiviCRM_API3_Exception $e) {
-            // Handle error here.
-            $errorMessage = $e->getMessage();
-            $errorCode = $e->getErrorCode();
-            $errorData = $e->getExtraParams();
+        catch (\API_Exception $e) {
             return [
                 'is_error' => 1,
-                'error_message' => $errorMessage,
-                'error_code' => $errorCode,
-                'error_data' => $errorData,
+                'error_message' => $e->getMessage(),
+                'error_code' => $e->getErrorCode(),
+                'error_data' => method_exists($e, 'getExtraParams') ? $e->getExtraParams() : [],
+            ];
+        }
+
+        if (!$result) {
+            return [
+                'is_error' => 1,
+                'error_message' => 'EntityFinancialTrxn not found for contribution ' . $contributionId,
+                'error_code' => 'not_found',
             ];
         }
 
@@ -737,21 +838,30 @@ class CRM_Itemmanager_Util
     public static function getFinancialAccountInfosByAccountId($financialAccountId)
     {
         try{
-            $result = civicrm_api3('FinancialAccount', 'getsingle', array('id' => $financialAccountId));
+            $result = FinancialAccount::get()
+                ->addWhere('id', '=', $financialAccountId)
+                ->setCheckPermissions(FALSE)
+                ->execute()
+                ->first();
         }
-        catch (CiviCRM_API3_Exception $e) {
-            // Handle error here.
-            $errorMessage = $e->getMessage();
-            $errorCode = $e->getErrorCode();
-            $errorData = $e->getExtraParams();
+        catch (\API_Exception $e) {
             return [
                 'is_error' => 1,
-                'error_message' => $errorMessage,
-                'error_code' => $errorCode,
-                'error_data' => $errorData,
+                'error_message' => $e->getMessage(),
+                'error_code' => $e->getErrorCode(),
+                'error_data' => method_exists($e, 'getExtraParams') ? $e->getExtraParams() : [],
             ];
         }
 
+        if (!$result) {
+            return [
+                'is_error' => 1,
+                'error_message' => 'Financial account not found: ' . $financialAccountId,
+                'error_code' => 'not_found',
+            ];
+        }
+
+        $result['is_error'] = 0;
         return $result;
 
     }
@@ -766,22 +876,34 @@ class CRM_Itemmanager_Util
     public static function getPriceSetRefByFieldValueId($fielvaluedid){
 
         try {
-            $pricefieldvalue = civicrm_api3('PriceFieldValue', 'getsingle',
-                array('id' => (int)$fielvaluedid,'return' => ['id','price_field_id']));
+            $pricefieldvalue = PriceFieldValue::get()
+                ->addSelect('id', 'price_field_id')
+                ->addWhere('id', '=', (int)$fielvaluedid)
+                ->setCheckPermissions(FALSE)
+                ->execute()
+                ->first();
             if (!isset($pricefieldvalue)) {
                 return array(
                     'iserror' => 1,
                     'error'=>'Could not get the price field value '.$fielvaluedid );
             }
-            $pricefield = civicrm_api3('PriceField', 'getsingle',
-                array('id' => (int)$pricefieldvalue['price_field_id'],'return' => ['id','price_set_id']));
+            $pricefield = PriceField::get()
+                ->addSelect('id', 'price_set_id')
+                ->addWhere('id', '=', (int)$pricefieldvalue['price_field_id'])
+                ->setCheckPermissions(FALSE)
+                ->execute()
+                ->first();
             if (!isset($pricefield)) {
                 return array(
                     'iserror' => 1,
                     'error'=>'Could not get the price field '.(int)$pricefieldvalue['price_field_id']);
             }
-            $priceset = civicrm_api3('PriceSet', 'getsingle',
-                array('id' => (int)$pricefield['price_set_id'],'return' =>'id'));
+            $priceset = PriceSet::get()
+                ->addSelect('id')
+                ->addWhere('id', '=', (int)$pricefield['price_set_id'])
+                ->setCheckPermissions(FALSE)
+                ->execute()
+                ->first();
             if (!isset($priceset)) {
                 return array(
                     'iserror' => 1,
@@ -795,7 +917,7 @@ class CRM_Itemmanager_Util
             );
 
 
-        } catch (CiviCRM_API3_Exception $e) {
+        } catch (\API_Exception $e) {
             return array(
                 'iserror' => 1,
                 'error'=>$e->getMessage());
@@ -844,22 +966,34 @@ class CRM_Itemmanager_Util
         }
 
         try {
-            $pricefieldvalue = civicrm_api3('PriceFieldValue', 'getsingle', array('id' => (int)$fielvaluedid));//In case of an error
+            $pricefieldvalue = PriceFieldValue::get()
+                ->addWhere('id', '=', (int)$fielvaluedid)
+                ->setCheckPermissions(FALSE)
+                ->execute()
+                ->first();
             if (!isset($pricefieldvalue)) {
-                self::addEmptyChoice($choices, $index, 'Can no find the related Price Field Value');
+                self::addEmptyChoice($choices, $index, 'Can not find the related Price Field Value');
                 return;
             }
-            $pricefield = civicrm_api3('PriceField', 'getsingle', array('id' => (int)$pricefieldvalue['price_field_id']));//In case of an error
+            $pricefield = PriceField::get()
+                ->addWhere('id', '=', (int)$pricefieldvalue['price_field_id'])
+                ->setCheckPermissions(FALSE)
+                ->execute()
+                ->first();
             if (!isset($pricefield)) {
-                self::addEmptyChoice($choices, $index, 'Can no find the related Price Field');
+                self::addEmptyChoice($choices, $index, 'Can not find the related Price Field');
                 return;
             }
-            $priceset = civicrm_api3('PriceSet', 'getsingle', array('id' => (int)$pricefield['price_set_id']));//In case of an error
+            $priceset = PriceSet::get()
+                ->addWhere('id', '=', (int)$pricefield['price_set_id'])
+                ->setCheckPermissions(FALSE)
+                ->execute()
+                ->first();
             if (!isset($priceset)) {
-                self::addEmptyChoice($choices, $index, 'Can no find the related Price Field');
+                self::addEmptyChoice($choices, $index, 'Can not find the related Price Field');
                 return;
             }
-        } catch (CiviCRM_API3_Exception $e) {
+        } catch (\API_Exception $e) {
             self::addEmptyChoice($choices, $index, $e->getMessage());
             return;
         }
