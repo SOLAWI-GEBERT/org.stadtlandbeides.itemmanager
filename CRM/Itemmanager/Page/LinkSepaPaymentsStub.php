@@ -3,14 +3,15 @@ use CRM_Itemmanager_ExtensionUtil as E;
 
 class CRM_Itemmanager_Page_LinkSepaPaymentsStub extends CRM_Core_Page {
 
-    public $_contact_id;
-    public $_financial_id;
-    public $_relation;
-    private $_errormessages;
-    private $_back_ward_search;
-    private $_currency;
-    private $_filteropen;
-    private $_filterfuture;
+    public ?int $_contact_id = null;
+    public ?int $_financial_id = null;
+    public array $_relation = array('contributions' => array());
+    protected string $_action = 'browse';
+    private array $_errormessages = array();
+    private array $_back_ward_search = array();
+    private string $_currency;
+    private bool $_filteropen = false;
+    private bool $_filterfuture = false;
 
 
     /**
