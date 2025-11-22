@@ -1,5 +1,11 @@
 <?php
 use CRM_Itemmanager_ExtensionUtil as E;
+use Civi\Api4\Contact;
+use Civi\Api4\Contribution;
+use Civi\Api4\ContributionRecur;
+use Civi\Api4\LineItem;
+use Civi\Api4\PriceField;
+use Civi\Api4\PriceFieldValue;
 
 class CRM_Itemmanager_Page_UpdateItems extends CRM_Core_Page {
 
@@ -80,8 +86,12 @@ class CRM_Itemmanager_Page_UpdateItems extends CRM_Core_Page {
     {
 
         // first, try to load contact
-        $contact = civicrm_api3('Contact', 'getsingle', array('id' => $contact_id));
-        if (isset($contact['is_error']) && $contact['is_error']) {
+        $contact = Contact::get()
+            ->addWhere('id', '=', $contact_id)
+            ->setCheckPermissions(FALSE)
+            ->execute()
+            ->first();
+        if (!$contact) {
             CRM_Core_Session::setStatus(sprintf(ts("Couldn't find contact #%s", array('domain' => 'org.stadtlandbeides.itemmanager')),
                 $contact_id), ts('Error', array('domain' => 'org.stadtlandbeides.itemmanager')), 'error');
             $this->assign("display_name", "ERROR");
@@ -144,7 +154,11 @@ class CRM_Itemmanager_Page_UpdateItems extends CRM_Core_Page {
 
         //compound both queries together
         while ($base_items->fetch()) {
-            $testcount = civicrm_api3('Contribution', 'getcount', array('id' => (int)$base_items->contrib_id));
+            $testcount = Contribution::get()
+                ->addWhere('id', '=', (int) $base_items->contrib_id)
+                ->setCheckPermissions(FALSE)
+                ->execute()
+                ->count();
             if($testcount == 0)
             {
                 // fatal error here
@@ -280,7 +294,7 @@ class CRM_Itemmanager_Page_UpdateItems extends CRM_Core_Page {
      * @param $filter_sync
      * @param $selected_items
      * @throws CRM_Core_Exception
-     * @throws CiviCRM_API3_Exception
+     * @throws \API_Exception
      */
     function updateData($contact_id,$filter_harmonize,$filter_sync,$selected_items)
     {
@@ -343,8 +357,12 @@ class CRM_Itemmanager_Page_UpdateItems extends CRM_Core_Page {
         ";
 
         // first, try to load contact
-        $contact = civicrm_api3('Contact', 'getsingle', array('id' => $contact_id));
-        if (isset($contact['is_error']) && $contact['is_error']) {
+        $contact = Contact::get()
+            ->addWhere('id', '=', $contact_id)
+            ->setCheckPermissions(FALSE)
+            ->execute()
+            ->first();
+        if (!$contact) {
             CRM_Core_Session::setStatus(sprintf(ts("Couldn't find contact #%s", array('domain' => 'org.stadtlandbeides.itemmanager')),
                 $contact_id), ts('Error', array('domain' => 'org.stadtlandbeides.itemmanager')), 'error');
             $this->assign("display_name", "ERROR");
@@ -360,14 +378,30 @@ class CRM_Itemmanager_Page_UpdateItems extends CRM_Core_Page {
             $update_label = False;
             $update_price = False;
             //get all nested data
-            $lineitemInfo = civicrm_api3('lineItem', 'getsingle', array('id' => (int) $line_item));
-            if(!isset($lineitemInfo)) continue;
-            $priceFieldInfo = civicrm_api3('PriceField', 'getsingle', array('id' => (int) $lineitemInfo['price_field_id']));
-            if(!isset($priceFieldInfo)) continue;
-            $priceFieldValueInfo = civicrm_api3('PriceFieldValue', 'getsingle', array('id' => (int) $lineitemInfo['price_field_value_id']));
-            if(!isset($priceFieldValueInfo)) continue;
-            $contributionInfo = civicrm_api3('Contribution', 'getsingle', array('id' => (int) $lineitemInfo['contribution_id']));
-            if(!isset($contributionInfo)) continue;
+            $lineitemInfo = LineItem::get()
+                ->addWhere('id', '=', (int) $line_item)
+                ->setCheckPermissions(FALSE)
+                ->execute()
+                ->first();
+            if(!$lineitemInfo) continue;
+            $priceFieldInfo = PriceField::get()
+                ->addWhere('id', '=', (int) $lineitemInfo['price_field_id'])
+                ->setCheckPermissions(FALSE)
+                ->execute()
+                ->first();
+            if(!$priceFieldInfo) continue;
+            $priceFieldValueInfo = PriceFieldValue::get()
+                ->addWhere('id', '=', (int) $lineitemInfo['price_field_value_id'])
+                ->setCheckPermissions(FALSE)
+                ->execute()
+                ->first();
+            if(!$priceFieldValueInfo) continue;
+            $contributionInfo = Contribution::get()
+                ->addWhere('id', '=', (int) $lineitemInfo['contribution_id'])
+                ->setCheckPermissions(FALSE)
+                ->execute()
+                ->first();
+            if(!$contributionInfo) continue;
 
             //update the data
             $line_timestamp = date_create($contributionInfo['receive_date']);
@@ -488,11 +522,13 @@ class CRM_Itemmanager_Page_UpdateItems extends CRM_Core_Page {
                 $tax_total = CRM_Itemmanager_Util::getTaxAmountTotalFromContributionID((int) $lineitemInfo['contribution_id']);
                 $total = CRM_Itemmanager_Util::getAmountTotalFromContributionID((int) $lineitemInfo['contribution_id']);
 
-                if(isset($contributionInfo['contribution_recur_id']))
-                    civicrm_api3('ContributionRecur', 'create', [
-                        'id' => (int)$contributionInfo['contribution_recur_id'],
-                        'amount' => $this->$total,
-                    ]);
+                if(isset($contributionInfo['contribution_recur_id'])) {
+                    ContributionRecur::update()
+                        ->addWhere('id', '=', (int) $contributionInfo['contribution_recur_id'])
+                        ->addValue('amount', $total)
+                        ->setCheckPermissions(FALSE)
+                        ->execute();
+                }
 
                 try{
                     $finalquery = CRM_Core_DAO::composeQuery($update_contribution_query,
