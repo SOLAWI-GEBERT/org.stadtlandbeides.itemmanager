@@ -1,0 +1,533 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "SystemAnalysis",
+  "type": "object",
+  "additionalProperties": true,
+  "system_summary": {
+    "scope_description": "Reviewed Itemmanager renewal, settings, and update flows to extract business rules and domain concepts with emphasis on duplicated period, pricing, and tax logic.",
+    "sources_analyzed": [
+      {
+        "id": "SRC-UTIL",
+        "type": "code",
+        "location": "CRM/Itemmanager/Util.php"
+      },
+      {
+        "id": "SRC-RENEW-FORM",
+        "type": "code",
+        "location": "CRM/Itemmanager/Form/RenewItemperiods.php"
+      },
+      {
+        "id": "SRC-ITEM-SETTING-FORM",
+        "type": "code",
+        "location": "CRM/Itemmanager/Form/ItemmanagerSetting.php"
+      },
+      {
+        "id": "SRC-UPDATE-PAGE",
+        "type": "code",
+        "location": "CRM/Itemmanager/Page/UpdateItems.php"
+      },
+      {
+        "id": "SRC-RENEW-BASE",
+        "type": "code",
+        "location": "CRM/Itemmanager/Logic/RenewalPaymentPlanBase.php"
+      },
+      {
+        "id": "SRC-RENEW-MULTI",
+        "type": "code",
+        "location": "CRM/Itemmanager/Logic/RenewalMultipleInstallmentPlan.php"
+      },
+      {
+        "id": "SRC-RENEW-SINGLE",
+        "type": "code",
+        "location": "CRM/Itemmanager/Logic/RenewalSingleInstallmentPlan.php"
+      },
+      {
+        "id": "SRC-README",
+        "type": "documentation",
+        "location": "README.md"
+      }
+    ]
+  },
+  "business_items": [
+    {
+      "id": "BI-001",
+      "name": "Period Unit Mapping (Choices)",
+      "type": "CalculationRule",
+      "business_description": "Period type indices map to duration units (day/week/month/year) with a week correction used to compute date ranges for renewal choices.",
+      "concept_group_id": "GRP-001-PeriodUnitMapping",
+      "sources": [
+        {
+          "source_id": "SRC-UTIL",
+          "location_detail": "CRM_Itemmanager_Util::addChoice (typemap/correctionmap for period selection)",
+          "implementation_form": "code",
+          "code_or_text_excerpt": "period_type index maps to D/W/M/Y and week uses +7 correction for end date calculation",
+          "differences_vs_group_canonical": null
+        }
+      ]
+    },
+    {
+      "id": "BI-002",
+      "name": "Period Unit Mapping (Membership Extension)",
+      "type": "CalculationRule",
+      "business_description": "Membership extension uses period type indices to determine interval units and applies week correction when computing membership end dates.",
+      "concept_group_id": "GRP-001-PeriodUnitMapping",
+      "sources": [
+        {
+          "source_id": "SRC-RENEW-BASE",
+          "location_detail": "CRM_Itemmanager_Logic_RenewalPaymentPlanBase::extendExistingMembership (typemap/correctionmap)",
+          "implementation_form": "code",
+          "code_or_text_excerpt": "periodsIdx maps to D/W/M/Y and week adds 7-day correction; end date is start + duration - 1 day",
+          "differences_vs_group_canonical": null
+        }
+      ]
+    },
+    {
+      "id": "BI-003",
+      "name": "Period Count Override (Update Preview)",
+      "type": "CalculationRule",
+      "business_description": "Effective period count is derived from Itemmanager periods, overridden by per-item exception periods, and forced to 1 when reverse or invalid.",
+      "concept_group_id": "GRP-002-PeriodCountOverrides",
+      "sources": [
+        {
+          "source_id": "SRC-UPDATE-PAGE",
+          "location_detail": "CRM_Itemmanager_Page_UpdateItems::prepareCreateForm (periods/exceptions/reverse handling)",
+          "implementation_form": "code",
+          "code_or_text_excerpt": "periods = period_item->periods; if enable_period_exception use exception_periods; if invalid or reverse then 1",
+          "differences_vs_group_canonical": null
+        }
+      ]
+    },
+    {
+      "id": "BI-004",
+      "name": "Period Count Override (Update Apply)",
+      "type": "CalculationRule",
+      "business_description": "Update execution repeats the same override rules for effective period count and reverse handling.",
+      "concept_group_id": "GRP-002-PeriodCountOverrides",
+      "sources": [
+        {
+          "source_id": "SRC-UPDATE-PAGE",
+          "location_detail": "CRM_Itemmanager_Page_UpdateItems::updateData (periods/exceptions/reverse handling)",
+          "implementation_form": "code",
+          "code_or_text_excerpt": "periods = period_item->periods; if enable_period_exception use exception_periods; if invalid or reverse then 1",
+          "differences_vs_group_canonical": null
+        }
+      ]
+    },
+    {
+      "id": "BI-005",
+      "name": "Period Count Override (Renewal Line Prototype)",
+      "type": "CalculationRule",
+      "business_description": "Renewal line item prototypes compute effective periods with exception overrides and force single period when reverse or invalid.",
+      "concept_group_id": "GRP-002-PeriodCountOverrides",
+      "sources": [
+        {
+          "source_id": "SRC-RENEW-BASE",
+          "location_detail": "CRM_Itemmanager_Logic_RenewalPaymentPlanBase::addLineItemPrototype",
+          "implementation_form": "code",
+          "code_or_text_excerpt": "periods = period_item->periods; if enable_period_exception use exception_periods; if invalid or reverse then 1",
+          "differences_vs_group_canonical": null
+        }
+      ]
+    },
+    {
+      "id": "BI-006",
+      "name": "Unit Price per Period (Choices)",
+      "type": "CalculationRule",
+      "business_description": "Choice display price is the item amount divided by periods unless reverse mode uses the full amount.",
+      "concept_group_id": "GRP-003-UnitPricePerPeriod",
+      "sources": [
+        {
+          "source_id": "SRC-UTIL",
+          "location_detail": "CRM_Itemmanager_Util::addChoice (summary_price calculation)",
+          "implementation_form": "code",
+          "code_or_text_excerpt": "summary_price = reverse ? amount : amount/periods",
+          "differences_vs_group_canonical": "Explicit reverse branch instead of forcing periods to 1."
+        }
+      ]
+    },
+    {
+      "id": "BI-007",
+      "name": "Unit Price per Period (Update Items)",
+      "type": "CalculationRule",
+      "business_description": "Line item unit price is recalculated as price field value amount divided by effective periods during update preview and apply.",
+      "concept_group_id": "GRP-003-UnitPricePerPeriod",
+      "sources": [
+        {
+          "source_id": "SRC-UPDATE-PAGE",
+          "location_detail": "CRM_Itemmanager_Page_UpdateItems::prepareCreateForm/updateData (change_unit_price)",
+          "implementation_form": "code",
+          "code_or_text_excerpt": "change_unit_price = field_amount / periods",
+          "differences_vs_group_canonical": "Reverse handled indirectly via periods forced to 1 rather than explicit branch."
+        }
+      ]
+    },
+    {
+      "id": "BI-008",
+      "name": "Unit Price per Period (Renewal Line Prototype)",
+      "type": "CalculationRule",
+      "business_description": "Renewal line item unit price is calculated as price field value amount divided by effective periods.",
+      "concept_group_id": "GRP-003-UnitPricePerPeriod",
+      "sources": [
+        {
+          "source_id": "SRC-RENEW-BASE",
+          "location_detail": "CRM_Itemmanager_Logic_RenewalPaymentPlanBase::addLineItemPrototype (unit_price)",
+          "implementation_form": "code",
+          "code_or_text_excerpt": "unit_price = amount / periods",
+          "differences_vs_group_canonical": "Reverse handled by forcing periods to 1 before dividing."
+        }
+      ]
+    },
+    {
+      "id": "BI-009",
+      "name": "Tax Amount Calculation (Update Items)",
+      "type": "CalculationRule",
+      "business_description": "Tax for updated line items is computed as quantity × unit price × tax rate percentage.",
+      "concept_group_id": "GRP-004-TaxAmountCalculation",
+      "sources": [
+        {
+          "source_id": "SRC-UPDATE-PAGE",
+          "location_detail": "CRM_Itemmanager_Page_UpdateItems::prepareCreateForm/updateData (changed_tax)",
+          "implementation_form": "code",
+          "code_or_text_excerpt": "changed_tax = qty * unit_price * tax/100",
+          "differences_vs_group_canonical": "No rounding utility applied."
+        }
+      ]
+    },
+    {
+      "id": "BI-010",
+      "name": "Tax Amount Calculation (Renewal Line Prototype)",
+      "type": "CalculationRule",
+      "business_description": "Tax for renewal line items is computed as quantity × unit price × tax rate percentage.",
+      "concept_group_id": "GRP-004-TaxAmountCalculation",
+      "sources": [
+        {
+          "source_id": "SRC-RENEW-BASE",
+          "location_detail": "CRM_Itemmanager_Logic_RenewalPaymentPlanBase::addLineItemPrototype (tax amount)",
+          "implementation_form": "code",
+          "code_or_text_excerpt": "new_tax = qty * unit_price * tax/100",
+          "differences_vs_group_canonical": "Uses tax rate from CRM_Itemmanager_Util; no explicit rounding."
+        }
+      ]
+    },
+    {
+      "id": "BI-011",
+      "name": "Tax Amount Calculation (Renewal Line Items)",
+      "type": "CalculationRule",
+      "business_description": "Tax amount for line items is calculated using CiviCRM's tax utility and rounded to currency precision.",
+      "concept_group_id": "GRP-004-TaxAmountCalculation",
+      "sources": [
+        {
+          "source_id": "SRC-RENEW-BASE",
+          "location_detail": "CRM_Itemmanager_Logic_RenewalPaymentPlanBase::calculateLineItemTaxAmount",
+          "implementation_form": "code",
+          "code_or_text_excerpt": "tax_amount calculated via CRM_Contribute_BAO_Contribution_Utils and MoneyUtilities::roundToCurrencyPrecision",
+          "differences_vs_group_canonical": "Uses rounding utility and tax utility instead of raw multiplication."
+        }
+      ]
+    },
+    {
+      "id": "BI-012",
+      "name": "Ignore Item in Successor Set",
+      "type": "Policy",
+      "business_description": "Items flagged as ignored are excluded from successor item selection when generating missing item choices.",
+      "concept_group_id": "GRP-005-IgnoreItems",
+      "sources": [
+        {
+          "source_id": "SRC-UTIL",
+          "location_detail": "CRM_Itemmanager_Util::getSuccessorItemsettingsByPriceId (ignore/novitiate filters)",
+          "implementation_form": "code",
+          "code_or_text_excerpt": "ItemmanagerSettings query filters ignore = FALSE and novitiate = FALSE",
+          "differences_vs_group_canonical": "Also excludes novitiate items." 
+        }
+      ]
+    },
+    {
+      "id": "BI-013",
+      "name": "Ignore Item in Renewal UI",
+      "type": "Policy",
+      "business_description": "Items flagged as ignored are skipped in renewal UI line item generation.",
+      "concept_group_id": "GRP-005-IgnoreItems",
+      "sources": [
+        {
+          "source_id": "SRC-RENEW-FORM",
+          "location_detail": "CRM_Itemmanager_Form_RenewItemperiods::preProcess (skip ignored items)",
+          "implementation_form": "code",
+          "code_or_text_excerpt": "if itemmanager setting ignore then continue",
+          "differences_vs_group_canonical": "Does not consider novitiate flag when skipping."
+        }
+      ]
+    },
+    {
+      "id": "BI-014",
+      "name": "Price Set Consistency per Membership",
+      "type": "ValidationRule",
+      "business_description": "All selected price field values within the same membership must come from the same price set.",
+      "concept_group_id": "GRP-006-PriceSetConsistency",
+      "sources": [
+        {
+          "source_id": "SRC-RENEW-FORM",
+          "location_detail": "CRM_Itemmanager_Form_RenewItemperiods::checkIntegrityRule (price set check)",
+          "implementation_form": "backend",
+          "code_or_text_excerpt": "compares hidden price set ids per membership; rejects mixed sets",
+          "differences_vs_group_canonical": null
+        }
+      ]
+    },
+    {
+      "id": "BI-015",
+      "name": "Period Count Consistency per Membership",
+      "type": "ValidationRule",
+      "business_description": "All selected items within the same membership must use the same period count.",
+      "concept_group_id": "GRP-007-PeriodCountConsistency",
+      "sources": [
+        {
+          "source_id": "SRC-RENEW-FORM",
+          "location_detail": "CRM_Itemmanager_Form_RenewItemperiods::checkIntegrityRule (period count check)",
+          "implementation_form": "backend",
+          "code_or_text_excerpt": "rejects differing period selections within a membership",
+          "differences_vs_group_canonical": null
+        }
+      ]
+    },
+    {
+      "id": "BI-016",
+      "name": "Successor Item Selection Constraints",
+      "type": "ConfigurationRule",
+      "business_description": "Successor price field values are limited to price sets matching financial type and membership type, and optionally restricted to the configured successor price set.",
+      "concept_group_id": "GRP-008-SuccessorItemSelection",
+      "sources": [
+        {
+          "source_id": "SRC-ITEM-SETTING-FORM",
+          "location_detail": "CRM_Itemmanager_Form_ItemmanagerSetting::getItemSelection",
+          "implementation_form": "backend",
+          "code_or_text_excerpt": "filters price sets by financial_type_id and price field values by financial_type_id and membership_type_id; respects successor period price set",
+          "differences_vs_group_canonical": null
+        }
+      ]
+    },
+    {
+      "id": "BI-017",
+      "name": "Successor Period Selection",
+      "type": "ConfigurationRule",
+      "business_description": "Successor periods can only be chosen from other price sets that have Itemmanager periods configured.",
+      "concept_group_id": "GRP-009-PeriodSuccessorSelection",
+      "sources": [
+        {
+          "source_id": "SRC-ITEM-SETTING-FORM",
+          "location_detail": "CRM_Itemmanager_Form_ItemmanagerSetting::getPeriodSelection",
+          "implementation_form": "backend",
+          "code_or_text_excerpt": "builds selection of ItemmanagerPeriods from other price sets",
+          "differences_vs_group_canonical": null
+        }
+      ]
+    },
+    {
+      "id": "BI-018",
+      "name": "Itemmanager Period Entity",
+      "type": "DomainEntity",
+      "business_description": "Represents a price set's period configuration, including start date, duration, period type, successor period, hide, and reverse flags.",
+      "concept_group_id": "GRP-010-ItemmanagerPeriodEntity",
+      "sources": [
+        {
+          "source_id": "SRC-ITEM-SETTING-FORM",
+          "location_detail": "CRM_Itemmanager_Form_ItemmanagerSetting::preProcess/buildQuickForm (period fields and flags)",
+          "implementation_form": "backend",
+          "code_or_text_excerpt": "period_start_on, periods, period_type, successor, hide, reverse",
+          "differences_vs_group_canonical": null
+        }
+      ]
+    },
+    {
+      "id": "BI-019",
+      "name": "Itemmanager Setting Entity",
+      "type": "DomainEntity",
+      "business_description": "Represents per-price-field settings such as successor item, ignore, extend, novitiate, bidding, and exception period rules.",
+      "concept_group_id": "GRP-011-ItemmanagerSettingEntity",
+      "sources": [
+        {
+          "source_id": "SRC-ITEM-SETTING-FORM",
+          "location_detail": "CRM_Itemmanager_Form_ItemmanagerSetting::preProcess/buildQuickForm (field flags)",
+          "implementation_form": "backend",
+          "code_or_text_excerpt": "ignore, extend, novitiate, bidding, enable_period_exception, exception_periods, successor",
+          "differences_vs_group_canonical": null
+        }
+      ]
+    },
+    {
+      "id": "BI-020",
+      "name": "Renewal Plan Selection by Period Count",
+      "type": "WorkflowRule",
+      "business_description": "Renewal uses a single-installment plan when periods equal 1; otherwise it uses a multiple-installment plan.",
+      "concept_group_id": "GRP-012-RenewalPlanSelection",
+      "sources": [
+        {
+          "source_id": "SRC-RENEW-FORM",
+          "location_detail": "CRM_Itemmanager_Form_RenewItemperiods::postProcess (plan selection)",
+          "implementation_form": "backend",
+          "code_or_text_excerpt": "if periods == 1 use RenewalSingleInstallmentPlan else RenewalMultipleInstallmentPlan",
+          "differences_vs_group_canonical": null
+        }
+      ]
+    }
+  ],
+  "concept_groups": [
+    {
+      "concept_group_id": "GRP-001-PeriodUnitMapping",
+      "group_name": "Period Unit Mapping",
+      "business_intent_summary": "Ensure consistent conversion of period types into date interval units and corrections for week-based periods.",
+      "related_business_item_ids": ["BI-001", "BI-002"],
+      "inconsistencies": [],
+      "risk_level": "Low",
+      "risk_explanation": "Logic is duplicated but matches between choice rendering and membership extension; divergence would affect period dates.",
+      "harmonization_strategy": "Centralize period unit mapping in a shared helper method used by both choice rendering and membership extension."
+    },
+    {
+      "concept_group_id": "GRP-002-PeriodCountOverrides",
+      "group_name": "Effective Period Count Overrides",
+      "business_intent_summary": "Determine effective period count by applying exception periods and forcing single-period behavior for reverse or invalid configurations.",
+      "related_business_item_ids": ["BI-003", "BI-004", "BI-005"],
+      "inconsistencies": [],
+      "risk_level": "Medium",
+      "risk_explanation": "Repeated logic across preview, update, and renewal increases risk of drift that could misalign pricing and contribution dates.",
+      "harmonization_strategy": "Extract a shared \"effectivePeriods\" utility in CRM_Itemmanager_Util and reuse in update and renewal flows."
+    },
+    {
+      "concept_group_id": "GRP-003-UnitPricePerPeriod",
+      "group_name": "Unit Price per Period",
+      "business_intent_summary": "Compute per-period unit price from item amount and effective periods, respecting reverse configurations.",
+      "related_business_item_ids": ["BI-006", "BI-007", "BI-008"],
+      "inconsistencies": [
+        {
+          "description": "Reverse handling is explicit in choice rendering but implicit via periods forced to 1 in update/renewal flows.",
+          "involved_business_item_ids": ["BI-006", "BI-007", "BI-008"]
+        }
+      ],
+      "risk_level": "Medium",
+      "risk_explanation": "Different reverse handling could produce mismatched display prices vs actual renewal charges if period override logic changes.",
+      "harmonization_strategy": "Create a canonical unit price calculation helper that takes amount, periods, and reverse flag and apply consistently."
+    },
+    {
+      "concept_group_id": "GRP-004-TaxAmountCalculation",
+      "group_name": "Tax Amount Calculation",
+      "business_intent_summary": "Calculate tax for line items based on financial type tax rate and line totals.",
+      "related_business_item_ids": ["BI-009", "BI-010", "BI-011"],
+      "inconsistencies": [
+        {
+          "description": "Some paths use raw multiplication without rounding while another uses CiviCRM tax utilities with currency rounding.",
+          "involved_business_item_ids": ["BI-009", "BI-010", "BI-011"]
+        }
+      ],
+      "risk_level": "Medium",
+      "risk_explanation": "Rounding inconsistencies can cause mismatched totals between updated contributions and renewed installments.",
+      "harmonization_strategy": "Standardize tax calculation by routing all tax computations through the same utility (e.g., CRM_Contribute_BAO_Contribution_Utils + MoneyUtilities)."
+    },
+    {
+      "concept_group_id": "GRP-005-IgnoreItems",
+      "group_name": "Ignore Items for Renewal",
+      "business_intent_summary": "Exclude ignored items from successor selection and renewal UI.",
+      "related_business_item_ids": ["BI-012", "BI-013"],
+      "inconsistencies": [
+        {
+          "description": "Successor selection excludes novitiate items in addition to ignore, while renewal UI only checks ignore.",
+          "involved_business_item_ids": ["BI-012", "BI-013"]
+        }
+      ],
+      "risk_level": "Low",
+      "risk_explanation": "Different filters may cause novitiate items to appear in renewal UI even if excluded from successor sets.",
+      "harmonization_strategy": "Define a shared eligibility predicate for inclusion in renewal UI and successor lists (ignore/novitiate/etc.)."
+    },
+    {
+      "concept_group_id": "GRP-006-PriceSetConsistency",
+      "group_name": "Price Set Consistency per Membership",
+      "business_intent_summary": "All items within a membership renewal selection must come from the same price set.",
+      "related_business_item_ids": ["BI-014"],
+      "inconsistencies": [],
+      "risk_level": "Low",
+      "risk_explanation": "Single enforcement point; risk is low but absence of parallel checks in other layers could allow bypass.",
+      "harmonization_strategy": "Consider server-side validation in renewal execution or shared validator to prevent bypass outside the form."
+    },
+    {
+      "concept_group_id": "GRP-007-PeriodCountConsistency",
+      "group_name": "Period Count Consistency per Membership",
+      "business_intent_summary": "All items within the same membership renewal must use the same period count.",
+      "related_business_item_ids": ["BI-015"],
+      "inconsistencies": [],
+      "risk_level": "Low",
+      "risk_explanation": "Single enforcement point; inconsistencies could arise if API usage bypasses form validation.",
+      "harmonization_strategy": "Add validation in renewal processing layer to enforce period consistency beyond the UI."
+    },
+    {
+      "concept_group_id": "GRP-008-SuccessorItemSelection",
+      "group_name": "Successor Item Selection Constraints",
+      "business_intent_summary": "Only items from compatible price sets, financial types, and membership types are eligible as successors.",
+      "related_business_item_ids": ["BI-016"],
+      "inconsistencies": [],
+      "risk_level": "Low",
+      "risk_explanation": "Single location rule; limited risk unless other pathways add successors without the constraints.",
+      "harmonization_strategy": "Document the constraints and enforce in any programmatic successor assignment as a shared validation."
+    },
+    {
+      "concept_group_id": "GRP-009-PeriodSuccessorSelection",
+      "group_name": "Successor Period Selection",
+      "business_intent_summary": "Successor periods are chosen from other price sets that have configured Itemmanager periods.",
+      "related_business_item_ids": ["BI-017"],
+      "inconsistencies": [],
+      "risk_level": "Low",
+      "risk_explanation": "Single location rule; low risk unless other flows allow invalid successor links.",
+      "harmonization_strategy": "Validate successor period assignments in persistence layer or BAO updates."
+    },
+    {
+      "concept_group_id": "GRP-010-ItemmanagerPeriodEntity",
+      "group_name": "Itemmanager Period Entity",
+      "business_intent_summary": "Model for period configuration per price set used throughout renewal and update flows.",
+      "related_business_item_ids": ["BI-018"],
+      "inconsistencies": [],
+      "risk_level": "Low",
+      "risk_explanation": "Concept is consistently represented but changes must propagate to multiple flows using its fields.",
+      "harmonization_strategy": "Document entity fields and ensure access via a single BAO/DAO helper to avoid drift."
+    },
+    {
+      "concept_group_id": "GRP-011-ItemmanagerSettingEntity",
+      "group_name": "Itemmanager Setting Entity",
+      "business_intent_summary": "Per-price-field configuration controlling successor, ignore/extend flags, and exception period behavior.",
+      "related_business_item_ids": ["BI-019"],
+      "inconsistencies": [],
+      "risk_level": "Low",
+      "risk_explanation": "Single definition but used across multiple flows; inconsistent usage could emerge.",
+      "harmonization_strategy": "Centralize access to setting flags with helper methods for common predicates."
+    },
+    {
+      "concept_group_id": "GRP-012-RenewalPlanSelection",
+      "group_name": "Renewal Plan Selection",
+      "business_intent_summary": "Determine whether to renew via single-installment or multi-installment plan based on period count.",
+      "related_business_item_ids": ["BI-020"],
+      "inconsistencies": [],
+      "risk_level": "Low",
+      "risk_explanation": "Single decision point; inconsistent logic elsewhere could cause mismatched renewal plan behavior.",
+      "harmonization_strategy": "Move the decision into the renewal logic layer or service so the UI is not the sole enforcement."
+    }
+  ],
+  "observations_and_gaps": {
+    "missing_or_ambiguous_rules": [
+      {
+        "description": "No centralized definition for \"effective periods\" and reverse handling; logic is duplicated across renewal and update workflows.",
+        "related_concept_group_id": "GRP-002-PeriodCountOverrides"
+      },
+      {
+        "description": "Tax rounding behavior is not uniformly specified; some paths round and others do not.",
+        "related_concept_group_id": "GRP-004-TaxAmountCalculation"
+      }
+    ],
+    "technical_debt_notes": [
+      {
+        "description": "Period type mapping (D/W/M/Y plus week correction) is hard-coded in multiple places, increasing maintenance overhead.",
+        "related_business_item_ids": ["BI-001", "BI-002"]
+      },
+      {
+        "description": "Duplicate pricing and tax formulas in update preview and update apply steps create a risk of drift when changes are introduced.",
+        "related_business_item_ids": ["BI-003", "BI-004", "BI-007", "BI-009"]
+      }
+    ]
+  },
+  "errors": null
+}
