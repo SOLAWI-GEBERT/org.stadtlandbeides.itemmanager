@@ -31,6 +31,7 @@ abstract class CRM_Itemmanager_Test_SeededTestCase extends \PHPUnit\Framework\Te
     civicrm_api3('Extension', 'install', [
       'keys' => [\CRM_Itemmanager_ExtensionUtil::LONG_NAME],
     ]);
+    $this->seedIds['extension_installed'] = TRUE;
 
     $this->seedDatabase();
   }
@@ -335,6 +336,15 @@ abstract class CRM_Itemmanager_Test_SeededTestCase extends \PHPUnit\Framework\Te
       \Civi\Api4\Contact::delete(FALSE)
         ->addWhere('id', 'IN', $this->seedIds['organization'])
         ->execute();
+    }
+
+    if (!empty($this->seedIds['extension_installed'])) {
+      civicrm_api3('Extension', 'disable', [
+        'keys' => [\CRM_Itemmanager_ExtensionUtil::LONG_NAME],
+      ]);
+      civicrm_api3('Extension', 'uninstall', [
+        'keys' => [\CRM_Itemmanager_ExtensionUtil::LONG_NAME],
+      ]);
     }
 
     // Drop extension tables if they were created.
