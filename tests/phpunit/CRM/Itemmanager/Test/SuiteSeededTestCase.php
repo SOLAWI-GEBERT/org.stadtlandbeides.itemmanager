@@ -29,6 +29,20 @@ abstract class CRM_Itemmanager_Test_SuiteSeededTestCase extends CRM_Itemmanager_
     else {
       // Reuse suite-level seed ids for subsequent tests.
       $this->seedIds = self::$suiteSeedIds;
+
+      // If headless reset wiped the DB, rebuild seeds.
+      $priceSetId = $this->seedIds['price_set'][0] ?? NULL;
+      if ($priceSetId) {
+        $exists = \Civi\Api4\PriceSet::get(FALSE)
+          ->addWhere('id', '=', $priceSetId)
+          ->execute()
+          ->first();
+        if (empty($exists['id'])) {
+          parent::setUp();
+          self::$suiteSeedIds = $this->seedIds;
+          self::$seedInstance = $this;
+        }
+      }
     }
   }
 
