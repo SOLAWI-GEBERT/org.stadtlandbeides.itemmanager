@@ -55,6 +55,38 @@ abstract class CRM_Itemmanager_Test_SeededTestCase extends \PHPUnit\Framework\Te
       $this->seedIds['organization'][] = $org['id'];
     }
 
+    // Cleanup any leftovers (idempotent seeds).
+    $existingFt = \Civi\Api4\FinancialType::get(FALSE)
+      ->addWhere('name', '=', 'Membership VAT 19')
+      ->setSelect(['id'])
+      ->execute()
+      ->first();
+
+    if (!empty($existingFt['id'])) {
+      $ftId = (int) $existingFt['id'];
+      // Remove dependent price fields/values referencing this financial type (if column exists).
+      $this->deleteByFinancialTypeIfColumn('civicrm_price_field_value', $ftId);
+      $this->deleteByFinancialTypeIfColumn('civicrm_price_field', $ftId);
+      $this->deleteByFinancialTypeIfColumn('civicrm_price_set', $ftId);
+
+      \Civi\Api4\MembershipType::delete(FALSE)
+        ->addWhere('financial_type_id', '=', $ftId)
+        ->execute();
+
+      \Civi\Api4\EntityFinancialAccount::delete(FALSE)
+        ->addWhere('entity_table', '=', 'civicrm_financial_type')
+        ->addWhere('entity_id', '=', $ftId)
+        ->execute();
+
+      \Civi\Api4\FinancialType::delete(FALSE)
+        ->addWhere('id', '=', $ftId)
+        ->execute();
+    }
+
+    \Civi\Api4\FinancialAccount::delete(FALSE)
+      ->addWhere('name', '=', 'Unit Test VAT Account')
+      ->execute();
+
     // Seed: create financial type (Membership VAT 19).
     $finType = \Civi\Api4\FinancialType::create(FALSE)
       ->addValue('name', 'Membership VAT 19')
@@ -65,6 +97,23 @@ abstract class CRM_Itemmanager_Test_SeededTestCase extends \PHPUnit\Framework\Te
 
     if (!empty($finType['id'])) {
       $this->seedIds['financial_type'][] = $finType['id'];
+    }
+
+    // Seed: create membership type.
+    $memType = \Civi\Api4\MembershipType::create(FALSE)
+      ->addValue('name', 'Unit Test Membership')
+      ->addValue('member_of_contact_id', $org['id'] ?? NULL)
+      ->addValue('financial_type_id', $finType['id'] ?? NULL)
+      ->addValue('duration_unit', 'year')
+      ->addValue('duration_interval', 1)
+      ->addValue('period_type', 'fixed')
+      ->addValue('minimum_fee', 100)
+      ->addValue('is_active', TRUE)
+      ->execute()
+      ->first();
+
+    if (!empty($memType['id'])) {
+      $this->seedIds['membership_type'][] = $memType['id'];
     }
 
     // Seed: create financial account (type id = 7).
@@ -93,6 +142,39 @@ abstract class CRM_Itemmanager_Test_SeededTestCase extends \PHPUnit\Framework\Te
     if (!empty($efa['id'])) {
       $this->seedIds['entity_financial_account'][] = $efa['id'];
     }
+  }
+
+  /**
+   * Delete rows by financial_type_id if the column exists.
+   */
+  protected function deleteByFinancialTypeIfColumn(string $table, int $ftId): void {
+    if (!$this->columnExists($table, 'financial_type_id')) {
+      return;
+    }
+    CRM_Core_DAO::executeQuery("DELETE FROM {$table} WHERE financial_type_id = %1", [
+      1 => [$ftId, 'Integer'],
+    ]);
+  }
+
+  /**
+   * Check if a column exists in current DB.
+   */
+  protected function columnExists(string $table, string $column): bool {
+    $dao = CRM_Core_DAO::executeQuery(
+      "SELECT COUNT(*) AS cnt
+       FROM INFORMATION_SCHEMA.COLUMNS
+       WHERE TABLE_SCHEMA = DATABASE()
+         AND TABLE_NAME = %1
+         AND COLUMN_NAME = %2",
+      [
+        1 => [$table, 'String'],
+        2 => [$column, 'String'],
+      ]
+    );
+    if ($dao->fetch()) {
+      return ((int) $dao->cnt) > 0;
+    }
+    return FALSE;
   }
 
   /**
@@ -143,7 +225,20 @@ abstract class CRM_Itemmanager_Test_SeededTestCase extends \PHPUnit\Framework\Te
         ->execute();
     }
 
+    if (!empty($this->seedIds['membership_type'])) {
+      \Civi\Api4\MembershipType::delete(FALSE)
+        ->addWhere('id', 'IN', $this->seedIds['membership_type'])
+        ->execute();
+    }
+
     if (!empty($this->seedIds['financial_type'])) {
+      foreach ($this->seedIds['financial_type'] as $ftId) {
+        $ftId = (int) $ftId;
+        $this->deleteByFinancialTypeIfColumn('civicrm_price_field_value', $ftId);
+        $this->deleteByFinancialTypeIfColumn('civicrm_price_field', $ftId);
+        $this->deleteByFinancialTypeIfColumn('civicrm_price_set', $ftId);
+      }
+
       \Civi\Api4\FinancialType::delete(FALSE)
         ->addWhere('id', 'IN', $this->seedIds['financial_type'])
         ->execute();
