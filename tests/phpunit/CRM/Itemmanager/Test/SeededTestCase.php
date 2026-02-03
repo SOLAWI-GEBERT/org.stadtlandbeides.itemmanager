@@ -142,6 +142,75 @@ abstract class CRM_Itemmanager_Test_SeededTestCase extends \PHPUnit\Framework\Te
     if (!empty($efa['id'])) {
       $this->seedIds['entity_financial_account'][] = $efa['id'];
     }
+
+    // Seed: price set.
+    $priceSet = \Civi\Api4\PriceSet::create(FALSE)
+      ->addValue('name', 'unit_test_priceset')
+      ->addValue('title', 'Unit Test PriceSet')
+      ->addValue('extends', 'Membership')
+      ->addValue('is_active', TRUE)
+      ->addValue('financial_type_id', $finType['id'] ?? NULL)
+      ->execute()
+      ->first();
+
+    if (!empty($priceSet['id'])) {
+      $this->seedIds['price_set'][] = $priceSet['id'];
+    }
+
+    // Seed: price field for membership type (checkbox).
+    $pfMembership = \Civi\Api4\PriceField::create(FALSE)
+      ->addValue('price_set_id', $priceSet['id'] ?? NULL)
+      ->addValue('name', 'membership_type')
+      ->addValue('label', 'Membership Type')
+      ->addValue('html_type', 'CheckBox')
+      ->addValue('is_active', TRUE)
+      ->execute()
+      ->first();
+
+    if (!empty($pfMembership['id'])) {
+      $this->seedIds['price_field'][] = $pfMembership['id'];
+    }
+
+    $pfvMembership = \Civi\Api4\PriceFieldValue::create(FALSE)
+      ->addValue('price_field_id', $pfMembership['id'] ?? NULL)
+      ->addValue('label', 'Unit Test Membership')
+      ->addValue('amount', 100)
+      ->addValue('membership_type_id', $memType['id'] ?? NULL)
+      ->addValue('financial_type_id', $finType['id'] ?? NULL)
+      ->addValue('is_active', TRUE)
+      ->execute()
+      ->first();
+
+    if (!empty($pfvMembership['id'])) {
+      $this->seedIds['price_field_value'][] = $pfvMembership['id'];
+    }
+
+    // Seed: optional fee with tax (checkbox).
+    $pfOptional = \Civi\Api4\PriceField::create(FALSE)
+      ->addValue('price_set_id', $priceSet['id'] ?? NULL)
+      ->addValue('name', 'optional_fee')
+      ->addValue('label', 'Optional Fee (Taxable)')
+      ->addValue('html_type', 'CheckBox')
+      ->addValue('is_active', TRUE)
+      ->execute()
+      ->first();
+
+    if (!empty($pfOptional['id'])) {
+      $this->seedIds['price_field'][] = $pfOptional['id'];
+    }
+
+    $pfvOptional = \Civi\Api4\PriceFieldValue::create(FALSE)
+      ->addValue('price_field_id', $pfOptional['id'] ?? NULL)
+      ->addValue('label', 'Optional Fee')
+      ->addValue('amount', 10)
+      ->addValue('financial_type_id', $finType['id'] ?? NULL)
+      ->addValue('is_active', TRUE)
+      ->execute()
+      ->first();
+
+    if (!empty($pfvOptional['id'])) {
+      $this->seedIds['price_field_value'][] = $pfvOptional['id'];
+    }
   }
 
   /**
@@ -213,6 +282,24 @@ abstract class CRM_Itemmanager_Test_SeededTestCase extends \PHPUnit\Framework\Te
    * Cleanup seeded data.
    */
   protected function cleanupSeeds(): void {
+    if (!empty($this->seedIds['price_field_value'])) {
+      \Civi\Api4\PriceFieldValue::delete(FALSE)
+        ->addWhere('id', 'IN', $this->seedIds['price_field_value'])
+        ->execute();
+    }
+
+    if (!empty($this->seedIds['price_field'])) {
+      \Civi\Api4\PriceField::delete(FALSE)
+        ->addWhere('id', 'IN', $this->seedIds['price_field'])
+        ->execute();
+    }
+
+    if (!empty($this->seedIds['price_set'])) {
+      \Civi\Api4\PriceSet::delete(FALSE)
+        ->addWhere('id', 'IN', $this->seedIds['price_set'])
+        ->execute();
+    }
+
     if (!empty($this->seedIds['entity_financial_account'])) {
       \Civi\Api4\EntityFinancialAccount::delete(FALSE)
         ->addWhere('id', 'IN', $this->seedIds['entity_financial_account'])
