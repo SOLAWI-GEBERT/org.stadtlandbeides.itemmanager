@@ -44,16 +44,15 @@ abstract class CRM_Itemmanager_Test_SeededTestCase extends \PHPUnit\Framework\Te
    * Seed minimal data for tests.
    */
   protected function seedDatabase(): void {
-    // Example seed: create a contact.
-    $contact = \Civi\Api4\Contact::create(FALSE)
-      ->addValue('contact_type', 'Individual')
-      ->addValue('first_name', 'Unit')
-      ->addValue('last_name', 'Test')
+    // Seed: create an organization.
+    $org = \Civi\Api4\Contact::create(FALSE)
+      ->addValue('contact_type', 'Organization')
+      ->addValue('organization_name', 'Unit Test Org')
       ->execute()
       ->first();
 
-    if (!empty($contact['id'])) {
-      $this->seedIds['contact'][] = $contact['id'];
+    if (!empty($org['id'])) {
+      $this->seedIds['organization'][] = $org['id'];
     }
   }
 
@@ -61,9 +60,9 @@ abstract class CRM_Itemmanager_Test_SeededTestCase extends \PHPUnit\Framework\Te
    * Cleanup seeded data.
    */
   protected function cleanupSeeds(): void {
-    if (!empty($this->seedIds['contact'])) {
+    if (!empty($this->seedIds['organization'])) {
       \Civi\Api4\Contact::delete(FALSE)
-        ->addWhere('id', 'IN', $this->seedIds['contact'])
+        ->addWhere('id', 'IN', $this->seedIds['organization'])
         ->execute();
     }
 
