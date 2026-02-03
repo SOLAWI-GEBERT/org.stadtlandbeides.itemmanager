@@ -89,6 +89,20 @@ class CRM_Itemmanager_Test_ItemmanagerSettingsTest extends CRM_Itemmanager_Test_
       ->first();
 
     $this->assertEquals(1, (int) ($setting2['ignore'] ?? 0));
+
+    // DB check via API4 get (periods/settings exist).
+    $periodId = $this->itemmanagerSettingsIds['period'][0] ?? NULL;
+    $period = \Civi\Api4\ItemmanagerPeriods::get(FALSE)
+      ->addWhere('id', '=', $periodId)
+      ->execute()
+      ->first();
+    $this->assertEquals($periodId, $period['id'] ?? NULL);
+
+    $setting3 = \Civi\Api4\ItemmanagerSettings::get(FALSE)
+      ->addWhere('id', '=', $settingId)
+      ->execute()
+      ->first();
+    $this->assertEquals($settingId, $setting3['id'] ?? NULL);
   }
 
 }
