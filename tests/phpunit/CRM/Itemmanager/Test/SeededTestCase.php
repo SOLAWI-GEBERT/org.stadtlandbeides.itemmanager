@@ -29,7 +29,7 @@ abstract class CRM_Itemmanager_Test_SeededTestCase extends \PHPUnit\Framework\Te
     // Ensure extension is installed in headless DB.
     civicrm_api3('Extension', 'refresh', []);
     civicrm_api3('Extension', 'install', [
-      'keys' => [\CRM_Itemmanager_ExtensionUtil::LONG_NAME],
+      'keys' => ['org.stadtlandbeides.itemmanager'],
     ]);
     $this->seedIds['extension_installed'] = TRUE;
 
@@ -340,10 +340,10 @@ abstract class CRM_Itemmanager_Test_SeededTestCase extends \PHPUnit\Framework\Te
 
     if (!empty($this->seedIds['extension_installed'])) {
       civicrm_api3('Extension', 'disable', [
-        'keys' => [\CRM_Itemmanager_ExtensionUtil::LONG_NAME],
+        'keys' => ['org.stadtlandbeides.itemmanager'],
       ]);
       civicrm_api3('Extension', 'uninstall', [
-        'keys' => [\CRM_Itemmanager_ExtensionUtil::LONG_NAME],
+        'keys' => ['org.stadtlandbeides.itemmanager'],
       ]);
     }
 

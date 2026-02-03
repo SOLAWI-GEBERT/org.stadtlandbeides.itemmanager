@@ -7,19 +7,19 @@ use Civi\Test\HookInterface;
  *
  * @group headless
  */
-class CRM_Itemmanager_Test_MigrationTest extends CRM_Itemmanager_Test_SeededTestCase implements HookInterface {
+class CRM_Itemmanager_Test_MigrationTest extends CRM_Itemmanager_Test_SuiteSeededTestCase implements HookInterface {
 
   public function testMigrationsApply(): void {
     // Ensure base schema for this extension exists before migrations.
     civicrm_api3('Extension', 'refresh', []);
     civicrm_api3('Extension', 'disable', [
-      'keys' => [\CRM_Itemmanager_ExtensionUtil::LONG_NAME],
+      'keys' => ['org.stadtlandbeides.itemmanager'],
     ]);
     civicrm_api3('Extension', 'uninstall', [
-      'keys' => [\CRM_Itemmanager_ExtensionUtil::LONG_NAME],
+      'keys' => ['org.stadtlandbeides.itemmanager'],
     ]);
     civicrm_api3('Extension', 'install', [
-      'keys' => [\CRM_Itemmanager_ExtensionUtil::LONG_NAME],
+      'keys' => ['org.stadtlandbeides.itemmanager'],
     ]);
 
     $sqlDir = dirname(__DIR__, 3) . '/sql';
