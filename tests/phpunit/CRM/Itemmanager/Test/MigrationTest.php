@@ -1,0 +1,80 @@
+<?php
+
+use Civi\Test\HookInterface;
+
+/**
+ * Run SQL migrations from sql/ and verify tables exist.
+ *
+ * @group headless
+ */
+class CRM_Itemmanager_Test_MigrationTest extends CRM_Itemmanager_Test_SeededTestCase implements HookInterface {
+
+  public function testMigrationsApply(): void {
+    // Ensure base schema for this extension exists before migrations.
+    civicrm_api3('Extension', 'refresh', []);
+    civicrm_api3('Extension', 'disable', [
+      'keys' => [\CRM_Itemmanager_ExtensionUtil::LONG_NAME],
+    ]);
+    civicrm_api3('Extension', 'uninstall', [
+      'keys' => [\CRM_Itemmanager_ExtensionUtil::LONG_NAME],
+    ]);
+    civicrm_api3('Extension', 'install', [
+      'keys' => [\CRM_Itemmanager_ExtensionUtil::LONG_NAME],
+    ]);
+
+    $sqlDir = dirname(__DIR__, 3) . '/sql';
+    $files = glob($sqlDir . '/upgrade_*.sql');
+    sort($files, SORT_NATURAL);
+
+    foreach ($files as $file) {
+      \Civi\Test::sqlFile($file);
+    }
+
+    // Idempotency: run migrations a second time (should not error).
+    foreach ($files as $file) {
+      \Civi\Test::sqlFile($file);
+    }
+
+    // Basic sanity: schema tables should exist after migrations.
+    $this->assertTrue($this->tableExists('civicrm_itemmanager_periods'));
+    $this->assertTrue($this->tableExists('civicrm_itemmanager_settings'));
+
+    // Structure checks (minimal expected columns).
+    $this->assertColumns('civicrm_itemmanager_periods', [
+      'id',
+      'price_set_id',
+      'period_start_on',
+      'periods',
+      'period_type',
+    ]);
+    $this->assertColumns('civicrm_itemmanager_settings', [
+      'id',
+      'price_field_value_id',
+      'itemmanager_periods_id',
+      'itemmanager_successor_id',
+      'ignore',
+      'extend',
+      'novitiate',
+      'enable_period_exception',
+      'bidding',
+      'exception_periods',
+    ]);
+  }
+
+  protected function tableExists(string $table): bool {
+    $dao = CRM_Core_DAO::executeQuery("SHOW TABLES LIKE %1", [
+      1 => [$table, 'String'],
+    ]);
+    return (bool) $dao->fetch();
+  }
+
+  protected function assertColumns(string $table, array $columns): void {
+    foreach ($columns as $column) {
+      $dao = CRM_Core_DAO::executeQuery("SHOW COLUMNS FROM {$table} LIKE %1", [
+        1 => [$column, 'String'],
+      ]);
+      $this->assertTrue((bool) $dao->fetch(), "Missing column {$table}.{$column}");
+    }
+  }
+
+}
