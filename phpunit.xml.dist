@@ -1,10 +1,16 @@
 <?xml version="1.0"?>
-<phpunit backupGlobals="false" backupStaticAttributes="false" colors="true" convertErrorsToExceptions="true" convertNoticesToExceptions="true" convertWarningsToExceptions="true" processIsolation="false" stopOnFailure="false" bootstrap="tests/phpunit/bootstrap.php">
+<phpunit backupGlobals="false" backupStaticAttributes="false" colors="true" convertErrorsToExceptions="true" convertNoticesToExceptions="true" convertWarningsToExceptions="true" processIsolation="false" stopOnFailure="false" executionOrder="default" bootstrap="tests/phpunit/bootstrap.php">
   <testsuites>
     <testsuite name="My Test Suite">
       <directory>./tests/phpunit</directory>
     </testsuite>
   </testsuites>
+  <php>
+    <env name="CIVICRM_SETTINGS" value="/root/.openclaw/workspace/civicrm-buildkit/build/stable/web/private/civicrm.settings.php"/>
+    <env name="CIVICRM_BOOT" value="Standalone://root/.openclaw/workspace/civicrm-buildkit/build/stable"/>
+    <env name="CIVICRM_DSN" value="mysql://stablecivi_dbz7q:M5dlmBEOR9YAsD4w@127.0.0.1/stablecivi_6m8zl?new_link=true"/>
+    <env name="PATH" value="/root/.composer/vendor/bin:${PATH}"/>
+  </php>
   <filter>
     <whitelist>
       <directory suffix=".php">./</directory>

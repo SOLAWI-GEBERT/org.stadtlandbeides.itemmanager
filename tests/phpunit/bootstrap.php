@@ -2,6 +2,18 @@
 
 ini_set('memory_limit', '2G');
 ini_set('safe_mode', 0);
+
+// Ensure CiviCRM bootstrap env is available for cv during tests.
+if (!getenv('CIVICRM_SETTINGS')) {
+  putenv('CIVICRM_SETTINGS=/root/.openclaw/workspace/civicrm-buildkit/build/stable/web/private/civicrm.settings.php');
+}
+if (!getenv('CIVICRM_BOOT')) {
+  putenv('CIVICRM_BOOT=Standalone://root/.openclaw/workspace/civicrm-buildkit/build/stable');
+}
+if (!getenv('CIVICRM_DSN')) {
+  putenv('CIVICRM_DSN=mysql://stablecivi_dbz7q:M5dlmBEOR9YAsD4w@127.0.0.1/stablecivi_6m8zl?new_link=true');
+}
+
 // phpcs:disable
 eval(cv('php:boot --level=classloader', 'phpcode'));
 // phpcs:enable

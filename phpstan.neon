@@ -1,0 +1,10 @@
+parameters:
+  level: 5
+  paths:
+    - CRM
+    - Civi
+  bootstrapFiles:
+    - ../civicrm-core-5.70/vendor/autoload.php
+  tmpDir: .phpstan-cache
+  excludePaths:
+    - tests

@@ -12,9 +12,9 @@ class CRM_Itemmanager_BAO_ItemmanagerSettings extends CRM_Itemmanager_DAO_Itemma
   public static function create($params) {
     $className = 'CRM_Itemmanager_DAO_ItemmanagerSettings';
     $entityName = 'ItemmanagerSettings';
-    $hook = empty($params['id']) ? 'create' : 'edit';
+    $hook = empty($params['id'] ?? NULL) ? 'create' : 'edit';
 
-    CRM_Utils_Hook::pre($hook, $entityName, $params['id'], $params);
+    CRM_Utils_Hook::pre($hook, $entityName, $params['id'] ?? NULL, $params);
     $instance = new $className();
     $instance->copyValues($params);
     $instance->save();
