@@ -32,16 +32,67 @@ abstract class CRM_Itemmanager_Test_SuiteSeededTestCase extends CRM_Itemmanager_
 
       // If headless reset wiped the DB, rebuild seeds.
       $priceSetId = $this->seedIds['price_set'][0] ?? NULL;
+      $priceFieldId = $this->seedIds['price_field'][0] ?? NULL;
+      $priceFieldValueId = $this->seedIds['price_field_value'][0] ?? NULL;
+      $membershipTypeId = $this->seedIds['membership_type'][0] ?? NULL;
+
+      $missing = FALSE;
       if ($priceSetId) {
         $exists = \Civi\Api4\PriceSet::get(FALSE)
           ->addWhere('id', '=', $priceSetId)
           ->execute()
           ->first();
         if (empty($exists['id'])) {
-          parent::setUp();
-          self::$suiteSeedIds = $this->seedIds;
-          self::$seedInstance = $this;
+          $missing = TRUE;
         }
+      }
+      else {
+        $missing = TRUE;
+      }
+
+      if (!$missing && $priceFieldId) {
+        $exists = \Civi\Api4\PriceField::get(FALSE)
+          ->addWhere('id', '=', $priceFieldId)
+          ->execute()
+          ->first();
+        if (empty($exists['id'])) {
+          $missing = TRUE;
+        }
+      }
+      elseif (!$priceFieldId) {
+        $missing = TRUE;
+      }
+
+      if (!$missing && $priceFieldValueId) {
+        $exists = \Civi\Api4\PriceFieldValue::get(FALSE)
+          ->addWhere('id', '=', $priceFieldValueId)
+          ->execute()
+          ->first();
+        if (empty($exists['id'])) {
+          $missing = TRUE;
+        }
+      }
+      elseif (!$priceFieldValueId) {
+        $missing = TRUE;
+      }
+
+      if (!$missing && $membershipTypeId) {
+        $exists = \Civi\Api4\MembershipType::get(FALSE)
+          ->addWhere('id', '=', $membershipTypeId)
+          ->execute()
+          ->first();
+        if (empty($exists['id'])) {
+          $missing = TRUE;
+        }
+      }
+      elseif (!$membershipTypeId) {
+        $missing = TRUE;
+      }
+
+      if ($missing) {
+        parent::setUp();
+        self::$suiteSeedIds = $this->seedIds;
+        self::$seedInstance = $this;
       }
     }
   }
