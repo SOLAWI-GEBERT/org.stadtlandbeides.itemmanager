@@ -2,16 +2,19 @@
 <phpunit backupGlobals="false" backupStaticAttributes="false" colors="true" convertErrorsToExceptions="true" convertNoticesToExceptions="true" convertWarningsToExceptions="true" processIsolation="false" stopOnFailure="false" executionOrder="default" bootstrap="tests/phpunit/helper/bootstrap.php">
   <testsuites>
     <testsuite name="Migration">
-      <directory>./tests/phpunit/Mig/CRM/Itemmanager/Test/Migration</directory>
+      <directory>./tests/phpunit/suites/migration</directory>
     </testsuite>
     <testsuite name="Sanity">
-      <directory>./tests/phpunit/San/CRM/Itemmanager/Test/Sanity</directory>
+      <directory>./tests/phpunit/suites/sanity</directory>
     </testsuite>
-    <testsuite name="ItemmanagerSetting">
-      <directory>./tests/phpunit/IMS/CRM/Itemmanager/Test/ItemmanagerSetting</directory>
+    <testsuite name="Settings">
+      <directory>./tests/phpunit/suites/settings</directory>
     </testsuite>
     <testsuite name="Util">
-      <directory>./tests/phpunit/Util/CRM/Itemmanager/Test/Util</directory>
+      <directory>./tests/phpunit/suites/util</directory>
+    </testsuite>
+    <testsuite name="Unit">
+      <directory>./tests/phpunit/suites/unit</directory>
     </testsuite>
   </testsuites>
   <php>
