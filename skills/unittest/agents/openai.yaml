@@ -1,0 +1,7 @@
+interface:
+  display_name: "Unit Test"
+  short_description: "Create and maintain PHPUnit tests"
+  icon_small: "./assets/unittest-small.svg"
+  icon_large: "./assets/unittest-large.svg"
+  brand_color: "#0C7A5B"
+  default_prompt: "Use $unittest to add or update PHPUnit tests for this repository only, without executing the tests."
