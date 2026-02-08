@@ -74,12 +74,22 @@ abstract class CRM_Itemmanager_Test_MembershipSeededTestCase extends CRM_Itemman
     if (!empty($order['id'])) {
       $this->seedIds['order'][] = $order['id'];
     }
+    else {
+      throw new \RuntimeException('Order.create failed: ' . print_r($order, TRUE));
+    }
   }
 
   public function tearDown(): void {
     if (!empty($this->seedIds['order'])) {
       foreach ($this->seedIds['order'] as $orderId) {
-        civicrm_api3('Order', 'delete', ['id' => $orderId]);
+        if (!empty($orderId) && is_numeric($orderId)) {
+          try {
+            civicrm_api3('Order', 'delete', ['id' => (int) $orderId]);
+          }
+          catch (Exception $e) {
+            // ignore cleanup errors
+          }
+        }
       }
     }
 
