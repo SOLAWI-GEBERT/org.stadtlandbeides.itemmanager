@@ -44,9 +44,10 @@ class CRM_Itemmanager_Test_ItemmanagerUtilTest extends CRM_Itemmanager_Test_Memb
   }
 
   public function testMembershipTypeAndPaymentsHelpers(): void {
-    $membershipTypeId = $this->getSeedId('membership_type');
+    $membershipTypeId = $this->getMembershipTypeId();
     $type = CRM_Itemmanager_Util::getMembershipTypeById($membershipTypeId);
-    $this->assertEquals($membershipTypeId, $type['values'][0]['id'] ?? NULL);
+    $first = $type['values'] ? reset($type['values']) : NULL;
+    $this->assertEquals($membershipTypeId, $first['id'] ?? NULL);
 
     $contactId = $this->getSeedId('member_contact');
     $membership = \Civi\Api4\Membership::get(FALSE)
@@ -54,6 +55,16 @@ class CRM_Itemmanager_Test_ItemmanagerUtilTest extends CRM_Itemmanager_Test_Memb
       ->addWhere('membership_type_id', '=', $membershipTypeId)
       ->execute()
       ->first();
+
+    if (empty($membership['id'])) {
+      $membership = civicrm_api3('Membership', 'create', [
+        'contact_id' => $contactId,
+        'membership_type_id' => $membershipTypeId,
+        'status_id' => 'Current',
+        'start_date' => date('Y-m-d'),
+      ]);
+      $membership = ['id' => $membership['id'] ?? NULL];
+    }
 
     $this->assertNotEmpty($membership['id']);
 
@@ -73,9 +84,15 @@ class CRM_Itemmanager_Test_ItemmanagerUtilTest extends CRM_Itemmanager_Test_Memb
   }
 
   public function testFinancialAccountLookupUsesSalesTaxRelationship(): void {
-    $financialTypeId = $this->getSeedId('financial_type');
+    $financialTypeId = $this->getFinancialTypeId();
     $financialAccountId = $this->getSeedId('financial_account');
     $relationshipId = $this->findAccountRelationshipByLabel('Sales Tax Account is');
+
+    \Civi\Api4\EntityFinancialAccount::delete(FALSE)
+      ->addWhere('entity_table', '=', 'civicrm_financial_type')
+      ->addWhere('entity_id', '=', $financialTypeId)
+      ->addWhere('account_relationship', '=', $relationshipId)
+      ->execute();
 
     \Civi\Api4\EntityFinancialAccount::create(FALSE)
       ->addValue('entity_table', 'civicrm_financial_type')
@@ -94,35 +111,121 @@ class CRM_Itemmanager_Test_ItemmanagerUtilTest extends CRM_Itemmanager_Test_Memb
     return (int) $value;
   }
 
+  private function getMembershipTypeId(): int {
+    $id = $this->getSeedId('membership_type');
+    if ($id) {
+      $exists = (int) CRM_Core_DAO::getFieldValue('CRM_Member_DAO_MembershipType', $id, 'id', 'id');
+      if (!$exists) {
+        $id = 0;
+      }
+    }
+    if (!$id) {
+      $id = (int) CRM_Core_DAO::getFieldValue('CRM_Member_DAO_MembershipType', 'Unit Test Membership', 'id', 'name');
+    }
+    $this->assertNotEmpty($id, 'MembershipType id missing');
+    return $id;
+  }
+
+  private function getFinancialTypeId(): int {
+    $id = $this->getSeedId('financial_type');
+    if ($id) {
+      $exists = (int) CRM_Core_DAO::getFieldValue('CRM_Financial_DAO_FinancialType', $id, 'id', 'id');
+      if (!$exists) {
+        $id = 0;
+      }
+    }
+    if (!$id) {
+      $id = (int) CRM_Core_DAO::getFieldValue('CRM_Financial_DAO_FinancialType', 'Membership VAT 19', 'id', 'name');
+    }
+    $this->assertNotEmpty($id, 'FinancialType id missing');
+    return $id;
+  }
+
+  private function getPriceFieldId(): int {
+    $id = $this->getSeedId('price_field');
+    if ($id) {
+      $exists = (int) CRM_Core_DAO::getFieldValue('CRM_Price_DAO_PriceField', $id, 'id', 'id');
+      if (!$exists) {
+        $id = 0;
+      }
+    }
+    if (!$id) {
+      $id = (int) CRM_Core_DAO::getFieldValue('CRM_Price_DAO_PriceField', 'membership_type', 'id', 'name');
+    }
+    $this->assertNotEmpty($id, 'PriceField id missing');
+    return $id;
+  }
+
+  private function getPriceFieldValueId(): int {
+    $id = $this->getSeedId('price_field_value');
+    if ($id) {
+      $exists = (int) CRM_Core_DAO::getFieldValue('CRM_Price_DAO_PriceFieldValue', $id, 'id', 'id');
+      if (!$exists) {
+        $id = 0;
+      }
+    }
+    if (!$id) {
+      $priceFieldId = $this->getPriceFieldId();
+      $dao = CRM_Core_DAO::executeQuery(
+        "SELECT id FROM civicrm_price_field_value WHERE price_field_id = %1 AND label = %2 LIMIT 1",
+        [
+          1 => [$priceFieldId, 'Integer'],
+          2 => ['Unit Test Membership', 'String'],
+        ]
+      );
+      if ($dao->fetch()) {
+        $id = (int) $dao->id;
+      }
+    }
+    $this->assertNotEmpty($id, 'PriceFieldValue id missing');
+    return $id;
+  }
+
   private function createContributionForContact(int $contactId, string $receiveDate, float $totalAmount): array {
     $params = [
       'contact_id' => $contactId,
       'total_amount' => $totalAmount,
       'receive_date' => $receiveDate,
       'contribution_status_id' => 1,
-      'financial_type_id' => $this->getSeedId('financial_type'),
+      'financial_type_id' => $this->getFinancialTypeId(),
       'is_test' => 1,
+      'skipLineItem' => 1,
     ];
 
     $result = civicrm_api3('Contribution', 'create', $params);
     $this->assertArrayHasKey('id', $result, 'Contribution creation failed');
+
+    // Ensure no pre-existing line items for this contribution.
+    CRM_Core_DAO::executeQuery('DELETE FROM civicrm_line_item WHERE contribution_id = %1', [
+      1 => [$result['id'], 'Integer'],
+    ]);
+
     return $result;
   }
 
   private function createLineItem(int $contributionId, float $lineTotal, float $taxAmount): array {
     $params = [
       'contribution_id' => $contributionId,
+      'entity_table' => 'civicrm_contribution',
+      'entity_id' => $contributionId,
       'qty' => 1,
       'line_total' => $lineTotal,
       'unit_price' => $lineTotal,
-      'financial_type_id' => $this->getSeedId('financial_type'),
-      'price_field_id' => $this->getSeedId('price_field'),
-      'price_field_value_id' => $this->getSeedId('price_field_value'),
+      'financial_type_id' => $this->getFinancialTypeId(),
+      'price_field_id' => $this->getPriceFieldId(),
+      'price_field_value_id' => $this->getPriceFieldValueId(),
       'tax_amount' => $taxAmount,
     ];
 
     $result = civicrm_api3('LineItem', 'create', $params);
     $this->assertArrayHasKey('id', $result, 'Line item creation failed');
+
+    // Ensure tax_amount is set (some APIs ignore input tax_amount).
+    CRM_Core_DAO::executeQuery('UPDATE civicrm_line_item SET tax_amount = %1 WHERE id = %2', [
+      1 => [$taxAmount, 'Float'],
+      2 => [$result['id'], 'Integer'],
+    ]);
+
     return $result;
   }
 
