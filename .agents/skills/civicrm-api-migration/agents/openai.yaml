@@ -1,0 +1,4 @@
+interface:
+  display_name: "CiviCRM API Migration"
+  short_description: "Safely migrate raw SQL/API3 access to API4"
+  default_prompt: "Use $civicrm-api-migration to migrate CiviCRM access patterns safely: classify entity API coverage, keep raw SQL when no API exists, and upgrade API3 calls to API4 only when supported."

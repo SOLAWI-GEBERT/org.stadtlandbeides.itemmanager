@@ -9,6 +9,7 @@
   <component name="ChangeListManager">
     <list default="true" id="8a4e2072-c43d-4029-bc01-730e5001dde6" name="Default Changelist" comment="FIX move skills on the right place">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/phpunit.xml.dist" beforeDir="false" afterPath="$PROJECT_DIR$/phpunit.xml.dist" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -241,7 +242,7 @@
       <workItem from="1739013045416" duration="20658000" />
       <workItem from="1770551805759" duration="5310000" />
       <workItem from="1770561046079" duration="31000" />
-      <workItem from="1771773871997" duration="424000" />
+      <workItem from="1771773871997" duration="4373000" />
     </task>
     <task id="LOCAL-00006" summary="ENH Redesign Itemmanager dashboard">
       <created>1645023684110</created>
