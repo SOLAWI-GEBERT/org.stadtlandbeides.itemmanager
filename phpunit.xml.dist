@@ -13,6 +13,9 @@
     <testsuite name="Util">
       <directory>./tests/phpunit/suites/util</directory>
     </testsuite>
+    <testsuite name="UpdateItems">
+      <directory>./tests/phpunit/suites/updateitems</directory>
+    </testsuite>
     <testsuite name="Unit">
       <directory>./tests/phpunit/suites/unit</directory>
     </testsuite>
