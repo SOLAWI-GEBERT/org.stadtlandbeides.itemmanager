@@ -15,11 +15,23 @@ class CRM_Itemmanager_Test_UpdateItemsTest extends CRM_Itemmanager_Test_Membersh
     'settings' => [],
   ];
 
+  /** @var array<string, array<int>> */
+  protected array $extraIds = [
+    'membership_type' => [],
+    'price_field_value' => [],
+    'line_item' => [],
+  ];
+
   public function setUp(): void {
     parent::setUp();
     $this->itemmanagerRecordIds = [
       'periods' => [],
       'settings' => [],
+    ];
+    $this->extraIds = [
+      'membership_type' => [],
+      'price_field_value' => [],
+      'line_item' => [],
     ];
   }
 
@@ -35,6 +47,27 @@ class CRM_Itemmanager_Test_UpdateItemsTest extends CRM_Itemmanager_Test_Membersh
     if (!empty($periodIds)) {
       \Civi\Api4\ItemmanagerPeriods::delete(FALSE)
         ->addWhere('id', 'IN', $periodIds)
+        ->execute();
+    }
+
+    $lineItemIds = $this->filterIds($this->extraIds['line_item'] ?? []);
+    if (!empty($lineItemIds)) {
+      \Civi\Api4\LineItem::delete(FALSE)
+        ->addWhere('id', 'IN', $lineItemIds)
+        ->execute();
+    }
+
+    $pfvIds = $this->filterIds($this->extraIds['price_field_value'] ?? []);
+    if (!empty($pfvIds)) {
+      \Civi\Api4\PriceFieldValue::delete(FALSE)
+        ->addWhere('id', 'IN', $pfvIds)
+        ->execute();
+    }
+
+    $mtIds = $this->filterIds($this->extraIds['membership_type'] ?? []);
+    if (!empty($mtIds)) {
+      \Civi\Api4\MembershipType::delete(FALSE)
+        ->addWhere('id', 'IN', $mtIds)
         ->execute();
     }
 
@@ -134,6 +167,65 @@ class CRM_Itemmanager_Test_UpdateItemsTest extends CRM_Itemmanager_Test_Membersh
       }
     }
     $this->assertTrue($contributionTransactionHasExpectedAmount, 'No contribution transaction matched expected amount');
+  }
+
+  public function testMultipleMembershipItemsInPriceSet(): void {
+    $fixture = $this->buildScenarioFixture(TRUE, TRUE, TRUE);
+
+    $priceFieldId = $this->getSeedId('price_field');
+    $financialTypeId = $this->getSeedId('financial_type');
+
+    $mt = \Civi\Api4\MembershipType::create(FALSE)
+      ->addValue('name', 'Unit Test Membership 2')
+      ->addValue('member_of_contact_id', (int) $fixture['contact_id'])
+      ->addValue('financial_type_id', $financialTypeId)
+      ->addValue('duration_unit', 'year')
+      ->addValue('duration_interval', 1)
+      ->addValue('period_type', 'fixed')
+      ->addValue('fixed_period_start_day', 1)
+      ->addValue('fixed_period_start_month', 1)
+      ->addValue('minimum_fee', 50)
+      ->addValue('is_active', TRUE)
+      ->execute()
+      ->first();
+    $this->extraIds['membership_type'][] = (int) ($mt['id'] ?? 0);
+
+    $pfv = \Civi\Api4\PriceFieldValue::create(FALSE)
+      ->addValue('price_field_id', $priceFieldId)
+      ->addValue('label', 'Unit Test Membership 2')
+      ->addValue('amount', 50)
+      ->addValue('membership_type_id', (int) ($mt['id'] ?? 0))
+      ->addValue('financial_type_id', $financialTypeId)
+      ->addValue('is_active', TRUE)
+      ->execute()
+      ->first();
+    $this->extraIds['price_field_value'][] = (int) ($pfv['id'] ?? 0);
+
+    $lineItem = civicrm_api3('LineItem', 'create', [
+      'contribution_id' => (int) $fixture['contribution_id'],
+      'entity_table' => 'civicrm_contribution',
+      'entity_id' => (int) $fixture['contribution_id'],
+      'price_field_id' => $priceFieldId,
+      'price_field_value_id' => (int) ($pfv['id'] ?? 0),
+      'qty' => 1,
+      'unit_price' => 50,
+      'line_total' => 50,
+      'financial_type_id' => $financialTypeId,
+    ]);
+    $this->extraIds['line_item'][] = (int) ($lineItem['id'] ?? 0);
+
+    $page = new CRM_Itemmanager_Test_UpdateItemsPageDouble();
+    $page->prepareCreateForm((int) $fixture['contact_id'], 1, 1);
+    $baseList = $page->assignedValues['base_list'] ?? [];
+
+    $count = 0;
+    foreach ($baseList as $row) {
+      if (!empty($row['line_id']) && in_array((int) $row['line_id'], [(int) $fixture['line_item_id'], (int) ($lineItem['id'] ?? 0)], TRUE)) {
+        $count++;
+      }
+    }
+
+    $this->assertGreaterThanOrEqual(2, $count);
   }
 
   public function testUpdateDataHandlesMissingPriceFieldValue(): void {

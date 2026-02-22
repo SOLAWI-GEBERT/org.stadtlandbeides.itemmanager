@@ -83,6 +83,41 @@ class CRM_Itemmanager_Test_ItemmanagerUtilTest extends CRM_Itemmanager_Test_Memb
     $this->assertArrayHasKey($payment['id'], $result['values']);
   }
 
+  public function testMembershipPaymentStatusChangeChain(): void {
+    $contactId = $this->getSeedId('member_contact');
+    $membershipTypeId = $this->getMembershipTypeId();
+
+    $membership = civicrm_api3('Membership', 'create', [
+      'contact_id' => $contactId,
+      'membership_type_id' => $membershipTypeId,
+      'status_id' => 'Pending',
+      'start_date' => date('Y-m-d'),
+    ]);
+    $this->assertArrayHasKey('id', $membership);
+
+    $contribution = $this->createContributionForContact($contactId, date('Y-m-d'), 80.0);
+    $payment = civicrm_api3('MembershipPayment', 'create', [
+      'membership_id' => $membership['id'],
+      'contribution_id' => $contribution['id'],
+      'amount' => 80.0,
+      'payment_date' => date('Y-m-d'),
+    ]);
+    $this->assertArrayHasKey('id', $payment);
+
+    $result = CRM_Itemmanager_Util::getMemberShipPaymentByMembershipId($membership['id']);
+    $this->assertEquals(0, $result['is_error']);
+    $this->assertArrayHasKey($payment['id'], $result['values']);
+
+    civicrm_api3('Membership', 'create', [
+      'id' => $membership['id'],
+      'status_id' => 'Current',
+    ]);
+
+    $membershipCheck = civicrm_api3('Membership', 'getsingle', ['id' => $membership['id']]);
+    $status = civicrm_api3('MembershipStatus', 'getsingle', ['name' => 'Current']);
+    $this->assertSame((int) $status['id'], (int) ($membershipCheck['status_id'] ?? 0));
+  }
+
   public function testFinancialAccountLookupUsesSalesTaxRelationship(): void {
     $financialTypeId = $this->getFinancialTypeId();
     $financialAccountId = $this->getSeedId('financial_account');
