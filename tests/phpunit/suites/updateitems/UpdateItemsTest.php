@@ -136,6 +136,30 @@ class CRM_Itemmanager_Test_UpdateItemsTest extends CRM_Itemmanager_Test_Membersh
     $this->assertTrue($contributionTransactionHasExpectedAmount, 'No contribution transaction matched expected amount');
   }
 
+  public function testUpdateDataHandlesMissingPriceFieldValue(): void {
+    $fixture = $this->buildScenarioFixture(TRUE, TRUE, TRUE);
+
+    civicrm_api3('PriceFieldValue', 'delete', [
+      'id' => (int) $fixture['price_field_value_id'],
+    ]);
+
+    $page = new CRM_Itemmanager_Test_UpdateItemsPageDouble();
+    try {
+      $page->updateData(
+        (int) $fixture['contact_id'],
+        1,
+        1,
+        [(int) $fixture['line_item_id']]
+      );
+    }
+    catch (CRM_Core_Exception $e) {
+      $this->assertStringContainsString('PriceFieldValue', $e->getMessage());
+      return;
+    }
+
+    $this->assertNotEmpty($page->assignedValues['errormessages'] ?? []);
+  }
+
   public function testUpdateDataSkipsDateAndPriceWhenFiltersDisabled(): void {
     $fixture = $this->buildScenarioFixture(FALSE, TRUE, TRUE);
 
@@ -285,6 +309,7 @@ class CRM_Itemmanager_Test_UpdateItemsTest extends CRM_Itemmanager_Test_Membersh
       'contact_id' => $contactId,
       'line_item_id' => $lineItemId,
       'contribution_id' => $contributionId,
+      'price_field_value_id' => $priceFieldValueId,
       'expected_change_date' => $this->calculateChangedDate(
         (string) $updatedContribution['receive_date'],
         (string) $period['period_start_on']
@@ -343,6 +368,50 @@ class CRM_Itemmanager_Test_UpdateItemsTest extends CRM_Itemmanager_Test_Membersh
 
     $created = $this->findLineItemFixture($contactId, $priceFieldValueId);
     $this->assertNotNull($created, 'Unable to create/fetch fixture line item for UpdateItems tests');
+
+    // Ensure EntityFinancialTrxn exists for the line item + contribution.
+    $lineItemId = (int) ($created['line_item']['id'] ?? 0);
+    $contributionId = (int) ($created['contribution']['id'] ?? 0);
+    if ($lineItemId && $contributionId) {
+      // Find any financial item for this line item.
+      $fi = civicrm_api3('FinancialItem', 'get', [
+        'entity_table' => CRM_Price_DAO_LineItem::getTableName(),
+        'entity_id' => $lineItemId,
+        'options' => ['limit' => 1],
+      ]);
+      if (!empty($fi['values'])) {
+        $fiRow = reset($fi['values']);
+        $fiId = (int) ($fiRow['id'] ?? 0);
+
+        $eft = civicrm_api3('EntityFinancialTrxn', 'get', [
+          'entity_table' => CRM_Financial_DAO_FinancialItem::getTableName(),
+          'entity_id' => $fiId,
+          'options' => ['limit' => 1],
+        ]);
+        if (empty($eft['count'])) {
+          civicrm_api3('EntityFinancialTrxn', 'create', [
+            'entity_table' => CRM_Financial_DAO_FinancialItem::getTableName(),
+            'entity_id' => $fiId,
+            'financial_trxn_id' => 1,
+            'amount' => $fiRow['amount'] ?? 0,
+          ]);
+        }
+
+        $eftContrib = civicrm_api3('EntityFinancialTrxn', 'get', [
+          'entity_table' => CRM_Contribute_DAO_Contribution::getTableName(),
+          'entity_id' => $contributionId,
+          'options' => ['limit' => 1],
+        ]);
+        if (empty($eftContrib['count'])) {
+          civicrm_api3('EntityFinancialTrxn', 'create', [
+            'entity_table' => CRM_Contribute_DAO_Contribution::getTableName(),
+            'entity_id' => $contributionId,
+            'financial_trxn_id' => 1,
+            'amount' => $fiRow['amount'] ?? 0,
+          ]);
+        }
+      }
+    }
 
     return $created;
   }
@@ -410,9 +479,142 @@ class CRM_Itemmanager_Test_UpdateItemsTest extends CRM_Itemmanager_Test_Membersh
   }
 
   private function getSeedId(string $key, int $index = 0): int {
+    switch ($key) {
+      case 'financial_type':
+        return $this->getFinancialTypeId();
+      case 'membership_type':
+        return $this->getMembershipTypeId();
+      case 'price_set':
+        return $this->getPriceSetId();
+      case 'price_field':
+        return $this->getPriceFieldId();
+      case 'price_field_value':
+        return $this->getPriceFieldValueId();
+      case 'member_contact':
+        return $this->getMemberContactId();
+    }
+
     $value = $this->seedIds[$key][$index] ?? NULL;
     $this->assertNotEmpty($value, "Seeded ID for {$key}[{$index}] is required");
     return (int) $value;
+  }
+
+  private function getFinancialTypeId(): int {
+    $id = (int) ($this->seedIds['financial_type'][0] ?? 0);
+    if ($id) {
+      $exists = (int) CRM_Core_DAO::getFieldValue('CRM_Financial_DAO_FinancialType', $id, 'id', 'id');
+      if (!$exists) {
+        $id = 0;
+      }
+    }
+    if (!$id) {
+      $id = (int) CRM_Core_DAO::getFieldValue('CRM_Financial_DAO_FinancialType', 'Membership VAT 19', 'id', 'name');
+    }
+    $this->assertNotEmpty($id, 'FinancialType id missing');
+    return $id;
+  }
+
+  private function getMembershipTypeId(): int {
+    $id = (int) ($this->seedIds['membership_type'][0] ?? 0);
+    if ($id) {
+      $exists = (int) CRM_Core_DAO::getFieldValue('CRM_Member_DAO_MembershipType', $id, 'id', 'id');
+      if (!$exists) {
+        $id = 0;
+      }
+    }
+    if (!$id) {
+      $id = (int) CRM_Core_DAO::getFieldValue('CRM_Member_DAO_MembershipType', 'Unit Test Membership', 'id', 'name');
+    }
+    $this->assertNotEmpty($id, 'MembershipType id missing');
+    return $id;
+  }
+
+  private function getPriceSetId(): int {
+    $id = (int) ($this->seedIds['price_set'][0] ?? 0);
+    if ($id) {
+      $exists = (int) CRM_Core_DAO::getFieldValue('CRM_Price_DAO_PriceSet', $id, 'id', 'id');
+      if (!$exists) {
+        $id = 0;
+      }
+    }
+    if (!$id) {
+      $id = (int) CRM_Core_DAO::getFieldValue('CRM_Price_DAO_PriceSet', 'unit_test_priceset', 'id', 'name');
+    }
+    $this->assertNotEmpty($id, 'PriceSet id missing');
+    return $id;
+  }
+
+  private function getPriceFieldId(): int {
+    $id = (int) ($this->seedIds['price_field'][0] ?? 0);
+    if ($id) {
+      $exists = (int) CRM_Core_DAO::getFieldValue('CRM_Price_DAO_PriceField', $id, 'id', 'id');
+      if (!$exists) {
+        $id = 0;
+      }
+    }
+    if (!$id) {
+      $id = (int) CRM_Core_DAO::getFieldValue('CRM_Price_DAO_PriceField', 'membership_type', 'id', 'name');
+    }
+    $this->assertNotEmpty($id, 'PriceField id missing');
+    return $id;
+  }
+
+  private function getPriceFieldValueId(): int {
+    $id = (int) ($this->seedIds['price_field_value'][0] ?? 0);
+    if ($id) {
+      $exists = (int) CRM_Core_DAO::getFieldValue('CRM_Price_DAO_PriceFieldValue', $id, 'id', 'id');
+      if (!$exists) {
+        $id = 0;
+      }
+    }
+    if (!$id) {
+      $priceFieldId = $this->getPriceFieldId();
+      $dao = CRM_Core_DAO::executeQuery(
+        "SELECT id FROM civicrm_price_field_value WHERE price_field_id = %1 AND label = %2 LIMIT 1",
+        [
+          1 => [$priceFieldId, 'Integer'],
+          2 => ['Unit Test Membership', 'String'],
+        ]
+      );
+      if ($dao->fetch()) {
+        $id = (int) $dao->id;
+      }
+    }
+    $this->assertNotEmpty($id, 'PriceFieldValue id missing');
+    return $id;
+  }
+
+  private function getMemberContactId(): int {
+    $id = (int) ($this->seedIds['member_contact'][0] ?? 0);
+    if ($id) {
+      $exists = (int) CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact', $id, 'id', 'id');
+      if (!$exists) {
+        $id = 0;
+      }
+    }
+    if (!$id) {
+      $dao = CRM_Core_DAO::executeQuery(
+        "SELECT id FROM civicrm_contact WHERE first_name = %1 AND last_name = %2 LIMIT 1",
+        [
+          1 => ['Unit', 'String'],
+          2 => ['Member', 'String'],
+        ]
+      );
+      if ($dao->fetch()) {
+        $id = (int) $dao->id;
+      }
+    }
+    if (!$id) {
+      $contact = \Civi\Api4\Contact::create(FALSE)
+        ->addValue('contact_type', 'Individual')
+        ->addValue('first_name', 'Unit')
+        ->addValue('last_name', 'Member')
+        ->execute()
+        ->first();
+      $id = (int) ($contact['id'] ?? 0);
+    }
+    $this->assertNotEmpty($id, 'Member contact id missing');
+    return $id;
   }
 
   /**
