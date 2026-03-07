@@ -8,9 +8,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8a4e2072-c43d-4029-bc01-730e5001dde6" name="Default Changelist" comment="ENH add unitest for dashboard">
-      <change beforePath="$PROJECT_DIR$/.claude/skills/unittest/SKILL.md" beforeDir="false" afterPath="$PROJECT_DIR$/.claude/skills/unittest/SKILL.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/phpunit.xml.dist" beforeDir="false" afterPath="$PROJECT_DIR$/phpunit.xml.dist" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -244,7 +243,7 @@
       <workItem from="1770551805759" duration="5310000" />
       <workItem from="1770561046079" duration="31000" />
       <workItem from="1771773871997" duration="6977000" />
-      <workItem from="1772898123927" duration="6171000" />
+      <workItem from="1772898123927" duration="10277000" />
     </task>
     <task id="LOCAL-00006" summary="ENH Redesign Itemmanager dashboard">
       <created>1645023684110</created>
