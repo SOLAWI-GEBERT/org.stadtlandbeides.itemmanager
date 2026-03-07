@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ls:*)",
+      "Bash(chmod +x:*)",
+      "Bash(/Users/linus/Documents/0_Development/org.stadtlandbeides.itemmanager/.claude/hooks/check-civicrm-api.sh:*)",
+      "Bash(do echo:*)",
+      "Bash(mkdir:*)",
+      "Bash(nc:*)",
+      "Bash(ssh:*)",
+      "Bash(ssh-copy-id:*)",
+      "Bash(git:*)",
+      "Skill(run-remote-test)",
+      "Bash(__NEW_LINE_7b3c9e3105706d3b__ ssh:*)"
+    ]
+  }
+}

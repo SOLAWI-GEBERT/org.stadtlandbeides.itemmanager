@@ -23,6 +23,9 @@ $loader->add('CRM_', __DIR__);
 $loader->add('Civi\\', __DIR__);
 $loader->add('api_', __DIR__);
 $loader->add('api\\', __DIR__);
+// Helper classes
+$loader->add('Helper_', __DIR__ . '/helper');
+$loader->add('Helper\\', __DIR__ . '/helper');
 $loader->register();
 
 /**

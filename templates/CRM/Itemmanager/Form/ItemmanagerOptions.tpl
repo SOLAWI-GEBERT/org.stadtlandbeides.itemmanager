@@ -3,7 +3,7 @@
 
   <div class="crm-submit-buttons">
     {* Display top submit button only if there are more than three elements on the page *}
-    {if ($elementNames|@count) gt 3}
+    {if ($elementNames|count) gt 3}
       {include file="CRM/common/formButtons.tpl" location="top"}
     {/if}
   </div>

@@ -1,0 +1,7 @@
+interface:
+  display_name: "File Viewer"
+  short_description: "Compact relative file and folder overview"
+  icon_small: "./assets/file-viewer-small.svg"
+  icon_large: "./assets/file-viewer-large.svg"
+  brand_color: "#7EC8FF"
+  default_prompt: "Use $file-viewer to return only compact relative file overviews and optional folder trees from fuzzy path hints."

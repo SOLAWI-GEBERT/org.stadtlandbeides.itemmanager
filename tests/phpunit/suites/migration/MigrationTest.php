@@ -22,7 +22,7 @@ class CRM_Itemmanager_Test_MigrationTest extends CRM_Itemmanager_Test_SuiteSeede
       'keys' => ['org.stadtlandbeides.itemmanager'],
     ]);
 
-    $sqlDir = dirname(__DIR__, 3) . '/sql';
+    $sqlDir = dirname(__DIR__, 4) . '/sql';
     $files = glob($sqlDir . '/upgrade_*.sql');
     sort($files, SORT_NATURAL);
 

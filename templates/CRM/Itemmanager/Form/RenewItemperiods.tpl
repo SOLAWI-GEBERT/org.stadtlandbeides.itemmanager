@@ -19,12 +19,12 @@
     {if $membership.show}
     <div class="crm-accordion-wrapper open">
       <div class="crm-accordion-header">
-        {ts}Membership{/ts}
+        {ts domain="org.stadtlandbeides.itemmanager"}Membership{/ts}
         {$membership.name}
       </div>
       <div class="crm-accordion-body">
         <div class="crm-block crm-form-block crm-form-title-here-form-block">
-          {ts}Status{/ts}
+          {ts domain="org.stadtlandbeides.itemmanager"}Status{/ts}
           {if $membership.active}
             <span style="font-weight: bold; color: #60A237;">{$membership.status}</span>
           {else}
@@ -42,20 +42,20 @@
             <tr>
               <th></th>
               <th width="40%"><span class="label">{$form.$element_item_name.label}</span></th>
-              <th>{ts}Start{/ts}</th>
-              <th>{ts}End{/ts}</th>
+              <th>{ts domain="org.stadtlandbeides.itemmanager"}Start{/ts}</th>
+              <th>{ts domain="org.stadtlandbeides.itemmanager"}End{/ts}</th>
               <th><span class="label">{$form.$element_quantity_name.label}</span></th>
               <th><span class="label">{$form.$element_period_name.label}</span></th>
-              <th>{ts}Interval{/ts}</th>
-              <th>{ts}Price per Interval{/ts}</th>
-              <th>{ts}Active ON{/ts}</th>
-              <th>{ts}Active Until{/ts}</th>
+              <th>{ts domain="org.stadtlandbeides.itemmanager"}Interval{/ts}</th>
+              <th>{ts domain="org.stadtlandbeides.itemmanager"}Price per Interval{/ts}</th>
+              <th>{ts domain="org.stadtlandbeides.itemmanager"}Active ON{/ts}</th>
+              <th>{ts domain="org.stadtlandbeides.itemmanager"}Active Until{/ts}</th>
             </tr>
             </thead>
             <tbody>
             {if not $lineitem.new_field}
               <tr>
-                <td><div>{ts}Old{/ts}</div></td>
+                <td><div>{ts domain="org.stadtlandbeides.itemmanager"}Old{/ts}</div></td>
                 <td width="40%">{$lineitem.name}</td>
                 <td><div>{$membership.start_date}</div></td>
                 <td><div>{$membership.last_date}</div></td>
@@ -75,13 +75,13 @@
                         style="background-color:lightpink"
                       {/if}
               >
-                <td><div>{ts}New{/ts}</div></td>
+                <td><div>{ts domain="org.stadtlandbeides.itemmanager"}New{/ts}</div></td>
                 <td><span class="content">{$form.$element_item_name.html}</span></td>
                 <td><span id="{$element_item_name}_start_on">{$lineitem.new_period_start_on}</span></td>
                 <td><span id="{$element_item_name}_end_on">{$lineitem.new_period_end_on}</span></td>
                 <td><span class="content">{$form.$element_quantity_name.html}</span></td>
                 <td><span class="content">{$form.$element_period_name.html}</span></td>
-                <td>{ts}Interval{/ts}</td>
+                <td>{ts domain="org.stadtlandbeides.itemmanager"}Interval{/ts}</td>
                 <td><span id="{$element_item_name}_interval_price">{$lineitem.new_interval_price}</span></td>
                 <td><span id="{$element_item_name}_active_on">{$lineitem.new_active_on}</span></td>
                 <td><span id="{$element_item_name}_expire_on">{$lineitem.new_expire_on}</span></td>
@@ -92,7 +92,7 @@
                 <td></td>
                 <td></td>
                 <td></td>
-                <td><span class="content">{ts}Bidding round{/ts}</span></td>
+                <td><span class="content">{ts domain="org.stadtlandbeides.itemmanager"}Bidding round{/ts}</span></td>
                 <td></td>
                 <td></td>
                 <td></td>
