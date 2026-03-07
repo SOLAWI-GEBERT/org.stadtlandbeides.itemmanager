@@ -36,12 +36,13 @@ class CRM_Itemmanager_Page_UpdateItems extends CRM_Core_Page {
           $old_backid = $contact_id;
           $filter_harmonize = CRM_Utils_Request::retrieve('harm', 'Integer');
           $filter_sync = CRM_Utils_Request::retrieve('sync', 'Integer');
+          $filter_orphan = CRM_Utils_Request::retrieve('orphan', 'Integer');
           $this->assign("request",$_REQUEST);
           $this->assign("action",$loaded_action);
           if(isset($loaded_action) and $loaded_action == "update")
-            $this->prepareCreateForm($contact_id,$filter_harmonize,$filter_sync);
+            $this->prepareCreateForm($contact_id,$filter_harmonize,$filter_sync,$filter_orphan);
           else
-              $this->prepareCreateForm($contact_id,$filter_harmonize,$filter_sync);
+              $this->prepareCreateForm($contact_id,$filter_harmonize,$filter_sync,$filter_orphan);
 
           parent::run();
 
@@ -53,7 +54,10 @@ class CRM_Itemmanager_Page_UpdateItems extends CRM_Core_Page {
           $filter_harmonize = $_POST['filter_harmonize'];
           $contact_id = $_POST['contact_id'];
           $check_list = $_POST['viewlist'];
+          $delete_list = $_POST['deletelist'] ?? [];
           $this->assign("update_done",  1);
+          if(!empty($delete_list))
+            $this->deleteOrphanedMembershipPayments($contact_id, $delete_list);
           if(isset($check_list))
             $this->updateData($contact_id,$filter_harmonize,$filter_sync,$check_list);
           return parent::run();
@@ -76,7 +80,7 @@ class CRM_Itemmanager_Page_UpdateItems extends CRM_Core_Page {
     /**
      * Will prepare the form and look up all necessary data
      */
-    function prepareCreateForm($contact_id,$filter_harmonize,$filter_sync)
+    function prepareCreateForm($contact_id,$filter_harmonize,$filter_sync,$filter_orphan=0)
     {
 
         // first, try to load contact
@@ -155,32 +159,32 @@ class CRM_Itemmanager_Page_UpdateItems extends CRM_Core_Page {
                 ->countMatched();
             if($testcount == 0)
             {
-                // fatal error here
-                $base = array(
-                    'line_id'  => null,
-                    'set_id'        => null,
-                    'field_id'        => null,
-                    'member_name'   => $base_items->member_name,
-                    'item_label'    => null,
-                    'item_quantity' => null,
-                    'item_price' => null,
-                    'item_total' => null,
-                    'item_tax' => null,
-                    'periods' => null,
-                    'contrib_date'  => null,
-                    'update_date' => null,
-                    'change_date' => null,
-                    'update_label' => null,
-                    'change_label' => null,
-                    'update_price' => null,
-                    'change_price' => null,
-                    'change_total' => null,
-                    'change_tax' => null,
-                    'empty_relation_id' => (int)$base_items->pay_id,
-                    'change_error' => 'membership contribution relation'. (int)$base_items->pay_id .' is missing',
-                );
-
-                $base_list[] = $base;
+                if($filter_orphan == 1) {
+                    $base = array(
+                        'line_id'  => null,
+                        'set_id'        => null,
+                        'field_id'        => null,
+                        'member_name'   => $base_items->member_name,
+                        'item_label'    => null,
+                        'item_quantity' => null,
+                        'item_price' => null,
+                        'item_total' => null,
+                        'item_tax' => null,
+                        'periods' => null,
+                        'contrib_date'  => null,
+                        'update_date' => null,
+                        'change_date' => null,
+                        'update_label' => null,
+                        'change_label' => null,
+                        'update_price' => null,
+                        'change_price' => null,
+                        'change_total' => null,
+                        'change_tax' => null,
+                        'empty_relation_id' => (int)$base_items->pay_id,
+                        'change_error' => 'membership contribution relation '. (int)$base_items->pay_id .' is missing',
+                    );
+                    $base_list[] = $base;
+                }
                 continue;
 
             }
@@ -277,6 +281,7 @@ class CRM_Itemmanager_Page_UpdateItems extends CRM_Core_Page {
         $this->assign("filter_url", CRM_Utils_System::url('civicrm/items/update',"action=preview&cid=$contact_id"));
         $this->assign("filter_sync",$filter_sync);
         $this->assign("filter_harmonize",$filter_harmonize);
+        $this->assign("filter_orphan",$filter_orphan);
     }
 
 
@@ -584,6 +589,45 @@ class CRM_Itemmanager_Page_UpdateItems extends CRM_Core_Page {
 
     }
 
+
+    /**
+     * Delete orphaned MembershipPayment records where the linked contribution no longer exists.
+     *
+     * @param int $contact_id
+     * @param array $payment_ids List of civicrm_membership_payment IDs to delete
+     */
+    function deleteOrphanedMembershipPayments($contact_id, $payment_ids) {
+        $deleted = 0;
+        foreach ($payment_ids as $pay_id) {
+            $pay_id = (int) $pay_id;
+            if ($pay_id <= 0) continue;
+
+            $payment = \Civi\Api4\MembershipPayment::get(FALSE)
+                ->addWhere('id', '=', $pay_id)
+                ->execute()->first();
+            if (!$payment) continue;
+
+            // Verify the contribution is actually missing
+            $contribCount = \Civi\Api4\Contribution::get(FALSE)
+                ->addWhere('id', '=', (int) $payment['contribution_id'])
+                ->selectRowCount()
+                ->execute()
+                ->countMatched();
+            if ($contribCount > 0) continue;
+
+            \Civi\Api4\MembershipPayment::delete(FALSE)
+                ->addWhere('id', '=', $pay_id)
+                ->execute();
+            $deleted++;
+        }
+
+        if ($deleted > 0) {
+            $this->processSuccess(
+                E::ts('Deleted %1 orphaned membership payment relation(s).', [1 => $deleted]),
+                $contact_id
+            );
+        }
+    }
 
     /**
      * test if this page is called as a popup
