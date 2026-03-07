@@ -178,8 +178,6 @@ class CRM_Itemmanager_Test_ItemmanagerUtilTest extends CRM_Itemmanager_Test_Memb
   public function testIsTaxEnabledInFinancialTypeReturnsTrue(): void {
     $financialTypeId = $this->getFinancialTypeId();
     $this->ensureSalesTaxAccountRelationship($financialTypeId);
-    // Flush the pseudo-constant cache so getTaxRates picks up our setup.
-    CRM_Core_PseudoConstant::flush();
     $this->assertTrue(CRM_Itemmanager_Util::isTaxEnabledInFinancialType($financialTypeId));
   }
 
@@ -200,7 +198,6 @@ class CRM_Itemmanager_Test_ItemmanagerUtilTest extends CRM_Itemmanager_Test_Memb
   public function testGetTaxRateInFinancialTypeReturnsRate(): void {
     $financialTypeId = $this->getFinancialTypeId();
     $this->ensureSalesTaxAccountRelationship($financialTypeId);
-    CRM_Core_PseudoConstant::flush();
     $rate = CRM_Itemmanager_Util::getTaxRateInFinancialType($financialTypeId);
     $this->assertIsNumeric($rate);
   }
@@ -874,8 +871,10 @@ class CRM_Itemmanager_Test_ItemmanagerUtilTest extends CRM_Itemmanager_Test_Memb
         ->execute();
     }
 
-    // Flush so getTaxRates() picks up changes.
+    // Flush all caches so getTaxRates() picks up changes.
     CRM_Core_PseudoConstant::flush();
+    // Clear the statics-based cache used by getTaxRates().
+    unset(\Civi::$statics['CRM_Core_PseudoConstant']['taxRates']);
   }
 
   private function cleanItemmanagerDataForPriceSet(int $priceSetId): void {
