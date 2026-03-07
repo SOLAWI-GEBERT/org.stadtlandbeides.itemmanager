@@ -97,6 +97,14 @@ For headless tests, also implement `Civi\Test\HookInterface` and keep class name
 - Filter to positive ints before API4 delete: `array_values(array_filter(array_map('intval', ...)))`.
 - Idempotent setup: remove conflicting records before create.
 
+## Edit Rules for Existing Test Files
+
+- When adding tests to an existing file, **read the full file first** and identify where helper methods live.
+- When using the Edit tool, the `old_string` must encompass **all** content being replaced — including helper methods that will be re-emitted in `new_string`. Otherwise helpers end up duplicated.
+- Preferred approach: insert new test methods **before** existing helpers by using an `old_string` that starts at the first helper method and extends to the class closing brace. The `new_string` then contains: new tests, then all helpers, then closing brace.
+- Alternative: use a narrow insertion point (e.g., the blank line just before the first helper) and only emit the new test methods — do **not** re-emit helpers that already exist.
+- **Never** include a method in `new_string` that already exists outside the `old_string` boundary — this causes PHP fatal "Cannot redeclare" errors.
+
 ## Templates
 
 ### Headless integration test with suite seed
