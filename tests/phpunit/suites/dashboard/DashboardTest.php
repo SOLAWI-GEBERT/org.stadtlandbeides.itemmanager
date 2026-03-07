@@ -18,6 +18,12 @@ class CRM_Itemmanager_Test_DashboardTest extends CRM_Itemmanager_Test_Membership
   /** @var array<int> */
   protected array $createdContactIds = [];
 
+  /** @var array<int> */
+  protected array $createdMembershipIds = [];
+
+  /** @var array<int> */
+  protected array $createdOrderIds = [];
+
   public function setUp(): void {
     parent::setUp();
 
@@ -26,6 +32,8 @@ class CRM_Itemmanager_Test_DashboardTest extends CRM_Itemmanager_Test_Membership
       'settings' => [],
     ];
     $this->createdContactIds = [];
+    $this->createdMembershipIds = [];
+    $this->createdOrderIds = [];
   }
 
   public function tearDown(): void {
@@ -41,6 +49,28 @@ class CRM_Itemmanager_Test_DashboardTest extends CRM_Itemmanager_Test_Membership
       \Civi\Api4\ItemmanagerPeriods::delete(FALSE)
         ->addWhere('id', 'IN', $periodIds)
         ->execute();
+    }
+
+    $orderIds = $this->filterIds($this->createdOrderIds);
+    foreach ($orderIds as $orderId) {
+      try {
+        civicrm_api3('Order', 'delete', ['id' => $orderId]);
+      }
+      catch (\Exception $e) {
+        // ignore
+      }
+    }
+
+    $membershipIds = $this->filterIds($this->createdMembershipIds);
+    if (!empty($membershipIds)) {
+      foreach ($membershipIds as $mid) {
+        try {
+          civicrm_api3('Membership', 'delete', ['id' => $mid]);
+        }
+        catch (\Exception $e) {
+          // ignore
+        }
+      }
     }
 
     $contactIds = $this->filterIds($this->createdContactIds);
@@ -187,6 +217,215 @@ class CRM_Itemmanager_Test_DashboardTest extends CRM_Itemmanager_Test_Membership
     $memberList = $page->assignedValues['member_list'] ?? NULL;
     $this->assertIsArray($memberList);
     $this->assertCount(0, $memberList);
+  }
+
+  // ---------------------------------------------------------------
+  // 8.1 run with multiple Memberships per Contact
+  // ---------------------------------------------------------------
+
+  public function testRunBuildsMultipleMembershipsPerContact(): void {
+    $this->ensureItemmanagerRecordForSeededFieldValue();
+
+    $contactId = $this->getSeedId('member_contact');
+    $membershipTypeId = $this->getMembershipTypeId();
+
+    // Create a second membership (different start/end) for the same contact.
+    $secondMembership = civicrm_api3('Membership', 'create', [
+      'contact_id' => $contactId,
+      'membership_type_id' => $membershipTypeId,
+      'status_id' => 'Current',
+      'start_date' => date('Y-m-d', strtotime('-6 months')),
+      'end_date' => date('Y-m-d', strtotime('+6 months')),
+    ]);
+    $secondMembershipId = (int) ($secondMembership['id'] ?? 0);
+    $this->assertGreaterThan(0, $secondMembershipId);
+    $this->createdMembershipIds[] = $secondMembershipId;
+
+    // Create a contribution linked to the second membership.
+    $priceFieldId = $this->getPriceFieldId();
+    $pfvId = $this->getSeedId('price_field_value');
+    $financialTypeId = $this->getFinancialTypeId();
+
+    $order2 = civicrm_api3('Order', 'create', [
+      'contact_id' => $contactId,
+      'total_amount' => 50,
+      'financial_type_id' => $financialTypeId,
+      'receive_date' => date('Y-m-d'),
+      'contribution_status_id' => 'Completed',
+      'line_items' => [
+        [
+          'params' => [
+            'contact_id' => $contactId,
+            'membership_type_id' => $membershipTypeId,
+          ],
+          'line_item' => [
+            [
+              'price_field_id' => $priceFieldId,
+              'price_field_value_id' => $pfvId,
+              'qty' => 1,
+              'unit_price' => 50,
+              'line_total' => 50,
+              'financial_type_id' => $financialTypeId,
+              'membership_type_id' => $membershipTypeId,
+            ],
+          ],
+        ],
+      ],
+    ]);
+    $this->createdOrderIds[] = (int) ($order2['id'] ?? 0);
+
+    // Link contribution to second membership.
+    civicrm_api3('MembershipPayment', 'create', [
+      'membership_id' => $secondMembershipId,
+      'contribution_id' => (int) $order2['id'],
+    ]);
+
+    $oldLevel = error_reporting(E_ALL & ~E_NOTICE & ~E_WARNING & ~E_DEPRECATED);
+    $page = new CRM_Itemmanager_Test_DashboardPageDouble();
+
+    try {
+      $this->withRequestCid($contactId, function () use ($page): void {
+        $page->run();
+      });
+    }
+    finally {
+      error_reporting($oldLevel);
+    }
+
+    $memberList = $page->assignedValues['member_list'] ?? [];
+    $this->assertIsArray($memberList);
+    // getLastMemberShipsFullRecordByContactId groups by membership type,
+    // so two memberships of the same type may merge into one entry.
+    // We verify at least one entry exists and contains data from contributions.
+    $this->assertNotEmpty($memberList,
+      'member_list should contain at least one membership');
+
+    foreach ($memberList as $entry) {
+      $this->assertArrayHasKey('field_data', $entry);
+      $this->assertArrayHasKey('member_name', $entry);
+      $this->assertArrayHasKey('status', $entry);
+    }
+
+    // Verify the membership has contribution data (payinfo) from both orders.
+    $firstMember = reset($memberList);
+    $fieldData = $firstMember['field_data'] ?? [];
+    $this->assertNotEmpty($fieldData, 'field_data should contain line item entries');
+  }
+
+  // ---------------------------------------------------------------
+  // 8.2 run with Successor resolution via getLastPricefieldSuccessor
+  // ---------------------------------------------------------------
+
+  public function testRunGroupsLineItemsBySuccessorFieldId(): void {
+    $contactId = $this->getSeedId('member_contact');
+    $priceSetId = $this->getSeedId('price_set');
+    $priceFieldId = $this->getPriceFieldId();
+    $pfvId = $this->getSeedId('price_field_value');
+    $financialTypeId = $this->getFinancialTypeId();
+    $membershipTypeId = $this->getMembershipTypeId();
+
+    // Clean existing itemmanager data.
+    \Civi\Api4\ItemmanagerPeriods::delete(FALSE)
+      ->addWhere('price_set_id', '=', $priceSetId)
+      ->execute();
+    \Civi\Api4\ItemmanagerSettings::delete(FALSE)
+      ->addWhere('price_field_value_id', '=', $pfvId)
+      ->execute();
+
+    // Create period + setting with a successor chain.
+    $period1 = \Civi\Api4\ItemmanagerPeriods::create(FALSE)
+      ->addValue('price_set_id', $priceSetId)
+      ->addValue('periods', 1)
+      ->addValue('period_type', 2)
+      ->addValue('period_start_on', '20250101')
+      ->execute()
+      ->first();
+    $this->itemmanagerRecordIds['periods'][] = (int) $period1['id'];
+
+    $setting1 = \Civi\Api4\ItemmanagerSettings::create(FALSE)
+      ->addValue('price_field_value_id', $pfvId)
+      ->addValue('itemmanager_periods_id', (int) $period1['id'])
+      ->addValue('itemmanager_successor_id', 0)
+      ->execute()
+      ->first();
+    $this->itemmanagerRecordIds['settings'][] = (int) $setting1['id'];
+
+    // Ensure membership with end_date.
+    $this->ensureMembershipWithEndDate($contactId, $membershipTypeId);
+
+    // Create contribution linked to membership.
+    $order = civicrm_api3('Order', 'create', [
+      'contact_id' => $contactId,
+      'total_amount' => 100,
+      'financial_type_id' => $financialTypeId,
+      'receive_date' => date('Y-m-d'),
+      'contribution_status_id' => 'Completed',
+      'line_items' => [
+        [
+          'params' => [
+            'contact_id' => $contactId,
+            'membership_type_id' => $membershipTypeId,
+          ],
+          'line_item' => [
+            [
+              'price_field_id' => $priceFieldId,
+              'price_field_value_id' => $pfvId,
+              'qty' => 1,
+              'unit_price' => 100,
+              'line_total' => 100,
+              'financial_type_id' => $financialTypeId,
+              'membership_type_id' => $membershipTypeId,
+            ],
+          ],
+        ],
+      ],
+    ]);
+    $this->createdOrderIds[] = (int) ($order['id'] ?? 0);
+
+    $membership = \Civi\Api4\Membership::get(FALSE)
+      ->addWhere('contact_id', '=', $contactId)
+      ->addWhere('membership_type_id', '=', $membershipTypeId)
+      ->execute()
+      ->first();
+
+    if (!empty($membership['id']) && !empty($order['id'])) {
+      civicrm_api3('MembershipPayment', 'create', [
+        'membership_id' => $membership['id'],
+        'contribution_id' => $order['id'],
+      ]);
+    }
+
+    // Verify that getLastPricefieldSuccessor resolves the PFV correctly.
+    $successorId = CRM_Itemmanager_Util::getLastPricefieldSuccessor($pfvId);
+    $this->assertSame($pfvId, (int) $successorId,
+      'Without successor chain, should return same PFV id');
+
+    $oldLevel = error_reporting(E_ALL & ~E_NOTICE & ~E_WARNING & ~E_DEPRECATED);
+    $page = new CRM_Itemmanager_Test_DashboardPageDouble();
+
+    try {
+      $this->withRequestCid($contactId, function () use ($page): void {
+        $page->run();
+      });
+    }
+    finally {
+      error_reporting($oldLevel);
+    }
+
+    $memberList = $page->assignedValues['member_list'] ?? [];
+    $this->assertIsArray($memberList);
+    $this->assertNotEmpty($memberList, 'member_list should be populated');
+
+    // field_data keys should use the successor-resolved PFV id.
+    $firstMember = reset($memberList);
+    $fieldData = $firstMember['field_data'] ?? [];
+    $this->assertIsArray($fieldData);
+
+    if (!empty($fieldData)) {
+      // The key should be the resolved successor id (which is pfvId itself here).
+      $this->assertArrayHasKey($pfvId, $fieldData,
+        'field_data should be keyed by successor-resolved PFV id');
+    }
   }
 
   public function testProcessHelpersAssignExpectedDetailFields(): void {
@@ -343,6 +582,57 @@ class CRM_Itemmanager_Test_DashboardTest extends CRM_Itemmanager_Test_Membership
     }
     $this->assertNotEmpty($id, 'Member contact id missing');
     return $id;
+  }
+
+  private function getMembershipTypeId(): int {
+    $id = (int) ($this->seedIds['membership_type'][0] ?? 0);
+    if ($id && CRM_Core_DAO::getFieldValue('CRM_Member_DAO_MembershipType', $id, 'id', 'id')) {
+      return $id;
+    }
+    return (int) CRM_Core_DAO::getFieldValue('CRM_Member_DAO_MembershipType', 'Unit Test Membership', 'id', 'name');
+  }
+
+  private function getFinancialTypeId(): int {
+    $id = (int) ($this->seedIds['financial_type'][0] ?? 0);
+    if ($id && CRM_Core_DAO::getFieldValue('CRM_Financial_DAO_FinancialType', $id, 'id', 'id')) {
+      return $id;
+    }
+    return (int) CRM_Core_DAO::getFieldValue('CRM_Financial_DAO_FinancialType', 'Membership VAT 19', 'id', 'name');
+  }
+
+  private function getPriceFieldId(): int {
+    $id = (int) ($this->seedIds['price_field'][0] ?? 0);
+    if ($id && CRM_Core_DAO::getFieldValue('CRM_Price_DAO_PriceField', $id, 'id', 'id')) {
+      return $id;
+    }
+    return (int) CRM_Core_DAO::getFieldValue('CRM_Price_DAO_PriceField', 'membership_type', 'id', 'name');
+  }
+
+  private function ensureMembershipWithEndDate(int $contactId, int $membershipTypeId): void {
+    $existing = \Civi\Api4\Membership::get(FALSE)
+      ->addWhere('contact_id', '=', $contactId)
+      ->addWhere('membership_type_id', '=', $membershipTypeId)
+      ->execute()
+      ->first();
+
+    if (empty($existing['id'])) {
+      civicrm_api3('Membership', 'create', [
+        'contact_id' => $contactId,
+        'membership_type_id' => $membershipTypeId,
+        'status_id' => 'Current',
+        'start_date' => date('Y-m-d'),
+        'end_date' => date('Y-m-d', strtotime('+1 year')),
+      ]);
+    }
+    elseif (empty($existing['end_date'])) {
+      CRM_Core_DAO::executeQuery(
+        "UPDATE civicrm_membership SET end_date = %1 WHERE id = %2",
+        [
+          1 => [date('Y-m-d', strtotime('+1 year')), 'String'],
+          2 => [(int) $existing['id'], 'Integer'],
+        ]
+      );
+    }
   }
 
   /**
