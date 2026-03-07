@@ -1,7 +1,64 @@
 {literal}
     <style>
-        .changed_data{
-            color:red;
+        .changed_data {
+            color: #c00;
+        }
+        .orphan-row {
+            background-color: #fff3f3;
+        }
+        .orphan-row td {
+            color: #999;
+            font-style: italic;
+        }
+        .orphan-error {
+            color: #c00;
+            font-weight: bold;
+            font-style: normal;
+        }
+        .orphan-delete-label {
+            color: #c00;
+            font-style: normal;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+        .itemmanager-toolbar {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 4px;
+            flex-wrap: wrap;
+        }
+        .itemmanager-toolbar .filter-group {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            border: 1px solid #d3d3d3;
+            border-radius: 4px;
+            padding: 6px 12px;
+            background: #f9f9f9;
+        }
+        .itemmanager-toolbar .filter-group label {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            cursor: pointer;
+            white-space: nowrap;
+            font-weight: normal;
+            margin: 0;
+        }
+        .itemmanager-toolbar .filter-group label.orphan-filter {
+            color: #c00;
+        }
+        .itemmanager-toolbar .filter-group .separator {
+            width: 1px;
+            height: 20px;
+            background: #d3d3d3;
+        }
+        .itemmanager-toolbar .action-group {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-left: auto;
         }
     </style>
 {/literal}
@@ -11,49 +68,48 @@
 <form class="crm-form-block" id='item_update_list' name="item_update_list" action="{$submit_url}" method="post">
     <input type="hidden" id="filter_sync" name="filter_sync" value="{$filter_sync}" />
     <input type="hidden" id="filter_harmonize" name="filter_harmonize" value="{$filter_harmonize}" />
+    <input type="hidden" id="filter_orphan" name="filter_orphan" value="{$filter_orphan}" />
     <input type="hidden" id="filter_url" value="{$filter_url}" />
     <input type="hidden" name="contact_id" value="{$contact_id}" />
 
-    <div class="crm-actions-ribbon">
-        {include file="CRM/common/formButtons.tpl" location="top"}
-            <span class="crm-checkbox-list">
+    <div class="itemmanager-toolbar">
+        <div class="filter-group">
+            <label>
                 <input type="checkbox" id='sync_price' name="optionlist" onchange="SetFilter(CRM.$, CRM._)"
-
-                {if $filter_sync}
-                    checked
-                {/if}
-
-                />
+                {if $filter_sync}checked{/if} />
                 {ts domain="org.stadtlandbeides.itemmanager"}Sync price items{/ts}
-            </span>
-            <span class="crm-checkbox-list">
+            </label>
+            <div class="separator"></div>
+            <label>
                 <input type="checkbox" id='harmonize_date' name="optionlist" onchange="SetFilter(CRM.$, CRM._)"
-                {if $filter_harmonize}
-                    checked
-                {/if}
-                />
+                {if $filter_harmonize}checked{/if} />
                 {ts domain="org.stadtlandbeides.itemmanager"}Harmonize date{/ts}
-            </span>
+            </label>
+            <div class="separator"></div>
+            <label class="orphan-filter">
+                <input type="checkbox" id='cleanup_orphans' name="optionlist" onchange="SetFilter(CRM.$, CRM._)"
+                {if $filter_orphan}checked{/if} />
+                {ts domain="org.stadtlandbeides.itemmanager"}Cleanup orphaned relations{/ts}
+            </label>
+        </div>
 
-            <span class="refresh crm-button" onclick="CloseDialog(CRM.$, CRM._)").dialog('destroy');">
-                <a title="{ts domain="org.project60.sepa"}Preview{/ts}" name="preview_button"
-                   id="Preview_Button"
-                   href="{$filter_url}&harm={$filter_harmonize}&sync={$filter_sync}" class="crm-popup action-item">
-                    <span>
-                      <div class="icon refresh-icon  ui-icon-refresh"></div>
-                      {ts domain="org.stadtlandbeides.itemmanager"}Preview{/ts}
-                    </span>
-                </a>
-             </span>
-        {if $base_list}
-            <span class="refresh crm-button crm-submit-buttons">
-                <div class="icon edit-icon ui-icon-pencil"></div>
-                <input type="submit" name="items_update" value="{ts domain="org.stadtlandbeides.itemmanager"}Update Items{/ts}">
-            </span>
-        {/if}
-
-        <div class="clear"></div>
+        <div class="action-group">
+            <a title="{ts domain="org.stadtlandbeides.itemmanager"}Preview{/ts}" name="preview_button"
+               id="Preview_Button"
+               href="{$filter_url}&harm={$filter_harmonize}&sync={$filter_sync}&orphan={$filter_orphan}"
+               class="crm-popup action-item button">
+                <i class="crm-i fa-refresh"></i>
+                {ts domain="org.stadtlandbeides.itemmanager"}Preview{/ts}
+            </a>
+            {if $base_list}
+                <span class="crm-submit-buttons">
+                    <input type="submit" name="items_update" class="crm-form-submit"
+                           value="{ts domain="org.stadtlandbeides.itemmanager"}Update Items{/ts}">
+                </span>
+            {/if}
+        </div>
     </div>
+
     <div class="crm-block">
         <h3>{ts domain="org.stadtlandbeides.itemmanager"}Found items to be updated{/ts}</h3>
 
@@ -75,6 +131,24 @@
             <tbody>
 
                 {foreach from=$base_list item=ritem}
+                    {if $ritem.empty_relation_id}
+                        <tr class="{cycle values="odd-row,even-row"} orphan-row">
+                            <td width="5%">
+                                <label class="orphan-delete-label">
+                                    <input type="checkbox" name="deletelist[]" value="{$ritem.empty_relation_id}"/>
+                                    {ts domain="org.stadtlandbeides.itemmanager"}Delete{/ts}
+                                </label>
+                            </td>
+                            <td width="10%">&mdash;</td>
+                            <td width="20%">{$ritem.member_name}</td>
+                            <td width="30%">&mdash;</td>
+                            <td width="5%">&mdash;</td>
+                            <td width="5%">&mdash;</td>
+                            <td width="5%">&mdash;</td>
+                            <td width="5%">&mdash;</td>
+                            <td width="15%"><span class="orphan-error">{$ritem.change_error}</span></td>
+                        </tr>
+                    {else}
                     <tr class="{cycle values="odd-row,even-row"}">
                         <td width="5%"><input type="checkbox" name="viewlist[]" value="{$ritem.line_id}"/></td>
                         {if $ritem.update_date}
@@ -122,6 +196,7 @@
 
 
                     </tr>
+                    {/if}
                 {/foreach}
 
             </tbody>
@@ -169,8 +244,10 @@
     {
         var p=document.getElementById('sync_price');
         var h=document.getElementById('harmonize_date');
+        var o=document.getElementById('cleanup_orphans');
         var s=document.getElementById('filter_sync');
         var d=document.getElementById('filter_harmonize');
+        var f=document.getElementById('filter_orphan');
         var b=document.getElementById('Preview_Button');
         if (p.checked) {
             s.value = 1;
@@ -182,6 +259,11 @@
         } else {
             d.value = 0;
         }
+        if (o.checked) {
+            f.value = 1;
+        } else {
+            f.value = 0;
+        }
 
         b.href = updateURL(CRM.$, CRM._)
     }
@@ -192,9 +274,10 @@
         //The variable to be returned
         var s=document.getElementById('filter_sync');
         var d=document.getElementById('filter_harmonize');
+        var f=document.getElementById('filter_orphan');
         var u=document.getElementById('filter_url');
         var URL = u.value
-        URL += "&harm=" + d.value + "&sync=" + s.value;
+        URL += "&harm=" + d.value + "&sync=" + s.value + "&orphan=" + f.value;
         return URL;
     }
 
@@ -227,4 +310,3 @@
 
 {/literal}
 </script>
-
