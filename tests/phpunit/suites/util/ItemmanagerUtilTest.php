@@ -198,8 +198,20 @@ class CRM_Itemmanager_Test_ItemmanagerUtilTest extends CRM_Itemmanager_Test_Memb
   public function testGetTaxRateInFinancialTypeReturnsRate(): void {
     $financialTypeId = $this->getFinancialTypeId();
     $this->ensureSalesTaxAccountRelationship($financialTypeId);
-    $rate = CRM_Itemmanager_Util::getTaxRateInFinancialType($financialTypeId);
+
+    // getTaxRateInFinancialType calls getTaxRates which may use a stale cache.
+    // Call getTaxRates directly first to confirm DB state, then use that result.
+    $taxRates = CRM_Core_PseudoConstant::getTaxRates();
+    $this->assertArrayHasKey($financialTypeId, $taxRates, 'Financial type not in taxRates after setup');
+
+    $rate = $taxRates[$financialTypeId];
     $this->assertIsNumeric($rate);
+    $this->assertEqualsWithDelta(19.0, (float) $rate, 0.01);
+
+    // Now also verify via the Util wrapper — flush cache again to ensure fresh lookup.
+    unset(\Civi::$statics['CRM_Core_PseudoConstant']['taxRates']);
+    $utilRate = CRM_Itemmanager_Util::getTaxRateInFinancialType($financialTypeId);
+    $this->assertIsNumeric($utilRate);
   }
 
   // ---------------------------------------------------------------
@@ -843,12 +855,15 @@ class CRM_Itemmanager_Test_ItemmanagerUtilTest extends CRM_Itemmanager_Test_Memb
       return;
     }
 
+    // Clear any stale tax rate cache from previous operations.
+    unset(\Civi::$statics['CRM_Core_PseudoConstant']['taxRates']);
+
     // Enable CiviCRM invoicing/tax support globally.
     \Civi::settings()->set('invoicing', 1);
 
     // Ensure financial account has a tax_rate set.
     CRM_Core_DAO::executeQuery(
-      "UPDATE civicrm_financial_account SET tax_rate = 19.00, is_tax = 1 WHERE id = %1 AND (tax_rate IS NULL OR tax_rate = 0)",
+      "UPDATE civicrm_financial_account SET tax_rate = 19.00, is_tax = 1, is_active = 1 WHERE id = %1",
       [1 => [(int) $accountId, 'Integer']]
     );
 
