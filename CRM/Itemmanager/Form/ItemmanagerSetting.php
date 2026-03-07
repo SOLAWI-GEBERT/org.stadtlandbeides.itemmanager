@@ -273,24 +273,20 @@ class CRM_Itemmanager_Form_ItemmanagerSetting extends CRM_Core_Form {
       $selection = $this->getEmptySelection();
 
       try {
-          $priceset_records = civicrm_api3('PriceSet', 'get',
-              array('sequential' => 1,
-                  'financial_type_id' => $priceset['financial_type_id'],
-              ));
-          if ($priceset_records['is_error'] or $priceset_records['count'] <= 1)
+          $priceset_records = \Civi\Api4\PriceSet::get(FALSE)
+              ->addWhere('financial_type_id', '=', $priceset['financial_type_id'])
+              ->execute();
+          if ($priceset_records->count() <= 1)
               return $this->getEmptySelection();
 
           $successor_id = $itemmanager_period['itemmanager_period_successor_id'];
 
-          $period_successor_result = \Civi\Api4\ItemmanagerPeriods::get()
+          $itemmperiod_successor = \Civi\Api4\ItemmanagerPeriods::get(FALSE)
               ->addWhere('id', '=', $successor_id)
-              ->setCheckPermissions(FALSE)
-              ->execute();
-
-          $itemmperiod_successor = $period_successor_result->first();
+              ->execute()->first();
 
           //Now generate the selections
-          foreach ($priceset_records['values'] as $selectedpriceset)
+          foreach ($priceset_records as $selectedpriceset)
           {
               //ignore own dataset or successor price set
               if($priceset['id'] == $selectedpriceset['id'] or
@@ -299,24 +295,19 @@ class CRM_Itemmanager_Form_ItemmanagerSetting extends CRM_Core_Form {
                         and $successor_id != 0 )
                   continue;
 
-              $pricefield_records = civicrm_api3('PriceField', 'get',
-                  array('sequential' => 1,
-                      'price_set_id'=>$selectedpriceset['id']));
+              $pricefield_records = \Civi\Api4\PriceField::get(FALSE)
+                  ->addWhere('price_set_id', '=', $selectedpriceset['id'])
+                  ->execute();
 
-              if( $pricefield_records['is_error']) return $selection;
-
-              foreach ($pricefield_records['values'] as $selectedpricefield)
+              foreach ($pricefield_records as $selectedpricefield)
               {
-                  $pricefield_values_records = civicrm_api3('PriceFieldValue', 'get',
-                      array('sequential' => 1,
-                          'price_field_id' => $selectedpricefield['id'],
-                          'financial_type_id' => $pricefieldvalue['financial_type_id'],
-                          'membership_type_id' => $pricefieldvalue['membership_type_id'],
-                          ));
+                  $pricefield_values_records = \Civi\Api4\PriceFieldValue::get(FALSE)
+                      ->addWhere('price_field_id', '=', $selectedpricefield['id'])
+                      ->addWhere('financial_type_id', '=', $pricefieldvalue['financial_type_id'])
+                      ->addWhere('membership_type_id', '=', $pricefieldvalue['membership_type_id'])
+                      ->execute();
 
-                  if( $pricefield_values_records['is_error']) return $selection;
-
-                  foreach ($pricefield_values_records['values'] as $selectedpricefieldvalue)
+                  foreach ($pricefield_values_records as $selectedpricefieldvalue)
                   {
                       $settings = new CRM_Itemmanager_BAO_ItemmanagerSettings();
                       $settings->get('price_field_value_id',$selectedpricefieldvalue['id']);
@@ -332,7 +323,7 @@ class CRM_Itemmanager_Form_ItemmanagerSetting extends CRM_Core_Form {
 
 
 
-      } catch (CiviCRM_API3_Exception $e) {
+      } catch (\CRM_Core_Exception $e) {
           $this->_errormessages[] = $e->getMessage();
           return $this->getEmptySelection();
       }
@@ -354,28 +345,24 @@ class CRM_Itemmanager_Form_ItemmanagerSetting extends CRM_Core_Form {
 
         try {
 
-                $priceset_records = civicrm_api3('PriceSet', 'get',
-                    array('sequential' => 1,
-                        'financial_type_id' => $priceset['financial_type_id'],
-                    ));
+                $priceset_records = \Civi\Api4\PriceSet::get(FALSE)
+                    ->addWhere('financial_type_id', '=', $priceset['financial_type_id'])
+                    ->execute();
 
-                if ($priceset_records['is_error'] or $priceset_records['count'] <= 1)
+                if ($priceset_records->count() <= 1)
                     return $this->getEmptySelection();
 
 
                 //Now generate the selections
-                foreach ($priceset_records['values'] as $selectedpriceset)
+                foreach ($priceset_records as $selectedpriceset)
                 {
                     //ignore own dataset
                     if($priceset['id'] == $selectedpriceset['id'])
                         continue;
 
-                    $period_result = \Civi\Api4\ItemmanagerPeriods::get()
+                    $itemmperiod_selected = \Civi\Api4\ItemmanagerPeriods::get(FALSE)
                         ->addWhere('price_set_id', '=', $selectedpriceset['id'])
-                        ->setCheckPermissions(FALSE)
-                        ->execute();
-
-                    $itemmperiod_selected = $period_result->first();
+                        ->execute()->first();
 
                     if (!isset($itemmperiod_selected)) {
                         $this->_errormessages[] = 'Could not get the period from price set ' . (int)$selectedpriceset['id'];
@@ -390,7 +377,7 @@ class CRM_Itemmanager_Form_ItemmanagerSetting extends CRM_Core_Form {
                 }
 
 
-        } catch (CiviCRM_API3_Exception $e) {
+        } catch (\CRM_Core_Exception $e) {
             $this->_errormessages[] = $e->getMessage();
             return $this->getEmptySelection();
         }
@@ -412,9 +399,6 @@ class CRM_Itemmanager_Form_ItemmanagerSetting extends CRM_Core_Form {
 
     /**
      *  Collect all items to be shown for the form
-     *
-     * @throws API_Exception
-     * @throws \Civi\API\Exception\UnauthorizedException
      */
   public function preProcess()
   {
@@ -459,8 +443,10 @@ class CRM_Itemmanager_Form_ItemmanagerSetting extends CRM_Core_Form {
                   ->setCheckPermissions(FALSE)
                   ->execute();
 
-              $priceset = civicrm_api3('PriceSet', 'getsingle', array('id' => (int)$itemmanager_period['price_set_id']));
-              if (!isset($priceset)) {
+              $priceset = \Civi\Api4\PriceSet::get(FALSE)
+                  ->addWhere('id', '=', (int)$itemmanager_period['price_set_id'])
+                  ->execute()->first();
+              if (!$priceset) {
                   $this->_errormessages[] = 'Could not get the price set ' . (int)$itemmanager_period['price_set_id'];
                   continue;
               }
@@ -480,25 +466,17 @@ class CRM_Itemmanager_Form_ItemmanagerSetting extends CRM_Core_Form {
                   $itemmanager_id = $itemmanager_price_field['id'];
 
                   //check still if exists
-                  $fieldcount = civicrm_api3('PriceFieldValue', 'getcount',
-                      array('id' => (int)$itemmanager_price_field['price_field_value_id']));
-
-                  if($fieldcount == 0)
-                  {
+                  $pricefieldvalue = \Civi\Api4\PriceFieldValue::get(FALSE)
+                      ->addWhere('id', '=', (int)$itemmanager_price_field['price_field_value_id'])
+                      ->execute()->first();
+                  if (!$pricefieldvalue) {
                       continue;
                   }
 
-                  $pricefieldvalue = civicrm_api3('PriceFieldValue', 'getsingle',
-                      array('id' => (int)$itemmanager_price_field['price_field_value_id']));
-                  if (!isset($pricefieldvalue)) {
-                      $this->_errormessages[] = 'Could not get the price field value ' .
-                                                        (int)$itemmanager_price_field['price_field_value_id'];
-                      continue;
-                  }
-
-                  $pricefield = civicrm_api3('PriceField', 'getsingle',
-                      array('id' => (int)$pricefieldvalue['price_field_id']));
-                  if (!isset($pricefield)) {
+                  $pricefield = \Civi\Api4\PriceField::get(FALSE)
+                      ->addWhere('id', '=', (int)$pricefieldvalue['price_field_id'])
+                      ->execute()->first();
+                  if (!$pricefield) {
                       $this->_errormessages[] = 'Could not get the price field ' .
                           (int)$pricefieldvalue['price_field_id'];
                       continue;
@@ -580,17 +558,9 @@ class CRM_Itemmanager_Form_ItemmanagerSetting extends CRM_Core_Form {
 
 
           }
-      } catch (\Civi\API\Exception\UnauthorizedException $e) {
-          $this->_errormessages[] = $e->$this->_errormessages;
-      } catch (API_Exception $e) {
-          $this->_errormessages[] = $e->$this->_errormessages;
-      } catch (CiviCRM_API3_Exception $e) {
-          $this->_errormessages[] = $e->$this->_errormessages;
+      } catch (Exception $e) {
+          $this->_errormessages[] = $e->getMessage();
       }
-     catch (Exception $e)
-     {
-         $this->_errormessages[] = $e->$this->_errormessages;
-     }
 
       $this->assign('errormessages',$this->_errormessages);
       $this->assign('itemsettings',$this->_itemSettings);
@@ -601,9 +571,6 @@ class CRM_Itemmanager_Form_ItemmanagerSetting extends CRM_Core_Form {
 
     /**
      *  Install an exact representation of the price set and price fields
-     *
-     * @throws API_Exception
-     * @throws \Civi\API\Exception\UnauthorizedException
      */
     private function syncItemmanager()
     {
@@ -611,20 +578,15 @@ class CRM_Itemmanager_Form_ItemmanagerSetting extends CRM_Core_Form {
 
         try {
 
-            $pricefield_values_records = civicrm_api3('PriceFieldValue', 'get',
-                array(
-                    'sequential' => 1,
-                    'return' => 'id',
-                    'options' => [
-                        'limit' => 'NULL']));
+            $pricefield_values_records = \Civi\Api4\PriceFieldValue::get(FALSE)
+                ->addSelect('id')
+                ->setLimit(0)
+                ->execute();
 
-            if( $pricefield_values_records['is_error']) return;
-
-            $priceset_records = civicrm_api3('PriceSet', 'get',
-                array('sequential' => 1,'return' => 'id',
-                    'options' => [
-                        'limit' => 'NULL']));
-            if( $priceset_records['is_error']) return;
+            $priceset_records = \Civi\Api4\PriceSet::get(FALSE)
+                ->addSelect('id')
+                ->setLimit(0)
+                ->execute();
 
             $itemmanager_periods = \Civi\Api4\ItemmanagerPeriods::get()
                 ->addSelect('price_set_id')
@@ -632,15 +594,15 @@ class CRM_Itemmanager_Form_ItemmanagerSetting extends CRM_Core_Form {
                 ->execute()
                 ->indexBy('price_set_id');
 
-            $pricefield_value_ids = array_column($pricefield_values_records['values'],'id');
-            $priceset_ids = array_column($priceset_records['values'],'id');
+            $pricefield_value_ids = $pricefield_values_records->column('id');
+            $priceset_ids = $priceset_records->column('id');
             $itemmanager_price_set_ids = array_column($itemmanager_periods->getArrayCopy(),'price_set_id');
 
 
             //now we wanna sync the pricesets with our extension
             foreach ($itemmanager_price_set_ids as $itemmanager_price_set_id) {
 
-                if(!in_array((string)$itemmanager_price_set_id,$priceset_ids))
+                if(!in_array((int)$itemmanager_price_set_id,$priceset_ids))
                 {
                     \Civi\Api4\ItemmanagerPeriods::delete()
                         ->addWhere('id','=',$itemmanager_price_set_id)
@@ -681,7 +643,7 @@ class CRM_Itemmanager_Form_ItemmanagerSetting extends CRM_Core_Form {
 
             foreach ($itemmanager_price_fields_ids as $field_id)
             {
-                if(!in_array((string)$field_id,$pricefield_value_ids))
+                if(!in_array((int)$field_id,$pricefield_value_ids))
                 {
                     \Civi\Api4\ItemmanagerSettings::delete()
                         ->addWhere('id',"=","$field_id")
@@ -729,9 +691,9 @@ class CRM_Itemmanager_Form_ItemmanagerSetting extends CRM_Core_Form {
             }
 
 
-        } catch (CiviCRM_API3_Exception $e) {
+        } catch (\CRM_Core_Exception $e) {
 
-            $this->_errormessages[] = $e->$this->_errormessages;
+            $this->_errormessages[] = $e->getMessage();
         }
 
     }
