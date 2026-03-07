@@ -11,7 +11,15 @@
       "Bash(ssh-copy-id:*)",
       "Bash(git:*)",
       "Skill(run-remote-test)",
-      "Bash(__NEW_LINE_7b3c9e3105706d3b__ ssh:*)"
+      "Bash(__NEW_LINE_7b3c9e3105706d3b__ ssh:*)",
+      "Bash(gh pr:*)",
+      "Bash(brew --prefix gh)",
+      "Read(//opt/homebrew/bin/**)",
+      "Read(//usr/local/bin/**)",
+      "Bash(export:*)",
+      "Bash(__NEW_LINE_1465e906aa1d2e9d__ ssh:*)",
+      "Bash(__NEW_LINE_2fd49a62ee40536e__ ssh:*)",
+      "Bash(__NEW_LINE_0f3a7552bac61c0f__ ssh:*)"
     ]
   }
 }

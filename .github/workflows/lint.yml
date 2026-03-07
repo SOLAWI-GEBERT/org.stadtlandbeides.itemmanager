@@ -1,0 +1,60 @@
+name: Lint
+
+on:
+  push:
+    branches: [ "dev" ]
+  pull_request:
+    branches: [ "dev" ]
+
+permissions:
+  contents: read
+
+jobs:
+  php-lint:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.1'
+
+    - name: PHP Syntax Check
+      run: find . -name '*.php' -not -path './vendor/*' -print0 | xargs -0 -n1 php -l
+
+  smarty-lint:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Check Smarty balanced tags
+      run: |
+        errors=0
+        for f in $(find . -name '*.tpl'); do
+          for tag in if foreach section capture; do
+            open=$(grep -co "{${tag}[\ }]" "$f" || true)
+            close=$(grep -co "{/${tag}}" "$f" || true)
+            if [ "$open" != "$close" ]; then
+              echo "ERROR: $f has $open {${tag}} but $close {/${tag}}"
+              errors=1
+            fi
+          done
+        done
+        exit $errors
+
+  js-lint:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup Node
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+
+    - name: Install ESLint
+      run: npm install --no-save eslint@8
+
+    - name: JavaScript Syntax Check
+      run: npx eslint --no-eslintrc --env browser,jquery --global CRM js/
