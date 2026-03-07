@@ -2,8 +2,15 @@
   "hooks": {
     "PostToolUse": [
       {
-        "matcher": "Edit|Write",
-        "command": ".claude/hooks/check-civicrm-api.sh"
+        "matcher": {
+          "tools": ["Edit", "Write"]
+        },
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/check-civicrm-api.sh"
+          }
+        ]
       }
     ]
   },
