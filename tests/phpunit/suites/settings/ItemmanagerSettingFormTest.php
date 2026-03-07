@@ -313,6 +313,43 @@ class CRM_Itemmanager_Test_ItemmanagerSettingFormTest extends CRM_Itemmanager_Te
     $this->assertSame(3, (int) $updatedSetting['exception_periods']);
   }
 
+  public function testBuildQuickFormCreatesExpectedElements(): void {
+    $form = new CRM_Itemmanager_Form_ItemmanagerSetting();
+    $form->preProcess();
+    $form->buildQuickForm();
+
+    $periodId = $this->itemmanagerPeriodIds[0] ?? NULL;
+    $this->assertNotEmpty($periodId);
+
+    $itemSettings = $this->getPrivateProperty($form, '_itemSettings');
+    $period = $itemSettings[(int) $periodId];
+
+    // Verify core period elements exist.
+    $this->assertTrue($form->elementExists($period['element_period_periods']),
+      'Periods text element should exist');
+    $this->assertTrue($form->elementExists($period['element_period_type']),
+      'Duration type select should exist');
+    $this->assertTrue($form->elementExists($period['element_period_hide']),
+      'Hide checkbox should exist');
+    $this->assertTrue($form->elementExists($period['element_period_reverse']),
+      'Reverse checkbox should exist');
+    $this->assertTrue($form->elementExists($period['element_period_successor']),
+      'Successor select should exist');
+
+    // Verify field-level elements exist.
+    $field = reset($period['fields']);
+    $this->assertTrue($form->elementExists($field['element_period_field_ignore']),
+      'Ignore checkbox should exist');
+    $this->assertTrue($form->elementExists($field['element_period_field_extend']),
+      'Extend checkbox should exist');
+    $this->assertTrue($form->elementExists($field['element_period_field_novitiate']),
+      'Novitiate checkbox should exist');
+    $this->assertTrue($form->elementExists($field['element_period_field_bidding']),
+      'Bidding checkbox should exist');
+    $this->assertTrue($form->elementExists($field['element_enable_period_exception']),
+      'Period exception checkbox should exist');
+  }
+
   public function testGetRenderableElementNamesFiltersUnlabeledElements(): void {
     $form = new CRM_Itemmanager_Form_ItemmanagerSetting();
 
