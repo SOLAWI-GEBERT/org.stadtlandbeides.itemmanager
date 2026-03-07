@@ -700,11 +700,14 @@ class CRM_Itemmanager_Util
     {
         $financeitems = array();
         $itemsdata = self::getFinancialItemsByLineItemId($lineItemId);
+        $itemsdata['is_error'] = $itemsdata['is_error'] ?? 0;
+        $itemsdata['values'] = $itemsdata['values'] ?? [];
 
         if($itemsdata['is_error']) return $itemsdata;
         foreach ($itemsdata['values'] As $financeitem)
         {
             $accountdata = self::getFinancialAccountInfosByAccountId($financeitem['financial_account_id']);
+            $accountdata['is_error'] = $accountdata['is_error'] ?? 0;
             if($accountdata['is_error']) return $accountdata;
 
             $financecollection = array(

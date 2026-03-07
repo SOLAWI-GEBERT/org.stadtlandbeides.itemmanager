@@ -1,0 +1,18 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="48" y1="28" x2="464" y2="486" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0A664D"/>
+      <stop offset="1" stop-color="#1BA874"/>
+    </linearGradient>
+    <linearGradient id="liquid" x1="160" y1="320" x2="352" y2="396" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0EA86D"/>
+      <stop offset="1" stop-color="#4DD59D"/>
+    </linearGradient>
+  </defs>
+  <rect x="32" y="32" width="448" height="448" rx="96" fill="url(#bg)"/>
+  <circle cx="384" cy="126" r="40" fill="#7CE8BD" fill-opacity="0.3"/>
+  <circle cx="132" cy="388" r="24" fill="#7CE8BD" fill-opacity="0.2"/>
+  <path d="M208 126C208 117.163 215.163 110 224 110H288C296.837 110 304 117.163 304 126V214L358.336 336.256C372.457 368.034 349.188 404.75 314.436 404.75H197.564C162.812 404.75 139.543 368.034 153.664 336.256L208 214V126Z" fill="#EEFFF7"/>
+  <path d="M178 328C178 323.582 181.582 320 186 320H326C330.418 320 334 323.582 334 328V340C334 362.091 316.091 380 294 380H218C195.909 380 178 362.091 178 340V328Z" fill="url(#liquid)"/>
+  <path d="M154 254L212 312L360 162" stroke="#FFFFFF" stroke-width="30" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

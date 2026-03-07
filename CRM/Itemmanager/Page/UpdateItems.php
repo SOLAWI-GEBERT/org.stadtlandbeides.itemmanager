@@ -491,7 +491,9 @@ class CRM_Itemmanager_Page_UpdateItems extends CRM_Core_Page {
                 if(isset($contributionInfo['contribution_recur_id']))
                     civicrm_api3('ContributionRecur', 'create', [
                         'id' => (int)$contributionInfo['contribution_recur_id'],
-                        'amount' => $this->$total,
+                        'amount' => $total,
+                        'contact_id' => (int) ($contributionInfo['contact_id'] ?? 0),
+                        'frequency_interval' => (int) ($contributionInfo['frequency_interval'] ?? 1),
                     ]);
 
                 try{

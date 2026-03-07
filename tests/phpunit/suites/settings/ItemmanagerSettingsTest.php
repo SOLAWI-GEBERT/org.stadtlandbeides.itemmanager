@@ -105,4 +105,67 @@ class CRM_Itemmanager_Test_ItemmanagerSettingsTest extends CRM_Itemmanager_Test_
     $this->assertEquals($settingId, $setting3['id'] ?? NULL);
   }
 
+  public function testApi4PeriodsCrud(): void {
+    $periodId = $this->itemmanagerSettingsIds['period'][0] ?? NULL;
+    $this->assertNotEmpty($periodId, 'ItemmanagerPeriods not created');
+
+    // Read.
+    $period = \Civi\Api4\ItemmanagerPeriods::get(FALSE)
+      ->addWhere('id', '=', $periodId)
+      ->execute()
+      ->first();
+    $this->assertEquals($periodId, $period['id'] ?? NULL);
+
+    // Update.
+    \Civi\Api4\ItemmanagerPeriods::update(FALSE)
+      ->addValue('periods', 6)
+      ->addValue('period_type', 2)
+      ->addValue('period_start_on', '20260101')
+      ->addValue('hide', 1)
+      ->addValue('reverse', 1)
+      ->addWhere('id', '=', $periodId)
+      ->execute();
+
+    $updated = \Civi\Api4\ItemmanagerPeriods::get(FALSE)
+      ->addWhere('id', '=', $periodId)
+      ->execute()
+      ->first();
+
+    $this->assertSame(6, (int) $updated['periods']);
+    $this->assertSame(2, (int) $updated['period_type']);
+    $this->assertSame(1, (int) $updated['hide']);
+    $this->assertSame(1, (int) $updated['reverse']);
+
+    // Successor link: create a second period and set it as successor.
+    $priceSetId = $this->seedIds['price_set'][0] ?? NULL;
+    $successor = \Civi\Api4\ItemmanagerPeriods::create(FALSE)
+      ->addValue('price_set_id', $priceSetId)
+      ->addValue('periods', 12)
+      ->addValue('period_type', 3)
+      ->execute()
+      ->first();
+    $this->itemmanagerSettingsIds['period'][] = $successor['id'];
+
+    \Civi\Api4\ItemmanagerPeriods::update(FALSE)
+      ->addValue('itemmanager_period_successor_id', (int) $successor['id'])
+      ->addWhere('id', '=', $periodId)
+      ->execute();
+
+    $linked = \Civi\Api4\ItemmanagerPeriods::get(FALSE)
+      ->addWhere('id', '=', $periodId)
+      ->execute()
+      ->first();
+    $this->assertSame((int) $successor['id'], (int) $linked['itemmanager_period_successor_id']);
+
+    // Delete the successor period.
+    \Civi\Api4\ItemmanagerPeriods::delete(FALSE)
+      ->addWhere('id', '=', (int) $successor['id'])
+      ->execute();
+
+    $deleted = \Civi\Api4\ItemmanagerPeriods::get(FALSE)
+      ->addWhere('id', '=', (int) $successor['id'])
+      ->execute();
+    $this->assertSame(0, $deleted->count());
+  }
+
 }

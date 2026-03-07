@@ -108,6 +108,8 @@ abstract class CRM_Itemmanager_Test_SeededTestCase extends \PHPUnit\Framework\Te
       ->addValue('duration_unit', 'year')
       ->addValue('duration_interval', 1)
       ->addValue('period_type', 'fixed')
+      ->addValue('fixed_period_start_day', 1)
+      ->addValue('fixed_period_start_month', 1)
       ->addValue('minimum_fee', 100)
       ->addValue('is_active', TRUE)
       ->execute()
