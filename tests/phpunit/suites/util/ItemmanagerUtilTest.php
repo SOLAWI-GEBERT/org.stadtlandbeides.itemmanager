@@ -179,16 +179,6 @@ class CRM_Itemmanager_Test_ItemmanagerUtilTest extends CRM_Itemmanager_Test_Memb
     $financialTypeId = $this->getFinancialTypeId();
     $this->ensureSalesTaxAccountRelationship($financialTypeId);
     unset(\Civi::$statics['CRM_Core_PseudoConstant']['taxRates']);
-
-    // Debug: what does getTaxRates actually return?
-    $taxRates = CRM_Core_PseudoConstant::getTaxRates();
-    $this->assertArrayHasKey($financialTypeId, $taxRates, sprintf(
-      'getTaxRates() missing financialTypeId=%d. Keys: [%s]. Statics set: %s',
-      $financialTypeId,
-      implode(',', array_keys($taxRates)),
-      isset(\Civi::$statics['CRM_Core_PseudoConstant']['taxRates']) ? 'yes' : 'no'
-    ));
-
     $this->assertTrue(CRM_Itemmanager_Util::isTaxEnabledInFinancialType($financialTypeId));
   }
 
@@ -852,26 +842,15 @@ class CRM_Itemmanager_Test_ItemmanagerUtilTest extends CRM_Itemmanager_Test_Memb
   }
 
   private function ensureSalesTaxAccountRelationship(int $financialTypeId): void {
-    $accountId = $this->seedIds['financial_account'][0] ?? 0;
-    if (!$accountId) {
-      return;
-    }
-
     // Clear any stale tax rate cache from previous operations.
     unset(\Civi::$statics['CRM_Core_PseudoConstant']['taxRates']);
 
     // Enable CiviCRM invoicing/tax support globally.
     \Civi::settings()->set('invoicing', 1);
 
-    // Ensure financial account has a tax_rate set.
-    CRM_Core_DAO::executeQuery(
-      "UPDATE civicrm_financial_account SET tax_rate = 19.00, is_tax = 1, is_active = 1 WHERE id = %1",
-      [1 => [(int) $accountId, 'Integer']]
-    );
-
     $relationshipId = $this->findAccountRelationshipByLabel('Sales Tax Account is');
 
-    // Ensure the EFA link exists.
+    // Check if an EFA with "Sales Tax Account is" already exists for this financial type.
     $existing = \Civi\Api4\EntityFinancialAccount::get(FALSE)
       ->addWhere('entity_table', '=', 'civicrm_financial_type')
       ->addWhere('entity_id', '=', $financialTypeId)
@@ -879,18 +858,38 @@ class CRM_Itemmanager_Test_ItemmanagerUtilTest extends CRM_Itemmanager_Test_Memb
       ->execute()
       ->first();
 
-    if (empty($existing['id'])) {
+    if (!empty($existing['id'])) {
+      $accountId = (int) $existing['financial_account_id'];
+    }
+    else {
+      // Find or create a suitable tax financial account.
+      $accountId = $this->seedIds['financial_account'][0] ?? 0;
+      if (!$accountId || !CRM_Core_DAO::getFieldValue('CRM_Financial_DAO_FinancialAccount', $accountId, 'id', 'id')) {
+        // Seed account doesn't exist; find any active one.
+        $dao = CRM_Core_DAO::executeQuery("SELECT id FROM civicrm_financial_account WHERE is_active = 1 LIMIT 1");
+        $accountId = $dao->fetch() ? (int) $dao->id : 0;
+      }
+
+      if (!$accountId) {
+        $this->fail('No financial account available for tax setup');
+      }
+
       \Civi\Api4\EntityFinancialAccount::create(FALSE)
         ->addValue('entity_table', 'civicrm_financial_type')
         ->addValue('entity_id', $financialTypeId)
-        ->addValue('financial_account_id', (int) $accountId)
+        ->addValue('financial_account_id', $accountId)
         ->addValue('account_relationship', $relationshipId)
         ->execute();
     }
 
+    // Ensure the linked financial account has tax_rate set (not NULL).
+    CRM_Core_DAO::executeQuery(
+      "UPDATE civicrm_financial_account SET tax_rate = 19.00, is_tax = 1, is_active = 1 WHERE id = %1",
+      [1 => [$accountId, 'Integer']]
+    );
+
     // Flush all caches so getTaxRates() picks up changes.
     CRM_Core_PseudoConstant::flush();
-    // Clear the statics-based cache used by getTaxRates().
     unset(\Civi::$statics['CRM_Core_PseudoConstant']['taxRates']);
   }
 
