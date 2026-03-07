@@ -475,7 +475,17 @@ class CRM_Itemmanager_Test_ItemmanagerUtilTest extends CRM_Itemmanager_Test_Memb
 
     $this->cleanItemmanagerDataForPriceSet($priceSetId);
 
-    // Create two periods: current -> successor.
+    // Create current period first (lower ID, so first() picks it up).
+    $periodCurrent = \Civi\Api4\ItemmanagerPeriods::create(FALSE)
+      ->addValue('price_set_id', $priceSetId)
+      ->addValue('periods', 12)
+      ->addValue('period_type', 2)
+      ->addValue('period_start_on', '2026-01-01')
+      ->execute()
+      ->first();
+    $this->createdPeriodIds[] = (int) $periodCurrent['id'];
+
+    // Create successor period (higher ID).
     $periodSuccessor = \Civi\Api4\ItemmanagerPeriods::create(FALSE)
       ->addValue('price_set_id', $priceSetId)
       ->addValue('periods', 12)
@@ -485,15 +495,11 @@ class CRM_Itemmanager_Test_ItemmanagerUtilTest extends CRM_Itemmanager_Test_Memb
       ->first();
     $this->createdPeriodIds[] = (int) $periodSuccessor['id'];
 
-    $periodCurrent = \Civi\Api4\ItemmanagerPeriods::create(FALSE)
-      ->addValue('price_set_id', $priceSetId)
-      ->addValue('periods', 12)
-      ->addValue('period_type', 2)
-      ->addValue('period_start_on', '2026-01-01')
+    // Link current -> successor.
+    \Civi\Api4\ItemmanagerPeriods::update(FALSE)
+      ->addWhere('id', '=', $periodCurrent['id'])
       ->addValue('itemmanager_period_successor_id', (int) $periodSuccessor['id'])
-      ->execute()
-      ->first();
-    $this->createdPeriodIds[] = (int) $periodCurrent['id'];
+      ->execute();
 
     // Create a setting in the successor period (not ignored, not novitiate).
     $setting = \Civi\Api4\ItemmanagerSettings::create(FALSE)
@@ -531,10 +537,14 @@ class CRM_Itemmanager_Test_ItemmanagerUtilTest extends CRM_Itemmanager_Test_Memb
 
     $this->cleanItemmanagerDataForPriceSet($priceSetId);
 
-    // Ensure active_on and expire_on are set on price field.
+    // Ensure active_on, expire_on and help_pre are set on price field and value.
     CRM_Core_DAO::executeQuery(
-      "UPDATE civicrm_price_field SET active_on = '2026-01-01', expire_on = '2026-12-31' WHERE id = %1",
+      "UPDATE civicrm_price_field SET active_on = '2026-01-01', expire_on = '2026-12-31', help_pre = 'Field help' WHERE id = %1",
       [1 => [$pfId, 'Integer']]
+    );
+    CRM_Core_DAO::executeQuery(
+      "UPDATE civicrm_price_field_value SET help_pre = 'Value help' WHERE id = %1",
+      [1 => [$pfvId, 'Integer']]
     );
 
     $period = \Civi\Api4\ItemmanagerPeriods::create(FALSE)
@@ -836,9 +846,12 @@ class CRM_Itemmanager_Test_ItemmanagerUtilTest extends CRM_Itemmanager_Test_Memb
       return;
     }
 
+    // Enable CiviCRM invoicing/tax support globally.
+    \Civi::settings()->set('invoicing', 1);
+
     // Ensure financial account has a tax_rate set.
     CRM_Core_DAO::executeQuery(
-      "UPDATE civicrm_financial_account SET tax_rate = 19.00 WHERE id = %1 AND (tax_rate IS NULL OR tax_rate = 0)",
+      "UPDATE civicrm_financial_account SET tax_rate = 19.00, is_tax = 1 WHERE id = %1 AND (tax_rate IS NULL OR tax_rate = 0)",
       [1 => [(int) $accountId, 'Integer']]
     );
 
@@ -860,6 +873,9 @@ class CRM_Itemmanager_Test_ItemmanagerUtilTest extends CRM_Itemmanager_Test_Memb
         ->addValue('account_relationship', $relationshipId)
         ->execute();
     }
+
+    // Flush so getTaxRates() picks up changes.
+    CRM_Core_PseudoConstant::flush();
   }
 
   private function cleanItemmanagerDataForPriceSet(int $priceSetId): void {

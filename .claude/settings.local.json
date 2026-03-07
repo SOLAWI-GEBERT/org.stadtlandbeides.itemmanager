@@ -9,7 +9,8 @@
       "Bash(nc:*)",
       "Bash(ssh:*)",
       "Bash(ssh-copy-id:*)",
-      "Bash(git:*)"
+      "Bash(git:*)",
+      "Skill(run-remote-test)"
     ]
   }
 }
