@@ -7,6 +7,10 @@
           {
             "type": "command",
             "command": ".claude/hooks/check-civicrm-api.sh"
+          },
+          {
+            "type": "command",
+            "command": ".claude/hooks/check-architecture.sh"
           }
         ]
       }

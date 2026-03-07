@@ -42,13 +42,13 @@
              style="padding: 5px;"
                      >
                 <div class="crm-accordion-header" id="AccordionExpander"
-                     data-url="{crmURL p='civicrm/sepastub' q="action=browse&cid=`$contact_id`&fid=`$relation.financial_id`"}"
+                     data-url="{crmURL p='civicrm/sepastub' q="action=browse&cid=$contact_id&fid=$relation.financial_id"}"
 
-                >{ts}Contribution Type{/ts} {$relation.financial_name}</div>
+                >{ts domain="org.stadtlandbeides.itemmanager"}Contribution Type{/ts} {$relation.financial_name}</div>
                 <div class="crm-accordion-body">
                     <div class="crm-clear">
 
-                        <div>{ts}Please wait...{/ts}</div>
+                        <div>{ts domain="org.stadtlandbeides.itemmanager"}Please wait...{/ts}</div>
 
                     </div>
                 </div>

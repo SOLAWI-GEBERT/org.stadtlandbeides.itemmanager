@@ -97,15 +97,15 @@
     <div id="error" class="crm-error">
         {$error_title}
         <span>{$error_message}</br></span>
-        <if {$detail_member}>
-            <span>Membership {$detail_member}</br></span>
-        </if>
-        <if {$detail_contribution}>
-            <span>Contribution ID {$detail_contribution}</br></span>
-        </if>
-        <if {$detail_lineitem}>
-            <span>Lineitem {$detail_lineitem}</br></span>
-        </if>
+        {if $detail_member}
+            <span>Membership {$detail_member}<br/></span>
+        {/if}
+        {if $detail_contribution}
+            <span>Contribution ID {$detail_contribution}<br/></span>
+        {/if}
+        {if $detail_lineitem}
+            <span>Lineitem {$detail_lineitem}<br/></span>
+        {/if}
     </div>
 {/if}
 
