@@ -2,9 +2,7 @@
   "hooks": {
     "PostToolUse": [
       {
-        "matcher": {
-          "tools": ["Edit", "Write"]
-        },
+        "matcher": "Edit|Write",
         "hooks": [
           {
             "type": "command",
@@ -14,7 +12,10 @@
       }
     ]
   },
-  "enabledPlugins": {
-    "context7@claude-plugins-official": true
+  "mcpServers": {
+    "context7": {
+      "command": "npx",
+      "args": ["-y", "@upstash/context7-mcp@latest"]
+    }
   }
 }

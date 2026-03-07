@@ -178,6 +178,17 @@ class CRM_Itemmanager_Test_ItemmanagerUtilTest extends CRM_Itemmanager_Test_Memb
   public function testIsTaxEnabledInFinancialTypeReturnsTrue(): void {
     $financialTypeId = $this->getFinancialTypeId();
     $this->ensureSalesTaxAccountRelationship($financialTypeId);
+    unset(\Civi::$statics['CRM_Core_PseudoConstant']['taxRates']);
+
+    // Debug: what does getTaxRates actually return?
+    $taxRates = CRM_Core_PseudoConstant::getTaxRates();
+    $this->assertArrayHasKey($financialTypeId, $taxRates, sprintf(
+      'getTaxRates() missing financialTypeId=%d. Keys: [%s]. Statics set: %s',
+      $financialTypeId,
+      implode(',', array_keys($taxRates)),
+      isset(\Civi::$statics['CRM_Core_PseudoConstant']['taxRates']) ? 'yes' : 'no'
+    ));
+
     $this->assertTrue(CRM_Itemmanager_Util::isTaxEnabledInFinancialType($financialTypeId));
   }
 
@@ -198,20 +209,11 @@ class CRM_Itemmanager_Test_ItemmanagerUtilTest extends CRM_Itemmanager_Test_Memb
   public function testGetTaxRateInFinancialTypeReturnsRate(): void {
     $financialTypeId = $this->getFinancialTypeId();
     $this->ensureSalesTaxAccountRelationship($financialTypeId);
-
-    // getTaxRateInFinancialType calls getTaxRates which may use a stale cache.
-    // Call getTaxRates directly first to confirm DB state, then use that result.
-    $taxRates = CRM_Core_PseudoConstant::getTaxRates();
-    $this->assertArrayHasKey($financialTypeId, $taxRates, 'Financial type not in taxRates after setup');
-
-    $rate = $taxRates[$financialTypeId];
+    // Clear cache right before assertion.
+    unset(\Civi::$statics['CRM_Core_PseudoConstant']['taxRates']);
+    $rate = CRM_Itemmanager_Util::getTaxRateInFinancialType($financialTypeId);
     $this->assertIsNumeric($rate);
     $this->assertEqualsWithDelta(19.0, (float) $rate, 0.01);
-
-    // Now also verify via the Util wrapper — flush cache again to ensure fresh lookup.
-    unset(\Civi::$statics['CRM_Core_PseudoConstant']['taxRates']);
-    $utilRate = CRM_Itemmanager_Util::getTaxRateInFinancialType($financialTypeId);
-    $this->assertIsNumeric($utilRate);
   }
 
   // ---------------------------------------------------------------
