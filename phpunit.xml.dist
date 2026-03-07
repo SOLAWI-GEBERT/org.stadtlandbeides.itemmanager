@@ -19,6 +19,9 @@
     <testsuite name="Dashboard">
       <directory>./tests/phpunit/suites/dashboard</directory>
     </testsuite>
+    <testsuite name="RenewPeriods">
+      <directory>./tests/phpunit/suites/renewperiods</directory>
+    </testsuite>
     <testsuite name="Unit">
       <directory>./tests/phpunit/suites/unit</directory>
     </testsuite>
