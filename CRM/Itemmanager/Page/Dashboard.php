@@ -92,7 +92,11 @@ class CRM_Itemmanager_Page_Dashboard extends CRM_Core_Page {
                 continue; // better here to go on
             }
 
-            $testcount = civicrm_api3('Contribution', 'getcount', array('id' => (int)$contribution_link['contribution_id']));
+            $testcount = \Civi\Api4\Contribution::get(FALSE)
+                ->addWhere('id', '=', (int)$contribution_link['contribution_id'])
+                ->selectRowCount()
+                ->execute()
+                ->countMatched();
             if($testcount == 0)
             {
                 $error = True;
@@ -104,7 +108,10 @@ class CRM_Itemmanager_Page_Dashboard extends CRM_Core_Page {
                 continue; // better here to go on
             }
 
-            $contribution = civicrm_api3('Contribution', 'getsingle', array('id' => (int)$contribution_link['contribution_id']));
+            $contribution = \Civi\Api4\Contribution::get(FALSE)
+                ->addSelect('receive_date')
+                ->addWhere('id', '=', (int)$contribution_link['contribution_id'])
+                ->execute()->single();
             $contrib_date = $contribution['receive_date'];
             $line_timestamp = date_create($contrib_date);
 
