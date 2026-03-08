@@ -161,11 +161,15 @@ class CRM_Itemmanager_Page_ItemmanagerSettingStub extends CRM_Core_Page {
                     ->execute();
 
                 foreach ($pricefield_records as $selectedpricefield) {
-                    $pricefield_values_records = \Civi\Api4\PriceFieldValue::get(FALSE)
+                    $pfvQuery = \Civi\Api4\PriceFieldValue::get(FALSE)
                         ->addWhere('price_field_id', '=', $selectedpricefield['id'])
-                        ->addWhere('financial_type_id', '=', $pricefieldvalue['financial_type_id'])
-                        ->addWhere('membership_type_id', '=', $pricefieldvalue['membership_type_id'])
-                        ->execute();
+                        ->addWhere('financial_type_id', '=', $pricefieldvalue['financial_type_id']);
+                    if (!empty($pricefieldvalue['membership_type_id'])) {
+                        $pfvQuery->addWhere('membership_type_id', '=', $pricefieldvalue['membership_type_id']);
+                    } else {
+                        $pfvQuery->addWhere('membership_type_id', 'IS EMPTY');
+                    }
+                    $pricefield_values_records = $pfvQuery->execute();
 
                     foreach ($pricefield_values_records as $selectedpricefieldvalue) {
                         $settings = new CRM_Itemmanager_BAO_ItemmanagerSettings();
