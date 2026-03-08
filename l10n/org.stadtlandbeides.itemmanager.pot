@@ -1,12 +1,4 @@
-#: ./CRM/Itemmanager/DAO/ItemmanagerPeriods.php
-msgid "Itemmanager Periods"
-msgstr ""
-
-#: ./CRM/Itemmanager/DAO/ItemmanagerSettings.php ./CRM/Itemmanager/Form/ItemmanagerSetting.php ./itemmanager.php
-msgid "Itemmanager Settings"
-msgstr ""
-
-#: ./CRM/Itemmanager/Form/ItemmanagerOptions.php ./CRM/Itemmanager/Form/ItemmanagerSetting.php ./CRM/Itemmanager/Form/RenewItemperiods.php
+#: ./CRM/Itemmanager/Form/ItemmanagerOptions.php ./CRM/Itemmanager/Form/ItemmanagerSetting.php ./CRM/Itemmanager/Form/LineItemEdit.php ./CRM/Itemmanager/Form/RenewItemperiods.php
 msgid "Submit"
 msgstr ""
 
@@ -18,7 +10,11 @@ msgstr ""
 msgid "Settings saved."
 msgstr ""
 
-#: ./CRM/Itemmanager/Form/ItemmanagerSetting.php ./CRM/Itemmanager/Form/RenewItemperiods.php
+#: ./CRM/Itemmanager/Form/ItemmanagerSetting.php ./itemmanager.php ./schema/ItemmanagerSettings.entityType.php
+msgid "Itemmanager Settings"
+msgstr ""
+
+#: ./CRM/Itemmanager/Form/ItemmanagerSetting.php ./CRM/Itemmanager/Form/RenewItemperiods.php ./schema/ItemmanagerPeriods.entityType.php
 msgid "Periods"
 msgstr ""
 
@@ -30,71 +26,63 @@ msgstr ""
 msgid "Duration Unit"
 msgstr ""
 
-#: ./CRM/Itemmanager/Form/ItemmanagerSetting.php
+#: ./CRM/Itemmanager/Form/ItemmanagerSetting.php ./schema/ItemmanagerPeriods.entityType.php
 msgid "Hide"
 msgstr ""
 
-#: ./CRM/Itemmanager/Form/ItemmanagerSetting.php ./templates/CRM/Itemmanager/Form/ItemmanagerSetting.tpl
+#: ./CRM/Itemmanager/Form/ItemmanagerSetting.php ./schema/ItemmanagerPeriods.entityType.php
+msgid "Reverse"
+msgstr ""
+
+#: ./CRM/Itemmanager/Form/ItemmanagerSetting.php ./schema/ItemmanagerPeriods.entityType.php ./schema/ItemmanagerSettings.entityType.php ./templates/CRM/Itemmanager/Page/ItemmanagerSettingStub.tpl
 msgid "Successor"
-msgstr ""
-
-#: ./CRM/Itemmanager/Form/ItemmanagerSetting.php ./templates/CRM/Itemmanager/Form/ItemmanagerSetting.tpl
-msgid "Ignore"
-msgstr ""
-
-#: ./CRM/Itemmanager/Form/ItemmanagerSetting.php ./templates/CRM/Itemmanager/Form/ItemmanagerSetting.tpl
-msgid "Extend"
-msgstr ""
-
-#: ./CRM/Itemmanager/Form/ItemmanagerSetting.php ./templates/CRM/Itemmanager/Form/ItemmanagerSetting.tpl
-msgid "Novitiate"
-msgstr ""
-
-#: ./CRM/Itemmanager/Form/ItemmanagerSetting.php
-msgid "Enable Period Exception Case"
-msgstr ""
-
-#: ./CRM/Itemmanager/Form/ItemmanagerSetting.php ./templates/CRM/Itemmanager/Form/ItemmanagerSetting.tpl
-msgid "Exception Periods"
-msgstr ""
-
-#: ./CRM/Itemmanager/Form/ItemmanagerSetting.php
-msgid "Synchronize"
 msgstr ""
 
 #: ./CRM/Itemmanager/Form/ItemmanagerSetting.php ./CRM/Itemmanager/Form/RepairMissingContribution.php
 msgid "Cancel"
 msgstr ""
 
-#: ./CRM/Itemmanager/Form/ItemmanagerSetting.php
+#: ./CRM/Itemmanager/Form/ItemmanagerSetting.php ./CRM/Itemmanager/Page/ItemmanagerSettingStub.php ./tests/phpunit/suites/settings/ItemmanagerSettingFormTest.php
 msgid "No Successor"
-msgstr ""
-
-#: ./CRM/Itemmanager/Form/ItemmanagerSetting.php ./templates/CRM/Itemmanager/Form/ItemmanagerSetting.tpl
-msgid "Active"
-msgstr ""
-
-#: ./CRM/Itemmanager/Form/ItemmanagerSetting.php
-msgid "Synchronized."
-msgstr ""
-
-#: ./CRM/Itemmanager/Form/ItemmanagerSetting.php
-msgid "Start"
 msgstr ""
 
 #: ./CRM/Itemmanager/Form/ItemmanagerSetting.php
 msgid "Saved"
 msgstr ""
 
-#: ./CRM/Itemmanager/Form/ItemmanagerSetting.php ./CRM/Itemmanager/Form/LinkSepaWrapper.php ./CRM/Itemmanager/Form/RenewItemperiods.php ./CRM/Itemmanager/Form/RepairMissingContribution.php ./CRM/Itemmanager/Page/LinkSepaPaymentsStub.php ./CRM/Itemmanager/Page/UpdateItems.php
+#: ./CRM/Itemmanager/Form/ItemmanagerSetting.php ./CRM/Itemmanager/Form/LinkSepaWrapper.php ./CRM/Itemmanager/Form/RenewItemperiods.php ./CRM/Itemmanager/Form/RepairMissingContribution.php ./CRM/Itemmanager/Page/LinkSepaPaymentsStub.php ./CRM/Itemmanager/Page/UpdateItems.php ./js/futureContributionScanProgress.js ./js/itemMaintenanceProgress.js
 msgid "Success"
+msgstr ""
+
+#: ./CRM/Itemmanager/Form/LineItemCancel.php
+msgid "WARNING: Cancelling this line item will affect the related contribution and update the associated financial transactions. The quantity and total price will be set to 0 for this line item. Do you want to continue?"
+msgstr ""
+
+#: ./CRM/Itemmanager/Form/LineItemCancel.php
+msgid "Cancel Item"
+msgstr ""
+
+#: ./CRM/Itemmanager/Form/LineItemCancel.php ./CRM/Itemmanager/Form/LineItemEdit.php
+msgid "Close"
+msgstr ""
+
+#: ./CRM/Itemmanager/Form/LineItemEdit.php
+msgid "Total amount"
+msgstr ""
+
+#: ./CRM/Itemmanager/Form/LineItemEdit.php
+msgid "Apply to %1 future contributions"
+msgstr ""
+
+#: ./CRM/Itemmanager/Form/LineItemEdit.php
+msgid "Please enter a whole number for quantity"
 msgstr ""
 
 #: ./CRM/Itemmanager/Form/LinkSepaWrapper.php ./CRM/Itemmanager/Page/UpdateItems.php
 msgid "Couldn't find contact #%s"
 msgstr ""
 
-#: ./CRM/Itemmanager/Form/LinkSepaWrapper.php ./CRM/Itemmanager/Form/RenewItemperiods.php ./CRM/Itemmanager/Form/RepairMissingContribution.php ./CRM/Itemmanager/Page/Dashboard.php ./CRM/Itemmanager/Page/LinkSepaPaymentsStub.php ./CRM/Itemmanager/Page/UpdateItems.php ./templates/CRM/Itemmanager/Page/UpdateItems.tpl
+#: ./CRM/Itemmanager/Form/LinkSepaWrapper.php ./CRM/Itemmanager/Form/RenewItemperiods.php ./CRM/Itemmanager/Form/RepairMissingContribution.php ./CRM/Itemmanager/Page/Dashboard.php ./CRM/Itemmanager/Page/DashboardStub.php ./CRM/Itemmanager/Page/LinkSepaPaymentsStub.php ./CRM/Itemmanager/Page/UpdateItems.php ./js/futureContributionScanProgress.js ./js/itemMaintenanceProgress.js ./js/syncProgress.js ./templates/CRM/Itemmanager/Page/FutureContributionScan.tpl ./templates/CRM/Itemmanager/Page/ItemMaintenance.tpl ./templates/CRM/Itemmanager/Page/UpdateItems.tpl
 msgid "Error"
 msgstr ""
 
@@ -106,11 +94,11 @@ msgstr ""
 msgid "Complete"
 msgstr ""
 
-#: ./CRM/Itemmanager/Form/LinkSepaWrapper.php ./CRM/Itemmanager/Form/RenewItemperiods.php ./CRM/Itemmanager/Form/RepairMissingContribution.php ./CRM/Itemmanager/Page/LinkSepaPaymentsStub.php ./CRM/Itemmanager/Page/UpdateItems.php
+#: ./CRM/Itemmanager/Form/LinkSepaWrapper.php ./CRM/Itemmanager/Form/RenewItemperiods.php ./CRM/Itemmanager/Form/RepairMissingContribution.php ./CRM/Itemmanager/Page/LinkSepaPaymentsStub.php ./CRM/Itemmanager/Page/UpdateItems.php ./js/futureContributionScanProgress.js ./js/itemMaintenanceProgress.js
 msgid "Info"
 msgstr ""
 
-#: ./CRM/Itemmanager/Form/RenewItemperiods.php ./CRM/Itemmanager/Form/RepairMissingContribution.php ./CRM/Itemmanager/Page/Dashboard.php ./CRM/Itemmanager/Page/LinkSepaPaymentsStub.php
+#: ./CRM/Itemmanager/Form/RenewItemperiods.php ./CRM/Itemmanager/Form/RepairMissingContribution.php ./CRM/Itemmanager/Page/Dashboard.php ./CRM/Itemmanager/Page/DashboardStub.php ./CRM/Itemmanager/Page/LinkSepaPaymentsStub.php
 msgid "Retrieve memberships"
 msgstr ""
 
@@ -118,7 +106,7 @@ msgstr ""
 msgid "Retrieve Contributions"
 msgstr ""
 
-#: ./CRM/Itemmanager/Form/RenewItemperiods.php ./CRM/Itemmanager/Form/RepairMissingContribution.php ./CRM/Itemmanager/Page/Dashboard.php
+#: ./CRM/Itemmanager/Form/RenewItemperiods.php ./CRM/Itemmanager/Form/RepairMissingContribution.php ./CRM/Itemmanager/Page/DashboardStub.php
 msgid "Retrieve line items"
 msgstr ""
 
@@ -126,11 +114,11 @@ msgstr ""
 msgid "Renew periods for booked items for contact "
 msgstr ""
 
-#: ./CRM/Itemmanager/Form/RenewItemperiods.php ./templates/CRM/Itemmanager/Page/Dashboard.tpl ./templates/CRM/Itemmanager/Page/LinkSepaPaymentsStub.tpl ./templates/CRM/Itemmanager/Page/UpdateItems.tpl
+#: ./CRM/Itemmanager/Form/RenewItemperiods.php ./managed/LineItemsSavedSearch.mgd.php ./templates/CRM/Itemmanager/Form/AddLineItems.tpl ./templates/CRM/Itemmanager/Form/LineItemEdit.tpl ./templates/CRM/Itemmanager/Page/DashboardStub.tpl ./templates/CRM/Itemmanager/Page/FutureContributionScan.tpl ./templates/CRM/Itemmanager/Page/ItemMaintenance.tpl ./templates/CRM/Itemmanager/Page/LinkSepaPaymentsStub.tpl ./templates/CRM/Itemmanager/Page/UpdateItems.tpl
 msgid "Item"
 msgstr ""
 
-#: ./CRM/Itemmanager/Form/RenewItemperiods.php ./templates/CRM/Itemmanager/Form/RepairMissingContribution.tpl ./templates/CRM/Itemmanager/Page/Dashboard.tpl ./templates/CRM/Itemmanager/Page/UpdateItems.tpl
+#: ./CRM/Itemmanager/Form/RenewItemperiods.php ./templates/CRM/Itemmanager/Form/RepairMissingContribution.tpl ./templates/CRM/Itemmanager/Page/DashboardStub.tpl ./templates/CRM/Itemmanager/Page/FutureContributionScan.tpl ./templates/CRM/Itemmanager/Page/ItemMaintenance.tpl ./templates/CRM/Itemmanager/Page/UpdateItems.tpl
 msgid "Quantity"
 msgstr ""
 
@@ -170,23 +158,99 @@ msgstr ""
 msgid "Items Dashboard"
 msgstr ""
 
-#: ./CRM/Itemmanager/Page/Dashboard.php
+#: ./CRM/Itemmanager/Page/DashboardStub.php
+msgid "Invalid parameters"
+msgstr ""
+
+#: ./CRM/Itemmanager/Page/DashboardStub.php
+msgid "Membership not found"
+msgstr ""
+
+#: ./CRM/Itemmanager/Page/DashboardStub.php
 msgid "Missing contribution relation to membership"
 msgstr ""
 
-#: ./CRM/Itemmanager/Page/Dashboard.php
+#: ./CRM/Itemmanager/Page/DashboardStub.php
 msgid "Combine line items"
 msgstr ""
 
-#: ./CRM/Itemmanager/Page/ItemMaintenance.php
-msgid "ItemMaintenance"
+#: ./CRM/Itemmanager/Page/FutureContributionScan.php
+msgid "Future Item Scan: %1"
+msgstr ""
+
+#: ./CRM/Itemmanager/Page/FutureContributionScanStub.php
+msgid "Missing item: %1"
+msgstr ""
+
+#: ./CRM/Itemmanager/Page/FutureContributionScanStub.php
+msgid "Cancelled item: %1 (exists in reference)"
+msgstr ""
+
+#: ./CRM/Itemmanager/Page/FutureContributionScanStub.php
+msgid "Qty mismatch: %1 (is %2, should be %3)"
+msgstr ""
+
+#: ./CRM/Itemmanager/Page/FutureContributionScanStub.php
+msgid "Extra item: %1 (not in reference)"
+msgstr ""
+
+#: ./CRM/Itemmanager/Page/FutureContributionScanStub.php ./CRM/Itemmanager/Page/ItemMaintenanceStub.php
+msgid "Could not load data for line item %1"
+msgstr ""
+
+#: ./CRM/Itemmanager/Page/FutureContributionScanStub.php ./CRM/Itemmanager/Page/ItemMaintenanceStub.php
+msgid "Error updating contribution date for %1"
+msgstr ""
+
+#: ./CRM/Itemmanager/Page/FutureContributionScanStub.php ./CRM/Itemmanager/Page/ItemMaintenanceStub.php
+msgid "Error updating label for %1"
+msgstr ""
+
+#: ./CRM/Itemmanager/Page/FutureContributionScanStub.php ./CRM/Itemmanager/Page/ItemMaintenanceStub.php
+msgid "Error updating line item %1"
+msgstr ""
+
+#: ./CRM/Itemmanager/Page/FutureContributionScanStub.php ./CRM/Itemmanager/Page/ItemMaintenanceStub.php
+msgid "Error retrieving financial info for %1"
+msgstr ""
+
+#: ./CRM/Itemmanager/Page/FutureContributionScanStub.php ./CRM/Itemmanager/Page/ItemMaintenanceStub.php
+msgid "Error updating financial item %1"
+msgstr ""
+
+#: ./CRM/Itemmanager/Page/FutureContributionScanStub.php ./CRM/Itemmanager/Page/ItemMaintenanceStub.php
+msgid "Error updating contribution %1"
+msgstr ""
+
+#: ./CRM/Itemmanager/Page/FutureContributionScanStub.php
+msgid "Error adding line item to contribution %1: %2"
+msgstr ""
+
+#: ./CRM/Itemmanager/Page/FutureContributionScanStub.php
+msgid "Error syncing qty for line item %1: %2"
+msgstr ""
+
+#: ./CRM/Itemmanager/Page/FutureContributionScanStub.php
+msgid "Error cancelling line item %1: %2"
+msgstr ""
+
+#: ./CRM/Itemmanager/Page/ItemMaintenance.php ./templates/CRM/Itemmanager/Page/ItemMaintenance.tpl
+msgid "Item Maintenance"
+msgstr ""
+
+#: ./CRM/Itemmanager/Page/ItemmanagerSettingStub.php ./templates/CRM/Itemmanager/Page/ItemmanagerSettingStub.tpl
+msgid "Active"
+msgstr ""
+
+#: ./CRM/Itemmanager/Page/LinkSepaPaymentsStub.php
+msgid "Retrieve payinfo from memberships"
 msgstr ""
 
 #: ./CRM/Itemmanager/Page/LinkSepaPaymentsStub.php
 msgid "Retrieve SEPA mandate"
 msgstr ""
 
-#: ./CRM/Itemmanager/Page/UpdateItems.php ./templates/CRM/Itemmanager/Page/Dashboard.tpl ./templates/CRM/Itemmanager/Page/UpdateItems.tpl
+#: ./CRM/Itemmanager/Page/UpdateItems.php ./templates/CRM/Itemmanager/Page/Dashboard.tpl ./templates/CRM/Itemmanager/Page/FutureContributionScan.tpl ./templates/CRM/Itemmanager/Page/ItemMaintenance.tpl ./templates/CRM/Itemmanager/Page/UpdateItems.tpl
 msgid "Update Items"
 msgstr ""
 
@@ -218,8 +282,92 @@ msgstr ""
 msgid "Nothing to be done"
 msgstr ""
 
-#: ./CRM/Itemmanager/Upgrader/Base.php
-msgid "Upgrade %1 to revision %2"
+#: ./CRM/Itemmanager/Page/UpdateItems.php
+msgid "Deleted %1 orphaned membership payment relation(s)."
+msgstr ""
+
+#: ./CRM/Itemmanager/Upgrader.php
+msgid "Migrate managed entities from lineitemedit"
+msgstr ""
+
+#: ./CRM/Itemmanager/Upgrader.php
+msgid "Generate additional line item price fields"
+msgstr ""
+
+#: ./CRM/Itemmanager/Upgrader.php
+msgid "Update contribution net_amount"
+msgstr ""
+
+#: ./CRM/Itemmanager/Util/LineItemEditor.php
+msgid "Edit Line item"
+msgstr ""
+
+#: ./CRM/Itemmanager/Util/LineItemEditor.php
+msgid "Cancel Line item"
+msgstr ""
+
+#: ./CRM/Itemmanager/Util/LineItemEditor.php ./templates/CRM/Itemmanager/Form/AddLineItems.tpl
+msgid "Add Item(s)"
+msgstr ""
+
+#: ./CRM/Itemmanager/Util/LineItemEditor.php
+msgid "Add Line-item(s)"
+msgstr ""
+
+#: ./CRM/Itemmanager/Util/LineItemEditor.php
+msgid "Create new item"
+msgstr ""
+
+#: ./CRM/Itemmanager/Util/LineItemEditor.php
+msgid "Add item"
+msgstr ""
+
+#: ./CRM/Itemmanager/Util/LineItemEditor.php
+msgid "- select any price-field -"
+msgstr ""
+
+#: ./CRM/Itemmanager/Util/LineItemEditor.php
+msgid "Please enter a monetary value for this field."
+msgstr ""
+
+#: ./CRM/Itemmanager/Util/LineItemEditor.php
+msgid "Qty must be a number (with or without decimal point)."
+msgstr ""
+
+#: ./CRM/Itemmanager/Util/LineItemEditor.php
+msgid "Additional Lineitem %1"
+msgstr ""
+
+#: ./CRM/Itemmanager/Util/LineItemEditor.php
+msgid "Additional Line Item"
+msgstr ""
+
+#: ./CRM/Itemmanager/Util/LineItemEditor.php
+msgid "Additional Item"
+msgstr ""
+
+#: ./itemmanager.php
+msgid "Itemmanager: add line item"
+msgstr ""
+
+#: ./itemmanager.php
+msgid "Allows non-admin users to add line item(s) associated to a contribution."
+msgstr ""
+
+#: ./itemmanager.php
+msgid "Itemmanager: edit line item"
+msgstr ""
+
+#: ./itemmanager.php
+msgid "Allows non-admin users to edit line item(s) associated to a contribution."
+msgstr ""
+
+#: ./itemmanager.php
+msgid "Itemmanager: cancel line item"
+msgstr ""
+
+#: ./itemmanager.php
+msgid "Allows non-admin users to cancel line item(s) associated to a contribution."
 msgstr ""
 
 #: ./itemmanager.php
@@ -232,6 +380,110 @@ msgstr ""
 
 #: ./itemmanager.php
 msgid "Renew periods"
+msgstr ""
+
+#: ./itemmanager.php
+msgid "Scan Future Items"
+msgstr ""
+
+#: ./itemmanager.php
+msgid "Scan future contributions based on this one"
+msgstr ""
+
+#: ./itemmanager.php
+msgid "Itemmanager Maintenance"
+msgstr ""
+
+#: ./js/futureContributionScanProgress.js
+msgid "Starting scan..."
+msgstr ""
+
+#: ./js/futureContributionScanProgress.js
+msgid "Scanned %1 of %2 contributions..."
+msgstr ""
+
+#: ./js/futureContributionScanProgress.js ./js/itemMaintenanceProgress.js ./js/syncProgress.js
+msgid "Connection error. Please try again."
+msgstr ""
+
+#: ./js/futureContributionScanProgress.js
+msgid "Scan complete."
+msgstr ""
+
+#: ./js/futureContributionScanProgress.js ./js/itemMaintenanceProgress.js
+msgid "Total affected items"
+msgstr ""
+
+#: ./js/futureContributionScanProgress.js ./js/itemMaintenanceProgress.js
+msgid "Label changes"
+msgstr ""
+
+#: ./js/futureContributionScanProgress.js ./js/itemMaintenanceProgress.js
+msgid "Price changes"
+msgstr ""
+
+#: ./js/futureContributionScanProgress.js ./js/itemMaintenanceProgress.js
+msgid "Date changes"
+msgstr ""
+
+#: ./js/futureContributionScanProgress.js ./js/itemMaintenanceProgress.js
+msgid "Orphaned relations"
+msgstr ""
+
+#: ./js/futureContributionScanProgress.js
+msgid "Missing items"
+msgstr ""
+
+#: ./js/futureContributionScanProgress.js
+msgid "Extra items"
+msgstr ""
+
+#: ./js/futureContributionScanProgress.js
+msgid "Qty mismatches"
+msgstr ""
+
+#: ./js/futureContributionScanProgress.js
+msgid "No inconsistencies found in future contributions."
+msgstr ""
+
+#: ./js/futureContributionScanProgress.js ./js/itemMaintenanceProgress.js ./templates/CRM/Itemmanager/Page/UpdateItems.tpl
+msgid "Delete"
+msgstr ""
+
+#: ./js/futureContributionScanProgress.js ./js/itemMaintenanceProgress.js ./templates/CRM/Itemmanager/Page/UpdateItems.tpl
+msgid "change to"
+msgstr ""
+
+#: ./js/futureContributionScanProgress.js ./js/itemMaintenanceProgress.js
+msgid "No items selected."
+msgstr ""
+
+#: ./js/futureContributionScanProgress.js ./js/itemMaintenanceProgress.js
+msgid "%1 item(s) updated."
+msgstr ""
+
+#: ./js/futureContributionScanProgress.js ./js/itemMaintenanceProgress.js
+msgid "%1 orphan(s) deleted."
+msgstr ""
+
+#: ./js/futureContributionScanProgress.js
+msgid "%1 item(s) added."
+msgstr ""
+
+#: ./js/futureContributionScanProgress.js
+msgid "%1 item(s) cancelled."
+msgstr ""
+
+#: ./js/futureContributionScanProgress.js
+msgid "%1 qty synced."
+msgstr ""
+
+#: ./js/futureContributionScanProgress.js ./js/itemMaintenanceProgress.js
+msgid "%1 error(s)."
+msgstr ""
+
+#: ./js/futureContributionScanProgress.js ./js/itemMaintenanceProgress.js
+msgid "Update"
 msgstr ""
 
 #: ./js/handlePayment.js
@@ -254,7 +506,7 @@ msgstr ""
 msgid "Update Contribution"
 msgstr ""
 
-#: ./js/handlePayment.js ./templates/CRM/Itemmanager/Page/UpdateItems.tpl
+#: ./js/handlePayment.js ./templates/CRM/Itemmanager/Page/FutureContributionScan.tpl ./templates/CRM/Itemmanager/Page/ItemMaintenance.tpl ./templates/CRM/Itemmanager/Page/UpdateItems.tpl
 msgid "Date"
 msgstr ""
 
@@ -276,6 +528,218 @@ msgstr ""
 
 #: ./js/handlePayment.js
 msgid "Please select a 1:n or n:1 relation."
+msgstr ""
+
+#: ./js/itemMaintenanceProgress.js
+msgid "Starting analysis..."
+msgstr ""
+
+#: ./js/itemMaintenanceProgress.js
+msgid "Analyzed %1 of %2 contacts..."
+msgstr ""
+
+#: ./js/itemMaintenanceProgress.js
+msgid "Analysis complete."
+msgstr ""
+
+#: ./js/itemMaintenanceProgress.js
+msgid "Affected contacts"
+msgstr ""
+
+#: ./js/itemMaintenanceProgress.js
+msgid "No items found that need updating. Try different filter options."
+msgstr ""
+
+#: ./js/syncProgress.js
+msgid "Synchronizing..."
+msgstr ""
+
+#: ./js/syncProgress.js ./templates/CRM/Itemmanager/Form/ItemmanagerSetting.tpl ./templates/CRM/Itemmanager/Form/LinkSepaWrapper.tpl ./templates/CRM/Itemmanager/Page/Dashboard.tpl
+msgid "Please wait..."
+msgstr ""
+
+#: ./js/syncProgress.js
+msgid "Errors occurred"
+msgstr ""
+
+#: ./js/syncProgress.js
+msgid "Back"
+msgstr ""
+
+#: ./js/syncProgress.js
+msgid "Synchronized!"
+msgstr ""
+
+#: ./js/syncProgress.js
+msgid "Reloading..."
+msgstr ""
+
+#: ./managed/LineItemsSavedSearch.mgd.php
+msgid "Contribution Amount"
+msgstr ""
+
+#: ./managed/LineItemsSavedSearch.mgd.php
+msgid "Contribution Tax Amounts"
+msgstr ""
+
+#: ./managed/LineItemsSavedSearch.mgd.php ./templates/CRM/Itemmanager/Form/AddLineItems.tpl
+msgid "Financial Type"
+msgstr ""
+
+#: ./managed/LineItemsSavedSearch.mgd.php ./templates/CRM/Itemmanager/Form/AddLineItems.tpl
+msgid "Qty"
+msgstr ""
+
+#: ./managed/LineItemsSavedSearch.mgd.php ./templates/CRM/Itemmanager/Form/AddLineItems.tpl
+msgid "Unit Price"
+msgstr ""
+
+#: ./managed/LineItemsSavedSearch.mgd.php ./templates/CRM/Itemmanager/Form/AddLineItems.tpl
+msgid "Total Price"
+msgstr ""
+
+#: ./managed/LineItemsSavedSearch.mgd.php ./templates/CRM/Itemmanager/Form/AddLineItems.tpl
+msgid "Tax Amount"
+msgstr ""
+
+#: ./managed/LineItemsSavedSearch.mgd.php
+msgid "Contribution Line Items"
+msgstr ""
+
+#: ./schema/ItemmanagerPeriods.entityType.php
+msgid "Itemmanager Periods"
+msgstr ""
+
+#: ./schema/ItemmanagerPeriods.entityType.php
+msgid "Itemmanager Periodses"
+msgstr ""
+
+#: ./schema/ItemmanagerPeriods.entityType.php
+msgid "Stores the common data, how often the items will be repeated"
+msgstr ""
+
+#: ./schema/ItemmanagerPeriods.entityType.php ./schema/ItemmanagerSettings.entityType.php
+msgid "ID"
+msgstr ""
+
+#: ./schema/ItemmanagerPeriods.entityType.php
+msgid "Unique ItemmanagerPeriods ID"
+msgstr ""
+
+#: ./schema/ItemmanagerPeriods.entityType.php
+msgid "Price Set"
+msgstr ""
+
+#: ./schema/ItemmanagerPeriods.entityType.php
+msgid "FK to civicrm_price_set"
+msgstr ""
+
+#: ./schema/ItemmanagerPeriods.entityType.php
+msgid "Booking Period Start on"
+msgstr ""
+
+#: ./schema/ItemmanagerPeriods.entityType.php
+msgid "If non-zero, do not show this field before the date specified"
+msgstr ""
+
+#: ./schema/ItemmanagerPeriods.entityType.php
+msgid "Number of periods at start"
+msgstr ""
+
+#: ./schema/ItemmanagerPeriods.entityType.php
+msgid "Period Type"
+msgstr ""
+
+#: ./schema/ItemmanagerPeriods.entityType.php
+msgid "Period interval type"
+msgstr ""
+
+#: ./schema/ItemmanagerPeriods.entityType.php
+msgid "ID to itemmanager period entry which is the successor"
+msgstr ""
+
+#: ./schema/ItemmanagerPeriods.entityType.php
+msgid "Don't show the period anymore"
+msgstr ""
+
+#: ./schema/ItemmanagerPeriods.entityType.php
+msgid "Reverse the period"
+msgstr ""
+
+#: ./schema/ItemmanagerSettings.entityType.php
+msgid "Itemmanager Settingses"
+msgstr ""
+
+#: ./schema/ItemmanagerSettings.entityType.php
+msgid "Stores the successor of an item"
+msgstr ""
+
+#: ./schema/ItemmanagerSettings.entityType.php
+msgid "Unique ItemmanagerSettings ID"
+msgstr ""
+
+#: ./schema/ItemmanagerSettings.entityType.php
+msgid "Price Field Value"
+msgstr ""
+
+#: ./schema/ItemmanagerSettings.entityType.php
+msgid "FK to civicrm_price_field_value"
+msgstr ""
+
+#: ./schema/ItemmanagerSettings.entityType.php
+msgid "FK to civicrm_itemmanager_periods"
+msgstr ""
+
+#: ./schema/ItemmanagerSettings.entityType.php
+msgid "ID to itemmanager entry which is the successor"
+msgstr ""
+
+#: ./schema/ItemmanagerSettings.entityType.php ./templates/CRM/Itemmanager/Page/ItemmanagerSettingStub.tpl
+msgid "Ignore"
+msgstr ""
+
+#: ./schema/ItemmanagerSettings.entityType.php
+msgid "Ignore item for next period"
+msgstr ""
+
+#: ./schema/ItemmanagerSettings.entityType.php ./templates/CRM/Itemmanager/Page/ItemmanagerSettingStub.tpl
+msgid "Extend"
+msgstr ""
+
+#: ./schema/ItemmanagerSettings.entityType.php
+msgid "Add item for next period"
+msgstr ""
+
+#: ./schema/ItemmanagerSettings.entityType.php
+msgid "Novitiate Item"
+msgstr ""
+
+#: ./schema/ItemmanagerSettings.entityType.php
+msgid "This item is for try out only"
+msgstr ""
+
+#: ./schema/ItemmanagerSettings.entityType.php
+msgid "Enable Period Exception Case"
+msgstr ""
+
+#: ./schema/ItemmanagerSettings.entityType.php
+msgid "The parent period should not used"
+msgstr ""
+
+#: ./schema/ItemmanagerSettings.entityType.php
+msgid "Enable bidding round"
+msgstr ""
+
+#: ./schema/ItemmanagerSettings.entityType.php
+msgid "The item is a related to a bidding round"
+msgstr ""
+
+#: ./schema/ItemmanagerSettings.entityType.php ./templates/CRM/Itemmanager/Page/ItemmanagerSettingStub.tpl
+msgid "Exception Periods"
+msgstr ""
+
+#: ./schema/ItemmanagerSettings.entityType.php
+msgid "The exceptional periods"
 msgstr ""
 
 #: ./settings/Itemmanager.setting.php
@@ -326,28 +790,52 @@ msgstr ""
 msgid "Select Yes to to make the hidden periods visible again"
 msgstr ""
 
+#: ./settings/Itemmanager.setting.php
+msgid "Maximum additional line items"
+msgstr ""
+
+#: ./settings/Itemmanager.setting.php
+msgid "Limits the number of lines shown"
+msgstr ""
+
+#: ./templates/CRM/Itemmanager/Form/AddLineItems.tpl
+msgid "Choose manual contribution amount"
+msgstr ""
+
+#: ./templates/CRM/Itemmanager/Form/AddLineItems.tpl
+msgid "Add another item"
+msgstr ""
+
+#: ./templates/CRM/Itemmanager/Form/AddLineItems.tpl
+msgid "Total Amount"
+msgstr ""
+
 #: ./templates/CRM/Itemmanager/Form/ItemmanagerSetting.tpl
 msgid "\n    Edit here the successor of each price field item.\n    The given start date just defines day and month. The year has no meaning.\n  "
+msgstr ""
+
+#: ./templates/CRM/Itemmanager/Form/ItemmanagerSetting.tpl
+msgid "There are %1 new price set(s) that are not yet synchronized. Click \"Synchronize\" to update."
+msgstr ""
+
+#: ./templates/CRM/Itemmanager/Form/ItemmanagerSetting.tpl
+msgid "Synchronize"
 msgstr ""
 
 #: ./templates/CRM/Itemmanager/Form/ItemmanagerSetting.tpl
 msgid "Priceset"
 msgstr ""
 
-#: ./templates/CRM/Itemmanager/Form/ItemmanagerSetting.tpl
-msgid "Item Name"
+#: ./templates/CRM/Itemmanager/Form/LineItemEdit.tpl
+msgid "Pricing"
 msgstr ""
 
-#: ./templates/CRM/Itemmanager/Form/ItemmanagerSetting.tpl
-msgid "Active On"
+#: ./templates/CRM/Itemmanager/Form/LineItemEdit.tpl
+msgid "Future Contributions"
 msgstr ""
 
-#: ./templates/CRM/Itemmanager/Form/ItemmanagerSetting.tpl
-msgid "Expire On"
-msgstr ""
-
-#: ./templates/CRM/Itemmanager/Form/ItemmanagerSetting.tpl
-msgid "Exception"
+#: ./templates/CRM/Itemmanager/Form/LineItemEdit.tpl
+msgid "Apply changes to %1 future contribution(s)"
 msgstr ""
 
 #: ./templates/CRM/Itemmanager/Form/LinkSepaWrapper.tpl
@@ -370,11 +858,7 @@ msgstr ""
 msgid "Contribution Type"
 msgstr ""
 
-#: ./templates/CRM/Itemmanager/Form/LinkSepaWrapper.tpl
-msgid "Please wait..."
-msgstr ""
-
-#: ./templates/CRM/Itemmanager/Form/RenewItemperiods.tpl
+#: ./templates/CRM/Itemmanager/Form/RenewItemperiods.tpl ./templates/CRM/Itemmanager/Page/FutureContributionScan.tpl
 msgid "Membership"
 msgstr ""
 
@@ -383,11 +867,39 @@ msgid "Status"
 msgstr ""
 
 #: ./templates/CRM/Itemmanager/Form/RenewItemperiods.tpl
+msgid "Start"
+msgstr ""
+
+#: ./templates/CRM/Itemmanager/Form/RenewItemperiods.tpl
+msgid "End"
+msgstr ""
+
+#: ./templates/CRM/Itemmanager/Form/RenewItemperiods.tpl
+msgid "Interval"
+msgstr ""
+
+#: ./templates/CRM/Itemmanager/Form/RenewItemperiods.tpl
+msgid "Price per Interval"
+msgstr ""
+
+#: ./templates/CRM/Itemmanager/Form/RenewItemperiods.tpl
+msgid "Active ON"
+msgstr ""
+
+#: ./templates/CRM/Itemmanager/Form/RenewItemperiods.tpl
+msgid "Active Until"
+msgstr ""
+
+#: ./templates/CRM/Itemmanager/Form/RenewItemperiods.tpl
 msgid "Old"
 msgstr ""
 
 #: ./templates/CRM/Itemmanager/Form/RenewItemperiods.tpl
 msgid "New"
+msgstr ""
+
+#: ./templates/CRM/Itemmanager/Form/RenewItemperiods.tpl
+msgid "Bidding round"
 msgstr ""
 
 #: ./templates/CRM/Itemmanager/Form/RepairMissingContribution.tpl
@@ -402,7 +914,7 @@ msgstr ""
 msgid "Lineitem"
 msgstr ""
 
-#: ./templates/CRM/Itemmanager/Form/RepairMissingContribution.tpl ./templates/CRM/Itemmanager/Page/UpdateItems.tpl
+#: ./templates/CRM/Itemmanager/Form/RepairMissingContribution.tpl ./templates/CRM/Itemmanager/Page/FutureContributionScan.tpl ./templates/CRM/Itemmanager/Page/ItemMaintenance.tpl ./templates/CRM/Itemmanager/Page/UpdateItems.tpl
 msgid "Total"
 msgstr ""
 
@@ -427,15 +939,119 @@ msgid "To start with a new set of monthly contributions click Renew Periods"
 msgstr ""
 
 #: ./templates/CRM/Itemmanager/Page/Dashboard.tpl
-msgid "Booked"
-msgstr ""
-
-#: ./templates/CRM/Itemmanager/Page/Dashboard.tpl
 msgid "This contact has no recorded line items."
 msgstr ""
 
+#: ./templates/CRM/Itemmanager/Page/DashboardStub.tpl
+msgid "Booked"
+msgstr ""
+
+#: ./templates/CRM/Itemmanager/Page/DashboardStub.tpl
+msgid "No line items found for this membership."
+msgstr ""
+
+#: ./templates/CRM/Itemmanager/Page/FutureContributionScan.tpl
+msgid "Future Item Scan"
+msgstr ""
+
+#: ./templates/CRM/Itemmanager/Page/FutureContributionScan.tpl
+msgid "Scan future contributions for this contact and check line items for inconsistencies (label, price, date). Select filters and start the scan."
+msgstr ""
+
+#: ./templates/CRM/Itemmanager/Page/FutureContributionScan.tpl ./templates/CRM/Itemmanager/Page/ItemMaintenance.tpl
+msgid "From date"
+msgstr ""
+
+#: ./templates/CRM/Itemmanager/Page/FutureContributionScan.tpl ./templates/CRM/Itemmanager/Page/ItemMaintenance.tpl ./templates/CRM/Itemmanager/Page/UpdateItems.tpl
+msgid "Sync price items"
+msgstr ""
+
+#: ./templates/CRM/Itemmanager/Page/FutureContributionScan.tpl ./templates/CRM/Itemmanager/Page/ItemMaintenance.tpl ./templates/CRM/Itemmanager/Page/UpdateItems.tpl
+msgid "Harmonize date"
+msgstr ""
+
+#: ./templates/CRM/Itemmanager/Page/FutureContributionScan.tpl ./templates/CRM/Itemmanager/Page/ItemMaintenance.tpl ./templates/CRM/Itemmanager/Page/UpdateItems.tpl
+msgid "Cleanup orphaned relations"
+msgstr ""
+
+#: ./templates/CRM/Itemmanager/Page/FutureContributionScan.tpl
+msgid "Check composition"
+msgstr ""
+
+#: ./templates/CRM/Itemmanager/Page/FutureContributionScan.tpl
+msgid "Start Scan"
+msgstr ""
+
+#: ./templates/CRM/Itemmanager/Page/FutureContributionScan.tpl ./templates/CRM/Itemmanager/Page/ItemMaintenance.tpl
+msgid "Statistics"
+msgstr ""
+
+#: ./templates/CRM/Itemmanager/Page/FutureContributionScan.tpl ./templates/CRM/Itemmanager/Page/ItemMaintenance.tpl ./templates/CRM/Itemmanager/Page/UpdateItems.tpl
+msgid "Found items to be updated"
+msgstr ""
+
+#: ./templates/CRM/Itemmanager/Page/FutureContributionScan.tpl ./templates/CRM/Itemmanager/Page/ItemMaintenance.tpl ./templates/CRM/Itemmanager/Page/UpdateItems.tpl
+msgid "Unit price"
+msgstr ""
+
+#: ./templates/CRM/Itemmanager/Page/FutureContributionScan.tpl ./templates/CRM/Itemmanager/Page/ItemMaintenance.tpl ./templates/CRM/Itemmanager/Page/UpdateItems.tpl
+msgid "Tax"
+msgstr ""
+
 #: ./templates/CRM/Itemmanager/Page/ItemMaintenance.tpl
-msgid "(In your native language) The current time is %1."
+msgid "Analyze and update line items across all contacts with memberships. Select filters and a start date, then run the analysis."
+msgstr ""
+
+#: ./templates/CRM/Itemmanager/Page/ItemMaintenance.tpl
+msgid "Exclude Tags"
+msgstr ""
+
+#: ./templates/CRM/Itemmanager/Page/ItemMaintenance.tpl
+msgid "No tags available"
+msgstr ""
+
+#: ./templates/CRM/Itemmanager/Page/ItemMaintenance.tpl
+msgid "Start Analysis"
+msgstr ""
+
+#: ./templates/CRM/Itemmanager/Page/ItemMaintenance.tpl
+msgid "Contact"
+msgstr ""
+
+#: ./templates/CRM/Itemmanager/Page/ItemMaintenance.tpl
+msgid "Tags"
+msgstr ""
+
+#: ./templates/CRM/Itemmanager/Page/ItemMaintenance.tpl ./templates/CRM/Itemmanager/Page/UpdateItems.tpl
+msgid "Referred to"
+msgstr ""
+
+#: ./templates/CRM/Itemmanager/Page/ItemmanagerSettingStub.tpl
+msgid "Item Name"
+msgstr ""
+
+#: ./templates/CRM/Itemmanager/Page/ItemmanagerSettingStub.tpl
+msgid "Active On"
+msgstr ""
+
+#: ./templates/CRM/Itemmanager/Page/ItemmanagerSettingStub.tpl
+msgid "Expire On"
+msgstr ""
+
+#: ./templates/CRM/Itemmanager/Page/ItemmanagerSettingStub.tpl
+msgid "Novitiate"
+msgstr ""
+
+#: ./templates/CRM/Itemmanager/Page/ItemmanagerSettingStub.tpl
+msgid "Bidding Round"
+msgstr ""
+
+#: ./templates/CRM/Itemmanager/Page/ItemmanagerSettingStub.tpl
+msgid "Exception"
+msgstr ""
+
+#: ./templates/CRM/Itemmanager/Page/ItemmanagerSettingStub.tpl
+msgid "No price field items found for this period."
 msgstr ""
 
 #: ./templates/CRM/Itemmanager/Page/LinkSepaPaymentsStub.tpl
@@ -451,35 +1067,7 @@ msgid "view payments"
 msgstr ""
 
 #: ./templates/CRM/Itemmanager/Page/UpdateItems.tpl
-msgid "Sync price items"
-msgstr ""
-
-#: ./templates/CRM/Itemmanager/Page/UpdateItems.tpl
-msgid "Harmonize date"
-msgstr ""
-
-#: ./templates/CRM/Itemmanager/Page/UpdateItems.tpl
 msgid "Preview"
-msgstr ""
-
-#: ./templates/CRM/Itemmanager/Page/UpdateItems.tpl
-msgid "Found items to be updated"
-msgstr ""
-
-#: ./templates/CRM/Itemmanager/Page/UpdateItems.tpl
-msgid "Referred to"
-msgstr ""
-
-#: ./templates/CRM/Itemmanager/Page/UpdateItems.tpl
-msgid "Unit price"
-msgstr ""
-
-#: ./templates/CRM/Itemmanager/Page/UpdateItems.tpl
-msgid "Tax"
-msgstr ""
-
-#: ./templates/CRM/Itemmanager/Page/UpdateItems.tpl
-msgid "change to"
 msgstr ""
 
 #: ./templates/CRM/Itemmanager/Page/UpdateItems.tpl

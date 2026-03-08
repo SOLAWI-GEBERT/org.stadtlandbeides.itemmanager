@@ -136,6 +136,121 @@ class CRM_Itemmanager_Upgrader extends CRM_Extension_Upgrader_Base {
         return TRUE;
     }
 
+    /**
+     * Integrate line item editor: generate additional price fields if not
+     * already present (e.g. from a previous lineitemedit installation) and
+     * update contribution net_amount where fee_amount is set.
+     *
+     * @return TRUE on success
+     * @throws Exception
+     */
+    public function upgrade_4400() {
+        $this->ctx->log->info('Applying update 4400 - Integrate line item editor');
+        $this->addTask(
+            E::ts('Migrate managed entities from lineitemedit'),
+            'migrateLineitemeditManagedEntities'
+        );
+        $this->addTask(
+            E::ts('Generate additional line item price fields'),
+            'generateLineItemPriceFields'
+        );
+        $this->addTask(
+            E::ts('Update contribution net_amount'),
+            'updateContributionNetAmount'
+        );
+        return TRUE;
+    }
+
+    /**
+     * Re-assign managed entities that were previously owned by
+     * biz.jmaconsulting.lineitemedit to this extension, and remove
+     * orphaned SavedSearch/SearchDisplay records so our managed
+     * declarations can recreate them cleanly.
+     */
+    public function migrateLineitemeditManagedEntities() {
+        // Re-assign any managed records from the old module to ours
+        CRM_Core_DAO::executeQuery(
+            "UPDATE civicrm_managed SET module = %1
+             WHERE module = 'biz.jmaconsulting.lineitemedit'",
+            [1 => [E::LONG_NAME, 'String']]
+        );
+
+        // Remove managed records that reference our SearchDisplay names
+        // so the managed system can recreate them fresh
+        $names = [
+            'SavedSearch_Line_Items_SearchDisplay_Contribution_Amount_Tax',
+            'SavedSearch_Line_Items_SearchDisplay_Line_Items_Table',
+            'Line_Items',
+        ];
+        foreach ($names as $name) {
+            CRM_Core_DAO::executeQuery(
+                "DELETE FROM civicrm_managed WHERE module = %1 AND name = %2",
+                [
+                    1 => [E::LONG_NAME, 'String'],
+                    2 => [$name, 'String'],
+                ]
+            );
+        }
+
+        // Drop existing SearchDisplay records that conflict
+        CRM_Core_DAO::executeQuery(
+            "DELETE FROM civicrm_search_display WHERE name IN ('Line_Items_Table_Tax', 'Line_Items_Table')
+             AND saved_search_id IN (SELECT id FROM civicrm_saved_search WHERE name = 'Line_Items')"
+        );
+
+        // Drop the existing SavedSearch if it exists
+        CRM_Core_DAO::executeQuery(
+            "DELETE FROM civicrm_saved_search WHERE name = 'Line_Items'"
+        );
+
+        $this->ctx->log->info('Migrated/cleaned lineitemedit managed entities');
+        return TRUE;
+    }
+
+    /**
+     * Generate additional price fields for the line item editor,
+     * only if they do not already exist.
+     */
+    public function generateLineItemPriceFields() {
+        // Check if additional price fields already exist (from previous lineitemedit install)
+        $defaultPriceSetId = CRM_Core_DAO::singleValueQuery(
+            "SELECT id FROM civicrm_price_set WHERE name = 'default_contribution_amount' LIMIT 1"
+        );
+        if (!$defaultPriceSetId) {
+            $this->ctx->log->info('No default_contribution_amount price set found, skipping price field generation');
+            return TRUE;
+        }
+
+        $existingAdditionalFields = CRM_Core_DAO::singleValueQuery(
+            "SELECT COUNT(*) FROM civicrm_price_field
+             WHERE price_set_id = %1 AND label LIKE 'Additional Line Item%%'",
+            [1 => [$defaultPriceSetId, 'Integer']]
+        );
+
+        if ($existingAdditionalFields > 0) {
+            $this->ctx->log->info(
+                "Found {$existingAdditionalFields} existing additional price fields, skipping generation"
+            );
+            return TRUE;
+        }
+
+        $this->ctx->log->info('Generating additional line item price fields');
+        CRM_Itemmanager_Util_LineItemEditor::generatePriceField();
+        return TRUE;
+    }
+
+    /**
+     * Update contribution net_amount where fee_amount is set but net_amount
+     * was not calculated. Ported from lineitemedit upgrade_2400.
+     */
+    public function updateContributionNetAmount() {
+        CRM_Core_DAO::executeQuery(
+            'UPDATE civicrm_contribution SET net_amount = total_amount - fee_amount
+             WHERE fee_amount IS NOT NULL AND fee_amount > 0 AND (net_amount IS NULL OR net_amount = 0)'
+        );
+        return TRUE;
+    }
+
   /**
    * Example: Run a slow upgrade process by breaking it up into smaller chunk.
    *

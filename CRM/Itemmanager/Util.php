@@ -21,6 +21,66 @@ use CRM_Itemmanager_ExtensionUtil as E;
 class CRM_Itemmanager_Util
 {
 
+    /**
+     * Precision for internal money calculations (4 decimal places).
+     */
+    const MONEY_PRECISION = 4;
+
+    /**
+     * Round a monetary value to MONEY_PRECISION decimal places.
+     *
+     * Use this instead of round($val, 2) throughout the codebase
+     * to ensure consistent 4-digit precision for all money calculations.
+     *
+     * @param float|string $amount
+     * @return float
+     */
+    public static function roundMoney($amount): float {
+        return round((float) $amount, self::MONEY_PRECISION);
+    }
+
+    /**
+     * Format a numeric amount for locale display.
+     *
+     * Convenience alias for the verbose core function
+     * CRM_Utils_Money::formatLocaleNumericRoundedForDefaultCurrency().
+     *
+     * @param float|string $amount
+     * @return string  Locale-formatted string (e.g. "1.234,57" for de_DE)
+     */
+    public static function formatLocaleMoney($amount): string {
+        return CRM_Utils_Money::formatLocaleNumericRoundedForDefaultCurrency(
+            (float) $amount
+        );
+    }
+
+    /**
+     * Convert any money value to machine format with MONEY_PRECISION decimals.
+     *
+     * Accepts locale-formatted strings (e.g. "1.234,56") or numeric values.
+     * Uses CRM_Utils_Rule::cleanMoney() for locale parsing, then formats
+     * to exactly MONEY_PRECISION decimal places with dot separator.
+     *
+     * @param string|float $amount
+     * @return string  Machine-formatted string (e.g. "1234.5600")
+     */
+    public static function toMachineMoney($amount): string {
+        $value = is_numeric($amount)
+            ? (float) $amount
+            : (float) CRM_Utils_Rule::cleanMoney($amount);
+        return number_format($value, self::MONEY_PRECISION, '.', '');
+    }
+
+    /**
+     * Compare two monetary amounts for equality within MONEY_PRECISION.
+     *
+     * @param float|string $a
+     * @param float|string $b
+     * @return bool
+     */
+    public static function moneyEquals($a, $b): bool {
+        return self::roundMoney($a) === self::roundMoney($b);
+    }
 
     /**
      *  Just get our settings with API

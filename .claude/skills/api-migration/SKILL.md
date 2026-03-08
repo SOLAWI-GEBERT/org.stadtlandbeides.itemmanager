@@ -40,10 +40,8 @@ The migration question is not "convert everything to API4" — it is "which conv
 - `CRM/Itemmanager/Logic/RenewalMultipleInstallmentPlan.php` — ContributionRecur, Membership, OptionValue, LineItem, ContributionRecurLineItem
 - `CRM/Itemmanager/Page/LinkSepaPaymentsStub.php` — Contribution, Payment
 
-### Legacy API2-style calls (4 calls — migrate first)
-- `CRM/Itemmanager/Page/UpdateItems.php:83` — `civicrm_api('Contact', 'getsingle', array('version' => 3, ...))`
-- `CRM/Itemmanager/Page/UpdateItems.php:346` — same
-- `CRM/Itemmanager/Form/RenewItemperiods.php:267` — same
+### Legacy API2-style calls (2 remaining — migrate first)
+- `CRM/Itemmanager/Form/RenewItemperiods.php:267` — `civicrm_api('Contact', 'getsingle', array('version' => 3, ...))`
 - `CRM/Itemmanager/Form/LinkSepaWrapper.php:34` — same
 
 ### Raw SQL that should stay as SQL
@@ -57,14 +55,39 @@ The migration question is not "convert everything to API4" — it is "which conv
 - `UpdateItems::updateData` — direct UPDATE on contribution, line_item, financial_item, entity_financial_trxn tables (batch operations)
 - `RenewalSingleInstallmentPlan` / `RenewalMultipleInstallmentPlan` — raw queries for recurring contribution logic
 
+## API4 Entity Availability (CiviCRM 6.10.1)
+
+**CRITICAL**: Not all CiviCRM core entities have API4 support. Before migrating any API3 call to API4, verify the entity class exists. API4 entities are discovered via `ClassScanner` — if no `Civi\Api4\<Entity>` class exists, the entity is NOT available in API4.
+
+### Entities WITHOUT API4 support (use API3 or direct SQL)
+
+| Entity | Status | Alternative |
+|---|---|---|
+| `MembershipPayment` | No API4 class in any CiviCRM version (incl. master). Will cause fatal `Class not found` error. | Direct SQL on `civicrm_membership_payment` or `CRM_Member_BAO_MembershipPayment` |
+| `ContributionRecurLineItem` | No stable API4 support | Keep as API3 |
+
+### Entities WITH confirmed API4 support (6.10.1)
+
+`Contact`, `Contribution`, `ContributionRecur`, `LineItem`, `PriceField`, `PriceFieldValue`, `PriceSet`, `Membership`, `MembershipType`, `FinancialType`, `EntityFinancialAccount`, `OptionValue`
+
+### How to verify
+
+```bash
+# On the remote CiviCRM instance, check if an entity is available:
+cv api4 <Entity>.getFields --select=name 2>&1
+# If it returns "Unknown api entity", the entity has no API4 support.
+```
+
 ## Decision Matrix
 
 | Situation | Action |
 |---|---|
 | `civicrm_api()` with `'version' => 3` | Always migrate to `civicrm_api3()` at minimum, API4 if entity available |
 | `civicrm_api3()` for entity with API4 support | Migrate if: simple get/create/delete, no complex param chaining |
+| `civicrm_api3()` for entity WITHOUT API4 support | Keep as API3, or migrate to direct SQL/DAO if API3 is also problematic |
 | `civicrm_api3()` with `getfields`, `getvalue`, `getcount` | Check API4 equivalent carefully; `getvalue` has no direct API4 match |
-| `civicrm_api3('ContributionRecurLineItem', ...)` | Keep as API3 — this entity may not have full API4 support |
+| `civicrm_api3('ContributionRecurLineItem', ...)` | Keep as API3 — no stable API4 support |
+| `civicrm_api3('MembershipPayment', ...)` | Keep as API3 or migrate to direct SQL — **NO API4 entity exists** |
 | `civicrm_api3('OptionValue', 'getvalue', ...)` | Keep as API3 or use `\Civi::settings()` if it's a setting |
 | Raw SQL with SUM/MIN/MAX/GROUP BY | Keep as raw SQL |
 | Raw SQL doing direct UPDATE on multiple tables | Keep as raw SQL — API overhead and transaction semantics differ |

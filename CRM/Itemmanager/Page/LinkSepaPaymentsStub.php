@@ -295,14 +295,14 @@ class CRM_Itemmanager_Page_LinkSepaPaymentsStub extends CRM_Core_Page {
                     $contrib_entry = &$contrib_base[$contribution_id];
                     $contrib_entry['total'] += $line_total + $line_tax;
                     $contrib_entry['net_amount'] += $line_total;
-                    $summary_display = CRM_Utils_Money::formatLocaleNumericRoundedForDefaultCurrency(
+                    $summary_display = CRM_Itemmanager_Util::formatLocaleMoney(
                         $contrib_entry['total']);
                     $contrib_entry['total_display'] = $summary_display.' '.$this->_currency;
                     $contrib_entry['line_count'] += 1;
 
                     //sum also all related
                     $this->_relation['contributions'][$reference_id]['related_total'] += $contrib_entry['total'];
-                    $summary_related = CRM_Utils_Money::formatLocaleNumericRoundedForDefaultCurrency(
+                    $summary_related = CRM_Itemmanager_Util::formatLocaleMoney(
                         $this->_relation['contributions'][$reference_id]['related_total']);
                     $this->_relation['contributions'][$reference_id]['related_total_display'] =
                         $summary_related.' '.$this->_currency;
@@ -417,7 +417,7 @@ class CRM_Itemmanager_Page_LinkSepaPaymentsStub extends CRM_Core_Page {
                     if($today < $reference_month) continue;
                 }
 
-                $summary_display = CRM_Utils_Money::formatLocaleNumericRoundedForDefaultCurrency(
+                $summary_display = CRM_Itemmanager_Util::formatLocaleMoney(
                     $sdd_contribution['total_amount']);
                 $SDD_transform[$trxnid] = array(
                     'date_linked' => false,

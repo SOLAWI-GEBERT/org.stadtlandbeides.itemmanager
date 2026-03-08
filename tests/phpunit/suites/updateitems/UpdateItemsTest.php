@@ -20,6 +20,7 @@ class CRM_Itemmanager_Test_UpdateItemsTest extends CRM_Itemmanager_Test_Membersh
     'membership_type' => [],
     'price_field_value' => [],
     'line_item' => [],
+    'membership_payment' => [],
   ];
 
   public function setUp(): void {
@@ -48,6 +49,19 @@ class CRM_Itemmanager_Test_UpdateItemsTest extends CRM_Itemmanager_Test_Membersh
       \Civi\Api4\ItemmanagerPeriods::delete(FALSE)
         ->addWhere('id', 'IN', $periodIds)
         ->execute();
+    }
+
+    $mpIds = $this->filterIds($this->extraIds['membership_payment'] ?? []);
+    if (!empty($mpIds)) {
+      // Some may already be deleted by the test — suppress errors.
+      try {
+        CRM_Core_DAO::executeQuery(
+          "DELETE FROM civicrm_membership_payment WHERE id IN (" . implode(',', $mpIds) . ")"
+        );
+      }
+      catch (\Exception $e) {
+        // Ignore — records may already be gone.
+      }
     }
 
     $lineItemIds = $this->filterIds($this->extraIds['line_item'] ?? []);
@@ -465,6 +479,143 @@ class CRM_Itemmanager_Test_UpdateItemsTest extends CRM_Itemmanager_Test_Membersh
   }
 
   // ---------------------------------------------------------------
+  // 3.1 prepareCreateForm — orphaned MembershipPayment detection
+  // ---------------------------------------------------------------
+
+  public function testPrepareCreateFormDetectsOrphanedMembershipPayments(): void {
+    $fixture = $this->buildScenarioFixture(FALSE, FALSE, FALSE);
+    $contactId = (int) $fixture['contact_id'];
+
+    // Create an orphaned MembershipPayment pointing to a non-existent contribution.
+    $membership = $this->findOrCreateMembership($contactId);
+    $orphanPayment = $this->createOrphanedMembershipPayment((int) $membership['id']);
+
+    $page = new CRM_Itemmanager_Test_UpdateItemsPageDouble();
+
+    $previousLevel = error_reporting(error_reporting() & ~E_NOTICE & ~E_WARNING);
+    try {
+      $page->prepareCreateForm($contactId, 0, 0, 1);
+    }
+    finally {
+      error_reporting($previousLevel);
+    }
+
+    $baseList = $page->assignedValues['base_list'] ?? [];
+    $this->assertIsArray($baseList);
+
+    $orphanRow = $this->findBaseListRowByOrphanId($baseList, (int) $orphanPayment['id']);
+    $this->assertNotNull($orphanRow, 'Expected orphan row in base_list when orphan filter is enabled');
+    $this->assertSame((int) $orphanPayment['id'], (int) $orphanRow['empty_relation_id']);
+    $this->assertStringContainsString('missing', $orphanRow['change_error']);
+    $this->assertNull($orphanRow['line_id']);
+  }
+
+  public function testPrepareCreateFormSkipsOrphansWhenFilterDisabled(): void {
+    $fixture = $this->buildScenarioFixture(FALSE, FALSE, FALSE);
+    $contactId = (int) $fixture['contact_id'];
+
+    $membership = $this->findOrCreateMembership($contactId);
+    $orphanPayment = $this->createOrphanedMembershipPayment((int) $membership['id']);
+
+    $page = new CRM_Itemmanager_Test_UpdateItemsPageDouble();
+
+    $previousLevel = error_reporting(error_reporting() & ~E_NOTICE & ~E_WARNING);
+    try {
+      $page->prepareCreateForm($contactId, 0, 0, 0);
+    }
+    finally {
+      error_reporting($previousLevel);
+    }
+
+    $baseList = $page->assignedValues['base_list'] ?? [];
+    $orphanRow = $this->findBaseListRowByOrphanId((array) $baseList, (int) $orphanPayment['id']);
+    $this->assertNull($orphanRow, 'Orphan row should not appear when filter is disabled');
+  }
+
+  // ---------------------------------------------------------------
+  // 3.2 deleteOrphanedMembershipPayments
+  // ---------------------------------------------------------------
+
+  public function testDeleteOrphanedMembershipPaymentsRemovesOrphans(): void {
+    $fixture = $this->buildScenarioFixture(FALSE, FALSE, FALSE);
+    $contactId = (int) $fixture['contact_id'];
+
+    $membership = $this->findOrCreateMembership($contactId);
+    $orphanPayment = $this->createOrphanedMembershipPayment((int) $membership['id']);
+    $orphanId = (int) $orphanPayment['id'];
+
+    $page = new CRM_Itemmanager_Test_UpdateItemsPageDouble();
+    $page->deleteOrphanedMembershipPayments($contactId, [$orphanId]);
+
+    $this->assertSame('success', $page->statusType);
+    $this->assertStringContainsString('1', $page->statusMessage);
+
+    // Verify the record is gone.
+    $remaining = (int) CRM_Core_DAO::singleValueQuery(
+      "SELECT COUNT(*) FROM civicrm_membership_payment WHERE id = %1",
+      [1 => [$orphanId, 'Integer']]
+    );
+    $this->assertSame(0, $remaining, 'Orphaned MembershipPayment should be deleted');
+  }
+
+  public function testDeleteOrphanedMembershipPaymentsSkipsValidPayments(): void {
+    $fixture = $this->buildScenarioFixture(FALSE, FALSE, FALSE);
+    $contactId = (int) $fixture['contact_id'];
+    $contributionId = (int) $fixture['contribution_id'];
+
+    $membership = $this->findOrCreateMembership($contactId);
+
+    // Create a MembershipPayment with a valid contribution — should NOT be deleted.
+    // Check if one already exists for this membership+contribution pair.
+    $existingId = (int) CRM_Core_DAO::singleValueQuery(
+      "SELECT id FROM civicrm_membership_payment WHERE membership_id = %1 AND contribution_id = %2 LIMIT 1",
+      [
+        1 => [(int) $membership['id'], 'Integer'],
+        2 => [$contributionId, 'Integer'],
+      ]
+    );
+    if ($existingId) {
+      $validId = $existingId;
+    }
+    else {
+      CRM_Core_DAO::executeQuery(
+        "INSERT INTO civicrm_membership_payment (membership_id, contribution_id) VALUES (%1, %2)",
+        [
+          1 => [(int) $membership['id'], 'Integer'],
+          2 => [$contributionId, 'Integer'],
+        ]
+      );
+      $validId = (int) CRM_Core_DAO::singleValueQuery("SELECT LAST_INSERT_ID()");
+      $this->assertGreaterThan(0, $validId);
+      $this->extraIds['membership_payment'][] = $validId;
+    }
+
+    $page = new CRM_Itemmanager_Test_UpdateItemsPageDouble();
+    $page->deleteOrphanedMembershipPayments($contactId, [$validId]);
+
+    // No success message when nothing was deleted.
+    $this->assertNull($page->statusType);
+
+    // Verify the record still exists.
+    $remaining = (int) CRM_Core_DAO::singleValueQuery(
+      "SELECT COUNT(*) FROM civicrm_membership_payment WHERE id = %1",
+      [1 => [$validId, 'Integer']]
+    );
+    $this->assertSame(1, $remaining, 'Valid MembershipPayment should not be deleted');
+  }
+
+  public function testDeleteOrphanedMembershipPaymentsSkipsInvalidIds(): void {
+    $fixture = $this->buildScenarioFixture(FALSE, FALSE, FALSE);
+    $contactId = (int) $fixture['contact_id'];
+
+    $page = new CRM_Itemmanager_Test_UpdateItemsPageDouble();
+    $page->deleteOrphanedMembershipPayments($contactId, [0, -1, 'abc']);
+
+    // Nothing deleted — no success message.
+    $this->assertNull($page->statusType);
+  }
+
+  // ---------------------------------------------------------------
   // Private helpers
   // ---------------------------------------------------------------
 
@@ -737,6 +888,71 @@ class CRM_Itemmanager_Test_UpdateItemsTest extends CRM_Itemmanager_Test_Membersh
     }
 
     return NULL;
+  }
+
+  private function findBaseListRowByOrphanId(array $baseList, int $orphanId): ?array {
+    foreach ($baseList as $row) {
+      if (isset($row['empty_relation_id']) && (int) $row['empty_relation_id'] === $orphanId) {
+        return $row;
+      }
+    }
+
+    return NULL;
+  }
+
+  /**
+   * @return array{id: int}
+   */
+  private function findOrCreateMembership(int $contactId): array {
+    $existing = \Civi\Api4\Membership::get(FALSE)
+      ->addWhere('contact_id', '=', $contactId)
+      ->setLimit(1)
+      ->execute()
+      ->first();
+
+    if ($existing) {
+      return $existing;
+    }
+
+    return \Civi\Api4\Membership::create(FALSE)
+      ->addValue('contact_id', $contactId)
+      ->addValue('membership_type_id', $this->getSeedId('membership_type'))
+      ->addValue('join_date', '2025-01-01')
+      ->addValue('start_date', '2025-01-01')
+      ->addValue('status_id:name', 'Current')
+      ->execute()
+      ->first();
+  }
+
+  /**
+   * Create a MembershipPayment pointing to a non-existent contribution.
+   *
+   * @return array{id: int, contribution_id: int}
+   */
+  private function createOrphanedMembershipPayment(int $membershipId): array {
+    $fakeContributionId = 999999999;
+
+    // Ensure the fake contribution does not exist.
+    $exists = \Civi\Api4\Contribution::get(FALSE)
+      ->addWhere('id', '=', $fakeContributionId)
+      ->selectRowCount()
+      ->execute()
+      ->countMatched();
+    $this->assertSame(0, $exists, 'Fake contribution ID must not exist');
+
+    // Insert directly since API validates contribution_id.
+    CRM_Core_DAO::executeQuery(
+      "INSERT INTO civicrm_membership_payment (membership_id, contribution_id) VALUES (%1, %2)",
+      [
+        1 => [$membershipId, 'Integer'],
+        2 => [$fakeContributionId, 'Integer'],
+      ]
+    );
+    $payId = (int) CRM_Core_DAO::singleValueQuery("SELECT LAST_INSERT_ID()");
+    $this->assertGreaterThan(0, $payId);
+    $this->extraIds['membership_payment'][] = $payId;
+
+    return ['id' => $payId, 'contribution_id' => $fakeContributionId];
   }
 
   private function getSeedId(string $key, int $index = 0): int {

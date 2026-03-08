@@ -12,165 +12,176 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Poedit 3.0.1\n"
 
+#: CRM/Itemmanager/Form/ItemmanagerOptions.php
+#: CRM/Itemmanager/Form/ItemmanagerSetting.php
+#: CRM/Itemmanager/Form/LineItemEdit.php
+#: CRM/Itemmanager/Form/RenewItemperiods.php
+msgid "Submit"
+msgstr "Absenden"
+
+#: CRM/Itemmanager/Form/ItemmanagerOptions.php itemmanager.php
+msgid "Itemmanager Options"
+msgstr "Itemmanager Optionen"
+
+#: CRM/Itemmanager/Form/ItemmanagerOptions.php
+msgid "Settings saved."
+msgstr "Einstellungen gespeichert."
+
 #: CRM/Itemmanager/Form/ItemmanagerSetting.php itemmanager.php
+#: schema/ItemmanagerSettings.entityType.php
 msgid "Itemmanager Settings"
-msgstr ""
+msgstr "Itemmanager Einstellungen"
 
 #: CRM/Itemmanager/Form/ItemmanagerSetting.php
 #: CRM/Itemmanager/Form/RenewItemperiods.php
+#: schema/ItemmanagerPeriods.entityType.php
 msgid "Periods"
-msgstr ""
+msgstr "Perioden"
 
 #: CRM/Itemmanager/Form/ItemmanagerSetting.php
 msgid "Start On"
-msgstr ""
+msgstr "Start am"
 
 #: CRM/Itemmanager/Form/ItemmanagerSetting.php
-#: templates/CRM/Itemmanager/Form/ItemmanagerSetting.tpl
-msgid "Ignore"
-msgstr ""
+msgid "Duration Unit"
+msgstr "Laufzeiteinheit"
 
 #: CRM/Itemmanager/Form/ItemmanagerSetting.php
-#: templates/CRM/Itemmanager/Form/ItemmanagerSetting.tpl
-msgid "Novitiate"
-msgstr "Neuzugang"
+#: schema/ItemmanagerPeriods.entityType.php
+msgid "Hide"
+msgstr "Ausblenden"
 
 #: CRM/Itemmanager/Form/ItemmanagerSetting.php
-#: templates/CRM/Itemmanager/Form/ItemmanagerSetting.tpl
+#: schema/ItemmanagerPeriods.entityType.php
+msgid "Reverse"
+msgstr "Umkehren"
+
+#: CRM/Itemmanager/Form/ItemmanagerSetting.php
+#: schema/ItemmanagerPeriods.entityType.php
+#: schema/ItemmanagerSettings.entityType.php
+#: templates/CRM/Itemmanager/Page/ItemmanagerSettingStub.tpl
 msgid "Successor"
 msgstr "Nachfolger"
 
 #: CRM/Itemmanager/Form/ItemmanagerSetting.php
-#: CRM/Itemmanager/Form/LinkSepaPayments.php
-#: CRM/Itemmanager/Form/RenewItemperiods.php
-msgid "Submit"
-msgstr ""
-
-#: CRM/Itemmanager/Form/ItemmanagerSetting.php
-msgid "Synchronize"
-msgstr "Synchronisieren"
-
-#: CRM/Itemmanager/Form/ItemmanagerSetting.php
-#: CRM/Itemmanager/Form/LinkSepaPayments.php
 #: CRM/Itemmanager/Form/RepairMissingContribution.php
 msgid "Cancel"
 msgstr "Abbrechen"
 
 #: CRM/Itemmanager/Form/ItemmanagerSetting.php
+#: CRM/Itemmanager/Page/ItemmanagerSettingStub.php
+#: tests/phpunit/suites/settings/ItemmanagerSettingFormTest.php
 msgid "No Successor"
 msgstr "Kein Nachfolger"
-
-#: CRM/Itemmanager/Form/ItemmanagerSetting.php
-#: templates/CRM/Itemmanager/Form/ItemmanagerSetting.tpl
-msgid "Active"
-msgstr "Aktiv"
-
-#: CRM/Itemmanager/Form/ItemmanagerSetting.php
-msgid "Synchronized."
-msgstr ""
-
-#: CRM/Itemmanager/Form/ItemmanagerSetting.php
-msgid "Start"
-msgstr "Start"
 
 #: CRM/Itemmanager/Form/ItemmanagerSetting.php
 msgid "Saved"
 msgstr "Gespeichert"
 
 #: CRM/Itemmanager/Form/ItemmanagerSetting.php
-#: CRM/Itemmanager/Form/LinkSepaPayments.php
 #: CRM/Itemmanager/Form/LinkSepaWrapper.php
 #: CRM/Itemmanager/Form/RenewItemperiods.php
 #: CRM/Itemmanager/Form/RepairMissingContribution.php
 #: CRM/Itemmanager/Page/LinkSepaPaymentsStub.php
-#: CRM/Itemmanager/Page/UpdateItems.php
+#: CRM/Itemmanager/Page/UpdateItems.php js/futureContributionScanProgress.js
+#: js/itemMaintenanceProgress.js
 msgid "Success"
 msgstr "Erfolgreich"
 
-#: CRM/Itemmanager/Form/LinkSepaPayments.php
+#: CRM/Itemmanager/Form/LineItemCancel.php
+msgid ""
+"WARNING: Cancelling this line item will affect the related contribution and "
+"update the associated financial transactions. The quantity and total price "
+"will be set to 0 for this line item. Do you want to continue?"
+msgstr ""
+"ACHTUNG: Das Stornieren dieses Postens wirkt sich auf die zugehörige "
+"Zuwendung aus und aktualisiert die Finanzbuchungen. Menge und Gesamtpreis "
+"werden auf 0 gesetzt. Möchten Sie fortfahren?"
+
+#: CRM/Itemmanager/Form/LineItemCancel.php
+msgid "Cancel Item"
+msgstr "Posten stornieren"
+
+#: CRM/Itemmanager/Form/LineItemCancel.php
+#: CRM/Itemmanager/Form/LineItemEdit.php
+msgid "Close"
+msgstr "Schließen"
+
+#: CRM/Itemmanager/Form/LineItemEdit.php
+msgid "Total amount"
+msgstr "Gesamtbetrag"
+
+#: CRM/Itemmanager/Form/LineItemEdit.php
+msgid "Apply to %1 future contributions"
+msgstr "Auf %1 zukünftige Zuwendungen anwenden"
+
+#: CRM/Itemmanager/Form/LineItemEdit.php
+msgid "Please enter a whole number for quantity"
+msgstr "Bitte eine ganze Zahl für die Menge eingeben"
+
 #: CRM/Itemmanager/Form/LinkSepaWrapper.php
 #: CRM/Itemmanager/Page/UpdateItems.php
 msgid "Couldn't find contact #%s"
 msgstr "Konnte den Kontakt #%s nicht finden"
 
-#: CRM/Itemmanager/Form/LinkSepaPayments.php
 #: CRM/Itemmanager/Form/LinkSepaWrapper.php
 #: CRM/Itemmanager/Form/RenewItemperiods.php
 #: CRM/Itemmanager/Form/RepairMissingContribution.php
-#: CRM/Itemmanager/Page/Dashboard.php
+#: CRM/Itemmanager/Page/Dashboard.php CRM/Itemmanager/Page/DashboardStub.php
 #: CRM/Itemmanager/Page/LinkSepaPaymentsStub.php
-#: CRM/Itemmanager/Page/UpdateItems.php
+#: CRM/Itemmanager/Page/UpdateItems.php js/futureContributionScanProgress.js
+#: js/itemMaintenanceProgress.js js/syncProgress.js
+#: templates/CRM/Itemmanager/Page/FutureContributionScan.tpl
+#: templates/CRM/Itemmanager/Page/ItemMaintenance.tpl
+#: templates/CRM/Itemmanager/Page/UpdateItems.tpl
 msgid "Error"
 msgstr "Fehler"
 
-#: CRM/Itemmanager/Form/LinkSepaPayments.php
 #: CRM/Itemmanager/Form/LinkSepaWrapper.php
 msgid "Payments relation for"
-msgstr ""
-
-#: CRM/Itemmanager/Form/LinkSepaPayments.php
-#: CRM/Itemmanager/Form/RenewItemperiods.php
-#: CRM/Itemmanager/Form/RepairMissingContribution.php
-#: CRM/Itemmanager/Page/Dashboard.php
-#: CRM/Itemmanager/Page/LinkSepaPaymentsStub.php
-msgid "Retrieve memberships"
-msgstr ""
-
-#: CRM/Itemmanager/Form/LinkSepaPayments.php
-#: CRM/Itemmanager/Page/LinkSepaPaymentsStub.php
-msgid "Retrieve SEPA mandate"
-msgstr ""
-
-#: CRM/Itemmanager/Form/LinkSepaPayments.php
-msgid "Relation"
-msgstr ""
-
-#: CRM/Itemmanager/Form/LinkSepaPayments.php
-msgid "Crosslink"
-msgstr ""
-
-#: CRM/Itemmanager/Form/LinkSepaPayments.php
-msgid "Add SEPA payment relation"
-msgstr ""
-
-#: CRM/Itemmanager/Form/LinkSepaPayments.php
-msgid "Delete SEPA payment relation"
-msgstr ""
-
-#: CRM/Itemmanager/Form/LinkSepaPayments.php
-msgid "Update status contribution"
-msgstr ""
-
-#: CRM/Itemmanager/Form/LinkSepaPayments.php
-#: CRM/Itemmanager/Form/LinkSepaWrapper.php
-#: CRM/Itemmanager/Form/RenewItemperiods.php
-#: CRM/Itemmanager/Form/RepairMissingContribution.php
-#: CRM/Itemmanager/Page/LinkSepaPaymentsStub.php
-#: CRM/Itemmanager/Page/UpdateItems.php
-msgid "Info"
-msgstr ""
+msgstr "Zahlungszuordnung für"
 
 #: CRM/Itemmanager/Form/LinkSepaWrapper.php
 msgid "Complete"
-msgstr ""
+msgstr "Abgeschlossen"
 
+#: CRM/Itemmanager/Form/LinkSepaWrapper.php
 #: CRM/Itemmanager/Form/RenewItemperiods.php
-msgid "Retrieve Contributions"
-msgstr ""
+#: CRM/Itemmanager/Form/RepairMissingContribution.php
+#: CRM/Itemmanager/Page/LinkSepaPaymentsStub.php
+#: CRM/Itemmanager/Page/UpdateItems.php js/futureContributionScanProgress.js
+#: js/itemMaintenanceProgress.js
+msgid "Info"
+msgstr "Info"
 
 #: CRM/Itemmanager/Form/RenewItemperiods.php
 #: CRM/Itemmanager/Form/RepairMissingContribution.php
-#: CRM/Itemmanager/Page/Dashboard.php
+#: CRM/Itemmanager/Page/Dashboard.php CRM/Itemmanager/Page/DashboardStub.php
+#: CRM/Itemmanager/Page/LinkSepaPaymentsStub.php
+msgid "Retrieve memberships"
+msgstr "Mitgliedschaften abrufen"
+
+#: CRM/Itemmanager/Form/RenewItemperiods.php
+msgid "Retrieve Contributions"
+msgstr "Zuwendungen abrufen"
+
+#: CRM/Itemmanager/Form/RenewItemperiods.php
+#: CRM/Itemmanager/Form/RepairMissingContribution.php
+#: CRM/Itemmanager/Page/DashboardStub.php
 msgid "Retrieve line items"
-msgstr ""
+msgstr "Posten abrufen"
 
 #: CRM/Itemmanager/Form/RenewItemperiods.php
 msgid "Renew periods for booked items for contact "
-msgstr ""
+msgstr "Perioden verlängern für gebuchte Anteile von Kontakt "
 
 #: CRM/Itemmanager/Form/RenewItemperiods.php
-#: templates/CRM/Itemmanager/Form/LinkSepaPayments.tpl
-#: templates/CRM/Itemmanager/Page/Dashboard.tpl
+#: managed/LineItemsSavedSearch.mgd.php
+#: templates/CRM/Itemmanager/Form/AddLineItems.tpl
+#: templates/CRM/Itemmanager/Form/LineItemEdit.tpl
+#: templates/CRM/Itemmanager/Page/DashboardStub.tpl
+#: templates/CRM/Itemmanager/Page/FutureContributionScan.tpl
+#: templates/CRM/Itemmanager/Page/ItemMaintenance.tpl
 #: templates/CRM/Itemmanager/Page/LinkSepaPaymentsStub.tpl
 #: templates/CRM/Itemmanager/Page/UpdateItems.tpl
 msgid "Item"
@@ -178,80 +189,177 @@ msgstr "Posten"
 
 #: CRM/Itemmanager/Form/RenewItemperiods.php
 #: templates/CRM/Itemmanager/Form/RepairMissingContribution.tpl
-#: templates/CRM/Itemmanager/Page/Dashboard.tpl
+#: templates/CRM/Itemmanager/Page/DashboardStub.tpl
+#: templates/CRM/Itemmanager/Page/FutureContributionScan.tpl
+#: templates/CRM/Itemmanager/Page/ItemMaintenance.tpl
 #: templates/CRM/Itemmanager/Page/UpdateItems.tpl
 msgid "Quantity"
 msgstr "Menge"
 
 #: CRM/Itemmanager/Form/RenewItemperiods.php
 msgid "The price field has been chosen from a different price set!"
-msgstr ""
+msgstr "Das Preisfeld stammt aus einer anderen Preisgruppe!"
 
 #: CRM/Itemmanager/Form/RenewItemperiods.php
 msgid "The period count for all items has to be equal"
-msgstr ""
+msgstr "Die Periodenanzahl muss für alle Posten gleich sein"
 
 #: CRM/Itemmanager/Form/RepairMissingContribution.php
 msgid "Clone contributions to insert missing data"
-msgstr ""
+msgstr "Zuwendungen klonen um fehlende Daten einzufügen"
 
 #: CRM/Itemmanager/Form/RepairMissingContribution.php
 msgid "Contribution Status"
-msgstr ""
+msgstr "Zuwendungsstatus"
 
 #: CRM/Itemmanager/Form/RepairMissingContribution.php
 msgid "Duplicate"
-msgstr ""
+msgstr "Duplizieren"
 
 #: CRM/Itemmanager/Form/RepairMissingContribution.php
 msgid "Please specify a contribution to clone."
-msgstr ""
+msgstr "Bitte eine Zuwendung zum Klonen angeben."
 
 #: CRM/Itemmanager/Form/RepairMissingContribution.php
 msgid "Retrieve related membership"
-msgstr ""
+msgstr "Zugehörige Mitgliedschaft abrufen"
 
 #: CRM/Itemmanager/Form/RepairMissingContribution.php
 msgid "There is no membership related to that contribution."
-msgstr ""
+msgstr "Zu dieser Zuwendung existiert keine zugehörige Mitgliedschaft."
 
 #: CRM/Itemmanager/Page/Dashboard.php itemmanager.php
 msgid "Items Dashboard"
-msgstr ""
+msgstr "Anteile Übersicht"
 
-#: CRM/Itemmanager/Page/Dashboard.php
+#: CRM/Itemmanager/Page/DashboardStub.php
+msgid "Invalid parameters"
+msgstr "Ungültige Parameter"
+
+#: CRM/Itemmanager/Page/DashboardStub.php
+msgid "Membership not found"
+msgstr "Mitgliedschaft nicht gefunden"
+
+#: CRM/Itemmanager/Page/DashboardStub.php
+msgid "Missing contribution relation to membership"
+msgstr "Fehlende Zuwendungszuordnung zur Mitgliedschaft"
+
+#: CRM/Itemmanager/Page/DashboardStub.php
 msgid "Combine line items"
-msgstr ""
+msgstr "Posten zusammenfassen"
+
+#: CRM/Itemmanager/Page/FutureContributionScan.php
+msgid "Future Item Scan: %1"
+msgstr "Zukünftige Posten prüfen: %1"
+
+#: CRM/Itemmanager/Page/FutureContributionScanStub.php
+msgid "Missing item: %1"
+msgstr "Fehlender Posten: %1"
+
+#: CRM/Itemmanager/Page/FutureContributionScanStub.php
+msgid "Cancelled item: %1 (exists in reference)"
+msgstr "Stornierter Posten: %1 (in Referenz vorhanden)"
+
+#: CRM/Itemmanager/Page/FutureContributionScanStub.php
+msgid "Qty mismatch: %1 (is %2, should be %3)"
+msgstr "Mengenabweichung: %1 (ist %2, soll %3)"
+
+#: CRM/Itemmanager/Page/FutureContributionScanStub.php
+msgid "Extra item: %1 (not in reference)"
+msgstr "Zusätzlicher Posten: %1 (nicht in Referenz)"
+
+#: CRM/Itemmanager/Page/FutureContributionScanStub.php
+#: CRM/Itemmanager/Page/ItemMaintenanceStub.php
+msgid "Could not load data for line item %1"
+msgstr "Daten für Posten %1 konnten nicht geladen werden"
+
+#: CRM/Itemmanager/Page/FutureContributionScanStub.php
+#: CRM/Itemmanager/Page/ItemMaintenanceStub.php
+msgid "Error updating contribution date for %1"
+msgstr "Fehler beim Aktualisieren des Zuwendungsdatums für %1"
+
+#: CRM/Itemmanager/Page/FutureContributionScanStub.php
+#: CRM/Itemmanager/Page/ItemMaintenanceStub.php
+msgid "Error updating label for %1"
+msgstr "Fehler beim Aktualisieren der Bezeichnung für %1"
+
+#: CRM/Itemmanager/Page/FutureContributionScanStub.php
+#: CRM/Itemmanager/Page/ItemMaintenanceStub.php
+msgid "Error updating line item %1"
+msgstr "Fehler beim Aktualisieren von Posten %1"
+
+#: CRM/Itemmanager/Page/FutureContributionScanStub.php
+#: CRM/Itemmanager/Page/ItemMaintenanceStub.php
+msgid "Error retrieving financial info for %1"
+msgstr "Fehler beim Abrufen der Finanzdaten für %1"
+
+#: CRM/Itemmanager/Page/FutureContributionScanStub.php
+#: CRM/Itemmanager/Page/ItemMaintenanceStub.php
+msgid "Error updating financial item %1"
+msgstr "Fehler beim Aktualisieren des Finanzpostens %1"
+
+#: CRM/Itemmanager/Page/FutureContributionScanStub.php
+#: CRM/Itemmanager/Page/ItemMaintenanceStub.php
+msgid "Error updating contribution %1"
+msgstr "Fehler beim Aktualisieren der Zuwendung %1"
+
+#: CRM/Itemmanager/Page/FutureContributionScanStub.php
+msgid "Error adding line item to contribution %1: %2"
+msgstr "Fehler beim Hinzufügen eines Postens zu Zuwendung %1: %2"
+
+#: CRM/Itemmanager/Page/FutureContributionScanStub.php
+msgid "Error syncing qty for line item %1: %2"
+msgstr "Fehler beim Mengenabgleich für Posten %1: %2"
+
+#: CRM/Itemmanager/Page/FutureContributionScanStub.php
+msgid "Error cancelling line item %1: %2"
+msgstr "Fehler beim Stornieren von Posten %1: %2"
 
 #: CRM/Itemmanager/Page/ItemMaintenance.php
-msgid "ItemMaintenance"
-msgstr ""
+#: templates/CRM/Itemmanager/Page/ItemMaintenance.tpl
+msgid "Item Maintenance"
+msgstr "Postenpflege"
+
+#: CRM/Itemmanager/Page/ItemmanagerSettingStub.php
+#: templates/CRM/Itemmanager/Page/ItemmanagerSettingStub.tpl
+msgid "Active"
+msgstr "Aktiv"
+
+#: CRM/Itemmanager/Page/LinkSepaPaymentsStub.php
+msgid "Retrieve payinfo from memberships"
+msgstr "Zahlungsdaten der Mitgliedschaften abrufen"
+
+#: CRM/Itemmanager/Page/LinkSepaPaymentsStub.php
+msgid "Retrieve SEPA mandate"
+msgstr "SEPA-Mandat abrufen"
 
 #: CRM/Itemmanager/Page/UpdateItems.php
 #: templates/CRM/Itemmanager/Page/Dashboard.tpl
+#: templates/CRM/Itemmanager/Page/FutureContributionScan.tpl
+#: templates/CRM/Itemmanager/Page/ItemMaintenance.tpl
 #: templates/CRM/Itemmanager/Page/UpdateItems.tpl
 msgid "Update Items"
-msgstr ""
+msgstr "Posten aktualisieren"
 
 #: CRM/Itemmanager/Page/UpdateItems.php
 msgid "Error for updating line items"
-msgstr ""
+msgstr "Fehler beim Aktualisieren der Posten"
 
 #: CRM/Itemmanager/Page/UpdateItems.php
 msgid "Retrieve financial infos"
-msgstr ""
+msgstr "Finanzdaten abrufen"
 
 #: CRM/Itemmanager/Page/UpdateItems.php
 msgid "Error for updating financeitem"
-msgstr ""
+msgstr "Fehler beim Aktualisieren des Finanzpostens"
 
 #: CRM/Itemmanager/Page/UpdateItems.php
 msgid "Error for updating contribution"
-msgstr ""
+msgstr "Fehler beim Aktualisieren der Zuwendung"
 
 #: CRM/Itemmanager/Page/UpdateItems.php
 msgid "Error for label for "
-msgstr ""
+msgstr "Fehler bei Bezeichnung für "
 
 #: CRM/Itemmanager/Page/UpdateItems.php
 msgid "Items updated"
@@ -259,15 +367,106 @@ msgstr "Posten aktualisiert"
 
 #: CRM/Itemmanager/Page/UpdateItems.php
 msgid "Nothing to be done"
-msgstr ""
+msgstr "Keine Änderungen nötig"
 
-#: CRM/Itemmanager/Upgrader/Base.php
-msgid "Upgrade %1 to revision %2"
+#: CRM/Itemmanager/Page/UpdateItems.php
+msgid "Deleted %1 orphaned membership payment relation(s)."
+msgstr "%1 verwaiste Zahlungszuordnung(en) gelöscht."
+
+#: CRM/Itemmanager/Upgrader.php
+msgid "Migrate managed entities from lineitemedit"
+msgstr "Verwaltete Entities aus lineitemedit migrieren"
+
+#: CRM/Itemmanager/Upgrader.php
+msgid "Generate additional line item price fields"
+msgstr "Zusätzliche Preisfelder für Posten erzeugen"
+
+#: CRM/Itemmanager/Upgrader.php
+msgid "Update contribution net_amount"
+msgstr "Nettobetrag der Zuwendung aktualisieren"
+
+#: CRM/Itemmanager/Util/LineItemEditor.php
+msgid "Edit Line item"
+msgstr "Posten bearbeiten"
+
+#: CRM/Itemmanager/Util/LineItemEditor.php
+msgid "Cancel Line item"
+msgstr "Posten stornieren"
+
+#: CRM/Itemmanager/Util/LineItemEditor.php
+#: templates/CRM/Itemmanager/Form/AddLineItems.tpl
+msgid "Add Item(s)"
+msgstr "Posten hinzufügen"
+
+#: CRM/Itemmanager/Util/LineItemEditor.php
+msgid "Add Line-item(s)"
+msgstr "Posten hinzufügen"
+
+#: CRM/Itemmanager/Util/LineItemEditor.php
+msgid "Create new item"
+msgstr "Neuen Posten anlegen"
+
+#: CRM/Itemmanager/Util/LineItemEditor.php
+msgid "Add item"
+msgstr "Posten hinzufügen"
+
+#: CRM/Itemmanager/Util/LineItemEditor.php
+msgid "- select any price-field -"
+msgstr "- Preisfeld wählen -"
+
+#: CRM/Itemmanager/Util/LineItemEditor.php
+msgid "Please enter a monetary value for this field."
+msgstr "Bitte einen Geldbetrag eingeben."
+
+#: CRM/Itemmanager/Util/LineItemEditor.php
+msgid "Qty must be a number (with or without decimal point)."
+msgstr "Menge muss eine Zahl sein (mit oder ohne Dezimalstelle)."
+
+#: CRM/Itemmanager/Util/LineItemEditor.php
+msgid "Additional Lineitem %1"
+msgstr "Zusätzlicher Posten %1"
+
+#: CRM/Itemmanager/Util/LineItemEditor.php
+msgid "Additional Line Item"
+msgstr "Zusätzlicher Posten"
+
+#: CRM/Itemmanager/Util/LineItemEditor.php
+msgid "Additional Item"
+msgstr "Zusätzlicher Posten"
+
+#: itemmanager.php
+msgid "Itemmanager: add line item"
+msgstr "Itemmanager: Posten hinzufügen"
+
+#: itemmanager.php
+msgid ""
+"Allows non-admin users to add line item(s) associated to a contribution."
 msgstr ""
+"Erlaubt Nicht-Admin-Benutzern, Posten zu einer Zuwendung hinzuzufügen."
+
+#: itemmanager.php
+msgid "Itemmanager: edit line item"
+msgstr "Itemmanager: Posten bearbeiten"
+
+#: itemmanager.php
+msgid ""
+"Allows non-admin users to edit line item(s) associated to a contribution."
+msgstr ""
+"Erlaubt Nicht-Admin-Benutzern, Posten einer Zuwendung zu bearbeiten."
+
+#: itemmanager.php
+msgid "Itemmanager: cancel line item"
+msgstr "Itemmanager: Posten stornieren"
+
+#: itemmanager.php
+msgid ""
+"Allows non-admin users to cancel line item(s) associated to a contribution."
+msgstr ""
+"Erlaubt Nicht-Admin-Benutzern, Posten einer Zuwendung zu stornieren."
 
 #: itemmanager.php
 msgid "Warning"
-msgstr ""
+msgstr "Warnung"
 
 #: itemmanager.php
 msgid "Renew Items Periods"
@@ -278,8 +477,452 @@ msgid "Renew periods"
 msgstr "Solawi Verlängerung"
 
 #: itemmanager.php
-msgid "Duplicate contribution"
+msgid "Scan Future Items"
+msgstr "Zukünftige Posten prüfen"
+
+#: itemmanager.php
+msgid "Scan future contributions based on this one"
+msgstr "Zukünftige Zuwendungen auf Basis dieser prüfen"
+
+#: itemmanager.php
+msgid "Itemmanager Maintenance"
+msgstr "Itemmanager Pflege"
+
+#: js/futureContributionScanProgress.js
+msgid "Starting scan..."
+msgstr "Scan wird gestartet..."
+
+#: js/futureContributionScanProgress.js
+msgid "Scanned %1 of %2 contributions..."
+msgstr "%1 von %2 Zuwendungen geprüft..."
+
+#: js/futureContributionScanProgress.js js/itemMaintenanceProgress.js
+#: js/syncProgress.js
+msgid "Connection error. Please try again."
+msgstr "Verbindungsfehler. Bitte erneut versuchen."
+
+#: js/futureContributionScanProgress.js
+msgid "Scan complete."
+msgstr "Scan abgeschlossen."
+
+#: js/futureContributionScanProgress.js js/itemMaintenanceProgress.js
+msgid "Total affected items"
+msgstr "Betroffene Posten gesamt"
+
+#: js/futureContributionScanProgress.js js/itemMaintenanceProgress.js
+msgid "Label changes"
+msgstr "Bezeichnungsänderungen"
+
+#: js/futureContributionScanProgress.js js/itemMaintenanceProgress.js
+msgid "Price changes"
+msgstr "Preisänderungen"
+
+#: js/futureContributionScanProgress.js js/itemMaintenanceProgress.js
+msgid "Date changes"
+msgstr "Datumsänderungen"
+
+#: js/futureContributionScanProgress.js js/itemMaintenanceProgress.js
+msgid "Orphaned relations"
+msgstr "Verwaiste Zuordnungen"
+
+#: js/futureContributionScanProgress.js
+msgid "Missing items"
+msgstr "Fehlende Posten"
+
+#: js/futureContributionScanProgress.js
+msgid "Extra items"
+msgstr "Zusätzliche Posten"
+
+#: js/futureContributionScanProgress.js
+msgid "Qty mismatches"
+msgstr "Mengenabweichungen"
+
+#: js/futureContributionScanProgress.js
+msgid "No inconsistencies found in future contributions."
+msgstr "Keine Abweichungen in zukünftigen Zuwendungen gefunden."
+
+#: js/futureContributionScanProgress.js js/itemMaintenanceProgress.js
+#: templates/CRM/Itemmanager/Page/UpdateItems.tpl
+msgid "Delete"
+msgstr "Löschen"
+
+#: js/futureContributionScanProgress.js js/itemMaintenanceProgress.js
+#: templates/CRM/Itemmanager/Page/UpdateItems.tpl
+msgid "change to"
+msgstr "ändern zu"
+
+#: js/futureContributionScanProgress.js js/itemMaintenanceProgress.js
+msgid "No items selected."
+msgstr "Keine Posten ausgewählt."
+
+#: js/futureContributionScanProgress.js js/itemMaintenanceProgress.js
+msgid "%1 item(s) updated."
+msgstr "%1 Posten aktualisiert."
+
+#: js/futureContributionScanProgress.js js/itemMaintenanceProgress.js
+msgid "%1 orphan(s) deleted."
+msgstr "%1 verwaiste Zuordnung(en) gelöscht."
+
+#: js/futureContributionScanProgress.js
+msgid "%1 item(s) added."
+msgstr "%1 Posten hinzugefügt."
+
+#: js/futureContributionScanProgress.js
+msgid "%1 item(s) cancelled."
+msgstr "%1 Posten storniert."
+
+#: js/futureContributionScanProgress.js
+msgid "%1 qty synced."
+msgstr "%1 Menge(n) abgeglichen."
+
+#: js/futureContributionScanProgress.js js/itemMaintenanceProgress.js
+msgid "%1 error(s)."
+msgstr "%1 Fehler."
+
+#: js/futureContributionScanProgress.js js/itemMaintenanceProgress.js
+msgid "Update"
+msgstr "Aktualisieren"
+
+#: js/handlePayment.js
+msgid "Add SEPA payment relation"
+msgstr "SEPA-Zahlungszuordnung hinzufügen"
+
+#: js/handlePayment.js
+msgid "SEPA payment relation added"
+msgstr "SEPA-Zahlungszuordnung hinzugefügt"
+
+#: js/handlePayment.js
+msgid "Delete SEPA payment relation"
+msgstr "SEPA-Zahlungszuordnung löschen"
+
+#: js/handlePayment.js
+msgid "SEPA payment relation deleted"
+msgstr "SEPA-Zahlungszuordnung gelöscht"
+
+#: js/handlePayment.js
+msgid "Update Contribution"
+msgstr "Zuwendung aktualisieren"
+
+#: js/handlePayment.js
+#: templates/CRM/Itemmanager/Page/FutureContributionScan.tpl
+#: templates/CRM/Itemmanager/Page/ItemMaintenance.tpl
+#: templates/CRM/Itemmanager/Page/UpdateItems.tpl
+msgid "Date"
+msgstr "Datum"
+
+#: js/handlePayment.js
+msgid "Contribution updated"
+msgstr "Zuwendung aktualisiert"
+
+#: js/handlePayment.js
+msgid "Try to add/delete the payment failed"
+msgstr "Hinzufügen/Löschen der Zahlung fehlgeschlagen"
+
+#: js/handlePayment.js
+msgid "Please select on both sides a cross link relation."
+msgstr "Bitte auf beiden Seiten eine Querverweis-Zuordnung auswählen."
+
+#: js/handlePayment.js
+msgid "SEPA cross link relation"
+msgstr "SEPA-Querverweis"
+
+#: js/handlePayment.js
+msgid "Please select a 1:n or n:1 relation."
+msgstr "Bitte eine 1:n oder n:1 Zuordnung wählen."
+
+#: js/itemMaintenanceProgress.js
+msgid "Starting analysis..."
+msgstr "Analyse wird gestartet..."
+
+#: js/itemMaintenanceProgress.js
+msgid "Analyzed %1 of %2 contacts..."
+msgstr "%1 von %2 Kontakten analysiert..."
+
+#: js/itemMaintenanceProgress.js
+msgid "Analysis complete."
+msgstr "Analyse abgeschlossen."
+
+#: js/itemMaintenanceProgress.js
+msgid "Affected contacts"
+msgstr "Betroffene Kontakte"
+
+#: js/itemMaintenanceProgress.js
+msgid "No items found that need updating. Try different filter options."
+msgstr "Keine zu aktualisierenden Posten gefunden. Versuchen Sie andere Filteroptionen."
+
+#: js/syncProgress.js
+msgid "Synchronizing..."
+msgstr "Synchronisiere..."
+
+#: js/syncProgress.js templates/CRM/Itemmanager/Form/ItemmanagerSetting.tpl
+#: templates/CRM/Itemmanager/Form/LinkSepaWrapper.tpl
+#: templates/CRM/Itemmanager/Page/Dashboard.tpl
+msgid "Please wait..."
+msgstr "Bitte warten.."
+
+#: js/syncProgress.js
+msgid "Errors occurred"
+msgstr "Fehler aufgetreten"
+
+#: js/syncProgress.js
+msgid "Back"
+msgstr "Zurück"
+
+#: js/syncProgress.js
+msgid "Synchronized!"
+msgstr "Synchronisiert!"
+
+#: js/syncProgress.js
+msgid "Reloading..."
+msgstr "Wird neu geladen..."
+
+#: managed/LineItemsSavedSearch.mgd.php
+msgid "Contribution Amount"
+msgstr "Zuwendungsbetrag"
+
+#: managed/LineItemsSavedSearch.mgd.php
+msgid "Contribution Tax Amounts"
+msgstr "Steuerbeträge der Zuwendung"
+
+#: managed/LineItemsSavedSearch.mgd.php
+#: templates/CRM/Itemmanager/Form/AddLineItems.tpl
+msgid "Financial Type"
+msgstr "Finanztyp"
+
+#: managed/LineItemsSavedSearch.mgd.php
+#: templates/CRM/Itemmanager/Form/AddLineItems.tpl
+msgid "Qty"
+msgstr "Menge"
+
+#: managed/LineItemsSavedSearch.mgd.php
+#: templates/CRM/Itemmanager/Form/AddLineItems.tpl
+msgid "Unit Price"
+msgstr "Einzelpreis"
+
+#: managed/LineItemsSavedSearch.mgd.php
+#: templates/CRM/Itemmanager/Form/AddLineItems.tpl
+msgid "Total Price"
+msgstr "Gesamtpreis"
+
+#: managed/LineItemsSavedSearch.mgd.php
+#: templates/CRM/Itemmanager/Form/AddLineItems.tpl
+msgid "Tax Amount"
+msgstr "Steuerbetrag"
+
+#: managed/LineItemsSavedSearch.mgd.php
+msgid "Contribution Line Items"
+msgstr "Zuwendungsposten"
+
+#: schema/ItemmanagerPeriods.entityType.php
+msgid "Itemmanager Periods"
+msgstr "Itemmanager Perioden"
+
+#: schema/ItemmanagerPeriods.entityType.php
+msgid "Itemmanager Periodses"
+msgstr "Itemmanager Perioden"
+
+#: schema/ItemmanagerPeriods.entityType.php
+msgid "Stores the common data, how often the items will be repeated"
+msgstr "Speichert die Periodeneinstellungen für die Wiederholung der Posten"
+
+#: schema/ItemmanagerPeriods.entityType.php
+#: schema/ItemmanagerSettings.entityType.php
+msgid "ID"
+msgstr "ID"
+
+#: schema/ItemmanagerPeriods.entityType.php
+msgid "Unique ItemmanagerPeriods ID"
+msgstr "Eindeutige ItemmanagerPeriods-ID"
+
+#: schema/ItemmanagerPeriods.entityType.php
+msgid "Price Set"
+msgstr "Preisgruppe"
+
+#: schema/ItemmanagerPeriods.entityType.php
+msgid "FK to civicrm_price_set"
+msgstr "FK zu civicrm_price_set"
+
+#: schema/ItemmanagerPeriods.entityType.php
+msgid "Booking Period Start on"
+msgstr "Periodenbeginn am"
+
+#: schema/ItemmanagerPeriods.entityType.php
+msgid "If non-zero, do not show this field before the date specified"
+msgstr "Wenn gesetzt, dieses Feld erst ab dem angegebenen Datum anzeigen"
+
+#: schema/ItemmanagerPeriods.entityType.php
+msgid "Number of periods at start"
+msgstr "Anzahl Perioden zu Beginn"
+
+#: schema/ItemmanagerPeriods.entityType.php
+msgid "Period Type"
+msgstr "Periodentyp"
+
+#: schema/ItemmanagerPeriods.entityType.php
+msgid "Period interval type"
+msgstr "Periodenintervalltyp"
+
+#: schema/ItemmanagerPeriods.entityType.php
+msgid "ID to itemmanager period entry which is the successor"
+msgstr "ID des Nachfolger-Periodeneintrags"
+
+#: schema/ItemmanagerPeriods.entityType.php
+msgid "Don't show the period anymore"
+msgstr "Periode nicht mehr anzeigen"
+
+#: schema/ItemmanagerPeriods.entityType.php
+msgid "Reverse the period"
+msgstr "Periode umkehren"
+
+#: schema/ItemmanagerSettings.entityType.php
+msgid "Itemmanager Settingses"
+msgstr "Itemmanager Einstellungen"
+
+#: schema/ItemmanagerSettings.entityType.php
+msgid "Stores the successor of an item"
+msgstr "Speichert den Nachfolger eines Postens"
+
+#: schema/ItemmanagerSettings.entityType.php
+msgid "Unique ItemmanagerSettings ID"
+msgstr "Eindeutige ItemmanagerSettings-ID"
+
+#: schema/ItemmanagerSettings.entityType.php
+msgid "Price Field Value"
+msgstr "Preisfeld"
+
+#: schema/ItemmanagerSettings.entityType.php
+msgid "FK to civicrm_price_field_value"
+msgstr "FK zu civicrm_price_field_value"
+
+#: schema/ItemmanagerSettings.entityType.php
+msgid "FK to civicrm_itemmanager_periods"
+msgstr "FK zu civicrm_itemmanager_periods"
+
+#: schema/ItemmanagerSettings.entityType.php
+msgid "ID to itemmanager entry which is the successor"
+msgstr "ID des Nachfolger-Eintrags"
+
+#: schema/ItemmanagerSettings.entityType.php
+#: templates/CRM/Itemmanager/Page/ItemmanagerSettingStub.tpl
+msgid "Ignore"
+msgstr "Ignorieren"
+
+#: schema/ItemmanagerSettings.entityType.php
+msgid "Ignore item for next period"
+msgstr "Posten für nächste Periode ignorieren"
+
+#: schema/ItemmanagerSettings.entityType.php
+#: templates/CRM/Itemmanager/Page/ItemmanagerSettingStub.tpl
+msgid "Extend"
+msgstr "Erweitern"
+
+#: schema/ItemmanagerSettings.entityType.php
+msgid "Add item for next period"
+msgstr "Posten für nächste Periode hinzufügen"
+
+#: schema/ItemmanagerSettings.entityType.php
+msgid "Novitiate Item"
+msgstr "Neuzugangs-Posten"
+
+#: schema/ItemmanagerSettings.entityType.php
+msgid "This item is for try out only"
+msgstr "Dieser Posten ist nur zum Kennenlernen"
+
+#: schema/ItemmanagerSettings.entityType.php
+msgid "Enable Period Exception Case"
+msgstr "Periodenausnahme aktivieren"
+
+#: schema/ItemmanagerSettings.entityType.php
+msgid "The parent period should not used"
+msgstr "Die übergeordnete Periode soll nicht verwendet werden"
+
+#: schema/ItemmanagerSettings.entityType.php
+msgid "Enable bidding round"
+msgstr "Bieterrunde aktivieren"
+
+#: schema/ItemmanagerSettings.entityType.php
+msgid "The item is a related to a bidding round"
+msgstr "Dieser Posten gehört zu einer Bieterrunde"
+
+#: schema/ItemmanagerSettings.entityType.php
+#: templates/CRM/Itemmanager/Page/ItemmanagerSettingStub.tpl
+msgid "Exception Periods"
+msgstr "Ausnahmeperioden"
+
+#: schema/ItemmanagerSettings.entityType.php
+msgid "The exceptional periods"
+msgstr "Die Ausnahmeperioden"
+
+#: settings/Itemmanager.setting.php
+msgid "Keep receive date after payment relation"
+msgstr "Empfangsdatum nach Zahlungszuordnung beibehalten"
+
+#: settings/Itemmanager.setting.php
+msgid "Keep receive date of the contribution after processing the payment"
+msgstr "Empfangsdatum der Zuwendung nach Zahlungsverarbeitung beibehalten"
+
+#: settings/Itemmanager.setting.php
+msgid ""
+"Select Yes to keep the origin receive date untouched after a payment relation"
 msgstr ""
+"Ja wählen, um das ursprüngliche Empfangsdatum nach einer Zahlungszuordnung "
+"unverändert zu lassen"
+
+#: settings/Itemmanager.setting.php
+msgid "Filter the SEPA relation for open payments only"
+msgstr "SEPA-Zuordnung nur für offene Zahlungen filtern"
+
+#: settings/Itemmanager.setting.php
+msgid "Filter Open payments only"
+msgstr "Nur offene Zahlungen"
+
+#: settings/Itemmanager.setting.php
+msgid "Select Yes to hide already paid contributions for payments"
+msgstr "Ja wählen, um bereits bezahlte Zuwendungen auszublenden"
+
+#: settings/Itemmanager.setting.php
+msgid "Filter the SEPA relation for past payments only"
+msgstr "SEPA-Zuordnung nur für vergangene Zahlungen filtern"
+
+#: settings/Itemmanager.setting.php
+msgid "Filter Past payments only"
+msgstr "Nur vergangene Zahlungen"
+
+#: settings/Itemmanager.setting.php
+msgid "Select Yes to hide future contributions for payments"
+msgstr "Ja wählen, um zukünftige Zuwendungen auszublenden"
+
+#: settings/Itemmanager.setting.php
+msgid "Show again the hidden period settings"
+msgstr "Ausgeblendete Periodeneinstellungen wieder anzeigen"
+
+#: settings/Itemmanager.setting.php
+msgid "Shows the hidden periods in itemmanager settings"
+msgstr "Zeigt die ausgeblendeten Perioden in den Einstellungen an"
+
+#: settings/Itemmanager.setting.php
+msgid "Select Yes to to make the hidden periods visible again"
+msgstr "Ja wählen, um ausgeblendete Perioden wieder sichtbar zu machen"
+
+#: settings/Itemmanager.setting.php
+msgid "Maximum additional line items"
+msgstr "Maximale Anzahl zusätzlicher Posten"
+
+#: settings/Itemmanager.setting.php
+msgid "Limits the number of lines shown"
+msgstr "Begrenzt die Anzahl angezeigter Zeilen"
+
+#: templates/CRM/Itemmanager/Form/AddLineItems.tpl
+msgid "Choose manual contribution amount"
+msgstr "Zuwendungsbetrag manuell festlegen"
+
+#: templates/CRM/Itemmanager/Form/AddLineItems.tpl
+msgid "Add another item"
+msgstr "Weiteren Posten hinzufügen"
+
+#: templates/CRM/Itemmanager/Form/AddLineItems.tpl
+msgid "Total Amount"
+msgstr "Gesamtbetrag"
 
 #: templates/CRM/Itemmanager/Form/ItemmanagerSetting.tpl
 msgid ""
@@ -289,77 +932,101 @@ msgid ""
 "meaning.\n"
 "  "
 msgstr ""
+"\n"
+"    Bearbeiten Sie hier den Nachfolger jedes Preisfeld-Postens.\n"
+"    Das Startdatum definiert nur Tag und Monat. Das Jahr hat keine "
+"Bedeutung.\n"
+"  "
+
+#: templates/CRM/Itemmanager/Form/ItemmanagerSetting.tpl
+msgid ""
+"There are %1 new price set(s) that are not yet synchronized. Click "
+"\"Synchronize\" to update."
+msgstr ""
+"Es gibt %1 neue Preisgruppe(n), die noch nicht synchronisiert sind. Klicken "
+"Sie auf \"Synchronisieren\" zum Aktualisieren."
+
+#: templates/CRM/Itemmanager/Form/ItemmanagerSetting.tpl
+msgid "Synchronize"
+msgstr "Synchronisieren"
 
 #: templates/CRM/Itemmanager/Form/ItemmanagerSetting.tpl
 msgid "Priceset"
-msgstr ""
+msgstr "Preisgruppe"
 
-#: templates/CRM/Itemmanager/Form/ItemmanagerSetting.tpl
-msgid "Item Name"
-msgstr "Posten Name"
+#: templates/CRM/Itemmanager/Form/LineItemEdit.tpl
+msgid "Pricing"
+msgstr "Preise"
 
-#: templates/CRM/Itemmanager/Form/ItemmanagerSetting.tpl
-msgid "Active On"
-msgstr "Aktiv ab"
+#: templates/CRM/Itemmanager/Form/LineItemEdit.tpl
+msgid "Future Contributions"
+msgstr "Zukünftige Zuwendungen"
 
-#: templates/CRM/Itemmanager/Form/ItemmanagerSetting.tpl
-msgid "Expire On"
-msgstr "Endet am"
+#: templates/CRM/Itemmanager/Form/LineItemEdit.tpl
+msgid "Apply changes to %1 future contribution(s)"
+msgstr "Änderungen auf %1 zukünftige Zuwendung(en) anwenden"
 
-#: templates/CRM/Itemmanager/Form/LinkSepaPayments.tpl
 #: templates/CRM/Itemmanager/Form/LinkSepaWrapper.tpl
 msgid "SEPA Payment Assignments"
-msgstr ""
-
-#: templates/CRM/Itemmanager/Form/LinkSepaPayments.tpl
-msgid ""
-"\n"
-"    Link here the SEPA payments to the payment plan contributions.\n"
-"    You can also set the payment contributions manually to paid here.\n"
-"  "
-msgstr ""
-
-#: templates/CRM/Itemmanager/Form/LinkSepaPayments.tpl
-#: templates/CRM/Itemmanager/Form/LinkSepaWrapper.tpl
-msgid "Contribution Type"
-msgstr "Zuwendungstyp"
-
-#: templates/CRM/Itemmanager/Form/LinkSepaPayments.tpl
-#: templates/CRM/Itemmanager/Page/LinkSepaPaymentsStub.tpl
-msgid "Contribution"
-msgstr "Zuwendung"
-
-#: templates/CRM/Itemmanager/Form/LinkSepaPayments.tpl
-#: templates/CRM/Itemmanager/Page/LinkSepaPaymentsStub.tpl
-msgid "Payments"
-msgstr "Bezahlungen"
-
-#: templates/CRM/Itemmanager/Form/LinkSepaPayments.tpl
-#: templates/CRM/Itemmanager/Page/LinkSepaPaymentsStub.tpl
-msgid "view payments"
-msgstr ""
+msgstr "SEPA-Zahlungszuordnungen"
 
 #: templates/CRM/Itemmanager/Form/LinkSepaWrapper.tpl
 msgid ""
 "\n"
 "        Link here the SEPA payments to the payment plan contributions.\n"
-"        You can also set the payment contributions manually to paid "
-"here.\n"
+"        You can also set the payment contributions manually to paid here.\n"
 "    "
 msgstr ""
+"\n"
+"        Verknüpfen Sie hier die SEPA-Zahlungen mit den Zahlungsplan-Zuwendungen.\n"
+"        Sie können Zuwendungen auch manuell als bezahlt markieren.\n"
+"    "
 
 #: templates/CRM/Itemmanager/Form/LinkSepaWrapper.tpl
-msgid "Please wait..."
-msgstr "Bitte warten.."
+msgid "Filter open payments"
+msgstr "Offene Zahlungen filtern"
+
+#: templates/CRM/Itemmanager/Form/LinkSepaWrapper.tpl
+msgid "Filter past contributions"
+msgstr "Vergangene Zuwendungen filtern"
+
+#: templates/CRM/Itemmanager/Form/LinkSepaWrapper.tpl
+msgid "Contribution Type"
+msgstr "Zuwendungstyp"
 
 #: templates/CRM/Itemmanager/Form/RenewItemperiods.tpl
+#: templates/CRM/Itemmanager/Page/FutureContributionScan.tpl
 msgid "Membership"
-msgstr ""
+msgstr "Mitgliedschaft"
 
 #: templates/CRM/Itemmanager/Form/RenewItemperiods.tpl
 #: templates/CRM/Itemmanager/Page/Dashboard.tpl
 msgid "Status"
-msgstr ""
+msgstr "Status"
+
+#: templates/CRM/Itemmanager/Form/RenewItemperiods.tpl
+msgid "Start"
+msgstr "Start"
+
+#: templates/CRM/Itemmanager/Form/RenewItemperiods.tpl
+msgid "End"
+msgstr "Ende"
+
+#: templates/CRM/Itemmanager/Form/RenewItemperiods.tpl
+msgid "Interval"
+msgstr "Intervall"
+
+#: templates/CRM/Itemmanager/Form/RenewItemperiods.tpl
+msgid "Price per Interval"
+msgstr "Preis pro Intervall"
+
+#: templates/CRM/Itemmanager/Form/RenewItemperiods.tpl
+msgid "Active ON"
+msgstr "Aktiv ab"
+
+#: templates/CRM/Itemmanager/Form/RenewItemperiods.tpl
+msgid "Active Until"
+msgstr "Aktiv bis"
 
 #: templates/CRM/Itemmanager/Form/RenewItemperiods.tpl
 msgid "Old"
@@ -369,9 +1036,13 @@ msgstr "Alt"
 msgid "New"
 msgstr "Neu"
 
+#: templates/CRM/Itemmanager/Form/RenewItemperiods.tpl
+msgid "Bidding round"
+msgstr "Bieterrunde"
+
 #: templates/CRM/Itemmanager/Form/RepairMissingContribution.tpl
 msgid "Are you sure, create a clone of this contribution?"
-msgstr ""
+msgstr "Sind Sie sicher, dass Sie diese Zuwendung klonen möchten?"
 
 #: templates/CRM/Itemmanager/Form/RepairMissingContribution.tpl
 msgid ""
@@ -379,15 +1050,20 @@ msgid ""
 "    Change the required contribution status for the cloned dataset.\n"
 "  "
 msgstr ""
+"\n"
+"    Ändern Sie den gewünschten Zuwendungsstatus für den geklonten Datensatz.\n"
+"  "
 
 #: templates/CRM/Itemmanager/Form/RepairMissingContribution.tpl
 msgid "Lineitem"
 msgstr "Posten"
 
 #: templates/CRM/Itemmanager/Form/RepairMissingContribution.tpl
+#: templates/CRM/Itemmanager/Page/FutureContributionScan.tpl
+#: templates/CRM/Itemmanager/Page/ItemMaintenance.tpl
 #: templates/CRM/Itemmanager/Page/UpdateItems.tpl
 msgid "Total"
-msgstr ""
+msgstr "Gesamt"
 
 #: templates/CRM/Itemmanager/Page/Dashboard.tpl
 msgid "Item Dashboard"
@@ -399,7 +1075,7 @@ msgstr "Solawi Verlängerung"
 
 #: templates/CRM/Itemmanager/Page/Dashboard.tpl
 msgid "Link Sepa Payments"
-msgstr ""
+msgstr "SEPA-Zahlungen verknüpfen"
 
 #: templates/CRM/Itemmanager/Page/Dashboard.tpl
 msgid "Refresh"
@@ -407,56 +1083,165 @@ msgstr "Neu Laden"
 
 #: templates/CRM/Itemmanager/Page/Dashboard.tpl
 msgid "To start with a new set of monthly contributions click Renew Periods"
-msgstr "Um mit eine neue Mitgliedschaftsperiode zu beginnen, bitte 'Solawi Verlängern' klicken"
-
-#: templates/CRM/Itemmanager/Page/Dashboard.tpl
-msgid "Gebucht"
 msgstr ""
+"Um mit eine neue Mitgliedschaftsperiode zu beginnen, bitte 'Solawi "
+"Verlängern' klicken"
 
 #: templates/CRM/Itemmanager/Page/Dashboard.tpl
 msgid "This contact has no recorded line items."
-msgstr ""
+msgstr "Für diesen Kontakt sind keine Posten erfasst."
 
+#: templates/CRM/Itemmanager/Page/DashboardStub.tpl
+msgid "Booked"
+msgstr "Gebucht"
+
+#: templates/CRM/Itemmanager/Page/DashboardStub.tpl
+msgid "No line items found for this membership."
+msgstr "Keine Posten für diese Mitgliedschaft gefunden."
+
+#: templates/CRM/Itemmanager/Page/FutureContributionScan.tpl
+msgid "Future Item Scan"
+msgstr "Zukünftige Posten prüfen"
+
+#: templates/CRM/Itemmanager/Page/FutureContributionScan.tpl
+msgid ""
+"Scan future contributions for this contact and check line items for "
+"inconsistencies (label, price, date). Select filters and start the scan."
+msgstr ""
+"Zukünftige Zuwendungen für diesen Kontakt prüfen und Posten auf "
+"Abweichungen (Bezeichnung, Preis, Datum) untersuchen. Filter wählen und Scan starten."
+
+#: templates/CRM/Itemmanager/Page/FutureContributionScan.tpl
 #: templates/CRM/Itemmanager/Page/ItemMaintenance.tpl
-msgid "(In your native language) The current time is %1."
-msgstr ""
+msgid "From date"
+msgstr "Ab Datum"
 
+#: templates/CRM/Itemmanager/Page/FutureContributionScan.tpl
+#: templates/CRM/Itemmanager/Page/ItemMaintenance.tpl
 #: templates/CRM/Itemmanager/Page/UpdateItems.tpl
 msgid "Sync price items"
-msgstr ""
+msgstr "Preise abgleichen"
 
+#: templates/CRM/Itemmanager/Page/FutureContributionScan.tpl
+#: templates/CRM/Itemmanager/Page/ItemMaintenance.tpl
 #: templates/CRM/Itemmanager/Page/UpdateItems.tpl
 msgid "Harmonize date"
+msgstr "Datum angleichen"
+
+#: templates/CRM/Itemmanager/Page/FutureContributionScan.tpl
+#: templates/CRM/Itemmanager/Page/ItemMaintenance.tpl
+#: templates/CRM/Itemmanager/Page/UpdateItems.tpl
+msgid "Cleanup orphaned relations"
+msgstr "Verwaiste Zuordnungen bereinigen"
+
+#: templates/CRM/Itemmanager/Page/FutureContributionScan.tpl
+msgid "Check composition"
+msgstr "Zusammensetzung prüfen"
+
+#: templates/CRM/Itemmanager/Page/FutureContributionScan.tpl
+msgid "Start Scan"
+msgstr "Scan starten"
+
+#: templates/CRM/Itemmanager/Page/FutureContributionScan.tpl
+#: templates/CRM/Itemmanager/Page/ItemMaintenance.tpl
+msgid "Statistics"
+msgstr "Statistik"
+
+#: templates/CRM/Itemmanager/Page/FutureContributionScan.tpl
+#: templates/CRM/Itemmanager/Page/ItemMaintenance.tpl
+#: templates/CRM/Itemmanager/Page/UpdateItems.tpl
+msgid "Found items to be updated"
+msgstr "Zu aktualisierende Posten gefunden"
+
+#: templates/CRM/Itemmanager/Page/FutureContributionScan.tpl
+#: templates/CRM/Itemmanager/Page/ItemMaintenance.tpl
+#: templates/CRM/Itemmanager/Page/UpdateItems.tpl
+msgid "Unit price"
+msgstr "Einzelpreis"
+
+#: templates/CRM/Itemmanager/Page/FutureContributionScan.tpl
+#: templates/CRM/Itemmanager/Page/ItemMaintenance.tpl
+#: templates/CRM/Itemmanager/Page/UpdateItems.tpl
+msgid "Tax"
+msgstr "Steuer"
+
+#: templates/CRM/Itemmanager/Page/ItemMaintenance.tpl
+msgid ""
+"Analyze and update line items across all contacts with memberships. Select "
+"filters and a start date, then run the analysis."
 msgstr ""
+"Posten aller Kontakte mit Mitgliedschaften analysieren und aktualisieren. "
+"Filter und Startdatum wählen, dann Analyse starten."
+
+#: templates/CRM/Itemmanager/Page/ItemMaintenance.tpl
+msgid "Exclude Tags"
+msgstr "Tags ausschließen"
+
+#: templates/CRM/Itemmanager/Page/ItemMaintenance.tpl
+msgid "No tags available"
+msgstr "Keine Tags verfügbar"
+
+#: templates/CRM/Itemmanager/Page/ItemMaintenance.tpl
+msgid "Start Analysis"
+msgstr "Analyse starten"
+
+#: templates/CRM/Itemmanager/Page/ItemMaintenance.tpl
+msgid "Contact"
+msgstr "Kontakt"
+
+#: templates/CRM/Itemmanager/Page/ItemMaintenance.tpl
+msgid "Tags"
+msgstr "Tags"
+
+#: templates/CRM/Itemmanager/Page/ItemMaintenance.tpl
+#: templates/CRM/Itemmanager/Page/UpdateItems.tpl
+msgid "Referred to"
+msgstr "Bezug auf"
+
+#: templates/CRM/Itemmanager/Page/ItemmanagerSettingStub.tpl
+msgid "Item Name"
+msgstr "Posten Name"
+
+#: templates/CRM/Itemmanager/Page/ItemmanagerSettingStub.tpl
+msgid "Active On"
+msgstr "Aktiv ab"
+
+#: templates/CRM/Itemmanager/Page/ItemmanagerSettingStub.tpl
+msgid "Expire On"
+msgstr "Endet am"
+
+#: templates/CRM/Itemmanager/Page/ItemmanagerSettingStub.tpl
+msgid "Novitiate"
+msgstr "Neuzugang"
+
+#: templates/CRM/Itemmanager/Page/ItemmanagerSettingStub.tpl
+msgid "Bidding Round"
+msgstr "Bieterrunde"
+
+#: templates/CRM/Itemmanager/Page/ItemmanagerSettingStub.tpl
+msgid "Exception"
+msgstr "Ausnahme"
+
+#: templates/CRM/Itemmanager/Page/ItemmanagerSettingStub.tpl
+msgid "No price field items found for this period."
+msgstr "Keine Preisfeld-Posten für diese Periode gefunden."
+
+#: templates/CRM/Itemmanager/Page/LinkSepaPaymentsStub.tpl
+msgid "Contribution"
+msgstr "Zuwendung"
+
+#: templates/CRM/Itemmanager/Page/LinkSepaPaymentsStub.tpl
+msgid "Payments"
+msgstr "Bezahlungen"
+
+#: templates/CRM/Itemmanager/Page/LinkSepaPaymentsStub.tpl
+msgid "view payments"
+msgstr "Zahlungen anzeigen"
 
 #: templates/CRM/Itemmanager/Page/UpdateItems.tpl
 msgid "Preview"
 msgstr "Vorschau"
 
 #: templates/CRM/Itemmanager/Page/UpdateItems.tpl
-msgid "Found items to be updated"
-msgstr ""
-
-#: templates/CRM/Itemmanager/Page/UpdateItems.tpl
-msgid "Date"
-msgstr "Datum"
-
-#: templates/CRM/Itemmanager/Page/UpdateItems.tpl
-msgid "Referred to"
-msgstr ""
-
-#: templates/CRM/Itemmanager/Page/UpdateItems.tpl
-msgid "Unit price"
-msgstr ""
-
-#: templates/CRM/Itemmanager/Page/UpdateItems.tpl
-msgid "Tax"
-msgstr "Steuer"
-
-#: templates/CRM/Itemmanager/Page/UpdateItems.tpl
-msgid "change to"
-msgstr ""
-
-#: templates/CRM/Itemmanager/Page/UpdateItems.tpl
 msgid "Nothing there for updating. Please use filter options to see more."
-msgstr ""
+msgstr "Keine Einträge zum Aktualisieren. Bitte Filteroptionen verwenden."

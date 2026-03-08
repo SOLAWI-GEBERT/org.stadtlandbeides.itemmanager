@@ -53,3 +53,7 @@ cv en itemmanager
 ## Known Issues
 
 (* FIXME *)
+
+## Credits
+
+This extension integrates functionality from the [Line Item Editor](https://lab.civicrm.org/extensions/lineitemedit) extension (`biz.jmaconsulting.lineitemedit`) by **Monish Deb**, **Joe Murray** and **JMA Consulting** (support@jmaconsulting.biz). The line item add, edit and cancel features are based on their work, licensed under [AGPL-3.0](http://www.gnu.org/licenses/agpl-3.0.html).

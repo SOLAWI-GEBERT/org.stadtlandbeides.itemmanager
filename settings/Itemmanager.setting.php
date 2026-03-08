@@ -78,6 +78,18 @@ return array(
         'title' => E::ts('Shows the hidden periods in itemmanager settings'),
         'help_text' => E::ts('Select Yes to to make the hidden periods visible again'),
     ),
+    'line_item_number' => array(
+        'name' => 'line_item_number',
+        'type' => 'Integer',
+        'default' => 10,
+        'html_type' => 'text',
+        'title' => E::ts('Maximum additional line items'),
+        'is_domain' => 1,
+        'is_contact' => 0,
+        'description' => E::ts('Limits the number of lines shown'),
+        'settings_pages' => ['contribute' => ['weight' => 10]],
+        'on_change' => ['CRM_Itemmanager_Util_LineItemEditor::settingChange'],
+    ),
 );
 
 
