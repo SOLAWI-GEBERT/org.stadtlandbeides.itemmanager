@@ -582,6 +582,7 @@ class CRM_Itemmanager_Test_UpdateItemsTest extends CRM_Itemmanager_Test_Membersh
   ): array {
     $existing = $this->findLineItemFixture($contactId, $priceFieldValueId);
     if ($existing !== NULL) {
+      $this->ensureFinancialTrxnRecords($existing);
       return $existing;
     }
 
@@ -618,51 +619,62 @@ class CRM_Itemmanager_Test_UpdateItemsTest extends CRM_Itemmanager_Test_Membersh
     $created = $this->findLineItemFixture($contactId, $priceFieldValueId);
     $this->assertNotNull($created, 'Unable to create/fetch fixture line item for UpdateItems tests');
 
-    // Ensure EntityFinancialTrxn exists for the line item + contribution.
-    $lineItemId = (int) ($created['line_item']['id'] ?? 0);
-    $contributionId = (int) ($created['contribution']['id'] ?? 0);
-    if ($lineItemId && $contributionId) {
-      // Find any financial item for this line item.
-      $fi = civicrm_api3('FinancialItem', 'get', [
-        'entity_table' => CRM_Price_DAO_LineItem::getTableName(),
-        'entity_id' => $lineItemId,
-        'options' => ['limit' => 1],
-      ]);
-      if (!empty($fi['values'])) {
-        $fiRow = reset($fi['values']);
-        $fiId = (int) ($fiRow['id'] ?? 0);
-
-        $eft = civicrm_api3('EntityFinancialTrxn', 'get', [
-          'entity_table' => CRM_Financial_DAO_FinancialItem::getTableName(),
-          'entity_id' => $fiId,
-          'options' => ['limit' => 1],
-        ]);
-        if (empty($eft['count'])) {
-          civicrm_api3('EntityFinancialTrxn', 'create', [
-            'entity_table' => CRM_Financial_DAO_FinancialItem::getTableName(),
-            'entity_id' => $fiId,
-            'financial_trxn_id' => 1,
-            'amount' => $fiRow['amount'] ?? 0,
-          ]);
-        }
-
-        $eftContrib = civicrm_api3('EntityFinancialTrxn', 'get', [
-          'entity_table' => CRM_Contribute_DAO_Contribution::getTableName(),
-          'entity_id' => $contributionId,
-          'options' => ['limit' => 1],
-        ]);
-        if (empty($eftContrib['count'])) {
-          civicrm_api3('EntityFinancialTrxn', 'create', [
-            'entity_table' => CRM_Contribute_DAO_Contribution::getTableName(),
-            'entity_id' => $contributionId,
-            'financial_trxn_id' => 1,
-            'amount' => $fiRow['amount'] ?? 0,
-          ]);
-        }
-      }
-    }
+    $this->ensureFinancialTrxnRecords($created);
 
     return $created;
+  }
+
+  /**
+   * @param array{line_item: array, contribution: array} $fixture
+   */
+  private function ensureFinancialTrxnRecords(array $fixture): void {
+    $lineItemId = (int) ($fixture['line_item']['id'] ?? 0);
+    $contributionId = (int) ($fixture['contribution']['id'] ?? 0);
+    if (!$lineItemId || !$contributionId) {
+      return;
+    }
+
+    $contribTable = CRM_Contribute_DAO_Contribution::getTableName();
+    $fiTable = CRM_Financial_DAO_FinancialItem::getTableName();
+    $liTable = CRM_Price_DAO_LineItem::getTableName();
+    $amount = (float) ($fixture['line_item']['line_total'] ?? 0);
+
+    // Find or create a FinancialTrxn linked to this contribution.
+    $trxnId = (int) CRM_Core_DAO::singleValueQuery(
+      "SELECT financial_trxn_id FROM civicrm_entity_financial_trxn WHERE entity_table = %1 AND entity_id = %2 LIMIT 1",
+      [1 => [$contribTable, 'String'], 2 => [$contributionId, 'Integer']]
+    );
+    if (!$trxnId) {
+      CRM_Core_DAO::executeQuery(
+        "INSERT INTO civicrm_financial_trxn (from_financial_account_id, to_financial_account_id, total_amount, status_id, payment_instrument_id, trxn_date)
+         VALUES (1, 1, %1, 1, 4, NOW())",
+        [1 => [$amount, 'Float']]
+      );
+      $trxnId = (int) CRM_Core_DAO::singleValueQuery("SELECT LAST_INSERT_ID()");
+      CRM_Core_DAO::executeQuery(
+        "INSERT INTO civicrm_entity_financial_trxn (entity_table, entity_id, financial_trxn_id, amount) VALUES (%1, %2, %3, %4)",
+        [1 => [$contribTable, 'String'], 2 => [$contributionId, 'Integer'], 3 => [$trxnId, 'Integer'], 4 => [$amount, 'Float']]
+      );
+    }
+
+    // Ensure EntityFinancialTrxn for each FinancialItem of this line item.
+    $fiDao = CRM_Core_DAO::executeQuery(
+      "SELECT id, amount FROM civicrm_financial_item WHERE entity_table = %1 AND entity_id = %2",
+      [1 => [$liTable, 'String'], 2 => [$lineItemId, 'Integer']]
+    );
+    while ($fiDao->fetch()) {
+      $fiId = (int) $fiDao->id;
+      $existing = (int) CRM_Core_DAO::singleValueQuery(
+        "SELECT COUNT(*) FROM civicrm_entity_financial_trxn WHERE entity_table = %1 AND entity_id = %2",
+        [1 => [$fiTable, 'String'], 2 => [$fiId, 'Integer']]
+      );
+      if (!$existing) {
+        CRM_Core_DAO::executeQuery(
+          "INSERT INTO civicrm_entity_financial_trxn (entity_table, entity_id, financial_trxn_id, amount) VALUES (%1, %2, %3, %4)",
+          [1 => [$fiTable, 'String'], 2 => [$fiId, 'Integer'], 3 => [$trxnId, 'Integer'], 4 => [(float) $fiDao->amount, 'Float']]
+        );
+      }
+    }
   }
 
   /**

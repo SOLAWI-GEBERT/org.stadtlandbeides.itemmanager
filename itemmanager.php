@@ -133,41 +133,34 @@ function itemmanager_civicrm_links($op, $objectName, $objectId, &$links, &$mask,
 function itemmanager_civicrm_navigationMenu(&$menu) {
 
 
-//    $item_maintenance_url = 'civicrm/items/maintenance';
-//
-//    _sepa_civix_insert_navigation_menu($menu,'CiviMember',array(
-//        'label' => ts('Itemmanager Maintenance',array('domain' => 'org.stadtlandbeides.itemmanager')),
-//        'name' => 'Itemmanager Maintenance',
-//        'url' => $item_maintenance_url,
-//        'permission' => 'administer CiviMember',
-//        'operator' => NULL,
-//        'separator' => 2,
-//        'active' => 1
-//    ));
-
-    //add menu entry for Itemmanager settings to Administer>CiviContribute menu
-    $items_settings_url = 'civicrm/admin/setting/itemmanager';
-
-    _sepa_civix_insert_navigation_menu($menu, 'Administer/CiviMember',array (
-        'label' => ts('Itemmanager Settings',array('domain' => 'org.stadtlandbeides.itemmanager')),
-        'name' => 'Itemmanager Settings',
-        'url' => $items_settings_url,
+    _sepa_civix_insert_navigation_menu($menu, 'Administer/CiviMember', array(
+        'label' => ts('Itemmanager Maintenance', array('domain' => 'org.stadtlandbeides.itemmanager')),
+        'name' => 'Itemmanager Maintenance',
+        'url' => 'civicrm/items/maintenance',
         'permission' => 'administer CiviCRM',
         'operator' => NULL,
-        'separator' => 2,
-        'active' => 1
+        'separator' => 0,
+        'active' => 1,
     ));
 
-    $items_options_url = 'civicrm/admin/setting/itemmanageroptions';
-
-    _sepa_civix_insert_navigation_menu($menu, 'Administer/CiviMember',array (
-        'label' => ts('Itemmanager Options',array('domain' => 'org.stadtlandbeides.itemmanager')),
-        'name' => 'Itemmanager Options',
-        'url' => $items_options_url,
+    _sepa_civix_insert_navigation_menu($menu, 'Administer/CiviMember', array(
+        'label' => ts('Itemmanager Settings', array('domain' => 'org.stadtlandbeides.itemmanager')),
+        'name' => 'Itemmanager Settings',
+        'url' => 'civicrm/admin/setting/itemmanager',
         'permission' => 'administer CiviCRM',
         'operator' => NULL,
-        'separator' => 2,
-        'active' => 1
+        'separator' => 0,
+        'active' => 1,
+    ));
+
+    _sepa_civix_insert_navigation_menu($menu, 'Administer/CiviMember', array(
+        'label' => ts('Itemmanager Options', array('domain' => 'org.stadtlandbeides.itemmanager')),
+        'name' => 'Itemmanager Options',
+        'url' => 'civicrm/admin/setting/itemmanageroptions',
+        'permission' => 'administer CiviCRM',
+        'operator' => NULL,
+        'separator' => 0,
+        'active' => 1,
     ));
 
   _itemmanager_civix_navigationMenu($menu);

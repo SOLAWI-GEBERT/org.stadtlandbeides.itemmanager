@@ -101,6 +101,13 @@ abstract class CRM_Itemmanager_Test_SuiteSeededTestCase extends CRM_Itemmanager_
     // No per-test cleanup; handled once at shutdown.
   }
 
+  public static function tearDownAfterClass(): void {
+    // Reset suite-level flags so the next test class gets a fresh seed.
+    self::$suiteSeeded = FALSE;
+    self::$suiteSeedIds = [];
+    parent::tearDownAfterClass();
+  }
+
   public function cleanupSuiteSeeds(): void {
     $this->cleanupSeeds();
   }
