@@ -157,20 +157,15 @@ class CRM_Itemmanager_Test_ItemmanagerSettingFormTest extends CRM_Itemmanager_Te
     $this->assertSame('Unit Test Successor PriceSet', $selection[(int) $otherPeriod['id']]);
   }
 
-  public function testGetItemSelectionReturnsSuccessorFieldOptions(): void {
+  public function testStubGetItemSelectionReturnsSuccessorFieldOptions(): void {
     $priceSetId = (int) ($this->seedIds['price_set'][0] ?? 0);
     $financialTypeId = (int) ($this->seedIds['financial_type'][0] ?? 0);
     $membershipTypeId = (int) ($this->seedIds['membership_type'][0] ?? 0);
 
-    $priceFieldId = (int) ($this->seedIds['price_field'][0] ?? 0);
     $priceFieldValueId = (int) ($this->seedIds['price_field_value'][0] ?? 0);
 
     $this->assertNotSame(0, $priceSetId, 'Missing seeded price set.');
     $this->assertNotSame(0, $priceFieldValueId, 'Missing seeded price field value.');
-
-    $priceSet = civicrm_api3('PriceSet', 'getsingle', ['id' => $priceSetId]);
-    $priceField = civicrm_api3('PriceField', 'getsingle', ['id' => $priceFieldId]);
-    $priceFieldValue = civicrm_api3('PriceFieldValue', 'getsingle', ['id' => $priceFieldValueId]);
 
     $successorPriceSet = \Civi\Api4\PriceSet::create(FALSE)
       ->addValue('name', 'unit_test_priceset_item_successor')
@@ -220,12 +215,17 @@ class CRM_Itemmanager_Test_ItemmanagerSettingFormTest extends CRM_Itemmanager_Te
       'itemmanager_period_successor_id' => (int) $successorPeriod['id'],
     ]);
 
-    $form = new CRM_Itemmanager_Form_ItemmanagerSetting();
+    $stub = new CRM_Itemmanager_Page_ItemmanagerSettingStub();
 
     $selection = $this->invokePrivateMethod(
-      $form,
+      $stub,
       'getItemSelection',
-      [$priceSet, $priceField, $priceFieldValue, $currentPeriod]
+      [
+        \Civi\Api4\PriceSet::get(FALSE)->addWhere('id', '=', $priceSetId)->execute()->single(),
+        \Civi\Api4\PriceField::get(FALSE)->addWhere('price_set_id', '=', $priceSetId)->execute()->first(),
+        \Civi\Api4\PriceFieldValue::get(FALSE)->addWhere('id', '=', $priceFieldValueId)->execute()->single(),
+        $currentPeriod,
+      ]
     );
 
     $expectedLabel = '(Unit Test Item Successor) Unit Test Membership';
@@ -256,7 +256,6 @@ class CRM_Itemmanager_Test_ItemmanagerSettingFormTest extends CRM_Itemmanager_Te
 
     $itemSettings = $this->getPrivateProperty($form, '_itemSettings');
     $currentPeriod = $itemSettings[(int) $periodId];
-    $currentField = reset($currentPeriod['fields']);
 
     $durationOptions = $this->getPrivateProperty($form, '_duration_options');
     $durationKey = array_key_first($durationOptions);
@@ -268,14 +267,18 @@ class CRM_Itemmanager_Test_ItemmanagerSettingFormTest extends CRM_Itemmanager_Te
       $currentPeriod['element_period_hide'] => 1,
       $currentPeriod['element_period_reverse'] => 1,
       $currentPeriod['element_period_successor'] => 0,
-      $currentField['element_period_field_successor'] => 0,
-      $currentField['element_period_field_ignore'] => 1,
-      $currentField['element_period_field_extend'] => 1,
-      $currentField['element_period_field_novitiate'] => 1,
-      $currentField['element_period_field_bidding'] => 1,
-      $currentField['element_enable_period_exception'] => 1,
-      $currentField['element_exception_periods'] => 3,
     ];
+
+    $prefix = 'period_' . $settingId . '_field_' . $settingId . '_';
+    $savedPost = $_POST;
+    $_POST['stub_field_ids'] = [(string) $settingId];
+    $_POST[$prefix . 'successor'] = '0';
+    $_POST[$prefix . 'ignore'] = '1';
+    $_POST[$prefix . 'extend'] = '1';
+    $_POST[$prefix . 'novitiate'] = '1';
+    $_POST[$prefix . 'bidding'] = '1';
+    $_POST[$prefix . 'enable_period_exception'] = '1';
+    $_POST[$prefix . 'exception_periods'] = '3';
 
     $form->controller = new class($formValues) {
       private array $values;
@@ -289,7 +292,11 @@ class CRM_Itemmanager_Test_ItemmanagerSettingFormTest extends CRM_Itemmanager_Te
       }
     };
 
-    $form->postProcess();
+    try {
+      $form->postProcess();
+    } finally {
+      $_POST = $savedPost;
+    }
 
     $updatedPeriod = \Civi\Api4\ItemmanagerPeriods::get(FALSE)
       ->addWhere('id', '=', (int) $periodId)
@@ -336,18 +343,12 @@ class CRM_Itemmanager_Test_ItemmanagerSettingFormTest extends CRM_Itemmanager_Te
     $this->assertTrue($form->elementExists($period['element_period_successor']),
       'Successor select should exist');
 
-    // Verify field-level elements exist.
-    $field = reset($period['fields']);
-    $this->assertTrue($form->elementExists($field['element_period_field_ignore']),
-      'Ignore checkbox should exist');
-    $this->assertTrue($form->elementExists($field['element_period_field_extend']),
-      'Extend checkbox should exist');
-    $this->assertTrue($form->elementExists($field['element_period_field_novitiate']),
-      'Novitiate checkbox should exist');
-    $this->assertTrue($form->elementExists($field['element_period_field_bidding']),
-      'Bidding checkbox should exist');
-    $this->assertTrue($form->elementExists($field['element_enable_period_exception']),
-      'Period exception checkbox should exist');
+    // Verify stub_url is set for lazy loading field details.
+    $this->assertArrayHasKey('stub_url', $period, 'stub_url should be set for lazy loading');
+    $this->assertStringContainsString('period_id=' . $periodId, $period['stub_url']);
+
+    // Verify fields array is empty (loaded via AJAX stub).
+    $this->assertEmpty($period['fields'], 'Fields should be empty (loaded via stub)');
   }
 
   public function testGetRenderableElementNamesFiltersUnlabeledElements(): void {

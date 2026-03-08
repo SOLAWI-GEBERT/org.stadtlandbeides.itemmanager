@@ -43,19 +43,16 @@ class CRM_Itemmanager_Page_Dashboard extends CRM_Core_Page {
     }
 
   public function run() {
-    // Example: Set the page-title dynamically; alternatively, declare a static title in xml/Menu/*.xml
     CRM_Utils_System::setTitle(E::ts('Items Dashboard'));
 
-    //Deklaration
       $member_list = array();
       $error = False;
-      $max_time = max(ini_get('max_execution_time'),30);
 
       $this->assign('currentTime', date('Y-m-d H:i:s'));
       $this->_contact_id = CRM_Utils_Request::retrieve('cid', 'Integer');
       $this->assign('contact_id', $this->_contact_id);
 
-      // Get the given memberships
+      // Get the given memberships (lightweight — no line-item details)
       $member_array = CRM_Itemmanager_Util::getLastMemberShipsFullRecordByContactId($this->_contact_id);
 
       if($member_array['is_error'])
@@ -66,123 +63,15 @@ class CRM_Itemmanager_Page_Dashboard extends CRM_Core_Page {
           return;
       }
 
-
-    //compound membership with lineitems
     foreach ($member_array['values'] As $membership)
     {
-
-        $field_data = array();
-        $member_count = count($member_array['values']);
-        $max_time_member = 0.75 * $max_time / $member_count;
-        $time_start = microtime(true);
-        //dig into details of a membership
-        foreach ($membership['payinfo'] As $contribution_link)
-        {
-
-            //get the line items to the last contribution
-            $linerecords = CRM_Itemmanager_Util::getLineitemFullRecordByContributionId((int)$contribution_link['contribution_id']);
-            if($linerecords['is_error'])
-            {
-                $error = True;
-                $this->assign('data_error',$error);
-                $this->processError("ERROR",E::ts('Retrieve line items'),
-                    $linerecords['error_message']);
-                $this->processDetail($membership['typeinfo']['name'],
-                    (int)$contribution_link['contribution_id']);
-                continue; // better here to go on
-            }
-
-            $testcount = \Civi\Api4\Contribution::get(FALSE)
-                ->addWhere('id', '=', (int)$contribution_link['contribution_id'])
-                ->selectRowCount()
-                ->execute()
-                ->countMatched();
-            if($testcount == 0)
-            {
-                $error = True;
-                $this->assign('data_error',$error);
-                $this->processError("ERROR",E::ts('Missing contribution relation to membership'),
-                    $linerecords[0]);
-                $this->processDetail($membership['typeinfo']['name']. ' with relation ID ' . (int)$contribution_link['id'],
-                    (int)$contribution_link['contribution_id']);
-                continue; // better here to go on
-            }
-
-            $contribution = \Civi\Api4\Contribution::get(FALSE)
-                ->addSelect('receive_date')
-                ->addWhere('id', '=', (int)$contribution_link['contribution_id'])
-                ->execute()->single();
-            $contrib_date = $contribution['receive_date'];
-            $line_timestamp = date_create($contrib_date);
-
-            foreach ($linerecords As $lineitem) {
-
-                try {
-
-                    $max_field_id = CRM_Itemmanager_Util::getLastPricefieldSuccessor(
-                        $lineitem['valuedata']['id']);
-
-                    $line_date = $line_timestamp->format('Y-M');
-                    $field_id = $lineitem['fielddata']['id'];
-                    $item_quantity = $lineitem['linedata']['qty'];
-
-                    //new stuff
-                    if (!array_key_exists($max_field_id, $field_data))
-                        $field_data[$max_field_id] = array();
-                    $_field = &$field_data[$max_field_id];
-                    if (!array_key_exists($item_quantity, $_field)) {
-                        $_details = array(
-                            'item_quantity' => (string)$item_quantity,
-                            'item_label' => $lineitem['linedata']['label'],
-                            'item_dates' => array(),
-                            'min' => null,
-                            'max' => null,
-                        );
-                        $_field[$item_quantity] = $_details;
-                    }
-                    $_dates = &$_field[$item_quantity]['item_dates'];
-                    $_dates[] = $line_date;
-                    $_field[$item_quantity]['min'] = min($_dates);
-                    $_field[$item_quantity]['max'] = max($_dates);
-
-
-                } catch (Exception $e) {
-
-                    $error = True;
-                    $this->assign('data_error',$error);
-                    $this->processError("ERROR",E::ts('Combine line items'),
-                        $e->getMessage());
-                    $this->processDetail($membership['typeinfo']['name'],
-                        (int)$contribution_link['contribution_id'],
-                        $lineitem['linedata']['label']);
-                    return;
-                }
-
-                $time_end = microtime(true);
-                $execution_time = ($time_end - $time_start);
-                if($execution_time > $max_time_member)
-                    break;
-
-            }//foreach ($linerecords As $lineitem)
-
-            $time_end = microtime(true);
-            $execution_time = ($time_end - $time_start);
-            if($execution_time > $max_time_member)
-                break;
-
-        }
-
         $member_list[] = array(
-            'field_data' => $field_data,
+            'membership_id' => (int)$membership['memberdata']['id'],
             'member_name' => $membership['typeinfo']['name'],
             'status' => $membership['status'],
             'active' => $membership['member_active'],
         );
-
-
-    }//foreach ($member_array['values'] As $membership)
-
-
+    }
 
       $this->assign('member_list',$member_list);
       $this->assign("group_refresh", CRM_Utils_System::url('civicrm/items/tab', "reset=1&force=1&cid={$this->_contact_id}"));

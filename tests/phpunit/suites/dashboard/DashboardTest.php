@@ -165,31 +165,14 @@ class CRM_Itemmanager_Test_DashboardTest extends CRM_Itemmanager_Test_Membership
     if (!empty($memberList)) {
       $firstMember = reset($memberList);
       $this->assertIsArray($firstMember);
-      $this->assertArrayHasKey('field_data', $firstMember);
+      $this->assertArrayHasKey('membership_id', $firstMember);
       $this->assertArrayHasKey('member_name', $firstMember);
       $this->assertArrayHasKey('status', $firstMember);
       $this->assertArrayHasKey('active', $firstMember);
 
+      $this->assertGreaterThan(0, $firstMember['membership_id']);
       $this->assertNotEmpty($firstMember['member_name']);
       $this->assertNotEmpty($firstMember['status']);
-
-      $fieldData = $firstMember['field_data'];
-      $this->assertIsArray($fieldData);
-      $this->assertNotEmpty($fieldData);
-
-      $firstFieldGroup = reset($fieldData);
-      $this->assertIsArray($firstFieldGroup);
-      $firstQuantityGroup = reset($firstFieldGroup);
-      $this->assertIsArray($firstQuantityGroup);
-
-      $this->assertArrayHasKey('item_quantity', $firstQuantityGroup);
-      $this->assertArrayHasKey('item_label', $firstQuantityGroup);
-      $this->assertArrayHasKey('item_dates', $firstQuantityGroup);
-      $this->assertArrayHasKey('min', $firstQuantityGroup);
-      $this->assertArrayHasKey('max', $firstQuantityGroup);
-      $this->assertNotEmpty($firstQuantityGroup['item_dates']);
-      $this->assertNotEmpty($firstQuantityGroup['min']);
-      $this->assertNotEmpty($firstQuantityGroup['max']);
     }
   }
 
@@ -301,15 +284,11 @@ class CRM_Itemmanager_Test_DashboardTest extends CRM_Itemmanager_Test_Membership
       'member_list should contain at least one membership');
 
     foreach ($memberList as $entry) {
-      $this->assertArrayHasKey('field_data', $entry);
+      $this->assertArrayHasKey('membership_id', $entry);
       $this->assertArrayHasKey('member_name', $entry);
       $this->assertArrayHasKey('status', $entry);
+      $this->assertGreaterThan(0, $entry['membership_id']);
     }
-
-    // Verify the membership has contribution data (payinfo) from both orders.
-    $firstMember = reset($memberList);
-    $fieldData = $firstMember['field_data'] ?? [];
-    $this->assertNotEmpty($fieldData, 'field_data should contain line item entries');
   }
 
   // ---------------------------------------------------------------
@@ -416,16 +395,11 @@ class CRM_Itemmanager_Test_DashboardTest extends CRM_Itemmanager_Test_Membership
     $this->assertIsArray($memberList);
     $this->assertNotEmpty($memberList, 'member_list should be populated');
 
-    // field_data keys should use the successor-resolved PFV id.
+    // Dashboard now only provides lightweight membership metadata.
     $firstMember = reset($memberList);
-    $fieldData = $firstMember['field_data'] ?? [];
-    $this->assertIsArray($fieldData);
-
-    if (!empty($fieldData)) {
-      // The key should be the resolved successor id (which is pfvId itself here).
-      $this->assertArrayHasKey($pfvId, $fieldData,
-        'field_data should be keyed by successor-resolved PFV id');
-    }
+    $this->assertArrayHasKey('membership_id', $firstMember);
+    $this->assertArrayHasKey('member_name', $firstMember);
+    $this->assertGreaterThan(0, $firstMember['membership_id']);
   }
 
   public function testProcessHelpersAssignExpectedDetailFields(): void {

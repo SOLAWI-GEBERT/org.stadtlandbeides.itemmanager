@@ -11,14 +11,33 @@ abstract class CRM_Itemmanager_Test_MembershipSeededTestCase extends CRM_Itemman
   public function setUp(): void {
     parent::setUp();
 
-    if (!self::$membershipSeeded) {
+    $needsSeed = !self::$membershipSeeded;
+
+    if (!$needsSeed) {
+      $contactId = self::$membershipSeedIds['member_contact'][0] ?? 0;
+      if ($contactId) {
+        $exists = \Civi\Api4\Contact::get(FALSE)
+          ->addWhere('id', '=', $contactId)
+          ->execute()->first();
+        if (empty($exists['id'])) {
+          $needsSeed = TRUE;
+        }
+      }
+      else {
+        $needsSeed = TRUE;
+      }
+    }
+
+    if ($needsSeed) {
       $this->seedMembership();
       self::$membershipSeeded = TRUE;
-      self::$membershipSeedIds = $this->seedIds;
+      // Only store membership-specific keys.
+      self::$membershipSeedIds = array_intersect_key($this->seedIds,
+        array_flip(['member_contact', 'order']));
     }
     else {
-      // Reuse membership seed ids.
-      $this->seedIds = array_merge($this->seedIds, self::$membershipSeedIds);
+      // Add membership keys without overwriting fresh base IDs.
+      $this->seedIds = $this->seedIds + self::$membershipSeedIds;
     }
   }
 
@@ -80,26 +99,15 @@ abstract class CRM_Itemmanager_Test_MembershipSeededTestCase extends CRM_Itemman
   }
 
   public function tearDown(): void {
-    if (!empty($this->seedIds['order'])) {
-      foreach ($this->seedIds['order'] as $orderId) {
-        if (!empty($orderId) && is_numeric($orderId)) {
-          try {
-            civicrm_api3('Order', 'delete', ['id' => (int) $orderId]);
-          }
-          catch (Exception $e) {
-            // ignore cleanup errors
-          }
-        }
-      }
-    }
-
-    if (!empty($this->seedIds['member_contact'])) {
-      \Civi\Api4\Contact::delete(FALSE)
-        ->addWhere('id', 'IN', $this->seedIds['member_contact'])
-        ->execute();
-    }
-
+    // No per-test cleanup for shared membership seed data.
+    // Cleanup happens via TransactionalInterface rollback or at script shutdown.
     parent::tearDown();
+  }
+
+  public static function tearDownAfterClass(): void {
+    self::$membershipSeeded = FALSE;
+    self::$membershipSeedIds = [];
+    parent::tearDownAfterClass();
   }
 
 }

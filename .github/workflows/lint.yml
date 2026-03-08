@@ -57,4 +57,4 @@ jobs:
       run: npm install --no-save eslint@8
 
     - name: JavaScript Syntax Check
-      run: npx eslint --no-eslintrc --env browser,jquery --global CRM js/
+      run: npx eslint --no-eslintrc --env browser,jquery --parser-options=ecmaVersion:2017 --global CRM js/

@@ -128,99 +128,6 @@ class CRM_Itemmanager_Form_ItemmanagerSetting extends CRM_Core_Form {
                 ['flex-grow'=> 1,'style'=>'width:300px',],
             )->setSelected($period['successor']);
 
-            foreach ($period['fields'] as $field)
-            {
-                $ignoreparam = array('value' => $field['ignore']);
-
-                if($field['ignore'] == 1)
-                {
-                    $ignoreparam['checked'] = 1;
-                }
-
-                 $this->addElement(
-                    'advcheckbox',
-                    $field['element_period_field_ignore'],
-                     E::ts('Ignore'),
-                )->setChecked($field['ignore'] == 1);
-
-
-                $extendparam = array('value' => $field['extend']);
-
-                if($field['extend'] == 1)
-                {
-                    $extendparam['checked'] = 1;
-                }
-
-                $this->addElement(
-                    'advcheckbox',
-                    $field['element_period_field_extend'],
-                    E::ts('Extend'),
-                )->setChecked($field['extend'] == 1);
-
-
-                $novitiate = array('value' => $field['novitiate']);
-                if($field['novitiate'] == 1)
-                {
-                    $novitiate['checked'] = 1;
-                }
-
-
-                $this->addElement(
-                    'advcheckbox',
-                    $field['element_period_field_novitiate'],
-                    E::ts('Novitiate'),
-                )->setChecked($field['novitiate'] == 1);
-
-
-                $bidding = array('value' => $field['bidding']);
-                if($field['bidding'] == 1)
-                {
-                    $bidding['checked'] = 1;
-                }
-
-                $this->addElement(
-                    'advcheckbox',
-                    $field['element_period_field_bidding'],
-                    E::ts('Bidding round'),
-                )->setChecked($field['bidding'] == 1);
-
-                $enable_period_exception = array('value' => $field['enable_period_exception']);
-                if($field['enable_period_exception'] == 1)
-                {
-                    $enable_period_exception['checked'] = 1;
-                }
-
-
-                $this->addElement(
-                    'advcheckbox',
-                    $field['element_enable_period_exception'],
-                    E::ts('Enable Period Exception Case'),
-                )->setChecked($field['enable_period_exception'] == 1);
-
-                $exception_periodsattributes = array(
-                    'placeholder' => 1,
-                    'size'=>"5",
-                    'value' => $field['exception_periods'] ,
-                );
-
-                $this->add(
-                    'text',
-                    $field['element_exception_periods']  ,
-                    E::ts('Exception Periods'),
-                    $exception_periodsattributes,
-                    False,
-                );
-
-                $this->add(
-                    'select',
-                    $field['element_period_field_successor'],
-                    E::ts('Successor'),
-                    $field['selection'], // list of options
-                    False, // is required
-                    ['flex-grow'=> 1,'style'=>'width:300px',],
-                )->setSelected($field['successor']);
-
-            }
         }
 
 
@@ -233,16 +140,13 @@ class CRM_Itemmanager_Form_ItemmanagerSetting extends CRM_Core_Form {
         ),
         [
             'type' => 'done',
-            'name' => ts('Synchronize'),
-            'js' => ['onclick' => "CRM.status(ts('Synchronizing...')); location.href='civicrm/admin/setting/itemmanager';"],
-            'subName' => 'sync',
-        ],
-        [
-            'type' => 'done',
             'name' => ts('Cancel'),
             'subName' => 'cancel',
         ],
     ));
+
+    $this->assign('sync_url', CRM_Utils_System::url('civicrm/admin/setting/itemmanagersync', '', FALSE, NULL, FALSE));
+    $this->assign('settings_url', CRM_Utils_System::url('civicrm/admin/setting/itemmanager', 'reset=1'));
 
     CRM_Core_Resources::singleton()
          ->addStyleFile('org.stadtlandbeides.itemmanager', 'css/setting.css', 200, 'html-header');
@@ -258,78 +162,6 @@ class CRM_Itemmanager_Form_ItemmanagerSetting extends CRM_Core_Form {
 
 
     parent::buildQuickForm();
-  }
-
-
-    /**
-     * Returns a drop down selection for the possible successor
-     *
-     * @param $priceset array current priceset array
-     * @param $pricefield array current price field array
-     * @param $pricefieldvalue array current price field value array
-     */
-  private function getItemSelection($priceset,$pricefield,$pricefieldvalue,$itemmanager_period)
-  {
-      $selection = $this->getEmptySelection();
-
-      try {
-          $priceset_records = \Civi\Api4\PriceSet::get(FALSE)
-              ->addWhere('financial_type_id', '=', $priceset['financial_type_id'])
-              ->execute();
-          if ($priceset_records->count() <= 1)
-              return $this->getEmptySelection();
-
-          $successor_id = $itemmanager_period['itemmanager_period_successor_id'];
-
-          $itemmperiod_successor = \Civi\Api4\ItemmanagerPeriods::get(FALSE)
-              ->addWhere('id', '=', $successor_id)
-              ->execute()->first();
-
-          //Now generate the selections
-          foreach ($priceset_records as $selectedpriceset)
-          {
-              //ignore own dataset or successor price set
-              if($priceset['id'] == $selectedpriceset['id'] or
-                  (isset($itemmperiod_successor) and
-                      $selectedpriceset['id'] != $itemmperiod_successor['price_set_id'])
-                        and $successor_id != 0 )
-                  continue;
-
-              $pricefield_records = \Civi\Api4\PriceField::get(FALSE)
-                  ->addWhere('price_set_id', '=', $selectedpriceset['id'])
-                  ->execute();
-
-              foreach ($pricefield_records as $selectedpricefield)
-              {
-                  $pricefield_values_records = \Civi\Api4\PriceFieldValue::get(FALSE)
-                      ->addWhere('price_field_id', '=', $selectedpricefield['id'])
-                      ->addWhere('financial_type_id', '=', $pricefieldvalue['financial_type_id'])
-                      ->addWhere('membership_type_id', '=', $pricefieldvalue['membership_type_id'])
-                      ->execute();
-
-                  foreach ($pricefield_values_records as $selectedpricefieldvalue)
-                  {
-                      $settings = new CRM_Itemmanager_BAO_ItemmanagerSettings();
-                      $settings->get('price_field_value_id',$selectedpricefieldvalue['id']);
-
-                      $selection[(int)$settings->id] = '('.$selectedpriceset['title'].') '.$selectedpricefieldvalue['label'];
-                  }
-
-
-              }
-
-
-          }
-
-
-
-      } catch (\CRM_Core_Exception $e) {
-          $this->_errormessages[] = $e->getMessage();
-          return $this->getEmptySelection();
-      }
-
-
-      return $selection;
   }
 
 
@@ -402,29 +234,16 @@ class CRM_Itemmanager_Form_ItemmanagerSetting extends CRM_Core_Form {
      */
   public function preProcess()
   {
-     if(isset($this->_submitValues['_qf_ItemmanagerSetting_done_sync']))
-     {
-         parent::preProcess();
-         return;
-     }
-
 
 
       try {
 
           $hiddenshowoption = CRM_Itemmanager_Util::getSetting('itemmanager_show_hiden_periods');
 
-
-          //get all periods first
-          $itemmanager_periods = \Civi\Api4\ItemmanagerPeriods::get()
-              ->setCheckPermissions(FALSE)
-              ->execute();//now we build the nested array for the form
-
+          $itemmanager_periods = \Civi\Api4\ItemmanagerPeriods::get(FALSE)
+              ->execute();
 
           foreach ($itemmanager_periods as $itemmanager_period) {
-
-
-
 
               $itemmanager_period_id = $itemmanager_period['id'];
 
@@ -432,16 +251,10 @@ class CRM_Itemmanager_Form_ItemmanagerSetting extends CRM_Core_Form {
 
               if($hide and !$hiddenshowoption)
               {
-
                   continue;
               }
 
               $reverse = $itemmanager_period['reverse'];
-
-              $itemmanager_price_fields = \Civi\Api4\ItemmanagerSettings::get()
-                  ->addWhere('itemmanager_periods_id', '=', $itemmanager_period_id)
-                  ->setCheckPermissions(FALSE)
-                  ->execute();
 
               $priceset = \Civi\Api4\PriceSet::get(FALSE)
                   ->addWhere('id', '=', (int)$itemmanager_period['price_set_id'])
@@ -451,92 +264,13 @@ class CRM_Itemmanager_Form_ItemmanagerSetting extends CRM_Core_Form {
                   continue;
               }
 
-
-              //populate the priceset successor selection
               $successor_selection = $this->getPeriodSelection($itemmanager_period,$priceset);
 
               $period_start_on_raw = date_create($itemmanager_period['period_start_on']);
 
-              $period_start_on = CRM_Utils_Date::customFormat($period_start_on_raw->format('Y-m-d'),
-                  Civi::settings()->get('dateformatshortdate'));
-
-              $field_list = array();
-              foreach ($itemmanager_price_fields As $itemmanager_price_field)
-              {
-                  $itemmanager_id = $itemmanager_price_field['id'];
-
-                  //check still if exists
-                  $pricefieldvalue = \Civi\Api4\PriceFieldValue::get(FALSE)
-                      ->addWhere('id', '=', (int)$itemmanager_price_field['price_field_value_id'])
-                      ->execute()->first();
-                  if (!$pricefieldvalue) {
-                      continue;
-                  }
-
-                  $pricefield = \Civi\Api4\PriceField::get(FALSE)
-                      ->addWhere('id', '=', (int)$pricefieldvalue['price_field_id'])
-                      ->execute()->first();
-                  if (!$pricefield) {
-                      $this->_errormessages[] = 'Could not get the price field ' .
-                          (int)$pricefieldvalue['price_field_id'];
-                      continue;
-                  }
-
-                  //just copy field data for info
-                  if(isset($pricefield['active_on']))
-                      $active_on = CRM_Utils_Date::customFormat(date_create(
-                          $pricefield['active_on'])->format('Y-m-d'),
-                          Civi::settings()->get('dateformatshortdate'));
-                  else
-                      $active_on = "-";
-                  if(isset($pricefield['expire_on']))
-                      $expire_on = CRM_Utils_Date::customFormat(date_create(
-                          $pricefield['expire_on'])->format('Y-m-d'),
-                          Civi::settings()->get('dateformatshortdate'));
-                  else
-                      $expire_on = "-";
-
-                  $field_collection = array(
-                      'manager_id' => (int)$itemmanager_id,
-                      'field_label' => $pricefieldvalue['label'],
-                      'active_on' => $active_on,
-                      'expire_on' => $expire_on,
-                      'isactive' => $pricefield['is_active'] == 1? ts('Active'):'',
-                      'ignore' => (int)$itemmanager_price_field['ignore'],
-                      'extend' => (int)$itemmanager_price_field['extend'],
-                      'novitiate' => (int)$itemmanager_price_field['novitiate'],
-                      'bidding' => (int)$itemmanager_price_field['bidding'],
-                      'enable_period_exception' => (int)$itemmanager_price_field['enable_period_exception'],
-                      'exception_periods' => (int)$itemmanager_price_field['exception_periods'],
-                      'successor' => (int)$itemmanager_price_field['itemmanager_successor_id'],
-                      'selection' => $this->getItemSelection($priceset,$pricefield,$pricefieldvalue, $itemmanager_period),
-                      'element_period_field_successor' => 'period_'.$itemmanager_id.
-                          '_field_'.$itemmanager_id.'_successor',
-                     'element_period_field_ignore' => 'period_'.$itemmanager_id.
-                         '_field_'.$itemmanager_id.'_ignore',
-                     'element_period_field_extend' => 'period_'.$itemmanager_id.
-                          '_field_'.$itemmanager_id.'_extend',
-                     'element_period_field_novitiate' => 'period_'.$itemmanager_id.
-                         '_field_'.$itemmanager_id.'_novitiate',
-                      'element_period_field_bidding' => 'period_'.$itemmanager_id.
-                          '_field_'.$itemmanager_id.'_bidding',
-                      'element_enable_period_exception' => 'period_'.$itemmanager_id.
-                          '_field_'.$itemmanager_id.'_enable_period_exception',
-                      'element_exception_periods' => 'period_'.$itemmanager_id.
-                          '_field_'.$itemmanager_id.'_exception_periods',
-
-
-                 );
-
-                  $field_list[$itemmanager_id] = $field_collection;
-              }
-
-
-
               $form_collection = array(
                   'price_label' => $priceset['title'],
                   'periods_id' => (int)$itemmanager_period_id,
-                  'period_start_on' => $period_start_on,
                   'period_start_on_raw' => $period_start_on_raw,
                   'periods' => $itemmanager_period['periods'],
                   'period_type' => $itemmanager_period['period_type'],
@@ -544,23 +278,28 @@ class CRM_Itemmanager_Form_ItemmanagerSetting extends CRM_Core_Form {
                   'hide' => (int)$hide,
                   'reverse' => (int)$reverse,
                   'selection' => $successor_selection,
-                  'fields' => $field_list,
-                  'element_period_start_on' => 'period_'.$itemmanager_id.'_period_start_on',
-                  'element_period_periods' => 'period_'.$itemmanager_id.'_periods',
-                  'element_period_interval' => 'period_'.$itemmanager_id.'_interval',
-                  'element_period_type' => 'period_'.$itemmanager_id.'_type',
-                  'element_period_successor' => 'period_'.$itemmanager_id.'_successor',
-                  'element_period_hide' => 'period_'.$itemmanager_id.'_hide',
-                  'element_period_reverse' => 'period_'.$itemmanager_id.'_reverse',
+                  'fields' => [],
+                  'element_period_start_on' => 'period_'.$itemmanager_period_id.'_period_start_on',
+                  'element_period_periods' => 'period_'.$itemmanager_period_id.'_periods',
+                  'element_period_interval' => 'period_'.$itemmanager_period_id.'_interval',
+                  'element_period_type' => 'period_'.$itemmanager_period_id.'_type',
+                  'element_period_successor' => 'period_'.$itemmanager_period_id.'_successor',
+                  'element_period_hide' => 'period_'.$itemmanager_period_id.'_hide',
+                  'element_period_reverse' => 'period_'.$itemmanager_period_id.'_reverse',
+                  'stub_url' => CRM_Utils_System::url('civicrm/admin/setting/itemmanagerstub',
+                      "action=browse&period_id={$itemmanager_period_id}"),
               );
 
               $this->_itemSettings[$itemmanager_period_id] = $form_collection;
-
-
           }
       } catch (Exception $e) {
           $this->_errormessages[] = $e->getMessage();
       }
+
+      $priceset_count = \Civi\Api4\PriceSet::get(FALSE)->selectRowCount()->execute()->countMatched();
+      $period_count = \Civi\Api4\ItemmanagerPeriods::get(FALSE)->selectRowCount()->execute()->countMatched();
+      $unsynced_count = $priceset_count - $period_count;
+      $this->assign('unsynced_count', $unsynced_count > 0 ? $unsynced_count : 0);
 
       $this->assign('errormessages',$this->_errormessages);
       $this->assign('itemsettings',$this->_itemSettings);
@@ -570,153 +309,10 @@ class CRM_Itemmanager_Form_ItemmanagerSetting extends CRM_Core_Form {
   }
 
     /**
-     *  Install an exact representation of the price set and price fields
-     */
-    private function syncItemmanager()
-    {
-
-
-        try {
-
-            $pricefield_values_records = \Civi\Api4\PriceFieldValue::get(FALSE)
-                ->addSelect('id')
-                ->setLimit(0)
-                ->execute();
-
-            $priceset_records = \Civi\Api4\PriceSet::get(FALSE)
-                ->addSelect('id')
-                ->setLimit(0)
-                ->execute();
-
-            $itemmanager_periods = \Civi\Api4\ItemmanagerPeriods::get()
-                ->addSelect('price_set_id')
-                ->setCheckPermissions(FALSE)
-                ->execute()
-                ->indexBy('price_set_id');
-
-            $pricefield_value_ids = $pricefield_values_records->column('id');
-            $priceset_ids = $priceset_records->column('id');
-            $itemmanager_price_set_ids = array_column($itemmanager_periods->getArrayCopy(),'price_set_id');
-
-
-            //now we wanna sync the pricesets with our extension
-            foreach ($itemmanager_price_set_ids as $itemmanager_price_set_id) {
-
-                if(!in_array((int)$itemmanager_price_set_id,$priceset_ids))
-                {
-                    \Civi\Api4\ItemmanagerPeriods::delete()
-                        ->addWhere('id','=',$itemmanager_price_set_id)
-                        ->setCheckPermissions(FALSE)
-                        ->execute();
-                }
-
-            }
-
-            $transaction = new CRM_Core_Transaction();
-            try {
-                foreach ($priceset_ids as $set_id) {
-                    if (!in_array((int)$set_id, $itemmanager_price_set_ids)) {
-
-                        $newperiod = new CRM_Itemmanager_BAO_ItemmanagerPeriods();
-                        $newperiod->price_set_id = (int)$set_id;
-                        $newperiod->period_start_on = date_create('2000-01-01')->format('Ymd');
-                        $newperiod->periods = 1;
-                        $newperiod->period_type = 1;
-                        $newperiod->save();
-
-                    }
-
-                }
-            } catch (Exception $e) {
-                $transaction->rollback();
-                $this->_errormessages[] = "An error occurred renewing a payment plan: " . $e->getMessage();
-            }
-            $transaction->commit();
-
-            $itemmanager_price_fields = \Civi\Api4\ItemmanagerSettings::get()
-                ->addSelect('price_field_value_id')
-                ->setCheckPermissions(FALSE)
-                ->execute()
-                ->indexBy('price_field_value_id');
-
-            $itemmanager_price_fields_ids = array_column($itemmanager_price_fields->getArrayCopy(),'price_field_value_id');
-
-            foreach ($itemmanager_price_fields_ids as $field_id)
-            {
-                if(!in_array((int)$field_id,$pricefield_value_ids))
-                {
-                    \Civi\Api4\ItemmanagerSettings::delete()
-                        ->addWhere('id',"=","$field_id")
-                        ->setCheckPermissions(FALSE)
-                        ->execute();
-                }
-
-            }
-
-
-            foreach ($pricefield_value_ids as $field_id)
-            {
-                if(!in_array((int)$field_id,$itemmanager_price_fields_ids)) {
-
-                    $field_infos = CRM_Itemmanager_Util::getPriceSetRefByFieldValueId($field_id);
-
-                    if ($field_infos['iserror'] == 1) {
-                        $this->_errormessages[] = 'Could not get the full record for price field value '.$field_id;
-                        continue;
-                    }
-
-
-                    if (!isset($field_infos['price_id']))
-                    {
-                        $this->_errormessages[] = 'Could not get the full record for price field value '.$field_id;
-                        continue;
-                    }
-
-                    $price_set = $field_infos['price_id'];
-
-                    $period = new CRM_Itemmanager_BAO_ItemmanagerPeriods();
-                    $valid = $period->get('price_set_id',(int)$price_set);
-                    if(!$valid or $period->id == 0)
-                    {
-                        $this->_errormessages[] = 'No Itemmanager periods found with id '.(int)$price_set;
-                        continue;
-                    }
-
-                    $itemsetting = new CRM_Itemmanager_BAO_ItemmanagerSettings();
-                    $itemsetting->price_field_value_id = (int)$field_id;
-                    $itemsetting->itemmanager_periods_id = (int)$period->id;
-                    $itemsetting->save();
-                }
-
-            }
-
-
-        } catch (\CRM_Core_Exception $e) {
-
-            $this->_errormessages[] = $e->getMessage();
-        }
-
-    }
-
-
-    /**
      * Update the settings records from form
      */
     public function postProcess() {
         $formvalues = $this->controller->exportValues($this->_name);
-
-        if(isset($this->_submitValues['_qf_ItemmanagerSetting_done_sync']))
-        {
-            $this->syncItemmanager();
-            CRM_Core_Session::setStatus(ts("Synchronized."), ts('Start', array('domain' => 'org.stadtlandbeides.itemmanager')),
-                'success');
-            parent::postProcess();
-            $admin_url = CRM_Utils_System::url('civicrm/admin', "reset=1");
-            CRM_Utils_System::redirect($admin_url);
-
-            return;
-        }
-
 
         try {
             foreach ($this->_itemSettings as $period) {
@@ -752,39 +348,35 @@ class CRM_Itemmanager_Form_ItemmanagerSetting extends CRM_Core_Form {
                 $update_period->itemmanager_period_successor_id = $period_successor;
                 $update_period->update();
 
-                foreach ($period['fields'] as $field) {
+            }
 
-                    $successor = isset($formvalues[$field['element_period_field_successor']])? (int)$formvalues[$field['element_period_field_successor']]: (int)$field['successor'];
-
-                    $ignore = isset($formvalues[$field['element_period_field_ignore']]) ?
-                        (int)$formvalues[$field['element_period_field_ignore']] : (int)$field['ignore'];
-
-                    $extend = isset($formvalues[$field['element_period_field_extend']]) ?
-                        (int)$formvalues[$field['element_period_field_extend']] : (int)$field['extend'];
-
-                    $novitiate = isset($formvalues[$field['element_period_field_novitiate']]) ?
-                        (int)$formvalues[$field['element_period_field_novitiate']] : (int)$field['novitiate'];
-                    $bidding = isset($formvalues[$field['element_period_field_bidding']]) ?
-                        (int)$formvalues[$field['element_period_field_bidding']] : (int)$field['bidding'];
-                    $enable_period_exception = isset($formvalues[$field['element_enable_period_exception']]) ?
-                        (int)$formvalues[$field['element_enable_period_exception']] : (int)$field['enable_period_exception'];
-                    $exception_periods = isset($formvalues[$field['element_exception_periods']]) ?
-                        (int)$formvalues[$field['element_exception_periods']] : (int)$field['exception_periods'];
-
-                    $update_manager = new CRM_Itemmanager_BAO_ItemmanagerSettings();
-                    $update_manager->id = (int)$field['manager_id'];
-                    $update_manager->itemmanager_successor_id = $successor;
-                    $update_manager->ignore = $ignore == 1;
-                    $update_manager->extend = $extend == 1;
-                    $update_manager->novitiate = $novitiate == 1;
-                    $update_manager->bidding = $bidding == 1;
-                    $update_manager->enable_period_exception = $enable_period_exception == 1;
-                    $update_manager->exception_periods = $exception_periods;
-                    $update_manager->update();
-
-
+            $stub_field_ids = $_POST['stub_field_ids'] ?? [];
+            foreach ($stub_field_ids as $field_id) {
+                $field_id = (int) $field_id;
+                if ($field_id <= 0) {
+                    continue;
                 }
 
+                $prefix = 'period_' . $field_id . '_field_' . $field_id . '_';
+
+                $successor = (int) ($_POST[$prefix . 'successor'] ?? 0);
+                $ignore = isset($_POST[$prefix . 'ignore']) ? 1 : 0;
+                $extend = isset($_POST[$prefix . 'extend']) ? 1 : 0;
+                $novitiate = isset($_POST[$prefix . 'novitiate']) ? 1 : 0;
+                $bidding = isset($_POST[$prefix . 'bidding']) ? 1 : 0;
+                $enable_period_exception = isset($_POST[$prefix . 'enable_period_exception']) ? 1 : 0;
+                $exception_periods = (int) ($_POST[$prefix . 'exception_periods'] ?? 0);
+
+                $update_manager = new CRM_Itemmanager_BAO_ItemmanagerSettings();
+                $update_manager->id = $field_id;
+                $update_manager->itemmanager_successor_id = $successor;
+                $update_manager->ignore = $ignore == 1;
+                $update_manager->extend = $extend == 1;
+                $update_manager->novitiate = $novitiate == 1;
+                $update_manager->bidding = $bidding == 1;
+                $update_manager->enable_period_exception = $enable_period_exception == 1;
+                $update_manager->exception_periods = $exception_periods;
+                $update_manager->update();
             }
         } catch (Exception $e) {
 
@@ -797,7 +389,6 @@ class CRM_Itemmanager_Form_ItemmanagerSetting extends CRM_Core_Form {
             'success');
 
         parent::postProcess();
-        sleep(10);
 
     }
 

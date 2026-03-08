@@ -47,11 +47,11 @@ class CRM_Itemmanager_Test_ItemmanagerSettingSyncTest extends CRM_Itemmanager_Te
         ->execute();
     }
 
-    $form = new CRM_Itemmanager_Form_ItemmanagerSetting();
+    $stub = new CRM_Itemmanager_Page_SyncStub();
 
-    $method = new \ReflectionMethod($form, 'syncItemmanager');
+    $method = new \ReflectionMethod($stub, 'syncItemmanager');
     $method->setAccessible(true);
-    $method->invoke($form);
+    $method->invoke($stub);
 
     $period = \Civi\Api4\ItemmanagerPeriods::get(FALSE)
       ->addWhere('price_set_id', '=', $priceSetId)
@@ -110,10 +110,10 @@ class CRM_Itemmanager_Test_ItemmanagerSettingSyncTest extends CRM_Itemmanager_Te
       ->execute();
 
     // Run sync.
-    $form = new CRM_Itemmanager_Form_ItemmanagerSetting();
-    $method = new \ReflectionMethod($form, 'syncItemmanager');
+    $stub = new CRM_Itemmanager_Page_SyncStub();
+    $method = new \ReflectionMethod($stub, 'syncItemmanager');
     $method->setAccessible(true);
-    $method->invoke($form);
+    $method->invoke($stub);
 
     // The orphaned setting should have been removed by sync.
     $remaining = \Civi\Api4\ItemmanagerSettings::get(FALSE)

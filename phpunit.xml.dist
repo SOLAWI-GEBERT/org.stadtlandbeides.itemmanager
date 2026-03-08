@@ -22,6 +22,9 @@
     <testsuite name="RenewPeriods">
       <directory>./tests/phpunit/suites/renewperiods</directory>
     </testsuite>
+    <testsuite name="Maintenance">
+      <directory>./tests/phpunit/suites/maintenance</directory>
+    </testsuite>
     <testsuite name="Unit">
       <directory>./tests/phpunit/suites/unit</directory>
     </testsuite>
