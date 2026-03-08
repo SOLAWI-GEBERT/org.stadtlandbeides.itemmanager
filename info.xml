@@ -14,13 +14,23 @@
     <url desc="Support">http://FIXME</url>
     <url desc="Licensing">http://www.gnu.org/licenses/agpl-3.0.html</url>
   </urls>
-  <releaseDate>2025-01-01</releaseDate>
+  <releaseDate>2026-03-08</releaseDate>
   <version>4.4.0</version>
   <develStage>stable</develStage>
   <compatibility>
     <ver>5.45</ver>
   </compatibility>
-  <comments>Fix amount precision</comments>
+  <releaseNotes>
+    - Add LineItem Edit, Cancel and Add forms for inline contribution editing
+    - Add FutureContributionScan page with batched AJAX analysis and composition checks
+    - Add ItemMaintenance page for global line item analysis across all contacts
+    - Migrate Dashboard, ItemmanagerSetting and UpdateItems from API3 to API4
+    - Add orphaned MembershipPayment cleanup to UpdateItems
+    - Fix false-positive price change display (precision mismatch)
+    - Add full German (de_DE) translation for SOLAWI context
+    - Add comprehensive PHPUnit test suites (settings, dashboard, util, updateitems, lineitemedit, maintenance, migration)
+    - Lazy-load stub pages for improved performance
+  </releaseNotes>
   <classloader>
     <psr4 prefix="Civi\" path="Civi"/>
     <psr0 prefix="CRM_" path="."/>
