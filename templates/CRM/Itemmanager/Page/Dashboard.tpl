@@ -49,39 +49,18 @@
     {if $member_list}
 
         {foreach from=$member_list item=member}
-            <div class="crm-accordion-wrapper open">
-                {assign var="field_data" value=$member.field_data}
+            {assign var="mid" value=$member.membership_id}
+            <div class="crm-accordion-wrapper collapsed">
 
-                <div class="crm-accordion-header">
+                <div class="crm-accordion-header" id="DashboardAccordionExpander"
+                     data-url="{crmURL p='civicrm/items/tabstub' q="action=browse&cid=$contact_id&mid=$mid"}"
+                >
                     {ts domain="org.stadtlandbeides.itemmanager"}Membership of {$member.member_name} {/ts}
                     {ts}Status{/ts} {$member.status}
                 </div>
                 <div class="crm-accordion-body">
-                    <div class="crm-block crm-form-block crm-form-title-here-form-block">
-
-                        <table>
-                        <thead>
-                            <tr class="columnheader">
-                                <td width="45%">{ts domain="org.stadtlandbeides.itemmanager"}Booked{/ts}</td>
-                                <td width="5%">{ts domain="org.stadtlandbeides.itemmanager"}Quantity{/ts}</td>
-                                <td width="40%">{ts domain="org.stadtlandbeides.itemmanager"}Item{/ts}</td>
-                            </tr>
-                        </thead>
-
-                        <tbody>
-                        {foreach from=$field_data item=quantity}
-                            {foreach from=$quantity item=ritem}
-                                <tr class="{cycle values="odd-row,even-row"}">
-                                    <td width="45%">{$ritem.min} to {$ritem.max}</td>
-                                    <td width="5%">{$ritem.item_quantity}</td>
-                                    <td width="40%">{$ritem.item_label}</td>
-
-                                </tr>
-                            {/foreach}
-                        {/foreach}
-                        </tbody>
-                        </table>
-
+                    <div class="crm-clear">
+                        <div>{ts domain="org.stadtlandbeides.itemmanager"}Please wait...{/ts}</div>
                     </div>
                 </div>
             </div>
@@ -97,42 +76,36 @@
     <div id="error" class="crm-error">
         {$error_title}
         <span>{$error_message}</br></span>
-        <if {$detail_member}>
-            <span>Membership {$detail_member}</br></span>
-        </if>
-        <if {$detail_contribution}>
-            <span>Contribution ID {$detail_contribution}</br></span>
-        </if>
-        <if {$detail_lineitem}>
-            <span>Lineitem {$detail_lineitem}</br></span>
-        </if>
+        {if $detail_member}
+            <span>Membership {$detail_member}<br/></span>
+        {/if}
+        {if $detail_contribution}
+            <span>Contribution ID {$detail_contribution}<br/></span>
+        {/if}
+        {if $detail_lineitem}
+            <span>Lineitem {$detail_lineitem}<br/></span>
+        {/if}
     </div>
 {/if}
 
 
+{crmScript ext="org.stadtlandbeides.itemmanager" file="js/expandDashboardAccordion.js"}
+
     <script type="application/javascript">
     {literal}
-        // trigger reload of tab
-        // || cj(event.target).attr('href').includes('civicrm/sepa/xmandate')
-        cj(document).ready(function() {
-            cj(document).on('crmPopupClose', function(event) {
-                if(cj(event.target).attr('href').includes('civicrm/items/update')) {
-                    cj("#items_update_extra_button").closest("div.crm-ajax-container").crmSnippet('refresh');
+        CRM.$(function($) {
+            $(document).on('crmPopupClose', function(event) {
+                if($(event.target).attr('href') && $(event.target).attr('href').includes('civicrm/items/update')) {
+                    $("#items_update_extra_button").closest("div.crm-ajax-container").crmSnippet('refresh');
                 }
             });
 
             $('#crm-content')
                 .on('click', 'a.button, a.action-item[href*="action=refresh"]', CRM.popup)
                 .on('crmPopupFormSuccess', function() {
-                    // Refresh datatable when form completes
-
-                        CRM.reloadPage();
-
+                    CRM.reloadPage();
                 });
-
-        })
-
-
+        });
     {/literal}
 </script>
 </div>

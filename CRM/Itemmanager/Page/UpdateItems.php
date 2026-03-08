@@ -36,12 +36,13 @@ class CRM_Itemmanager_Page_UpdateItems extends CRM_Core_Page {
           $old_backid = $contact_id;
           $filter_harmonize = CRM_Utils_Request::retrieve('harm', 'Integer');
           $filter_sync = CRM_Utils_Request::retrieve('sync', 'Integer');
+          $filter_orphan = CRM_Utils_Request::retrieve('orphan', 'Integer');
           $this->assign("request",$_REQUEST);
           $this->assign("action",$loaded_action);
           if(isset($loaded_action) and $loaded_action == "update")
-            $this->prepareCreateForm($contact_id,$filter_harmonize,$filter_sync);
+            $this->prepareCreateForm($contact_id,$filter_harmonize,$filter_sync,$filter_orphan);
           else
-              $this->prepareCreateForm($contact_id,$filter_harmonize,$filter_sync);
+              $this->prepareCreateForm($contact_id,$filter_harmonize,$filter_sync,$filter_orphan);
 
           parent::run();
 
@@ -53,7 +54,10 @@ class CRM_Itemmanager_Page_UpdateItems extends CRM_Core_Page {
           $filter_harmonize = $_POST['filter_harmonize'];
           $contact_id = $_POST['contact_id'];
           $check_list = $_POST['viewlist'];
+          $delete_list = $_POST['deletelist'] ?? [];
           $this->assign("update_done",  1);
+          if(!empty($delete_list))
+            $this->deleteOrphanedMembershipPayments($contact_id, $delete_list);
           if(isset($check_list))
             $this->updateData($contact_id,$filter_harmonize,$filter_sync,$check_list);
           return parent::run();
@@ -76,12 +80,16 @@ class CRM_Itemmanager_Page_UpdateItems extends CRM_Core_Page {
     /**
      * Will prepare the form and look up all necessary data
      */
-    function prepareCreateForm($contact_id,$filter_harmonize,$filter_sync)
+    function prepareCreateForm($contact_id,$filter_harmonize,$filter_sync,$filter_orphan=0)
     {
 
         // first, try to load contact
-        $contact = civicrm_api('Contact', 'getsingle', array('version' => 3, 'id' => $contact_id));
-        if (isset($contact['is_error']) && $contact['is_error']) {
+        try {
+            $contact = \Civi\Api4\Contact::get(FALSE)
+                ->addSelect('display_name')
+                ->addWhere('id', '=', $contact_id)
+                ->execute()->single();
+        } catch (\CRM_Core_Exception $e) {
             CRM_Core_Session::setStatus(sprintf(ts("Couldn't find contact #%s", array('domain' => 'org.stadtlandbeides.itemmanager')),
                 $contact_id), ts('Error', array('domain' => 'org.stadtlandbeides.itemmanager')), 'error');
             $this->assign("display_name", "ERROR");
@@ -144,35 +152,39 @@ class CRM_Itemmanager_Page_UpdateItems extends CRM_Core_Page {
 
         //compound both queries together
         while ($base_items->fetch()) {
-            $testcount = civicrm_api3('Contribution', 'getcount', array('id' => (int)$base_items->contrib_id));
+            $testcount = \Civi\Api4\Contribution::get(FALSE)
+                ->addWhere('id', '=', (int)$base_items->contrib_id)
+                ->selectRowCount()
+                ->execute()
+                ->countMatched();
             if($testcount == 0)
             {
-                // fatal error here
-                $base = array(
-                    'line_id'  => null,
-                    'set_id'        => null,
-                    'field_id'        => null,
-                    'member_name'   => $base_items->member_name,
-                    'item_label'    => null,
-                    'item_quantity' => null,
-                    'item_price' => null,
-                    'item_total' => null,
-                    'item_tax' => null,
-                    'periods' => null,
-                    'contrib_date'  => null,
-                    'update_date' => null,
-                    'change_date' => null,
-                    'update_label' => null,
-                    'change_label' => null,
-                    'update_price' => null,
-                    'change_price' => null,
-                    'change_total' => null,
-                    'change_tax' => null,
-                    'empty_relation_id' => (int)$base_items->pay_id,
-                    'change_error' => 'membership contribution relation'. (int)$base_items->pay_id .' is missing',
-                );
-
-                $base_list[] = $base;
+                if($filter_orphan == 1) {
+                    $base = array(
+                        'line_id'  => null,
+                        'set_id'        => null,
+                        'field_id'        => null,
+                        'member_name'   => $base_items->member_name,
+                        'item_label'    => null,
+                        'item_quantity' => null,
+                        'item_price' => null,
+                        'item_total' => null,
+                        'item_tax' => null,
+                        'periods' => null,
+                        'contrib_date'  => null,
+                        'update_date' => null,
+                        'change_date' => null,
+                        'update_label' => null,
+                        'change_label' => null,
+                        'update_price' => null,
+                        'change_price' => null,
+                        'change_total' => null,
+                        'change_tax' => null,
+                        'empty_relation_id' => (int)$base_items->pay_id,
+                        'change_error' => 'membership contribution relation '. (int)$base_items->pay_id .' is missing',
+                    );
+                    $base_list[] = $base;
+                }
                 continue;
 
             }
@@ -235,20 +247,20 @@ class CRM_Itemmanager_Page_UpdateItems extends CRM_Core_Page {
                     'member_name'   => $base_items->member_name,
                     'item_label'    => $line_items->item_label,
                     'item_quantity' => $line_items->item_quantity,
-                    'item_price' => round($line_items-> item_price, 2),
-                    'item_total' => round($line_items-> item_total,2),
-                    'item_tax' => round($line_items-> item_tax,2),
+                    'item_price' => CRM_Itemmanager_Util::roundMoney($line_items-> item_price),
+                    'item_total' => CRM_Itemmanager_Util::roundMoney($line_items-> item_total),
+                    'item_tax' => CRM_Itemmanager_Util::roundMoney($line_items-> item_tax),
                     'periods' => $periods,
                     'contrib_date'  => $line_date,
                     'update_date' => $line_date != $changed_date and $filter_harmonize == 1,
                     'change_date' => $changed_date,
                     'update_label' => $line_items->item_label != $line_items -> field_label,
                     'change_label' => $line_items -> field_label,
-                    'update_price' => round($line_items-> item_price, 2) != round($change_unit_price, 2)
+                    'update_price' => !CRM_Itemmanager_Util::moneyEquals($line_items-> item_price, $change_unit_price)
                                             and $filter_sync == 1,
-                    'change_price' => round($change_unit_price,2),
-                    'change_total' => round($changed_total,2),
-                    'change_tax' => round($changed_tax,2),
+                    'change_price' => CRM_Itemmanager_Util::roundMoney($change_unit_price),
+                    'change_total' => CRM_Itemmanager_Util::roundMoney($changed_total),
+                    'change_tax' => CRM_Itemmanager_Util::roundMoney($changed_tax),
                     'change_error' => null,
                 );
 
@@ -269,6 +281,7 @@ class CRM_Itemmanager_Page_UpdateItems extends CRM_Core_Page {
         $this->assign("filter_url", CRM_Utils_System::url('civicrm/items/update',"action=preview&cid=$contact_id"));
         $this->assign("filter_sync",$filter_sync);
         $this->assign("filter_harmonize",$filter_harmonize);
+        $this->assign("filter_orphan",$filter_orphan);
     }
 
 
@@ -280,7 +293,6 @@ class CRM_Itemmanager_Page_UpdateItems extends CRM_Core_Page {
      * @param $filter_sync
      * @param $selected_items
      * @throws CRM_Core_Exception
-     * @throws CiviCRM_API3_Exception
      */
     function updateData($contact_id,$filter_harmonize,$filter_sync,$selected_items)
     {
@@ -343,8 +355,11 @@ class CRM_Itemmanager_Page_UpdateItems extends CRM_Core_Page {
         ";
 
         // first, try to load contact
-        $contact = civicrm_api('Contact', 'getsingle', array('version' => 3, 'id' => $contact_id));
-        if (isset($contact['is_error']) && $contact['is_error']) {
+        try {
+            \Civi\Api4\Contact::get(FALSE)
+                ->addWhere('id', '=', $contact_id)
+                ->execute()->single();
+        } catch (\CRM_Core_Exception $e) {
             CRM_Core_Session::setStatus(sprintf(ts("Couldn't find contact #%s", array('domain' => 'org.stadtlandbeides.itemmanager')),
                 $contact_id), ts('Error', array('domain' => 'org.stadtlandbeides.itemmanager')), 'error');
             $this->assign("display_name", "ERROR");
@@ -360,14 +375,18 @@ class CRM_Itemmanager_Page_UpdateItems extends CRM_Core_Page {
             $update_label = False;
             $update_price = False;
             //get all nested data
-            $lineitemInfo = civicrm_api3('lineItem', 'getsingle', array('id' => (int) $line_item));
-            if(!isset($lineitemInfo)) continue;
-            $priceFieldInfo = civicrm_api3('PriceField', 'getsingle', array('id' => (int) $lineitemInfo['price_field_id']));
-            if(!isset($priceFieldInfo)) continue;
-            $priceFieldValueInfo = civicrm_api3('PriceFieldValue', 'getsingle', array('id' => (int) $lineitemInfo['price_field_value_id']));
-            if(!isset($priceFieldValueInfo)) continue;
-            $contributionInfo = civicrm_api3('Contribution', 'getsingle', array('id' => (int) $lineitemInfo['contribution_id']));
-            if(!isset($contributionInfo)) continue;
+            $lineitemInfo = \Civi\Api4\LineItem::get(FALSE)
+                ->addWhere('id', '=', (int) $line_item)
+                ->execute()->single();
+            $priceFieldInfo = \Civi\Api4\PriceField::get(FALSE)
+                ->addWhere('id', '=', (int) $lineitemInfo['price_field_id'])
+                ->execute()->single();
+            $priceFieldValueInfo = \Civi\Api4\PriceFieldValue::get(FALSE)
+                ->addWhere('id', '=', (int) $lineitemInfo['price_field_value_id'])
+                ->execute()->single();
+            $contributionInfo = \Civi\Api4\Contribution::get(FALSE)
+                ->addWhere('id', '=', (int) $lineitemInfo['contribution_id'])
+                ->execute()->single();
 
             //update the data
             $line_timestamp = date_create($contributionInfo['receive_date']);
@@ -421,7 +440,7 @@ class CRM_Itemmanager_Page_UpdateItems extends CRM_Core_Page {
 
 
             //change price data
-            if(round($lineitemInfo['unit_price'], 2) != round($change_unit_price, 2)
+            if(!CRM_Itemmanager_Util::moneyEquals($lineitemInfo['unit_price'], $change_unit_price)
                 and $filter_sync == 1)
             {
                 $update_price = True;
@@ -489,10 +508,10 @@ class CRM_Itemmanager_Page_UpdateItems extends CRM_Core_Page {
                 $total = CRM_Itemmanager_Util::getAmountTotalFromContributionID((int) $lineitemInfo['contribution_id']);
 
                 if(isset($contributionInfo['contribution_recur_id']))
-                    civicrm_api3('ContributionRecur', 'create', [
-                        'id' => (int)$contributionInfo['contribution_recur_id'],
-                        'amount' => $this->$total,
-                    ]);
+                    \Civi\Api4\ContributionRecur::update(FALSE)
+                        ->addWhere('id', '=', (int)$contributionInfo['contribution_recur_id'])
+                        ->addValue('amount', $total)
+                        ->execute();
 
                 try{
                     $finalquery = CRM_Core_DAO::composeQuery($update_contribution_query,
@@ -570,6 +589,47 @@ class CRM_Itemmanager_Page_UpdateItems extends CRM_Core_Page {
 
     }
 
+
+    /**
+     * Delete orphaned MembershipPayment records where the linked contribution no longer exists.
+     *
+     * @param int $contact_id
+     * @param array $payment_ids List of civicrm_membership_payment IDs to delete
+     */
+    function deleteOrphanedMembershipPayments($contact_id, $payment_ids) {
+        $deleted = 0;
+        foreach ($payment_ids as $pay_id) {
+            $pay_id = (int) $pay_id;
+            if ($pay_id <= 0) continue;
+
+            $payment = CRM_Core_DAO::executeQuery(
+                "SELECT id, contribution_id FROM civicrm_membership_payment WHERE id = %1",
+                [1 => [$pay_id, 'Integer']]
+            );
+            if (!$payment->fetch()) continue;
+
+            // Verify the contribution is actually missing
+            $contribCount = \Civi\Api4\Contribution::get(FALSE)
+                ->addWhere('id', '=', (int) $payment->contribution_id)
+                ->selectRowCount()
+                ->execute()
+                ->countMatched();
+            if ($contribCount > 0) continue;
+
+            CRM_Core_DAO::executeQuery(
+                "DELETE FROM civicrm_membership_payment WHERE id = %1",
+                [1 => [$pay_id, 'Integer']]
+            );
+            $deleted++;
+        }
+
+        if ($deleted > 0) {
+            $this->processSuccess(
+                E::ts('Deleted %1 orphaned membership payment relation(s).', [1 => $deleted]),
+                $contact_id
+            );
+        }
+    }
 
     /**
      * test if this page is called as a popup

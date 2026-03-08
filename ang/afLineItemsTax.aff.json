@@ -1,0 +1,8 @@
+{
+    "type": "search",
+    "title": "Line Items",
+    "description": "",
+    "icon": "fa-list-alt",
+    "permission": "access CiviCRM",
+    "server_route": ""
+}

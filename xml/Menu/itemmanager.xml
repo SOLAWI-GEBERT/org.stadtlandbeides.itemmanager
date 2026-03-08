@@ -24,8 +24,11 @@
   <item>
     <path>civicrm/items/maintenance</path>
     <page_callback>CRM_Itemmanager_Page_ItemMaintenance</page_callback>
-    <title>ItemMaintenance</title>
-    <access_arguments>access CiviCRM</access_arguments>
+    <title>Item Maintenance</title>
+    <desc>Analyze and update line items across all memberships</desc>
+    <adminGroup>CiviContribute</adminGroup>
+    <access_arguments>administer CiviCRM</access_arguments>
+    <icon>admin/small/online_contribution_pages.png</icon>
   </item>
   <item>
     <path>civicrm/items/renewperiods</path>
@@ -54,6 +57,34 @@
     <page_type>1</page_type>
   </item>
   <item>
+    <path>civicrm/admin/setting/itemmanagerstub</path>
+    <page_callback>CRM_Itemmanager_Page_ItemmanagerSettingStub</page_callback>
+    <title>ItemmanagerSettingStub</title>
+    <access_arguments>administer CiviCRM</access_arguments>
+    <page_type>1</page_type>
+  </item>
+  <item>
+    <path>civicrm/items/tabstub</path>
+    <page_callback>CRM_Itemmanager_Page_DashboardStub</page_callback>
+    <title>DashboardStub</title>
+    <access_arguments>access CiviCRM</access_arguments>
+    <page_type>1</page_type>
+  </item>
+  <item>
+    <path>civicrm/admin/setting/itemmanagersync</path>
+    <page_callback>CRM_Itemmanager_Page_SyncStub</page_callback>
+    <title>ItemmanagerSync</title>
+    <access_arguments>administer CiviCRM</access_arguments>
+    <page_type>1</page_type>
+  </item>
+  <item>
+    <path>civicrm/items/maintenancestub</path>
+    <page_callback>CRM_Itemmanager_Page_ItemMaintenanceStub</page_callback>
+    <title>ItemMaintenanceStub</title>
+    <access_arguments>administer CiviCRM</access_arguments>
+    <page_type>1</page_type>
+  </item>
+  <item>
     <path>civicrm/admin/setting/itemmanageroptions</path>
     <page_callback>CRM_Itemmanager_Form_ItemmanagerOptions</page_callback>
     <title>Itemmanager Options</title>
@@ -61,5 +92,35 @@
     <adminGroup>CiviContribute</adminGroup>
     <access_arguments>administer CiviCRM</access_arguments>
     <icon>admin/small/online_contribution_pages.png</icon>
+  </item>
+  <item>
+    <path>civicrm/items/futurescan</path>
+    <page_callback>CRM_Itemmanager_Page_FutureContributionScan</page_callback>
+    <title>Future Item Scan</title>
+    <access_arguments>access CiviCRM</access_arguments>
+  </item>
+  <item>
+    <path>civicrm/items/futurescanstub</path>
+    <page_callback>CRM_Itemmanager_Page_FutureContributionScanStub</page_callback>
+    <title>FutureContributionScanStub</title>
+    <access_arguments>access CiviCRM</access_arguments>
+    <page_type>1</page_type>
+  </item>
+  <item>
+    <path>civicrm/lineitem/edit</path>
+    <page_callback>CRM_Itemmanager_Form_LineItemEdit</page_callback>
+    <title>Edit Item</title>
+    <access_arguments>access CiviCRM</access_arguments>
+  </item>
+  <item>
+    <path>civicrm/lineitem/cancel</path>
+    <page_callback>CRM_Itemmanager_Form_LineItemCancel</page_callback>
+    <title>Cancel Item</title>
+    <access_arguments>access CiviCRM</access_arguments>
+  </item>
+  <item>
+    <path>civicrm/ajax/get-pricefield-info</path>
+    <page_callback>CRM_Itemmanager_Util_LineItemEditor::getPriceFieldInfo</page_callback>
+    <access_arguments>access CiviCRM</access_arguments>
   </item>
 </menu>

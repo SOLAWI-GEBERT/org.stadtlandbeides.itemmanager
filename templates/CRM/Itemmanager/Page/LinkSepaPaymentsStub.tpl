@@ -1,5 +1,5 @@
 <div id="SEPALINKSTUB{$financial_id}"
-     data-callback-url="{crmURL p='civicrm/sepastub' q="action=browse&cid=`$contact_id`&fid=`$financial_id`"}">
+     data-callback-url="{crmURL p='civicrm/sepastub' q="action=browse&cid=$contact_id&fid=$financial_id"}">
     {* make here some better access *}
     {assign var="contributions" value=$relation.contributions}
 
@@ -28,14 +28,14 @@
                 </div>
             </tr>
             <tr>
-                <th>{ts}Contribution{/ts} {ts}Item{/ts}</th>
+                <th>{ts domain="org.stadtlandbeides.itemmanager"}Contribution{/ts} {ts domain="org.stadtlandbeides.itemmanager"}Item{/ts}</th>
                 <th>
                     <label>
                         <input type="checkbox" class="cm-toggle" id="FinancialGrouplink"
                                data-financial="{$financial_id}">
                     </label>
                 </th>
-                <th>SEPA {ts}Payments{/ts}</th>
+                <th>SEPA {ts domain="org.stadtlandbeides.itemmanager"}Payments{/ts}</th>
             </tr>
             </thead>
 
@@ -55,8 +55,8 @@
                                             class="crm-i fa-bars"></span> {$related.line_count}</div>
                                 <div class="contrib_table-cell col-md-fix-tiny">
                                     <a class="nowrap bold crm-expand-row"
-                                       title="{ts}view payments{/ts}"
-                                       href="{crmURL p='civicrm/payment' q="view=transaction&component=contribution&action=browse&cid=`$contact_id`&id=`$related.contribution_id`&selector=1"}">
+                                       title="{ts domain="org.stadtlandbeides.itemmanager"}view payments{/ts}"
+                                       href="{crmURL p='civicrm/payment' q="view=transaction&component=contribution&action=browse&cid=$contact_id&id=$related.contribution_id&selector=1"}">
                                     </a>
                                 </div>
                                 <div class="contrib_table-cell col-md-fix-small">&sum; {$related.total_display}</div>

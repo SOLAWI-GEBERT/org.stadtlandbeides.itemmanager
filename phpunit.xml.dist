@@ -1,10 +1,43 @@
 <?xml version="1.0"?>
-<phpunit backupGlobals="false" backupStaticAttributes="false" colors="true" convertErrorsToExceptions="true" convertNoticesToExceptions="true" convertWarningsToExceptions="true" processIsolation="false" stopOnFailure="false" bootstrap="tests/phpunit/bootstrap.php">
+<phpunit backupGlobals="false" backupStaticAttributes="false" colors="true" convertErrorsToExceptions="true" convertNoticesToExceptions="true" convertWarningsToExceptions="true" processIsolation="false" stopOnFailure="false" executionOrder="default" bootstrap="tests/phpunit/helper/bootstrap.php">
   <testsuites>
-    <testsuite name="My Test Suite">
-      <directory>./tests/phpunit</directory>
+    <testsuite name="Migration">
+      <directory>./tests/phpunit/suites/migration</directory>
+    </testsuite>
+    <testsuite name="Sanity">
+      <directory>./tests/phpunit/suites/sanity</directory>
+    </testsuite>
+    <testsuite name="Settings">
+      <directory>./tests/phpunit/suites/settings</directory>
+    </testsuite>
+    <testsuite name="Util">
+      <directory>./tests/phpunit/suites/util</directory>
+    </testsuite>
+    <testsuite name="UpdateItems">
+      <directory>./tests/phpunit/suites/updateitems</directory>
+    </testsuite>
+    <testsuite name="Dashboard">
+      <directory>./tests/phpunit/suites/dashboard</directory>
+    </testsuite>
+    <testsuite name="RenewPeriods">
+      <directory>./tests/phpunit/suites/renewperiods</directory>
+    </testsuite>
+    <testsuite name="Maintenance">
+      <directory>./tests/phpunit/suites/maintenance</directory>
+    </testsuite>
+    <testsuite name="Unit">
+      <directory>./tests/phpunit/suites/unit</directory>
+    </testsuite>
+    <testsuite name="LineItemEdit">
+      <directory>./tests/phpunit/suites/lineitemedit</directory>
     </testsuite>
   </testsuites>
+  <php>
+    <env name="CIVICRM_SETTINGS" value="/root/.openclaw/workspace/civicrm-buildkit/build/stable/web/private/civicrm.settings.php"/>
+    <env name="CIVICRM_BOOT" value="Standalone://root/.openclaw/workspace/civicrm-buildkit/build/stable"/>
+    <env name="CIVICRM_DSN" value="mysql://stablecivi_dbz7q:M5dlmBEOR9YAsD4w@127.0.0.1/stablecivi_6m8zl?new_link=true"/>
+    <env name="PATH" value="/root/.composer/vendor/bin:${PATH}"/>
+  </php>
   <filter>
     <whitelist>
       <directory suffix=".php">./</directory>
