@@ -28,6 +28,9 @@
     <testsuite name="Unit">
       <directory>./tests/phpunit/suites/unit</directory>
     </testsuite>
+    <testsuite name="LineItemEdit">
+      <directory>./tests/phpunit/suites/lineitemedit</directory>
+    </testsuite>
   </testsuites>
   <php>
     <env name="CIVICRM_SETTINGS" value="/root/.openclaw/workspace/civicrm-buildkit/build/stable/web/private/civicrm.settings.php"/>

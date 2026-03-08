@@ -560,21 +560,23 @@ class CRM_Itemmanager_Test_ItemMaintenanceStubTest extends CRM_Itemmanager_Test_
       $payId = (int) $payId;
       if ($payId <= 0) continue;
 
-      $payment = \Civi\Api4\MembershipPayment::get(FALSE)
-        ->addWhere('id', '=', $payId)
-        ->execute()->first();
-      if (!$payment) continue;
+      $payment = CRM_Core_DAO::executeQuery(
+        "SELECT id, contribution_id FROM civicrm_membership_payment WHERE id = %1",
+        [1 => [$payId, 'Integer']]
+      );
+      if (!$payment->fetch()) continue;
 
       $contribCount = \Civi\Api4\Contribution::get(FALSE)
-        ->addWhere('id', '=', (int) $payment['contribution_id'])
+        ->addWhere('id', '=', (int) $payment->contribution_id)
         ->selectRowCount()
         ->execute()
         ->countMatched();
       if ($contribCount > 0) continue;
 
-      \Civi\Api4\MembershipPayment::delete(FALSE)
-        ->addWhere('id', '=', $payId)
-        ->execute();
+      CRM_Core_DAO::executeQuery(
+        "DELETE FROM civicrm_membership_payment WHERE id = %1",
+        [1 => [$payId, 'Integer']]
+      );
     }
 
     // Process line item label updates directly.

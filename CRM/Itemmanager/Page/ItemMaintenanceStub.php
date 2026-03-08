@@ -279,20 +279,20 @@ class CRM_Itemmanager_Page_ItemMaintenanceStub extends CRM_Core_Page {
                     'member_name' => $base_items->member_name,
                     'item_label' => $line_items->item_label,
                     'item_quantity' => $line_items->item_quantity,
-                    'item_price' => round($line_items->item_price, 2),
-                    'item_total' => round($line_items->item_total, 2),
-                    'item_tax' => round($line_items->item_tax, 2),
+                    'item_price' => CRM_Itemmanager_Util::roundMoney($line_items->item_price),
+                    'item_total' => CRM_Itemmanager_Util::roundMoney($line_items->item_total),
+                    'item_tax' => CRM_Itemmanager_Util::roundMoney($line_items->item_tax),
                     'periods' => $periods,
                     'contrib_date' => $line_date,
                     'update_date' => $line_date != $changed_date && $filter_harmonize == 1,
                     'change_date' => $changed_date,
                     'update_label' => $line_items->item_label != $line_items->field_label,
                     'change_label' => $line_items->field_label,
-                    'update_price' => round($line_items->item_price, 2) != round($change_unit_price, 2)
+                    'update_price' => !CRM_Itemmanager_Util::moneyEquals($line_items->item_price, $change_unit_price)
                         && $filter_sync == 1,
-                    'change_price' => round($change_unit_price, 2),
-                    'change_total' => round($changed_total, 2),
-                    'change_tax' => round($changed_tax, 2),
+                    'change_price' => CRM_Itemmanager_Util::roundMoney($change_unit_price),
+                    'change_total' => CRM_Itemmanager_Util::roundMoney($changed_total),
+                    'change_tax' => CRM_Itemmanager_Util::roundMoney($changed_tax),
                     'empty_relation_id' => null,
                     'change_error' => null,
                 ];
@@ -324,21 +324,23 @@ class CRM_Itemmanager_Page_ItemMaintenanceStub extends CRM_Core_Page {
             $pay_id = (int) $pay_id;
             if ($pay_id <= 0) continue;
 
-            $payment = \Civi\Api4\MembershipPayment::get(FALSE)
-                ->addWhere('id', '=', $pay_id)
-                ->execute()->first();
-            if (!$payment) continue;
+            $payment = CRM_Core_DAO::executeQuery(
+                "SELECT id, contribution_id FROM civicrm_membership_payment WHERE id = %1",
+                [1 => [$pay_id, 'Integer']]
+            );
+            if (!$payment->fetch()) continue;
 
             $contribCount = \Civi\Api4\Contribution::get(FALSE)
-                ->addWhere('id', '=', (int) $payment['contribution_id'])
+                ->addWhere('id', '=', (int) $payment->contribution_id)
                 ->selectRowCount()
                 ->execute()
                 ->countMatched();
             if ($contribCount > 0) continue;
 
-            \Civi\Api4\MembershipPayment::delete(FALSE)
-                ->addWhere('id', '=', $pay_id)
-                ->execute();
+            CRM_Core_DAO::executeQuery(
+                "DELETE FROM civicrm_membership_payment WHERE id = %1",
+                [1 => [$pay_id, 'Integer']]
+            );
             $results['deleted']++;
         }
 
@@ -437,7 +439,7 @@ class CRM_Itemmanager_Page_ItemMaintenanceStub extends CRM_Core_Page {
             }
 
             // Update price
-            if (round($lineitemInfo['unit_price'], 2) != round($change_unit_price, 2) && $filter_sync == 1) {
+            if (!CRM_Itemmanager_Util::moneyEquals($lineitemInfo['unit_price'], $change_unit_price) && $filter_sync == 1) {
                 $update_price = TRUE;
 
                 try {
