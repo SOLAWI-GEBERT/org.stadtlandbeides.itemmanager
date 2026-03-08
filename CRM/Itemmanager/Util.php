@@ -79,7 +79,7 @@ class CRM_Itemmanager_Util
      * @return bool
      */
     public static function moneyEquals($a, $b): bool {
-        return self::roundMoney($a) === self::roundMoney($b);
+        return self::toMachineMoney($a) === self::toMachineMoney($b);
     }
 
     /**

@@ -1012,6 +1012,7 @@ ORDER BY  ps.id, pf.weight ;
     );
     $priceFieldValueParams = $priceFieldValue;
     unset($priceFieldValueParams['id'], $priceFieldValueParams['name'], $priceFieldValueParams['weight']);
+    $priceFieldValueParams['financial_type_id'] = self::ensureValidFinancialType($priceFieldValueParams['financial_type_id'] ?? NULL);
     for ($i = $start; $i <= $end; ++$i) {
       $params = array_merge($priceFieldParams, ['label' => ts('Additional Line Item') . " $i"]);
       $priceField = civicrm_api3('PriceField', 'get', $params)['values'];
@@ -1036,7 +1037,56 @@ ORDER BY  ps.id, pf.weight ;
     $priceFields = civicrm_api3('PriceField', 'get', ['price_set_id' => $priceSetID, 'is_active' => !$enable])['values'];
     foreach ($priceFields as $id => $value) {
       if ($value['name'] != 'contribution_amount') {
+        if ($enable) {
+          self::fixPriceFieldValueFinancialTypes($id);
+        }
         civicrm_api3('PriceField', 'create', ['id' => $id, 'is_active' => $enable]);
+      }
+    }
+  }
+
+  /**
+   * Return a valid (enabled) financial type ID.
+   *
+   * If the given ID is already valid, return it unchanged.
+   * Otherwise fall back to the first available financial type.
+   *
+   * @param int|null $financialTypeId
+   * @return int
+   */
+  private static function ensureValidFinancialType($financialTypeId) {
+    CRM_Financial_BAO_FinancialType::getAvailableFinancialTypes($financialTypes);
+    if ($financialTypeId && array_key_exists($financialTypeId, $financialTypes)) {
+      return $financialTypeId;
+    }
+    return (int) array_key_first($financialTypes);
+  }
+
+  /**
+   * Fix financial types on price field values before enabling a price field.
+   *
+   * Replaces disabled/missing financial type IDs with a valid one so that
+   * CiviCRM core validation does not reject the activation.
+   *
+   * @param int $priceFieldId
+   */
+  private static function fixPriceFieldValueFinancialTypes($priceFieldId) {
+    CRM_Financial_BAO_FinancialType::getAvailableFinancialTypes($financialTypes);
+    $pfvs = civicrm_api3('PriceFieldValue', 'get', [
+      'price_field_id' => $priceFieldId,
+      'options' => ['limit' => 0],
+    ])['values'];
+    foreach ($pfvs as $pfv) {
+      $ftId = $pfv['financial_type_id'] ?? NULL;
+      if ($ftId && !array_key_exists($ftId, $financialTypes)) {
+        $validId = self::ensureValidFinancialType($ftId);
+        CRM_Core_DAO::executeQuery(
+          'UPDATE civicrm_price_field_value SET financial_type_id = %1 WHERE id = %2',
+          [
+            1 => [$validId, 'Integer'],
+            2 => [$pfv['id'], 'Integer'],
+          ]
+        );
       }
     }
   }
