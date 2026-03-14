@@ -137,7 +137,7 @@ function itemmanager_civicrm_pre($op, $objectName, $id, &$params) {
           $params['financial_type_id'] = $financialTypes[0];
         }
       }
-      elseif ($op == 'edit' && CRM_Core_Permission::check('edit line item')) {
+      elseif ($op == 'edit' && CRM_Core_Permission::check('edit memberships')) {
         $newLineItemParams = $lineItemParams = $newLineItem = [];
         for ($i = 0; $i <= 10; $i++) {
           $lineItemParams[$i] = [];
@@ -356,7 +356,7 @@ function itemmanager_civicrm_buildForm($formName, &$form) {
 
   if ($formName == 'CRM_Contribute_Form_Contribution') {
     $contributionID = NULL;
-    if (!empty($form->_id) && ($form->_action & CRM_Core_Action::UPDATE) && CRM_Core_Permission::check('edit line item')) {
+    if (!empty($form->_id) && ($form->_action & CRM_Core_Action::UPDATE) && CRM_Core_Permission::check('edit memberships')) {
       $contributionID = $form->_id;
       $pricesetFieldsCount = NULL;
       $isQuickConfig = empty($form->_lineItems) ? TRUE : FALSE;
@@ -379,7 +379,7 @@ function itemmanager_civicrm_buildForm($formName, &$form) {
       }
     }
 
-    if (!($form->_action & CRM_Core_Action::DELETE) && CRM_Core_Permission::check('cancel line item')) {
+    if (!($form->_action & CRM_Core_Action::DELETE) && CRM_Core_Permission::check('edit memberships')) {
       $form->assign('contribution_id', $contributionID);
       Civi::service('angularjs.loader')->addModules(['afLineItems', 'afLineItemsTax']);
 
@@ -405,7 +405,7 @@ function itemmanager_civicrm_postProcess($formName, &$form) {
   if ($formName == 'CRM_Contribute_Form_Contribution' &&
     !empty($form->_id) &&
     ($form->_action & CRM_Core_Action::UPDATE) &&
-    CRM_Core_Permission::check('edit line item')
+    CRM_Core_Permission::check('edit memberships')
   ) {
     $lineItems = CRM_Price_BAO_LineItem::getLineItemsByContributionID($form->_id);
     foreach ($lineItems as $id => $lineItem) {
@@ -446,7 +446,7 @@ function itemmanager_civicrm_validateForm($formName, &$fields, &$files, &$form, 
  * Updates contribution after line item creation via cache (integrated from lineitemedit).
  */
 function itemmanager_civicrm_post($op, $objectName, $objectId, &$obj) {
-  if ($objectName == 'Contribution' && $op == 'edit' && CRM_Core_Permission::check('edit line item')) {
+  if ($objectName == 'Contribution' && $op == 'edit' && CRM_Core_Permission::check('edit memberships')) {
     $entityID = (string) $objectId;
     $contriParams = Civi::cache('lineitemEditor')->get($entityID);
     if (!empty($contriParams)) {

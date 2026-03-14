@@ -134,7 +134,7 @@ return [
                       'check user permission',
                       '=',
                       [
-                        'edit line item',
+                        'edit memberships',
                       ],
                     ],
                   ],
@@ -154,7 +154,7 @@ return [
                       'check user permission',
                       '=',
                       [
-                        'cancel line item',
+                        'edit memberships',
                       ],
                     ],
                   ],
@@ -264,7 +264,7 @@ return [
                       'check user permission',
                       '=',
                       [
-                        'edit line item',
+                        'edit memberships',
                       ],
                     ],
                   ],
@@ -284,7 +284,7 @@ return [
                       'check user permission',
                       '=',
                       [
-                        'cancel line item',
+                        'edit memberships',
                       ],
                     ],
                   ],

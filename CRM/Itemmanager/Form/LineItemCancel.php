@@ -54,7 +54,22 @@ class CRM_Itemmanager_Form_LineItemCancel extends CRM_Core_Form {
   }
 
   public function postProcess() {
-    CRM_Itemmanager_Util_LineItemEditor::cancelEntity($this->_lineitemInfo['entity_id'], $this->_lineitemInfo['entity_table']);
+    // Only cancel the linked entity (membership/participant) when no other
+    // active line items reference it.  Otherwise just zero out this item.
+    if ($this->_lineitemInfo['entity_table'] === 'civicrm_membership') {
+      $otherActive = civicrm_api3('LineItem', 'getcount', [
+        'entity_table' => 'civicrm_membership',
+        'entity_id' => $this->_lineitemInfo['entity_id'],
+        'line_total' => ['>' => 0],
+        'id' => ['!=' => $this->_id],
+      ]);
+      if ($otherActive == 0) {
+        CRM_Itemmanager_Util_LineItemEditor::cancelEntity($this->_lineitemInfo['entity_id'], $this->_lineitemInfo['entity_table']);
+      }
+    }
+    else {
+      CRM_Itemmanager_Util_LineItemEditor::cancelEntity($this->_lineitemInfo['entity_id'], $this->_lineitemInfo['entity_table']);
+    }
 
     civicrm_api3('LineItem', 'create', array(
       'id' => $this->_id,

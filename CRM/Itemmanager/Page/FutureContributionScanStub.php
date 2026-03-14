@@ -904,11 +904,24 @@ class CRM_Itemmanager_Page_FutureContributionScanStub extends CRM_Core_Page {
 
                 if ($targetQty === 0) {
                     // Qty=0 → follow LineItemCancel::postProcess() pattern
+                    // Only cancel entity when no other active line items reference it.
                     if (!empty($previousLineItem['entity_id']) && !empty($previousLineItem['entity_table'])) {
-                        CRM_Itemmanager_Util_LineItemEditor::cancelEntity(
-                            (int) $previousLineItem['entity_id'],
-                            $previousLineItem['entity_table']
-                        );
+                        $shouldCancel = TRUE;
+                        if ($previousLineItem['entity_table'] === 'civicrm_membership') {
+                            $otherActive = civicrm_api3('LineItem', 'getcount', [
+                                'entity_table' => 'civicrm_membership',
+                                'entity_id' => $previousLineItem['entity_id'],
+                                'line_total' => ['>' => 0],
+                                'id' => ['!=' => $lineId],
+                            ]);
+                            $shouldCancel = ($otherActive == 0);
+                        }
+                        if ($shouldCancel) {
+                            CRM_Itemmanager_Util_LineItemEditor::cancelEntity(
+                                (int) $previousLineItem['entity_id'],
+                                $previousLineItem['entity_table']
+                            );
+                        }
                     }
 
                     civicrm_api3('LineItem', 'create', [
@@ -1001,12 +1014,24 @@ class CRM_Itemmanager_Page_FutureContributionScanStub extends CRM_Core_Page {
                 $previousLineItem = civicrm_api3('LineItem', 'getsingle', ['id' => $lineId]);
                 $contribId = (int) $previousLineItem['contribution_id'];
 
-                // Cancel linked entity (membership/participant)
+                // Only cancel entity when no other active line items reference it.
                 if (!empty($previousLineItem['entity_id']) && !empty($previousLineItem['entity_table'])) {
-                    CRM_Itemmanager_Util_LineItemEditor::cancelEntity(
-                        (int) $previousLineItem['entity_id'],
-                        $previousLineItem['entity_table']
-                    );
+                    $shouldCancel = TRUE;
+                    if ($previousLineItem['entity_table'] === 'civicrm_membership') {
+                        $otherActive = civicrm_api3('LineItem', 'getcount', [
+                            'entity_table' => 'civicrm_membership',
+                            'entity_id' => $previousLineItem['entity_id'],
+                            'line_total' => ['>' => 0],
+                            'id' => ['!=' => $lineId],
+                        ]);
+                        $shouldCancel = ($otherActive == 0);
+                    }
+                    if ($shouldCancel) {
+                        CRM_Itemmanager_Util_LineItemEditor::cancelEntity(
+                            (int) $previousLineItem['entity_id'],
+                            $previousLineItem['entity_table']
+                        );
+                    }
                 }
 
                 // Zero out the line item
