@@ -869,7 +869,7 @@ ORDER BY  ps.id, pf.weight ;
   public static function buildLineItemRows(&$form, $contributionID = NULL) {
     $fields = self::getLineitemFieldNames(TRUE);
     $submittedValues = $pvIDs = [];
-    if (!empty($contributionID) && CRM_Core_Permission::check('add line item')) {
+    if (!empty($contributionID) && CRM_Core_Permission::check('edit memberships')) {
       $options = self::getPriceFieldLists($contributionID);
       if (CRM_Core_Permission::check('administer CiviCRM')) {
         $options += ['new' => E::ts('Create new item')];

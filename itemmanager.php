@@ -93,7 +93,7 @@ function itemmanager_civicrm_pre($op, $objectName, $id, &$params) {
 
     // Line item editor: process line item params on contribution create/edit
     if ($objectName == 'Contribution') {
-      if ($op == 'create' && CRM_Core_Permission::check('add line item') && empty($params['price_set_id'])) {
+      if ($op == 'create' && CRM_Core_Permission::check('edit memberships') && empty($params['price_set_id'])) {
         $lineItemParams = [];
         $financialTypes = [];
         $taxEnabled = (bool) Civi::settings()->get('invoicing');
