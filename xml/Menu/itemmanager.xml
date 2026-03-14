@@ -110,17 +110,17 @@
     <path>civicrm/lineitem/edit</path>
     <page_callback>CRM_Itemmanager_Form_LineItemEdit</page_callback>
     <title>Edit Item</title>
-    <access_arguments>access CiviCRM</access_arguments>
+    <access_arguments>edit memberships</access_arguments>
   </item>
   <item>
     <path>civicrm/lineitem/cancel</path>
     <page_callback>CRM_Itemmanager_Form_LineItemCancel</page_callback>
     <title>Cancel Item</title>
-    <access_arguments>access CiviCRM</access_arguments>
+    <access_arguments>edit memberships</access_arguments>
   </item>
   <item>
     <path>civicrm/ajax/get-pricefield-info</path>
     <page_callback>CRM_Itemmanager_Util_LineItemEditor::getPriceFieldInfo</page_callback>
-    <access_arguments>access CiviCRM</access_arguments>
+    <access_arguments>edit memberships</access_arguments>
   </item>
 </menu>

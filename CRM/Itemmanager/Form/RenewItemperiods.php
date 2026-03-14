@@ -40,10 +40,16 @@ class CRM_Itemmanager_Form_RenewItemperiods extends CRM_Core_Form {
                 return;
             }
 
+            $deceasedStatusId = (int) civicrm_api3('MembershipStatus', 'getvalue', [
+                'name' => 'Deceased',
+                'return' => 'id',
+            ]);
+
             //Create a logical form reference
             foreach ($member_array['values'] as $membership) {
-                // Skip disabled memberships
+                // Skip disabled or deceased memberships
                 if (empty($membership['member_active'])) continue;
+                if ((int) $membership['memberdata']['status_id'] === $deceasedStatusId) continue;
 
                 try {
                     //region Related Contributions
@@ -106,8 +112,8 @@ class CRM_Itemmanager_Form_RenewItemperiods extends CRM_Core_Form {
                             'price_field_id' => $lineitem['fielddata']['id'],
                             'price_set_id' => $lineitem['setdata']['id'],
                             'last_qty' => $lineitem['linedata']['qty'],
-                            'last_price_per_interval' => CRM_Utils_Money::format(
-                                $lineitem['linedata']['unit_price'], NULL, NULL, TRUE),
+                            'last_price_per_interval' => CRM_Itemmanager_Util::formatLocaleMoney(
+                                $lineitem['linedata']['unit_price']),
                             'element_item_name' => 'member_' . $membership['memberdata']['id'] . '_' .
                                 'item_' . $lineitem['fielddata']['id'],
                             'element_hidden_name' => 'member_' . $membership['memberdata']['id'] . '_' .
@@ -179,7 +185,7 @@ class CRM_Itemmanager_Form_RenewItemperiods extends CRM_Core_Form {
                                     'price_field_id' => $pricefield['id'],
                                     'price_set_id' => $priceset['id'],
                                     'last_qty' => $quantity,
-                                    'last_price_per_interval' => CRM_Utils_Money::format(0, NULL, NULL, TRUE),
+                                    'last_price_per_interval' => CRM_Itemmanager_Util::formatLocaleMoney(0),
                                     'element_item_name' => 'member_' . $membership['memberdata']['id'] . '_' .
                                         'item_' . $pricefield['id'],
                                     'element_hidden_name' => 'member_' . $membership['memberdata']['id'] . '_' .

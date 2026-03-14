@@ -19,7 +19,10 @@
       "Bash(export:*)",
       "Bash(__NEW_LINE_1465e906aa1d2e9d__ ssh:*)",
       "Bash(__NEW_LINE_2fd49a62ee40536e__ ssh:*)",
-      "Bash(__NEW_LINE_0f3a7552bac61c0f__ ssh:*)"
+      "Bash(__NEW_LINE_0f3a7552bac61c0f__ ssh:*)",
+      "Bash(brew list:*)",
+      "Bash(brew install:*)",
+      "Bash(gh auth:*)"
     ]
   }
 }

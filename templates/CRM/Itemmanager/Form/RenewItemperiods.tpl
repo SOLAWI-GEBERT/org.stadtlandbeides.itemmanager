@@ -41,7 +41,7 @@
             <thead>
             <tr>
               <th></th>
-              <th width="40%"><span class="label">{$form.$element_item_name.label}</span></th>
+              <th style="min-width: 300px; width: 40%;"><span class="label">{$form.$element_item_name.label}</span></th>
               <th>{ts domain="org.stadtlandbeides.itemmanager"}Start{/ts}</th>
               <th>{ts domain="org.stadtlandbeides.itemmanager"}End{/ts}</th>
               <th><span class="label">{$form.$element_quantity_name.label}</span></th>
@@ -122,6 +122,25 @@
 <script type="application/javascript">
   {literal}
 
+  // Set tooltip on item selector to show selected option text
+  function updateItemTooltip(selector) {
+    if (selector && selector.options && selector.selectedIndex >= 0) {
+      selector.title = selector.options[selector.selectedIndex].text;
+    }
+  }
+
+  // Initialize tooltips on all item selectors after page load
+  document.addEventListener('DOMContentLoaded', function() {
+    var selects = document.querySelectorAll('select[id^="member_"][id$="_item_"]');
+    // Match selectors whose id is like member_X_item_Y (no further suffix)
+    for (var i = 0; i < selects.length; i++) {
+      var parts = selects[i].id.split('_');
+      if (parts.length === 4) {
+        updateItemTooltip(selects[i]);
+      }
+    }
+  });
+
   //UpdateSettingsInfos
   function UpdateSettings($, _,membership_id,price_field_id,price_field_value_id,isitemselector)
   {
@@ -142,6 +161,7 @@
       if(isitemselector)
       {
         hidden_field.value = priceset;
+        updateItemTooltip(item_selector);
 
         for (i = length-1; i >= 0; i--) {
           period_selector.options[i] = null;
