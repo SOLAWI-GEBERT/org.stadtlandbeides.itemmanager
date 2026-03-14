@@ -42,6 +42,9 @@ class CRM_Itemmanager_Form_RenewItemperiods extends CRM_Core_Form {
 
             //Create a logical form reference
             foreach ($member_array['values'] as $membership) {
+                // Skip disabled memberships
+                if (empty($membership['member_active'])) continue;
+
                 try {
                     //region Related Contributions
                     //get the last record
