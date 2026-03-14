@@ -69,6 +69,11 @@ class CRM_Itemmanager_Page_DashboardStub extends CRM_Core_Page {
         }
 
         foreach ($membership['payinfo'] as $contribution_link) {
+            // Skip payment records with no contribution (valid state after contribution deletion)
+            if (empty($contribution_link['contribution_id'])) {
+                continue;
+            }
+
             $linerecords = CRM_Itemmanager_Util::getLineitemFullRecordByContributionId((int) $contribution_link['contribution_id']);
             if ($linerecords['is_error']) {
                 $error = TRUE;

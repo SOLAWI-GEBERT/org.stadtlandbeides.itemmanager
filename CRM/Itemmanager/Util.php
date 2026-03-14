@@ -50,7 +50,7 @@ class CRM_Itemmanager_Util
      */
     public static function formatLocaleMoney($amount): string {
         return CRM_Utils_Money::formatLocaleNumericRoundedForDefaultCurrency(
-            (float) $amount
+            (float) $amount, self::MONEY_PRECISION
         );
     }
 
@@ -932,7 +932,7 @@ class CRM_Itemmanager_Util
 
         //calculate the interval price
         $summary_price = $reverse ?  $pricefieldvalue['amount']: $pricefieldvalue['amount']/$periods;
-        $summary_display = CRM_Utils_Money::format($summary_price, NULL, NULL, TRUE);
+        $summary_display = self::formatLocaleMoney($summary_price);
         //just copy field data for info
         $active_on = CRM_Utils_Date::customFormat(date_create( $pricefield['active_on'])->format('Y-m-d'),
             Civi::settings()->get('dateformatshortdate'));

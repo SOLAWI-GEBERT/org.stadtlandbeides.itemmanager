@@ -90,8 +90,9 @@ class CRM_Itemmanager_Page_UpdateItems extends CRM_Core_Page {
                 ->addWhere('id', '=', $contact_id)
                 ->execute()->single();
         } catch (\CRM_Core_Exception $e) {
-            CRM_Core_Session::setStatus(sprintf(ts("Couldn't find contact #%s", array('domain' => 'org.stadtlandbeides.itemmanager')),
-                $contact_id), ts('Error', array('domain' => 'org.stadtlandbeides.itemmanager')), 'error');
+            CRM_Core_Session::setStatus(
+                E::ts("Couldn't find contact #%1", [1 => $contact_id]),
+                E::ts('Error'), 'error');
             $this->assign("display_name", "ERROR");
             return;
         }
@@ -152,6 +153,11 @@ class CRM_Itemmanager_Page_UpdateItems extends CRM_Core_Page {
 
         //compound both queries together
         while ($base_items->fetch()) {
+            // Skip memberships with no payment record (valid state after contribution deletion)
+            if (empty($base_items->pay_id)) {
+                continue;
+            }
+
             $testcount = \Civi\Api4\Contribution::get(FALSE)
                 ->addWhere('id', '=', (int)$base_items->contrib_id)
                 ->selectRowCount()
@@ -181,7 +187,7 @@ class CRM_Itemmanager_Page_UpdateItems extends CRM_Core_Page {
                         'change_total' => null,
                         'change_tax' => null,
                         'empty_relation_id' => (int)$base_items->pay_id,
-                        'change_error' => 'membership contribution relation '. (int)$base_items->pay_id .' is missing',
+                        'change_error' => E::ts('Membership contribution relation %1 is missing', [1 => (int)$base_items->pay_id]),
                     );
                     $base_list[] = $base;
                 }
@@ -247,9 +253,9 @@ class CRM_Itemmanager_Page_UpdateItems extends CRM_Core_Page {
                     'member_name'   => $base_items->member_name,
                     'item_label'    => $line_items->item_label,
                     'item_quantity' => $line_items->item_quantity,
-                    'item_price' => CRM_Itemmanager_Util::roundMoney($line_items-> item_price),
-                    'item_total' => CRM_Itemmanager_Util::roundMoney($line_items-> item_total),
-                    'item_tax' => CRM_Itemmanager_Util::roundMoney($line_items-> item_tax),
+                    'item_price' => CRM_Itemmanager_Util::formatLocaleMoney($line_items-> item_price),
+                    'item_total' => CRM_Itemmanager_Util::formatLocaleMoney($line_items-> item_total),
+                    'item_tax' => CRM_Itemmanager_Util::formatLocaleMoney($line_items-> item_tax),
                     'periods' => $periods,
                     'contrib_date'  => $line_date,
                     'update_date' => $line_date != $changed_date and $filter_harmonize == 1,
@@ -258,9 +264,9 @@ class CRM_Itemmanager_Page_UpdateItems extends CRM_Core_Page {
                     'change_label' => $line_items -> field_label,
                     'update_price' => !CRM_Itemmanager_Util::moneyEquals($line_items-> item_price, $change_unit_price)
                                             and $filter_sync == 1,
-                    'change_price' => CRM_Itemmanager_Util::roundMoney($change_unit_price),
-                    'change_total' => CRM_Itemmanager_Util::roundMoney($changed_total),
-                    'change_tax' => CRM_Itemmanager_Util::roundMoney($changed_tax),
+                    'change_price' => CRM_Itemmanager_Util::formatLocaleMoney($change_unit_price),
+                    'change_total' => CRM_Itemmanager_Util::formatLocaleMoney($changed_total),
+                    'change_tax' => CRM_Itemmanager_Util::formatLocaleMoney($changed_tax),
                     'change_error' => null,
                 );
 
@@ -360,8 +366,9 @@ class CRM_Itemmanager_Page_UpdateItems extends CRM_Core_Page {
                 ->addWhere('id', '=', $contact_id)
                 ->execute()->single();
         } catch (\CRM_Core_Exception $e) {
-            CRM_Core_Session::setStatus(sprintf(ts("Couldn't find contact #%s", array('domain' => 'org.stadtlandbeides.itemmanager')),
-                $contact_id), ts('Error', array('domain' => 'org.stadtlandbeides.itemmanager')), 'error');
+            CRM_Core_Session::setStatus(
+                E::ts("Couldn't find contact #%1", [1 => $contact_id]),
+                E::ts('Error'), 'error');
             $this->assign("display_name", "ERROR");
             return;
         }
@@ -642,7 +649,7 @@ class CRM_Itemmanager_Page_UpdateItems extends CRM_Core_Page {
      * report error data
      */
     protected function processError($status, $title, $message, $contact_id) {
-        CRM_Core_Session::setStatus($status . "<br/>" . $message, ts('Error', array('domain' => 'org.stadtlandbeides.itemmanager')), 'error');
+        CRM_Core_Session::setStatus($status . "<br/>" . $message, E::ts('Error'), 'error');
         $this->assign("error_title",   $title);
         $this->assign("error_message", $message);
 
@@ -653,7 +660,7 @@ class CRM_Itemmanager_Page_UpdateItems extends CRM_Core_Page {
     }
 
     protected function processSuccess($message, $contact_id) {
-        CRM_Core_Session::setStatus($message, ts('Success', array('domain' => 'org.stadtlandbeides.itemmanager')), 'success');
+        CRM_Core_Session::setStatus($message, E::ts('Success'), 'success');
         $this->assign("destroy",  True);
         $contact_url = CRM_Utils_System::url('civicrm/contact/view', "reset=1&cid={$contact_id}&selectedChild=itemmanager");
 
@@ -661,7 +668,7 @@ class CRM_Itemmanager_Page_UpdateItems extends CRM_Core_Page {
     }
 
     protected function processInfo($message, $contact_id) {
-        CRM_Core_Session::setStatus($message, ts('Info', array('domain' => 'org.stadtlandbeides.itemmanager')), 'info');
+        CRM_Core_Session::setStatus($message, E::ts('Info'), 'info');
 
         $contact_url = CRM_Utils_System::url('civicrm/contact/view', "reset=1&cid={$contact_id}&selectedChild=itemmanager");
         CRM_Utils_System::redirect($contact_url);
