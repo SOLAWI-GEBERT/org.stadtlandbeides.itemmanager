@@ -1035,8 +1035,11 @@ class CRM_Itemmanager_Util
     }
 
 
-    public static function getLastPricefieldSuccessor($currentFieldValueId)
+    public static function getLastPricefieldSuccessor($currentFieldValueId, $depth = 0)
     {
+        if ($depth > 20)
+            return $currentFieldValueId;
+
         $item = new CRM_Itemmanager_BAO_ItemmanagerSettings();
         $valid = $item->get('price_field_value_id', $currentFieldValueId);
 
@@ -1051,7 +1054,7 @@ class CRM_Itemmanager_Util
         if(!$valid)
             return $currentFieldValueId;
 
-        return CRM_Itemmanager_Util::getLastPricefieldSuccessor($successor_item->price_field_value_id);
+        return CRM_Itemmanager_Util::getLastPricefieldSuccessor($successor_item->price_field_value_id, $depth + 1);
     }
 
 

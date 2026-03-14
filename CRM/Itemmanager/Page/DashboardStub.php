@@ -35,12 +35,21 @@ class CRM_Itemmanager_Page_DashboardStub extends CRM_Core_Page {
             return;
         }
 
+        // Handle cleanup POST request
+        $cleanup_action = CRM_Utils_Request::retrieve('cleanup_orphans', 'String');
+        if ($cleanup_action === '1') {
+            $this->cleanupOrphanedPayments($membership_id);
+            CRM_Utils_JSON::output(['status' => 'ok']);
+            return;
+        }
+
         $error = FALSE;
         $max_time = max(ini_get('max_execution_time'), 30);
         $max_time_member = 0.75 * $max_time;
         $time_start = microtime(true);
 
         $field_data = [];
+        $orphaned_payments = [];
 
         $member_array = CRM_Itemmanager_Util::getLastMemberShipsFullRecordByContactId($contact_id);
 
@@ -89,13 +98,10 @@ class CRM_Itemmanager_Page_DashboardStub extends CRM_Core_Page {
                 ->execute()
                 ->countMatched();
             if ($testcount == 0) {
-                $error = TRUE;
-                $this->assign('data_error', $error);
-                $this->processError("ERROR", E::ts('Missing contribution relation to membership'), $linerecords[0]);
-                $this->processDetail(
-                    $membership['typeinfo']['name'] . ' with relation ID ' . (int) $contribution_link['id'],
-                    (int) $contribution_link['contribution_id']
-                );
+                $orphaned_payments[] = [
+                    'pay_id' => (int) $contribution_link['id'],
+                    'contribution_id' => (int) $contribution_link['contribution_id'],
+                ];
                 continue;
             }
 
@@ -105,6 +111,15 @@ class CRM_Itemmanager_Page_DashboardStub extends CRM_Core_Page {
                 ->execute()->single();
             $contrib_date = $contribution['receive_date'];
             $line_timestamp = date_create($contrib_date);
+
+            if (!$line_timestamp) {
+                $error = TRUE;
+                $this->assign('data_error', $error);
+                $this->processError("ERROR", E::ts('Invalid contribution date'),
+                    E::ts('Contribution %1 has no valid date', [1 => (int) $contribution_link['contribution_id']]));
+                $this->processDetail($membership['typeinfo']['name'], (int) $contribution_link['contribution_id']);
+                continue;
+            }
 
             foreach ($linerecords as $lineitem) {
                 try {
@@ -141,8 +156,7 @@ class CRM_Itemmanager_Page_DashboardStub extends CRM_Core_Page {
                         (int) $contribution_link['contribution_id'],
                         $lineitem['linedata']['label']
                     );
-                    parent::run();
-                    return;
+                    continue;
                 }
 
                 $time_end = microtime(true);
@@ -159,6 +173,9 @@ class CRM_Itemmanager_Page_DashboardStub extends CRM_Core_Page {
 
         $this->assign('field_data', $field_data);
         $this->assign('data_error', $error);
+        $this->assign('orphaned_payments', $orphaned_payments);
+        $this->assign('cleanup_url', CRM_Utils_System::url('civicrm/items/tabstub',
+            "cid=$contact_id&mid=$membership_id&cleanup_orphans=1"));
 
         parent::run();
     }
@@ -177,5 +194,40 @@ class CRM_Itemmanager_Page_DashboardStub extends CRM_Core_Page {
         $this->assign("detail_member", $membership);
         $this->assign("detail_contribution", $contribution);
         $this->assign("detail_lineitem", $lineitem);
+    }
+
+    /**
+     * Delete orphaned membership_payment records for a given membership
+     * where the linked contribution no longer exists.
+     */
+    private function cleanupOrphanedPayments($membership_id) {
+        $dao = CRM_Core_DAO::executeQuery(
+            "SELECT mp.id, mp.contribution_id
+             FROM civicrm_membership_payment mp
+             WHERE mp.membership_id = %1",
+            [1 => [$membership_id, 'Integer']]
+        );
+
+        $deleted = 0;
+        while ($dao->fetch()) {
+            $contribCount = \Civi\Api4\Contribution::get(FALSE)
+                ->addWhere('id', '=', (int) $dao->contribution_id)
+                ->selectRowCount()
+                ->execute()
+                ->countMatched();
+
+            if ($contribCount == 0) {
+                CRM_Core_DAO::executeQuery(
+                    "DELETE FROM civicrm_membership_payment WHERE id = %1",
+                    [1 => [(int) $dao->id, 'Integer']]
+                );
+                $deleted++;
+            }
+        }
+
+        CRM_Core_Session::setStatus(
+            E::ts('Deleted %1 orphaned membership payment relation(s).', [1 => $deleted]),
+            E::ts('Success'), 'success'
+        );
     }
 }

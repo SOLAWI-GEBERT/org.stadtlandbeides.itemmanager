@@ -91,7 +91,7 @@ class CRM_Itemmanager_Form_RepairMissingContribution extends CRM_Core_Form {
             //get the last record
             $contributions = array();
             foreach ($membership['payinfo'] as $contribution_link)
-                if ((int)$contribution_link['contribution_id'] == $id)
+                if (!empty($contribution_link['contribution_id']) && (int)$contribution_link['contribution_id'] == $id)
                     $current_membership = $membership;
         }
 

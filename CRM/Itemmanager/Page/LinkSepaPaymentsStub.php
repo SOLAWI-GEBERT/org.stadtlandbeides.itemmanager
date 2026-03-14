@@ -61,6 +61,9 @@ class CRM_Itemmanager_Page_LinkSepaPaymentsStub extends CRM_Core_Page {
             //get the last record
             foreach ($membership['payinfo'] as $contribution_link)
             {
+                if (empty($contribution_link['contribution_id'])) {
+                    continue;
+                }
                 $contribution_id = (int)$contribution_link['contribution_id'];
 
                 $current_contribution = civicrm_api3('Contribution', 'getsingle', array('id' => (int)$contribution_id));
