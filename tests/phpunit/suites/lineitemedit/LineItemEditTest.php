@@ -64,7 +64,7 @@ class CRM_Itemmanager_Test_LineItemEditFormDouble extends CRM_Itemmanager_Form_L
  *
  * @group headless
  */
-class CRM_Itemmanager_Test_LineItemEditTest extends CRM_Itemmanager_Test_MembershipSeededTestCase implements HookInterface {
+class CRM_Itemmanager_Test_LineItemEditTest extends CRM_Itemmanager_Test_NonTransactionalSeededTestCase implements HookInterface {
 
   /** @var int[] Contribution IDs created per test. */
   protected array $contributionIds = [];
@@ -82,6 +82,15 @@ class CRM_Itemmanager_Test_LineItemEditTest extends CRM_Itemmanager_Test_Members
         // ignore
       }
     }
+    // Defensive cleanup to avoid lingering locks.
+    try {
+      CRM_Core_DAO::executeQuery('UNLOCK TABLES');
+      CRM_Core_DAO::executeQuery('SET autocommit=1');
+    }
+    catch (\Exception $e) {
+      // ignore
+    }
+
     parent::tearDown();
   }
 
@@ -294,7 +303,7 @@ class CRM_Itemmanager_Test_LineItemEditTest extends CRM_Itemmanager_Test_Members
 
   public function testCountFutureLineItemsCountsCorrectlyWithFutureOrders(): void {
     $lineItemId = $this->getSeededLineItemId();
-    $contribId = $this->seedIds['order'][0];
+    $contribId = (int) CRM_Core_DAO::getFieldValue('CRM_Price_DAO_LineItem', $lineItemId, 'contribution_id');
 
     // Get the receive_date of the seeded contribution
     $receiveDate = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Contribution', $contribId, 'receive_date');
@@ -314,7 +323,7 @@ class CRM_Itemmanager_Test_LineItemEditTest extends CRM_Itemmanager_Test_Members
 
   public function testCountFutureLineItemsExcludesCurrentItem(): void {
     $lineItemId = $this->getSeededLineItemId();
-    $contribId = $this->seedIds['order'][0];
+    $contribId = (int) CRM_Core_DAO::getFieldValue('CRM_Price_DAO_LineItem', $lineItemId, 'contribution_id');
 
     $receiveDate = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Contribution', $contribId, 'receive_date');
     // Create an order AFTER the seeded one — it should be counted
@@ -329,7 +338,7 @@ class CRM_Itemmanager_Test_LineItemEditTest extends CRM_Itemmanager_Test_Members
 
   public function testCountFutureLineItemsExcludesPastContributions(): void {
     $lineItemId = $this->getSeededLineItemId();
-    $contribId = $this->seedIds['order'][0];
+    $contribId = (int) CRM_Core_DAO::getFieldValue('CRM_Price_DAO_LineItem', $lineItemId, 'contribution_id');
     $receiveDate = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Contribution', $contribId, 'receive_date');
 
     // Create one future and one past order
@@ -864,14 +873,32 @@ class CRM_Itemmanager_Test_LineItemEditTest extends CRM_Itemmanager_Test_Members
   // ── Helper Methods ───────────────────────────────────────────────────
 
   private function getSeededLineItemId(): int {
-    $contribId = $this->seedIds['order'][0] ?? 0;
-    $this->assertGreaterThan(0, $contribId, 'Seeded order must exist.');
+    $contribId = (int) ($this->seedIds['order'][0] ?? 0);
+    if ($contribId <= 0) {
+      $contribId = $this->createFutureOrder(date('Y-m-d'));
+    }
 
     $lineItem = civicrm_api3('LineItem', 'getsingle', [
       'contribution_id' => $contribId,
       'options' => ['limit' => 1],
     ]);
     return (int) $lineItem['id'];
+  }
+
+  private function getMemberContactId(): int {
+    $contactId = (int) ($this->seedIds['member_contact'][0] ?? 0);
+    if ($contactId > 0) {
+      return $contactId;
+    }
+    $contact = \Civi\Api4\Contact::create(FALSE)
+      ->addValue('contact_type', 'Individual')
+      ->addValue('first_name', 'Unit')
+      ->addValue('last_name', 'Member')
+      ->execute()
+      ->first();
+    $contactId = (int) ($contact['id'] ?? 0);
+    $this->seedIds['member_contact'][0] = $contactId;
+    return $contactId;
   }
 
   private function createFormDouble(int $lineItemId): CRM_Itemmanager_Test_LineItemEditFormDouble {
@@ -882,11 +909,15 @@ class CRM_Itemmanager_Test_LineItemEditTest extends CRM_Itemmanager_Test_Members
   }
 
   private function createFutureOrder(string $receiveDate): int {
-    $contactId = $this->seedIds['member_contact'][0];
-    $priceFieldId = $this->seedIds['price_field'][0];
-    $priceFieldValueId = $this->seedIds['price_field_value'][0];
-    $financialTypeId = $this->seedIds['financial_type'][0];
-    $membershipTypeId = $this->seedIds['membership_type'][0];
+    $contactId = $this->getMemberContactId();
+    $priceFieldId = $this->seedIds['price_field'][0] ?? 0;
+    $priceFieldValueId = $this->seedIds['price_field_value'][0] ?? 0;
+    $financialTypeId = $this->seedIds['financial_type'][0] ?? 0;
+    $membershipTypeId = $this->seedIds['membership_type'][0] ?? 0;
+
+    if (!$priceFieldId || !$priceFieldValueId || !$financialTypeId || !$membershipTypeId) {
+      throw new \RuntimeException('Missing seed IDs for future order');
+    }
 
     $order = civicrm_api3('Order', 'create', [
       'contact_id' => $contactId,

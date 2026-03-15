@@ -7,16 +7,10 @@ use Civi\Test\TransactionalInterface;
 /**
  * Base class for tests with seeded data.
  */
-abstract class CRM_Itemmanager_Test_SeededTestCase extends \PHPUnit\Framework\TestCase implements HeadlessInterface, TransactionalInterface {
+abstract class CRM_Itemmanager_Test_NonTransactionalSeededTestCase extends \PHPUnit\Framework\TestCase implements HeadlessInterface {
 
   /** @var array */
   protected $seedIds = [];
-
-  /** @var bool */
-  protected static $bootstrapped = FALSE;
-
-  /** @var string */
-  protected $seedTag;
 
   /**
    * Setup used when HeadlessInterface is implemented.
@@ -31,19 +25,13 @@ abstract class CRM_Itemmanager_Test_SeededTestCase extends \PHPUnit\Framework\Te
   public function setUp(): void {
     parent::setUp();
     $this->seedIds = [];
-    if (empty($this->seedTag)) {
-      $this->seedTag = 'UnitTest-' . uniqid();
-    }
 
-    // Ensure extension is installed in headless DB (once per run).
-    if (!self::$bootstrapped) {
-      civicrm_api3('Extension', 'refresh', []);
-      civicrm_api3('Extension', 'install', [
-        'keys' => ['org.stadtlandbeides.itemmanager'],
-      ]);
-      $this->seedIds['extension_installed'] = TRUE;
-      self::$bootstrapped = TRUE;
-    }
+    // Ensure extension is installed in headless DB.
+    civicrm_api3('Extension', 'refresh', []);
+    civicrm_api3('Extension', 'install', [
+      'keys' => ['org.stadtlandbeides.itemmanager'],
+    ]);
+    $this->seedIds['extension_installed'] = TRUE;
 
     $this->seedDatabase();
   }
@@ -57,11 +45,10 @@ abstract class CRM_Itemmanager_Test_SeededTestCase extends \PHPUnit\Framework\Te
    * Seed minimal data for tests.
    */
   protected function seedDatabase(): void {
-    $tag = $this->seedTag;
     // Seed: create an organization.
     $org = \Civi\Api4\Contact::create(FALSE)
       ->addValue('contact_type', 'Organization')
-      ->addValue('organization_name', 'Unit Test Org ' . $tag)
+      ->addValue('organization_name', 'Unit Test Org')
       ->execute()
       ->first();
 
@@ -71,39 +58,49 @@ abstract class CRM_Itemmanager_Test_SeededTestCase extends \PHPUnit\Framework\Te
 
     // Cleanup any leftovers (idempotent seeds).
     $existingFt = \Civi\Api4\FinancialType::get(FALSE)
-      ->addWhere('name', '=', 'Membership VAT 19 ' . $tag)
+      ->addWhere('name', '=', 'Membership VAT 19')
       ->setSelect(['id'])
       ->execute()
       ->first();
 
     if (!empty($existingFt['id'])) {
       $ftId = (int) $existingFt['id'];
-      // Remove dependent price fields/values referencing this financial type (if column exists).
-      $this->deleteByFinancialTypeIfColumn('civicrm_price_field_value', $ftId);
-      $this->deleteByFinancialTypeIfColumn('civicrm_price_field', $ftId);
-      $this->deleteByFinancialTypeIfColumn('civicrm_price_set', $ftId);
+      try {
+        // Remove dependent price fields/values referencing this financial type (if column exists).
+        $this->deleteByFinancialTypeIfColumn('civicrm_price_field_value', $ftId);
+        $this->deleteByFinancialTypeIfColumn('civicrm_price_field', $ftId);
+        $this->deleteByFinancialTypeIfColumn('civicrm_price_set', $ftId);
 
-      \Civi\Api4\MembershipType::delete(FALSE)
-        ->addWhere('financial_type_id', '=', $ftId)
-        ->execute();
+        \Civi\Api4\MembershipType::delete(FALSE)
+          ->addWhere('financial_type_id', '=', $ftId)
+          ->execute();
 
-      \Civi\Api4\EntityFinancialAccount::delete(FALSE)
-        ->addWhere('entity_table', '=', 'civicrm_financial_type')
-        ->addWhere('entity_id', '=', $ftId)
-        ->execute();
+        \Civi\Api4\EntityFinancialAccount::delete(FALSE)
+          ->addWhere('entity_table', '=', 'civicrm_financial_type')
+          ->addWhere('entity_id', '=', $ftId)
+          ->execute();
 
-      \Civi\Api4\FinancialType::delete(FALSE)
-        ->addWhere('id', '=', $ftId)
-        ->execute();
+        \Civi\Api4\FinancialType::delete(FALSE)
+          ->addWhere('id', '=', $ftId)
+          ->execute();
+      }
+      catch (\Exception $e) {
+        // ignore cleanup errors in non-transactional tests
+      }
     }
 
-    \Civi\Api4\FinancialAccount::delete(FALSE)
-      ->addWhere('name', '=', 'Unit Test VAT Account ' . $tag)
-      ->execute();
+    try {
+      \Civi\Api4\FinancialAccount::delete(FALSE)
+        ->addWhere('name', '=', 'Unit Test VAT Account')
+        ->execute();
+    }
+    catch (\Exception $e) {
+      // ignore cleanup errors
+    }
 
     // Seed: create financial type (Membership VAT 19).
     $finType = \Civi\Api4\FinancialType::create(FALSE)
-      ->addValue('name', 'Membership VAT 19 ' . $tag)
+      ->addValue('name', 'Membership VAT 19')
       ->addValue('is_taxable', TRUE)
       ->addValue('is_active', TRUE)
       ->execute()
@@ -115,7 +112,7 @@ abstract class CRM_Itemmanager_Test_SeededTestCase extends \PHPUnit\Framework\Te
 
     // Seed: create membership type.
     $memType = \Civi\Api4\MembershipType::create(FALSE)
-      ->addValue('name', 'Unit Test Membership ' . $tag)
+      ->addValue('name', 'Unit Test Membership')
       ->addValue('member_of_contact_id', $org['id'] ?? NULL)
       ->addValue('financial_type_id', $finType['id'] ?? NULL)
       ->addValue('duration_unit', 'year')
@@ -134,7 +131,7 @@ abstract class CRM_Itemmanager_Test_SeededTestCase extends \PHPUnit\Framework\Te
 
     // Seed: create financial account (type id = 7).
     $finAcc = \Civi\Api4\FinancialAccount::create(FALSE)
-      ->addValue('name', 'Unit Test VAT Account ' . $tag)
+      ->addValue('name', 'Unit Test VAT Account')
       ->addValue('financial_account_type_id', 7)
       ->addValue('is_active', TRUE)
       ->execute()
@@ -162,7 +159,7 @@ abstract class CRM_Itemmanager_Test_SeededTestCase extends \PHPUnit\Framework\Te
     // Seed: price set.
     $priceSet = \Civi\Api4\PriceSet::create(FALSE)
       ->addValue('name', 'unit_test_priceset')
-      ->addValue('title', 'Unit Test PriceSet ' . $tag)
+      ->addValue('title', 'Unit Test PriceSet')
       ->addValue('extends', 'Membership')
       ->addValue('is_active', TRUE)
       ->addValue('financial_type_id', $finType['id'] ?? NULL)
@@ -189,7 +186,7 @@ abstract class CRM_Itemmanager_Test_SeededTestCase extends \PHPUnit\Framework\Te
 
     $pfvMembership = \Civi\Api4\PriceFieldValue::create(FALSE)
       ->addValue('price_field_id', $pfMembership['id'] ?? NULL)
-      ->addValue('label', 'Unit Test Membership ' . $tag)
+      ->addValue('label', 'Unit Test Membership')
       ->addValue('amount', 100)
       ->addValue('membership_type_id', $memType['id'] ?? NULL)
       ->addValue('financial_type_id', $finType['id'] ?? NULL)
@@ -298,7 +295,8 @@ abstract class CRM_Itemmanager_Test_SeededTestCase extends \PHPUnit\Framework\Te
    * Cleanup seeded data.
    */
   protected function cleanupSeeds(): void {
-    if (!empty($this->seedIds['price_field_value'])) {
+    try {
+      if (!empty($this->seedIds['price_field_value'])) {
       \Civi\Api4\PriceFieldValue::delete(FALSE)
         ->addWhere('id', 'IN', $this->seedIds['price_field_value'])
         ->execute();
@@ -353,29 +351,6 @@ abstract class CRM_Itemmanager_Test_SeededTestCase extends \PHPUnit\Framework\Te
         ->execute();
     }
 
-    // Tag-based fallback cleanup (in case IDs were not recorded).
-    if (!empty($this->seedTag)) {
-      $tag = $this->seedTag;
-      \Civi\Api4\FinancialType::delete(FALSE)
-        ->addWhere('name', 'LIKE', '% ' . $tag)
-        ->execute();
-      \Civi\Api4\FinancialAccount::delete(FALSE)
-        ->addWhere('name', 'LIKE', '% ' . $tag)
-        ->execute();
-      \Civi\Api4\MembershipType::delete(FALSE)
-        ->addWhere('name', 'LIKE', '% ' . $tag)
-        ->execute();
-      \Civi\Api4\PriceSet::delete(FALSE)
-        ->addWhere('title', 'LIKE', '% ' . $tag)
-        ->execute();
-      \Civi\Api4\PriceFieldValue::delete(FALSE)
-        ->addWhere('label', 'LIKE', '% ' . $tag)
-        ->execute();
-      \Civi\Api4\Contact::delete(FALSE)
-        ->addWhere('organization_name', 'LIKE', '% ' . $tag)
-        ->execute();
-    }
-
     if (!empty($this->seedIds['extension_installed'])) {
       civicrm_api3('Extension', 'disable', [
         'keys' => ['org.stadtlandbeides.itemmanager'],
@@ -392,6 +367,10 @@ abstract class CRM_Itemmanager_Test_SeededTestCase extends \PHPUnit\Framework\Te
     CRM_Core_DAO::executeQuery('SET FOREIGN_KEY_CHECKS=1');
 
     $this->seedIds = [];
+    }
+    catch (\Exception $e) {
+      // ignore cleanup errors in non-transactional tests
+    }
   }
 
 }

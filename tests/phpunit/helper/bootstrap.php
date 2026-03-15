@@ -11,8 +11,15 @@ if (!getenv('CIVICRM_BOOT')) {
   putenv('CIVICRM_BOOT=Standalone://root/.openclaw/workspace/civicrm-buildkit/build/stable');
 }
 if (!getenv('CIVICRM_DSN')) {
-  putenv('CIVICRM_DSN=mysql://stablecivi_dbz7q:M5dlmBEOR9YAsD4w@127.0.0.1/stablecivi_6m8zl?new_link=true');
+  $dsn = 'mysql://stablecivi_dbz7q:M5dlmBEOR9YAsD4w@127.0.0.1/stablecivi_6m8zl?new_link=true';
+  putenv('CIVICRM_DSN=' . $dsn);
+  $_ENV['CIVICRM_DSN'] = $dsn;
+  $_SERVER['CIVICRM_DSN'] = $dsn;
 }
+if (!defined('CIVICRM_DSN')) {
+  define('CIVICRM_DSN', getenv('CIVICRM_DSN'));
+}
+$GLOBALS['CIVICRM_DSN'] = getenv('CIVICRM_DSN');
 
 // phpcs:disable
 eval(cv('php:boot --level=classloader', 'phpcode'));
