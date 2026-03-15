@@ -175,20 +175,20 @@
 
                         <!-- Price block -->
                         {if $ritem.update_price}
-                            <td  width="5%"><span class="changed_data">{$ritem.item_price}
+                            <td  width="5%"><span class="changed_data"><span class="fmt-money">{$ritem.item_price}</span>
                                     </br> {ts domain="org.stadtlandbeides.itemmanager"}change to{/ts}
-                                    </br> {$ritem.change_price}</span></td>
-                            <td  width="5%"><span class="changed_data">{$ritem.item_total}
+                                    </br> <span class="fmt-money">{$ritem.change_price}</span></span></td>
+                            <td  width="5%"><span class="changed_data"><span class="fmt-money">{$ritem.item_total}</span>
                                     </br> {ts domain="org.stadtlandbeides.itemmanager"}change to{/ts}
-                                    </br> {$ritem.change_total}</span></td>
-                            <td  width="5%"><span class="changed_data">{$ritem.item_tax}
+                                    </br> <span class="fmt-money">{$ritem.change_total}</span></span></td>
+                            <td  width="5%"><span class="changed_data"><span class="fmt-money">{$ritem.item_tax}</span>
                                     </br> {ts domain="org.stadtlandbeides.itemmanager"}change to{/ts}
-                                    </br> {$ritem.change_tax}</span></td>
+                                    </br> <span class="fmt-money">{$ritem.change_tax}</span></span></td>
 
                         {else}
-                            <td width="5%">{$ritem.item_price}</td>
-                            <td width="5%">{$ritem.item_total}</td>
-                            <td width="5%">{$ritem.item_tax}</td>
+                            <td width="5%"><span class="fmt-money">{$ritem.item_price}</span></td>
+                            <td width="5%"><span class="fmt-money">{$ritem.item_total}</span></td>
+                            <td width="5%"><span class="fmt-money">{$ritem.item_tax}</span></td>
 
                         {/if}
 
@@ -292,6 +292,12 @@
            input.checked = all.checked;
         }
     }
+
+    function formatMoney4(el) {
+        var n = parseFloat(el.textContent);
+        if (!isNaN(n)) el.textContent = n.toFixed(4);
+    }
+    document.querySelectorAll('.fmt-money').forEach(formatMoney4);
 
     (function($) {
 

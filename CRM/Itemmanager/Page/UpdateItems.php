@@ -253,9 +253,9 @@ class CRM_Itemmanager_Page_UpdateItems extends CRM_Core_Page {
                     'member_name'   => $base_items->member_name,
                     'item_label'    => $line_items->item_label,
                     'item_quantity' => $line_items->item_quantity,
-                    'item_price' => CRM_Itemmanager_Util::formatLocaleMoney($line_items-> item_price),
-                    'item_total' => CRM_Itemmanager_Util::formatLocaleMoney($line_items-> item_total),
-                    'item_tax' => CRM_Itemmanager_Util::formatLocaleMoney($line_items-> item_tax),
+                    'item_price' => (float) $line_items->item_price,
+                    'item_total' => (float) $line_items->item_total,
+                    'item_tax' => (float) $line_items->item_tax,
                     'periods' => $periods,
                     'contrib_date'  => $line_date,
                     'update_date' => $line_date != $changed_date and $filter_harmonize == 1,
@@ -264,9 +264,9 @@ class CRM_Itemmanager_Page_UpdateItems extends CRM_Core_Page {
                     'change_label' => $line_items -> field_label,
                     'update_price' => !CRM_Itemmanager_Util::moneyEquals($line_items-> item_price, $change_unit_price)
                                             and $filter_sync == 1,
-                    'change_price' => CRM_Itemmanager_Util::formatLocaleMoney($change_unit_price),
-                    'change_total' => CRM_Itemmanager_Util::formatLocaleMoney($changed_total),
-                    'change_tax' => CRM_Itemmanager_Util::formatLocaleMoney($changed_tax),
+                    'change_price' => $change_unit_price,
+                    'change_total' => $changed_total,
+                    'change_tax' => $changed_tax,
                     'change_error' => null,
                 );
 

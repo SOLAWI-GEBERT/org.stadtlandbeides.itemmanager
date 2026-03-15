@@ -42,8 +42,16 @@ msgstr ""
 msgid "Cancel"
 msgstr ""
 
+#: ./CRM/Itemmanager/Form/ItemmanagerSetting.php
+msgid "Could not get the period from price set %1"
+msgstr ""
+
 #: ./CRM/Itemmanager/Form/ItemmanagerSetting.php ./CRM/Itemmanager/Page/ItemmanagerSettingStub.php ./tests/phpunit/suites/settings/ItemmanagerSettingFormTest.php
 msgid "No Successor"
+msgstr ""
+
+#: ./CRM/Itemmanager/Form/ItemmanagerSetting.php ./CRM/Itemmanager/Page/ItemmanagerSettingStub.php
+msgid "Could not get the price set %1"
 msgstr ""
 
 #: ./CRM/Itemmanager/Form/ItemmanagerSetting.php
@@ -88,6 +96,14 @@ msgstr ""
 
 #: ./CRM/Itemmanager/Form/LinkSepaWrapper.php
 msgid "Payments relation for"
+msgstr ""
+
+#: ./CRM/Itemmanager/Form/LinkSepaWrapper.php ./CRM/Itemmanager/Page/ItemmanagerSettingStub.php
+msgid "Could not get the price field %1"
+msgstr ""
+
+#: ./CRM/Itemmanager/Form/LinkSepaWrapper.php
+msgid "Could not get the financial type %1"
 msgstr ""
 
 #: ./CRM/Itemmanager/Form/LinkSepaWrapper.php
@@ -147,6 +163,18 @@ msgid "Quantity"
 msgstr ""
 
 #: ./CRM/Itemmanager/Form/RenewItemperiods.php
+msgid "Membership \"%1\" has been updated."
+msgstr ""
+
+#: ./CRM/Itemmanager/Form/RenewItemperiods.php
+msgid "Membership \"%1\" could not be updated."
+msgstr ""
+
+#: ./CRM/Itemmanager/Form/RenewItemperiods.php
+msgid "Update Membership"
+msgstr ""
+
+#: ./CRM/Itemmanager/Form/RenewItemperiods.php
 msgid "The price field has been chosen from a different price set!"
 msgstr ""
 
@@ -180,6 +208,18 @@ msgstr ""
 
 #: ./CRM/Itemmanager/Form/RepairMissingContribution.php
 msgid "There is no membership related to that contribution."
+msgstr ""
+
+#: ./CRM/Itemmanager/Form/RepairMissingContribution.php
+msgid "Contribution for membership \"%1\" has been cloned."
+msgstr ""
+
+#: ./CRM/Itemmanager/Form/RepairMissingContribution.php
+msgid "Cloning contribution for membership \"%1\" failed."
+msgstr ""
+
+#: ./CRM/Itemmanager/Form/RepairMissingContribution.php
+msgid "Clone contribution"
 msgstr ""
 
 #: ./CRM/Itemmanager/Page/Dashboard.php ./itemmanager.php
@@ -278,8 +318,16 @@ msgstr ""
 msgid "Membership contribution relation %1 is missing"
 msgstr ""
 
+#: ./CRM/Itemmanager/Page/ItemmanagerSettingStub.php
+msgid "Period not found: %1"
+msgstr ""
+
 #: ./CRM/Itemmanager/Page/ItemmanagerSettingStub.php ./templates/CRM/Itemmanager/Page/ItemmanagerSettingStub.tpl
 msgid "Active"
+msgstr ""
+
+#: ./CRM/Itemmanager/Page/LinkSepaPaymentsStub.php
+msgid "Net amount is zero: %1"
 msgstr ""
 
 #: ./CRM/Itemmanager/Page/LinkSepaPaymentsStub.php
@@ -287,7 +335,27 @@ msgid "Retrieve payinfo from memberships"
 msgstr ""
 
 #: ./CRM/Itemmanager/Page/LinkSepaPaymentsStub.php
+msgid "Could not get the line items for contribution %1"
+msgstr ""
+
+#: ./CRM/Itemmanager/Page/LinkSepaPaymentsStub.php
+msgid "Could not get the payments for contribution %1"
+msgstr ""
+
+#: ./CRM/Itemmanager/Page/LinkSepaPaymentsStub.php
+msgid "Could not get Itemmanager data for price field value %1"
+msgstr ""
+
+#: ./CRM/Itemmanager/Page/LinkSepaPaymentsStub.php
 msgid "Retrieve SEPA mandate"
+msgstr ""
+
+#: ./CRM/Itemmanager/Page/SyncStub.php
+msgid "Could not get the full record for price field value %1"
+msgstr ""
+
+#: ./CRM/Itemmanager/Page/SyncStub.php
+msgid "No Itemmanager periods found for price set %1"
 msgstr ""
 
 #: ./CRM/Itemmanager/Page/UpdateItems.php ./templates/CRM/Itemmanager/Page/Dashboard.tpl ./templates/CRM/Itemmanager/Page/FutureContributionScan.tpl ./templates/CRM/Itemmanager/Page/ItemMaintenance.tpl ./templates/CRM/Itemmanager/Page/UpdateItems.tpl
@@ -836,6 +904,10 @@ msgstr ""
 
 #: ./settings/Itemmanager.setting.php
 msgid "Limits the number of lines shown"
+msgstr ""
+
+#: ./templates/CRM/Itemmanager/Form/AddLineItems.tpl
+msgid "OR"
 msgstr ""
 
 #: ./templates/CRM/Itemmanager/Form/AddLineItems.tpl

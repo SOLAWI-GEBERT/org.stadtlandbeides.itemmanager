@@ -55,20 +55,17 @@ class CRM_Itemmanager_Util
     }
 
     /**
-     * Convert any money value to machine format with MONEY_PRECISION decimals.
+     * Convert a numeric money value to machine format with MONEY_PRECISION decimals.
      *
-     * Accepts locale-formatted strings (e.g. "1.234,56") or numeric values.
-     * Uses CRM_Utils_Rule::cleanMoney() for locale parsing, then formats
-     * to exactly MONEY_PRECISION decimal places with dot separator.
+     * Casts to float and formats to exactly MONEY_PRECISION decimal places
+     * with dot separator. Does not use locale-aware parsing — input must be
+     * a numeric value or dot-decimal string (as returned by the database).
      *
      * @param string|float $amount
      * @return string  Machine-formatted string (e.g. "1234.5600")
      */
     public static function toMachineMoney($amount): string {
-        $value = is_numeric($amount)
-            ? (float) $amount
-            : (float) CRM_Utils_Rule::cleanMoney($amount);
-        return number_format($value, self::MONEY_PRECISION, '.', '');
+        return number_format((float) $amount, self::MONEY_PRECISION, '.', '');
     }
 
     /**

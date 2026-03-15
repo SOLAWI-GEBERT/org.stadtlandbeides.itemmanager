@@ -79,7 +79,7 @@ class CRM_Itemmanager_Page_LinkSepaPaymentsStub extends CRM_Core_Page {
                 try {
                     if ($contrib_net_amount == 0) {
                         $contrib_net_fee_ratio = -1.0;
-                        $this->_errormessages[] = 'Net amount is Zero ' .$contrib_net_amount;
+                        $this->_errormessages[] = E::ts('Net amount is zero: %1', [1 => $contrib_net_amount]);
                     }
                     else {$contrib_net_fee_ratio = $contrib_fee_amount / $contrib_net_amount;}
 
@@ -113,7 +113,7 @@ class CRM_Itemmanager_Page_LinkSepaPaymentsStub extends CRM_Core_Page {
                     $contribution_id,
                     $this->_financial_id);
                 if ($linerecords['is_error']) {
-                    $this->_errormessages[] = 'Could not get the line items for contribution ' .(int)$contribution_id;
+                    $this->_errormessages[] = E::ts('Could not get the line items for contribution %1', [1 => (int)$contribution_id]);
                     continue;
                 }
 
@@ -121,7 +121,7 @@ class CRM_Itemmanager_Page_LinkSepaPaymentsStub extends CRM_Core_Page {
 
                 $trxn = civicrm_api3('Payment','get',array('entity_id' => (int)$contribution_id));
                 if ($trxn['is_error']) {
-                    $this->_errormessages[] = 'Could not get the payments for the contribution ' .(int)$contribution_id;
+                    $this->_errormessages[] = E::ts('Could not get the payments for contribution %1', [1 => (int)$contribution_id]);
                     continue;
                 }
 
@@ -161,7 +161,7 @@ class CRM_Itemmanager_Page_LinkSepaPaymentsStub extends CRM_Core_Page {
                     $valid = $itemmanager->get('price_field_value_id', $price_field_value_id );
                     if(!$valid)
                     {
-                        $this->_errormessages[] = 'Could not get itemmanger data from ' .(int)$price_field_value_id;
+                        $this->_errormessages[] = E::ts('Could not get Itemmanager data for price field value %1', [1 => (int)$price_field_value_id]);
                         continue;
                     }
                     $periodbase = new CRM_Itemmanager_BAO_ItemmanagerPeriods();

@@ -479,12 +479,14 @@ class CRM_Itemmanager_Form_RenewItemperiods extends CRM_Core_Form {
 
                 }
 
-                $this->processSuccess("Membership ".$membership['name']." has been updated.");
+                $this->processSuccess(E::ts('Membership "%1" has been updated.', [1 => $membership['name']]));
 
             }
         catch (CRM_Core_Exception $e) {
-            $this->processError("Membership ".$membership['name']." has been failed.",$e->getMessage(),
-                "Update Membership");
+            $this->processError(
+                E::ts('Membership "%1" could not be updated.', [1 => $membership['name']]),
+                $e->getMessage(),
+                E::ts('Update Membership'));
         }
 
         }

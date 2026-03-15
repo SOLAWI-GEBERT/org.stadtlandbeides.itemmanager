@@ -170,9 +170,9 @@ CRM.$(function($) {
                     '<td>' + escHtml(item.member_name || '') + '</td>' +
                     '<td><span class="missing-label">' + escHtml(mi.label || '') + '</span></td>' +
                     '<td>' + (mi.qty || '') + '</td>' +
-                    '<td>' + (item.change_price || '') + '</td>' +
-                    '<td>' + (item.change_total || '') + '</td>' +
-                    '<td>' + (item.change_tax || '') + '</td>' +
+                    '<td>' + formatMoney4(item.change_price) + '</td>' +
+                    '<td>' + formatMoney4(item.change_total) + '</td>' +
+                    '<td>' + formatMoney4(item.change_tax) + '</td>' +
                     '<td><span class="missing-label">' + escHtml(item.change_error || '') + '</span></td>' +
                     '</tr>';
                 continue;
@@ -186,9 +186,9 @@ CRM.$(function($) {
                     '<td>' + escHtml(item.member_name || '') + '</td>' +
                     '<td><span class="extra-label">' + escHtml(item.item_label || '') + '</span></td>' +
                     '<td>' + escHtml(item.item_quantity || '') + '</td>' +
-                    '<td>' + (item.item_price || '') + '</td>' +
-                    '<td>' + (item.item_total || '') + '</td>' +
-                    '<td>' + (item.item_tax || '') + '</td>' +
+                    '<td>' + formatMoney4(item.item_price) + '</td>' +
+                    '<td>' + formatMoney4(item.item_total) + '</td>' +
+                    '<td>' + formatMoney4(item.item_tax) + '</td>' +
                     '<td><span class="extra-label">' + escHtml(item.change_error || '') + '</span></td>' +
                     '</tr>';
                 continue;
@@ -204,9 +204,9 @@ CRM.$(function($) {
                     '<td>' + escHtml(item.item_label || '') + '</td>' +
                     '<td><span class="changed_data">' + item.item_quantity +
                         '<br/>' + ts('change to') + '<br/>' + qs.target_qty + '</span></td>' +
-                    '<td>' + (item.item_price || '') + '</td>' +
-                    '<td>' + (item.change_total || '') + '</td>' +
-                    '<td>' + (item.change_tax || '') + '</td>' +
+                    '<td>' + formatMoney4(item.item_price) + '</td>' +
+                    '<td>' + formatMoney4(item.change_total) + '</td>' +
+                    '<td>' + formatMoney4(item.change_tax) + '</td>' +
                     '<td><span class="missing-label">' + escHtml(item.change_error || '') + '</span></td>' +
                     '</tr>';
                 continue;
@@ -239,16 +239,16 @@ CRM.$(function($) {
 
             // Price
             if (item.update_price) {
-                html += '<td><span class="changed_data">' + item.item_price +
-                    '<br/>' + ts('change to') + '<br/>' + item.change_price + '</span></td>';
-                html += '<td><span class="changed_data">' + item.item_total +
-                    '<br/>' + ts('change to') + '<br/>' + item.change_total + '</span></td>';
-                html += '<td><span class="changed_data">' + item.item_tax +
-                    '<br/>' + ts('change to') + '<br/>' + item.change_tax + '</span></td>';
+                html += '<td><span class="changed_data">' + formatMoney4(item.item_price) +
+                    '<br/>' + ts('change to') + '<br/>' + formatMoney4(item.change_price) + '</span></td>';
+                html += '<td><span class="changed_data">' + formatMoney4(item.item_total) +
+                    '<br/>' + ts('change to') + '<br/>' + formatMoney4(item.change_total) + '</span></td>';
+                html += '<td><span class="changed_data">' + formatMoney4(item.item_tax) +
+                    '<br/>' + ts('change to') + '<br/>' + formatMoney4(item.change_tax) + '</span></td>';
             } else {
-                html += '<td>' + (item.item_price || '') + '</td>';
-                html += '<td>' + (item.item_total || '') + '</td>';
-                html += '<td>' + (item.item_tax || '') + '</td>';
+                html += '<td>' + formatMoney4(item.item_price) + '</td>';
+                html += '<td>' + formatMoney4(item.item_total) + '</td>';
+                html += '<td>' + formatMoney4(item.item_tax) + '</td>';
             }
 
             html += '<td><span class="changed_data">' + escHtml(item.change_error || '') + '</span></td>';
@@ -350,10 +350,15 @@ CRM.$(function($) {
         });
     });
 
+    function formatMoney4(val) {
+        var n = parseFloat(val);
+        return isNaN(n) ? '0.0000' : n.toFixed(4);
+    }
+
     function escHtml(str) {
-        if (!str) return '';
+        if (!str && str !== 0) return '';
         var div = document.createElement('div');
-        div.appendChild(document.createTextNode(str));
+        div.appendChild(document.createTextNode(String(str)));
         return div.innerHTML;
     }
 

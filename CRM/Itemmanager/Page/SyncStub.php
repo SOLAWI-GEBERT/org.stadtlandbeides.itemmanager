@@ -97,12 +97,12 @@ class CRM_Itemmanager_Page_SyncStub extends CRM_Core_Page {
                     $field_infos = CRM_Itemmanager_Util::getPriceSetRefByFieldValueId($field_id);
 
                     if ($field_infos['iserror'] == 1) {
-                        $this->_errormessages[] = 'Could not get the full record for price field value ' . $field_id;
+                        $this->_errormessages[] = E::ts('Could not get the full record for price field value %1', [1 => $field_id]);
                         continue;
                     }
 
                     if (!isset($field_infos['price_id'])) {
-                        $this->_errormessages[] = 'Could not get the full record for price field value ' . $field_id;
+                        $this->_errormessages[] = E::ts('Could not get the full record for price field value %1', [1 => $field_id]);
                         continue;
                     }
 
@@ -111,7 +111,7 @@ class CRM_Itemmanager_Page_SyncStub extends CRM_Core_Page {
                     $period = new CRM_Itemmanager_BAO_ItemmanagerPeriods();
                     $valid = $period->get('price_set_id', (int) $price_set);
                     if (!$valid or $period->id == 0) {
-                        $this->_errormessages[] = 'No Itemmanager periods found with id ' . (int) $price_set;
+                        $this->_errormessages[] = E::ts('No Itemmanager periods found for price set %1', [1 => (int) $price_set]);
                         continue;
                     }
 

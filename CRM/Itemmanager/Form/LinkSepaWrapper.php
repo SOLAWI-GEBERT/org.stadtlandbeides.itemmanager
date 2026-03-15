@@ -62,7 +62,7 @@ class CRM_Itemmanager_Form_LinkSepaWrapper extends CRM_Core_Form {
             $price_origins  = civicrm_api3('PriceFieldValue', 'get',
                 array('price_field_id' => (int)$price_id));
             if ($price_origins['is_error']) {
-                $this->_errormessages[] = 'Could not get the price field ' .(int)$price_id;
+                $this->_errormessages[] = E::ts('Could not get the price field %1', [1 => (int)$price_id]);
                 continue;
             }
 
@@ -79,7 +79,7 @@ class CRM_Itemmanager_Form_LinkSepaWrapper extends CRM_Core_Form {
             $finance_type  = civicrm_api3('FinancialType', 'getsingle',
                 array('id' => (int)$financial_id));
             if (!isset($finance_type)) {
-                $this->_errormessages[] = 'Could not get the financial type ' .(int)$financial_id;
+                $this->_errormessages[] = E::ts('Could not get the financial type %1', [1 => (int)$financial_id]);
                 continue;
             }
 

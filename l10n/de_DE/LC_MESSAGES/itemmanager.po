@@ -69,10 +69,19 @@ msgid "Cancel"
 msgstr "Abbrechen"
 
 #: CRM/Itemmanager/Form/ItemmanagerSetting.php
+msgid "Could not get the period from price set %1"
+msgstr "Periode der Preisgruppe %1 konnte nicht abgerufen werden"
+
+#: CRM/Itemmanager/Form/ItemmanagerSetting.php
 #: CRM/Itemmanager/Page/ItemmanagerSettingStub.php
 #: tests/phpunit/suites/settings/ItemmanagerSettingFormTest.php
 msgid "No Successor"
 msgstr "Kein Nachfolger"
+
+#: CRM/Itemmanager/Form/ItemmanagerSetting.php
+#: CRM/Itemmanager/Page/ItemmanagerSettingStub.php
+msgid "Could not get the price set %1"
+msgstr "Preisgruppe %1 konnte nicht abgerufen werden"
 
 #: CRM/Itemmanager/Form/ItemmanagerSetting.php
 msgid "Saved"
@@ -143,6 +152,15 @@ msgid "Payments relation for"
 msgstr "Zahlungszuordnung für"
 
 #: CRM/Itemmanager/Form/LinkSepaWrapper.php
+#: CRM/Itemmanager/Page/ItemmanagerSettingStub.php
+msgid "Could not get the price field %1"
+msgstr "Preisfeld %1 konnte nicht abgerufen werden"
+
+#: CRM/Itemmanager/Form/LinkSepaWrapper.php
+msgid "Could not get the financial type %1"
+msgstr "Finanztyp %1 konnte nicht abgerufen werden"
+
+#: CRM/Itemmanager/Form/LinkSepaWrapper.php
 msgid "Complete"
 msgstr "Abgeschlossen"
 
@@ -180,19 +198,22 @@ msgstr "Mitgliedschaft \"%1\": Erste Zuwendung konnte nicht ermittelt werden."
 
 #: CRM/Itemmanager/Form/RenewItemperiods.php
 msgid "Membership \"%1\": Could not retrieve line items for contribution %2."
-msgstr "Mitgliedschaft \"%1\": Posten der Zuwendung %2 konnten nicht abgerufen werden."
+msgstr ""
+"Mitgliedschaft \"%1\": Posten der Zuwendung %2 konnten nicht abgerufen "
+"werden."
 
 #: CRM/Itemmanager/Form/RenewItemperiods.php
 msgid "Membership \"%1\": No line items found for the latest contribution %2."
-msgstr "Mitgliedschaft \"%1\": Keine Posten in der letzten Zuwendung %2 gefunden."
+msgstr ""
+"Mitgliedschaft \"%1\": Keine Posten in der letzten Zuwendung %2 gefunden."
 
 #: CRM/Itemmanager/Form/RenewItemperiods.php
 msgid ""
 "Membership \"%1\": No period configuration found for price field value %2 "
 "(\"%3\"). Check the Itemmanager settings."
 msgstr ""
-"Mitgliedschaft \"%1\": Keine Periodenkonfiguration für Preisfeld %2 "
-"(\"%3\") gefunden. Bitte die Itemmanager-Einstellungen prüfen."
+"Mitgliedschaft \"%1\": Keine Periodenkonfiguration für Preisfeld %2 (\"%3\") "
+"gefunden. Bitte die Itemmanager-Einstellungen prüfen."
 
 #: CRM/Itemmanager/Form/RenewItemperiods.php
 msgid ""
@@ -232,6 +253,18 @@ msgid "Quantity"
 msgstr "Menge"
 
 #: CRM/Itemmanager/Form/RenewItemperiods.php
+msgid "Membership \"%1\" has been updated."
+msgstr "Mitgliedschaft \"%1\" wurde aktualisiert."
+
+#: CRM/Itemmanager/Form/RenewItemperiods.php
+msgid "Membership \"%1\" could not be updated."
+msgstr "Mitgliedschaft \"%1\" konnte nicht aktualisiert werden."
+
+#: CRM/Itemmanager/Form/RenewItemperiods.php
+msgid "Update Membership"
+msgstr "Mitgliedschaft aktualisieren"
+
+#: CRM/Itemmanager/Form/RenewItemperiods.php
 msgid "The price field has been chosen from a different price set!"
 msgstr "Das Preisfeld stammt aus einer anderen Preisgruppe!"
 
@@ -267,6 +300,18 @@ msgstr "Zugehörige Mitgliedschaft abrufen"
 #: CRM/Itemmanager/Form/RepairMissingContribution.php
 msgid "There is no membership related to that contribution."
 msgstr "Zu dieser Zuwendung existiert keine zugehörige Mitgliedschaft."
+
+#: CRM/Itemmanager/Form/RepairMissingContribution.php
+msgid "Contribution for membership \"%1\" has been cloned."
+msgstr "Zuwendung für Mitgliedschaft \"%1\" wurde geklont."
+
+#: CRM/Itemmanager/Form/RepairMissingContribution.php
+msgid "Cloning contribution for membership \"%1\" failed."
+msgstr "Klonen der Zuwendung für Mitgliedschaft \"%1\" fehlgeschlagen."
+
+#: CRM/Itemmanager/Form/RepairMissingContribution.php
+msgid "Clone contribution"
+msgstr "Zuwendung klonen"
 
 #: CRM/Itemmanager/Page/Dashboard.php itemmanager.php
 msgid "Items Dashboard"
@@ -374,17 +419,45 @@ msgid "Membership contribution relation %1 is missing"
 msgstr "Zuwendungszuordnung %1 zur Mitgliedschaft fehlt"
 
 #: CRM/Itemmanager/Page/ItemmanagerSettingStub.php
+msgid "Period not found: %1"
+msgstr "Zeitraum nicht gefunden: %1"
+
+#: CRM/Itemmanager/Page/ItemmanagerSettingStub.php
 #: templates/CRM/Itemmanager/Page/ItemmanagerSettingStub.tpl
 msgid "Active"
 msgstr "Aktiv"
+
+#: CRM/Itemmanager/Page/LinkSepaPaymentsStub.php
+msgid "Net amount is zero: %1"
+msgstr "Nettobetrag ist null: %1"
 
 #: CRM/Itemmanager/Page/LinkSepaPaymentsStub.php
 msgid "Retrieve payinfo from memberships"
 msgstr "Zahlungsdaten der Mitgliedschaften abrufen"
 
 #: CRM/Itemmanager/Page/LinkSepaPaymentsStub.php
+msgid "Could not get the line items for contribution %1"
+msgstr "Posten der Zuwendung %1 konnten nicht abgerufen werden"
+
+#: CRM/Itemmanager/Page/LinkSepaPaymentsStub.php
+msgid "Could not get the payments for contribution %1"
+msgstr "Zahlungen der Zuwendung %1 konnten nicht abgerufen werden"
+
+#: CRM/Itemmanager/Page/LinkSepaPaymentsStub.php
+msgid "Could not get Itemmanager data for price field value %1"
+msgstr "Itemmanager-Daten für Preisfeld %1 konnten nicht abgerufen werden"
+
+#: CRM/Itemmanager/Page/LinkSepaPaymentsStub.php
 msgid "Retrieve SEPA mandate"
 msgstr "SEPA-Mandat abrufen"
+
+#: CRM/Itemmanager/Page/SyncStub.php
+msgid "Could not get the full record for price field value %1"
+msgstr "Vollständiger Datensatz für Preisfeld %1 konnte nicht abgerufen werden"
+
+#: CRM/Itemmanager/Page/SyncStub.php
+msgid "No Itemmanager periods found for price set %1"
+msgstr "Keine Itemmanager-Zeiträume für Preisgruppe %1 gefunden"
 
 #: CRM/Itemmanager/Page/UpdateItems.php
 #: templates/CRM/Itemmanager/Page/Dashboard.tpl
@@ -965,6 +1038,10 @@ msgid "Limits the number of lines shown"
 msgstr "Begrenzt die Anzahl angezeigter Zeilen"
 
 #: templates/CRM/Itemmanager/Form/AddLineItems.tpl
+msgid "OR"
+msgstr "ODER"
+
+#: templates/CRM/Itemmanager/Form/AddLineItems.tpl
 msgid "Choose manual contribution amount"
 msgstr "Zuwendungsbetrag manuell festlegen"
 
@@ -1154,8 +1231,8 @@ msgstr "Neu laden"
 #: templates/CRM/Itemmanager/Page/Dashboard.tpl
 msgid "To start with a new set of monthly contributions click Renew Periods"
 msgstr ""
-"Um eine neue Mitgliedschaftsperiode zu beginnen, bitte 'Solawi "
-"Verlängerung' klicken"
+"Um eine neue Mitgliedschaftsperiode zu beginnen, bitte 'Solawi Verlängerung' "
+"klicken"
 
 #: templates/CRM/Itemmanager/Page/Dashboard.tpl
 msgid "This contact has no recorded line items."

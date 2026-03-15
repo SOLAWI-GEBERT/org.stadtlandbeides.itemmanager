@@ -177,12 +177,14 @@ class CRM_Itemmanager_Form_RepairMissingContribution extends CRM_Core_Form {
 
                 }
 
-                $this->processSuccess("Contribution for membership ".$current_membership['memberdata']['name']." has been cloned.");
+                $this->processSuccess(E::ts('Contribution for membership "%1" has been cloned.', [1 => $current_membership['memberdata']['name']]));
 
             }
             catch (CRM_Core_Exception $e) {
-                $this->processError("Cloning for contribution of membership ".$current_membership['memberdata']['name']." has been failed.",$e->getMessage(),
-                    "Clone contribution");
+                $this->processError(
+                    E::ts('Cloning contribution for membership "%1" failed.', [1 => $current_membership['memberdata']['name']]),
+                    $e->getMessage(),
+                    E::ts('Clone contribution'));
             }
 
         }

@@ -27,7 +27,7 @@ class CRM_Itemmanager_Page_ItemmanagerSettingStub extends CRM_Core_Page {
                 ->execute()->first();
 
             if (!$itemmanager_period) {
-                $this->_errormessages[] = 'Period not found: ' . $period_id;
+                $this->_errormessages[] = E::ts('Period not found: %1', [1 => $period_id]);
                 $this->assign('errormessages', $this->_errormessages);
                 $this->assign('fields', []);
                 parent::run();
@@ -39,7 +39,7 @@ class CRM_Itemmanager_Page_ItemmanagerSettingStub extends CRM_Core_Page {
                 ->execute()->first();
 
             if (!$priceset) {
-                $this->_errormessages[] = 'Could not get the price set ' . (int) $itemmanager_period['price_set_id'];
+                $this->_errormessages[] = E::ts('Could not get the price set %1', [1 => (int) $itemmanager_period['price_set_id']]);
                 $this->assign('errormessages', $this->_errormessages);
                 $this->assign('fields', []);
                 parent::run();
@@ -64,8 +64,7 @@ class CRM_Itemmanager_Page_ItemmanagerSettingStub extends CRM_Core_Page {
                     ->addWhere('id', '=', (int) $pricefieldvalue['price_field_id'])
                     ->execute()->first();
                 if (!$pricefield) {
-                    $this->_errormessages[] = 'Could not get the price field ' .
-                        (int) $pricefieldvalue['price_field_id'];
+                    $this->_errormessages[] = E::ts('Could not get the price field %1', [1 => (int) $pricefieldvalue['price_field_id']]);
                     continue;
                 }
 

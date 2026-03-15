@@ -197,7 +197,7 @@ class CRM_Itemmanager_Form_ItemmanagerSetting extends CRM_Core_Form {
                         ->execute()->first();
 
                     if (!isset($itemmperiod_selected)) {
-                        $this->_errormessages[] = 'Could not get the period from price set ' . (int)$selectedpriceset['id'];
+                        $this->_errormessages[] = E::ts('Could not get the period from price set %1', [1 => (int)$selectedpriceset['id']]);
                         continue;
                     }
 
@@ -260,7 +260,7 @@ class CRM_Itemmanager_Form_ItemmanagerSetting extends CRM_Core_Form {
                   ->addWhere('id', '=', (int)$itemmanager_period['price_set_id'])
                   ->execute()->first();
               if (!$priceset) {
-                  $this->_errormessages[] = 'Could not get the price set ' . (int)$itemmanager_period['price_set_id'];
+                  $this->_errormessages[] = E::ts('Could not get the price set %1', [1 => (int)$itemmanager_period['price_set_id']]);
                   continue;
               }
 

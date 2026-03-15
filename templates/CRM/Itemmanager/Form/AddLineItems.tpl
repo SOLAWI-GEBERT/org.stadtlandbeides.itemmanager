@@ -1,6 +1,6 @@
 {* template block that contains the new field *}
 {crmScope extensionKey='org.stadtlandbeides.itemmanager'}
-<span id="totalAmountORaddLineitem">&nbsp;OR
+<span id="totalAmountORaddLineitem">&nbsp;{ts}OR{/ts}
   {if $form.add_item.html}
     <span class="label">{$form.add_item.label}</span>
     <span>{$form.add_item.html}</span>

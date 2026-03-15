@@ -248,18 +248,10 @@ class CRM_Itemmanager_Page_FutureContributionScanStub extends CRM_Core_Page {
             $changed_total = CRM_Itemmanager_Util::roundMoney($line_items->item_quantity * $change_unit_price);
             $changed_tax = CRM_Itemmanager_Util::roundMoney($line_items->item_quantity * $change_unit_price * $tax / 100.0);
 
-            $fmtItemPrice = CRM_Itemmanager_Util::formatLocaleMoney($line_items->item_price);
-            $fmtItemTotal = CRM_Itemmanager_Util::formatLocaleMoney($line_items->item_total);
-            $fmtItemTax = CRM_Itemmanager_Util::formatLocaleMoney($line_items->item_tax);
-            $fmtChangePrice = CRM_Itemmanager_Util::formatLocaleMoney($change_unit_price);
-            $fmtChangeTotal = CRM_Itemmanager_Util::formatLocaleMoney($changed_total);
-            $fmtChangeTax = CRM_Itemmanager_Util::formatLocaleMoney($changed_tax);
-
-            // Only flag as price change when the displayed values actually differ
             $priceVisiblyChanged = $filter_sync == 1
-                && ($fmtItemPrice !== $fmtChangePrice
-                    || $fmtItemTotal !== $fmtChangeTotal
-                    || $fmtItemTax !== $fmtChangeTax);
+                && (!CRM_Itemmanager_Util::moneyEquals($line_items->item_price, $change_unit_price)
+                    || !CRM_Itemmanager_Util::moneyEquals($line_items->item_total, $changed_total)
+                    || !CRM_Itemmanager_Util::moneyEquals($line_items->item_tax, $changed_tax));
 
             $base = [
                 'contact_id' => $cid,
@@ -270,9 +262,9 @@ class CRM_Itemmanager_Page_FutureContributionScanStub extends CRM_Core_Page {
                 'field_id' => $line_items->field_id,
                 'item_label' => $line_items->item_label,
                 'item_quantity' => $line_items->item_quantity,
-                'item_price' => $fmtItemPrice,
-                'item_total' => $fmtItemTotal,
-                'item_tax' => $fmtItemTax,
+                'item_price' => (float) $line_items->item_price,
+                'item_total' => (float) $line_items->item_total,
+                'item_tax' => (float) $line_items->item_tax,
                 'periods' => $periods,
                 'contrib_date' => $line_date,
                 'update_date' => $line_date != $changed_date && $filter_harmonize == 1,
@@ -280,9 +272,9 @@ class CRM_Itemmanager_Page_FutureContributionScanStub extends CRM_Core_Page {
                 'update_label' => $line_items->item_label != $line_items->field_label,
                 'change_label' => $line_items->field_label,
                 'update_price' => $priceVisiblyChanged,
-                'change_price' => $fmtChangePrice,
-                'change_total' => $fmtChangeTotal,
-                'change_tax' => $fmtChangeTax,
+                'change_price' => $change_unit_price,
+                'change_total' => $changed_total,
+                'change_tax' => $changed_tax,
                 'empty_relation_id' => null,
                 'change_error' => null,
             ];
@@ -433,9 +425,9 @@ class CRM_Itemmanager_Page_FutureContributionScanStub extends CRM_Core_Page {
                     'update_label' => false,
                     'change_label' => $ref['label'],
                     'update_price' => false,
-                    'change_price' => CRM_Itemmanager_Util::formatLocaleMoney($ref['unit_price']),
-                    'change_total' => CRM_Itemmanager_Util::formatLocaleMoney($ref['line_total']),
-                    'change_tax' => CRM_Itemmanager_Util::formatLocaleMoney($ref['tax_amount']),
+                    'change_price' => (float) $ref['unit_price'],
+                    'change_total' => (float) $ref['line_total'],
+                    'change_tax' => (float) $ref['tax_amount'],
                     'empty_relation_id' => null,
                     'missing_item' => [
                         'contribution_id' => $contrib['contribution_id'],
@@ -478,7 +470,7 @@ class CRM_Itemmanager_Page_FutureContributionScanStub extends CRM_Core_Page {
                         'field_id' => null,
                         'item_label' => $cur['label'],
                         'item_quantity' => $cur['qty'],
-                        'item_price' => CRM_Itemmanager_Util::formatLocaleMoney($ref['unit_price']),
+                        'item_price' => (float) $ref['unit_price'],
                         'item_total' => null,
                         'item_tax' => null,
                         'periods' => null,
@@ -489,8 +481,8 @@ class CRM_Itemmanager_Page_FutureContributionScanStub extends CRM_Core_Page {
                         'change_label' => null,
                         'update_price' => false,
                         'change_price' => null,
-                        'change_total' => CRM_Itemmanager_Util::formatLocaleMoney($newLineTotal),
-                        'change_tax' => CRM_Itemmanager_Util::formatLocaleMoney($newTaxAmount),
+                        'change_total' => $newLineTotal,
+                        'change_tax' => $newTaxAmount,
                         'empty_relation_id' => null,
                         'missing_item' => null,
                         'extra_item' => null,
