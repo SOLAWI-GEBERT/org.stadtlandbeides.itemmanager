@@ -54,22 +54,27 @@ class CRM_Itemmanager_Form_RenewItemperiods extends CRM_Core_Form {
                 try {
                     //region Related Contributions
                     //get the last record
+                    $memberName = $membership['typeinfo']['name'] ?? ('ID ' . $membership['memberdata']['id']);
                     $contributions = array();
                     foreach ($membership['payinfo'] as $contribution_link)
                         if (!empty($contribution_link['contribution_id']))
                             $contributions[] = (int)$contribution_link['contribution_id'];
 
-                    $lastid = CRM_Itemmanager_Util::getLastReceiveDateContribution($contributions);
-                    if ($lastid < 0) {
-                        $this->processError("ERROR", E::ts('Retrieve Contributions'), $member_array['error_message']);
-                        return;
+                    if (empty($contributions)) {
+                        $this->_errormessages[] = E::ts('Membership "%1": No contributions found. The membership payment records may be incomplete.', [1 => $memberName]);
+                        continue;
                     }
 
+                    $lastid = CRM_Itemmanager_Util::getLastReceiveDateContribution($contributions);
+                    if ($lastid <= 0) {
+                        $this->_errormessages[] = E::ts('Membership "%1": Could not determine the latest contribution.', [1 => $memberName]);
+                        continue;
+                    }
 
                     $firstid = CRM_Itemmanager_Util::getFirstReceiveDateContribution($contributions);
-                    if ($firstid < 0) {
-                        $this->processError("ERROR", E::ts('Retrieve Contributions'), $member_array['error_message']);
-                        return;
+                    if ($firstid <= 0) {
+                        $this->_errormessages[] = E::ts('Membership "%1": Could not determine the earliest contribution.', [1 => $memberName]);
+                        continue;
                     }
 
                     $last_contribution = civicrm_api3('Contribution', 'getsingle', array('id' => (int)$lastid));
@@ -81,15 +86,21 @@ class CRM_Itemmanager_Form_RenewItemperiods extends CRM_Core_Form {
 
                     //get the line items to the last contribution
                     $linerecords = CRM_Itemmanager_Util::getLineitemFullRecordByContributionId($lastid);
-                    if ($linerecords['is_error']) {
-                        $this->processError("ERROR", E::ts('Retrieve line items'), $linerecords['error_message']);
-                        return;
+                    if (!empty($linerecords['is_error'])) {
+                        $this->_errormessages[] = E::ts('Membership "%1": Could not retrieve line items for contribution %2.', [1 => $memberName, 2 => $lastid]);
+                        continue;
+                    }
+                    if (empty($linerecords)) {
+                        $this->_errormessages[] = E::ts('Membership "%1": No line items found for the latest contribution %2.', [1 => $memberName, 2 => $lastid]);
+                        continue;
                     }
 
 
                     $linelist = array();
                     $reflist = array();
                     foreach ($linerecords as $lineitem) {
+                        if (!is_array($lineitem) || empty($lineitem['linedata'])) continue;
+
                         //get the itemmanager records
                         $choices = CRM_Itemmanager_Util::getChoicesOfPricefieldsByFieldID(
                             $lineitem['linedata']['price_field_value_id'], $last_date);
@@ -106,6 +117,17 @@ class CRM_Itemmanager_Form_RenewItemperiods extends CRM_Core_Form {
                             $reflist[$choices['itemmanager_selection'][0]] = TRUE;
                         }
 
+                        if (empty($choices['period_data'][0])) {
+                            $pfvId = $lineitem['linedata']['price_field_value_id'];
+                            $this->_errormessages[] = E::ts('Membership "%1": No period configuration found for price field value %2 ("%3"). Check the Itemmanager settings.', [
+                                1 => $memberName,
+                                2 => $pfvId,
+                                3 => $lineitem['linedata']['label'] ?? $pfvId,
+                            ]);
+                            continue;
+                        }
+
+                        $defaultPeriodKey = max(array_keys($choices['period_data'][0]));
                         $linecollection = array(
                             'name' => '(' . $lineitem['setdata']['id'] . ') ' . $lineitem['linedata']['label'] . ' ' .
                                 $lineitem['setdata']['title'],
@@ -128,16 +150,12 @@ class CRM_Itemmanager_Form_RenewItemperiods extends CRM_Core_Form {
                                 'item_' . $lineitem['fielddata']['id'] . '_' .
                                 'period_' . $lineitem['linedata']['price_field_value_id'],
                             'choices' => $choices,
-                            'new_active_on' => $choices['period_data'][0][max(
-                                array_keys($choices['period_data'][0]))]['active_on'],
-                            'new_expire_on' => $choices['period_data'][0][max(
-                                array_keys($choices['period_data'][0]))]['expire_on'],
-                            'new_interval_price' => $choices['period_data'][0][max(array_keys($choices['period_data'][0]))]['interval_price'],
-                            'new_period_start_on' => $choices['period_data'][0][max(
-                                array_keys($choices['period_data'][0]))]['period_start_on'],
-                            'new_period_end_on' => $choices['period_data'][0][max(
-                                array_keys($choices['period_data'][0]))]['period_end_on'],
-                            'help_pre' => $choices['help_pre'][0],
+                            'new_active_on' => $choices['period_data'][0][$defaultPeriodKey]['active_on'],
+                            'new_expire_on' => $choices['period_data'][0][$defaultPeriodKey]['expire_on'],
+                            'new_interval_price' => $choices['period_data'][0][$defaultPeriodKey]['interval_price'],
+                            'new_period_start_on' => $choices['period_data'][0][$defaultPeriodKey]['period_start_on'],
+                            'new_period_end_on' => $choices['period_data'][0][$defaultPeriodKey]['period_end_on'],
+                            'help_pre' => $choices['help_pre'][0] ?? '',
                             'new_field' => FALSE,
                             'extend' => $item_settings->extend == TRUE,
                             'bidding' => $item_settings->bidding == TRUE,
@@ -179,6 +197,16 @@ class CRM_Itemmanager_Form_RenewItemperiods extends CRM_Core_Form {
                                 if ($item_setting['extend'] == TRUE)
                                     $quantity = 1;
 
+                                if (empty($choices['period_data'][0])) {
+                                    $this->_errormessages[] = E::ts('Membership "%1": No period configuration found for successor item "%2" (price field value %3). Check the Itemmanager settings.', [
+                                        1 => $memberName,
+                                        2 => $pricefieldvalue['label'] ?? '',
+                                        3 => $item_setting['price_field_value_id'],
+                                    ]);
+                                    continue;
+                                }
+
+                                $defaultPeriodKey = max(array_keys($choices['period_data'][0]));
                                 $linecollection = array(
                                     'name' => '(' . $priceset['id'] . ') ' . $pricefieldvalue['label'] . ' ' .
                                         $priceset['title'],
@@ -200,16 +228,12 @@ class CRM_Itemmanager_Form_RenewItemperiods extends CRM_Core_Form {
                                         'item_' . $pricefield['id'] . '_' .
                                         'period_' . $pricefieldvalue['id'],
                                     'choices' => $choices,
-                                    'new_active_on' => $choices['period_data'][0][max(
-                                        array_keys($choices['period_data'][0]))]['active_on'],
-                                    'new_expire_on' => $choices['period_data'][0][max(
-                                        array_keys($choices['period_data'][0]))]['expire_on'],
-                                    'new_interval_price' => $choices['period_data'][0][max(array_keys($choices['period_data'][0]))]['interval_price'],
-                                    'new_period_start_on' => $choices['period_data'][0][max(
-                                        array_keys($choices['period_data']))]['period_start_on'],
-                                    'new_period_end_on' => $choices['period_data'][0][max(
-                                        array_keys($choices['period_data'][0]))]['period_end_on'],
-                                    'help_pre' => $choices['help_pre'][0],
+                                    'new_active_on' => $choices['period_data'][0][$defaultPeriodKey]['active_on'],
+                                    'new_expire_on' => $choices['period_data'][0][$defaultPeriodKey]['expire_on'],
+                                    'new_interval_price' => $choices['period_data'][0][$defaultPeriodKey]['interval_price'],
+                                    'new_period_start_on' => $choices['period_data'][0][$defaultPeriodKey]['period_start_on'],
+                                    'new_period_end_on' => $choices['period_data'][0][$defaultPeriodKey]['period_end_on'],
+                                    'help_pre' => $choices['help_pre'][0] ?? '',
                                     'new_field' => TRUE,
                                     'extend' => $item_settings->extend == TRUE,
                                     'bidding' => $item_settings->bidding == TRUE,
@@ -244,16 +268,11 @@ class CRM_Itemmanager_Form_RenewItemperiods extends CRM_Core_Form {
                     $this->_memberships[$membership['memberdata']['id']] = $form_collection;
 
             }
-            catch (\Civi\API\Exception\UnauthorizedException $e) {
-                    $this->_errormessages[] = 'For '.$membership['typeinfo']['name'].' an error occurred:'.$e->getMessage();
-                } catch (API_Exception $e) {
-                    $this->_errormessages[] = 'For '.$membership['typeinfo']['name'].' an error occurred:'.$e->getMessage();
-                } catch (CiviCRM_API3_Exception $e) {
-                    $this->_errormessages[] = 'For '.$membership['typeinfo']['name'].' an error occurred:'.$e->getMessage();
-                }
-             catch (Exception $e)
-             {
-                 $this->_errormessages[] = 'For '.$membership['typeinfo']['name'].' an error occurred:'.$e->getMessage();
+            catch (\Exception $e) {
+                 $this->_errormessages[] = E::ts('Membership "%1": %2', [
+                     1 => $memberName ?? ($membership['typeinfo']['name'] ?? '?'),
+                     2 => $e->getMessage(),
+                 ]);
              }
 
             }
@@ -290,7 +309,8 @@ class CRM_Itemmanager_Form_RenewItemperiods extends CRM_Core_Form {
                 E::ts('Item'),
                 $line_item['choices']['item_selection'], // list of options
                 TRUE, // is required
-                ['flex-grow'=> 1,
+                ['style'=> 'width:100%',
+                    'title' => $line_item['choices']['item_selection'][0] ?? '',
                     'onchange'=>"UpdateSettings(CRM.$, CRM._,".
                         $membership['member_id'].",".$line_item['price_field_id'].",".
                         $line_item['price_field_value_id'].",true)"],

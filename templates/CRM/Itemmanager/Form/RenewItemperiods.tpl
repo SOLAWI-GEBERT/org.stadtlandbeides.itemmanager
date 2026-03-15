@@ -5,12 +5,12 @@
 </div>
 
 {if $errormessages}
-  <div class="crm-error">
+  <div class="messages status no-popup crm-not-you-message">
+    <div class="icon inform-icon"></div>
     {foreach from=$errormessages item=message}
-      <span>{$message}</br></span>
+      <p>{$message}</p>
     {/foreach}
   </div>
-
 {/if}
 
 
@@ -130,15 +130,14 @@
   }
 
   // Initialize tooltips on all item selectors after page load
-  document.addEventListener('DOMContentLoaded', function() {
-    var selects = document.querySelectorAll('select[id^="member_"][id$="_item_"]');
-    // Match selectors whose id is like member_X_item_Y (no further suffix)
-    for (var i = 0; i < selects.length; i++) {
-      var parts = selects[i].id.split('_');
-      if (parts.length === 4) {
-        updateItemTooltip(selects[i]);
+  CRM.$(function($) {
+    $('select[id^="member_"]').each(function() {
+      var parts = this.id.split('_');
+      // Match selectors whose id is like member_X_item_Y (no further suffix)
+      if (parts.length === 4 && parts[2] === 'item') {
+        updateItemTooltip(this);
       }
-    }
+    });
   });
 
   //UpdateSettingsInfos
@@ -206,6 +205,37 @@
   {/literal}
 </script>
 
+<script type="application/javascript">
+  {literal}
+  CRM.$(function($) {
+    $('#RenewItemperiods').on('submit', function() {
+      var membershipCount = {/literal}{$memberships|@count}{literal} || 0;
+      if (membershipCount === 0) return;
+
+      var msg = '{/literal}{ts domain="org.stadtlandbeides.itemmanager" escape="js"}Processing renewals, please wait...{/ts}{literal}';
+      msg += '<br><small>' + membershipCount + ' {/literal}{ts domain="org.stadtlandbeides.itemmanager" escape="js"}membership(s) to process. This may take a while.{/ts}{literal}</small>';
+
+      // Show blocking overlay with CiviCRM spinner
+      var $overlay = $('<div id="renewitemperiods-overlay"></div>').css({
+        position: 'fixed', top: 0, left: 0, width: '100%', height: '100%',
+        backgroundColor: 'rgba(0,0,0,0.4)', zIndex: 10000, cursor: 'wait'
+      });
+      var $box = $('<div></div>').css({
+        position: 'fixed', top: '40%', left: '50%', transform: 'translate(-50%,-50%)',
+        backgroundColor: '#fff', padding: '30px 40px', borderRadius: '4px',
+        boxShadow: '0 2px 10px rgba(0,0,0,0.3)', textAlign: 'center', zIndex: 10001
+      }).html(
+        '<div><i class="crm-i fa-spinner fa-spin" style="font-size:28px;margin-bottom:12px;"></i></div>' +
+        '<div>' + msg + '</div>'
+      );
+      $overlay.append($box).appendTo('body');
+
+      // Disable submit buttons to prevent double-clicks
+      $(this).find('input[type="submit"], .crm-button').prop('disabled', true);
+    });
+  });
+  {/literal}
+</script>
 
 {* FOOTER *}
 <div class="crm-submit-buttons">
