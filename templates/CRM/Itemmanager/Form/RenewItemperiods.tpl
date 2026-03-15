@@ -17,7 +17,7 @@
   {if $memberships}
   {foreach from=$memberships item=membership}
     {if $membership.show}
-    <div class="crm-accordion-wrapper open">
+    <div class="crm-accordion-wrapper open" data-member-id="{$membership.member_id}">
       <div class="crm-accordion-header">
         {ts domain="org.stadtlandbeides.itemmanager"}Membership{/ts}
         {$membership.name}
@@ -30,6 +30,10 @@
           {else}
             <span style="font-weight: bold; color: #cc0000;">{$membership.status}</span>
           {/if}
+          <button type="button" class="crm-button renew-skip-btn" data-member-id="{$membership.member_id}" style="float:right;">
+            <i class="crm-i fa-forward"></i>
+            {ts domain="org.stadtlandbeides.itemmanager"}Skip{/ts}
+          </button>
         </div>
         {foreach from=$membership.line_items item=lineitem}
           {assign var="element_item_name" value=$lineitem.element_item_name}
@@ -208,7 +212,45 @@
 <script type="application/javascript">
   {literal}
   CRM.$(function($) {
+    // Skip/unskip membership toggle
+    $('.renew-skip-btn').on('click', function() {
+      var $btn = $(this);
+      var memberId = $btn.data('member-id');
+      var $wrapper = $btn.closest('.crm-accordion-wrapper');
+      var $body = $wrapper.find('.crm-accordion-body');
+      var isSkipped = $btn.hasClass('renew-skipped');
+      var prefix = 'member_' + memberId + '_item_';
+
+      // Find all quantity inputs for this membership
+      $body.find('input[id^="' + prefix + '"][id*="_quantity_"]').each(function() {
+        if (!isSkipped) {
+          // Store original value and set to 0
+          $(this).data('orig-qty', this.value);
+          this.value = '0';
+        } else {
+          // Restore original value
+          this.value = $(this).data('orig-qty') || this.placeholder || '0';
+        }
+      });
+
+      if (!isSkipped) {
+        $btn.addClass('renew-skipped');
+        $btn.html('<i class="crm-i fa-undo"></i> {/literal}{ts domain="org.stadtlandbeides.itemmanager" escape="js"}Unskip{/ts}{literal}');
+        $body.find('table, .help').css('opacity', '0.4');
+        $body.find('select, input[type="text"]').prop('disabled', true);
+      } else {
+        $btn.removeClass('renew-skipped');
+        $btn.html('<i class="crm-i fa-forward"></i> {/literal}{ts domain="org.stadtlandbeides.itemmanager" escape="js"}Skip{/ts}{literal}');
+        $body.find('table, .help').css('opacity', '1');
+        $body.find('select, input[type="text"]').prop('disabled', false);
+      }
+    });
+
     $('#RenewItemperiods').on('submit', function() {
+      // Re-enable skipped fields so their values (0) get submitted
+      $(this).find('.renew-skipped').each(function() {
+        $(this).closest('.crm-accordion-wrapper').find('select, input[type="text"]').prop('disabled', false);
+      });
       var membershipCount = {/literal}{$memberships|@count}{literal} || 0;
       if (membershipCount === 0) return;
 
