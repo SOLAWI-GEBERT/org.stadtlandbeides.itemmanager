@@ -50,7 +50,7 @@ msgstr ""
 msgid "Saved"
 msgstr ""
 
-#: ./CRM/Itemmanager/Form/ItemmanagerSetting.php ./CRM/Itemmanager/Form/LinkSepaWrapper.php ./CRM/Itemmanager/Form/RenewItemperiods.php ./CRM/Itemmanager/Form/RepairMissingContribution.php ./CRM/Itemmanager/Page/LinkSepaPaymentsStub.php ./CRM/Itemmanager/Page/UpdateItems.php ./js/futureContributionScanProgress.js ./js/itemMaintenanceProgress.js
+#: ./CRM/Itemmanager/Form/ItemmanagerSetting.php ./CRM/Itemmanager/Form/LinkSepaWrapper.php ./CRM/Itemmanager/Form/RenewItemperiods.php ./CRM/Itemmanager/Form/RepairMissingContribution.php ./CRM/Itemmanager/Page/DashboardStub.php ./CRM/Itemmanager/Page/LinkSepaPaymentsStub.php ./CRM/Itemmanager/Page/UpdateItems.php ./js/futureContributionScanProgress.js ./js/itemMaintenanceProgress.js
 msgid "Success"
 msgstr ""
 
@@ -78,11 +78,11 @@ msgstr ""
 msgid "Please enter a whole number for quantity"
 msgstr ""
 
-#: ./CRM/Itemmanager/Form/LinkSepaWrapper.php ./CRM/Itemmanager/Page/UpdateItems.php
+#: ./CRM/Itemmanager/Form/LinkSepaWrapper.php
 msgid "Couldn't find contact #%s"
 msgstr ""
 
-#: ./CRM/Itemmanager/Form/LinkSepaWrapper.php ./CRM/Itemmanager/Form/RenewItemperiods.php ./CRM/Itemmanager/Form/RepairMissingContribution.php ./CRM/Itemmanager/Page/Dashboard.php ./CRM/Itemmanager/Page/DashboardStub.php ./CRM/Itemmanager/Page/LinkSepaPaymentsStub.php ./CRM/Itemmanager/Page/UpdateItems.php ./js/futureContributionScanProgress.js ./js/itemMaintenanceProgress.js ./js/syncProgress.js ./templates/CRM/Itemmanager/Page/FutureContributionScan.tpl ./templates/CRM/Itemmanager/Page/ItemMaintenance.tpl ./templates/CRM/Itemmanager/Page/UpdateItems.tpl
+#: ./CRM/Itemmanager/Form/LinkSepaWrapper.php ./CRM/Itemmanager/Form/RenewItemperiods.php ./CRM/Itemmanager/Form/RepairMissingContribution.php ./CRM/Itemmanager/Page/Dashboard.php ./CRM/Itemmanager/Page/DashboardStub.php ./CRM/Itemmanager/Page/LinkSepaPaymentsStub.php ./CRM/Itemmanager/Page/UpdateItems.php ./js/futureContributionScanProgress.js ./js/itemMaintenanceProgress.js ./js/syncProgress.js ./templates/CRM/Itemmanager/Page/DashboardStub.tpl ./templates/CRM/Itemmanager/Page/FutureContributionScan.tpl ./templates/CRM/Itemmanager/Page/ItemMaintenance.tpl ./templates/CRM/Itemmanager/Page/UpdateItems.tpl
 msgid "Error"
 msgstr ""
 
@@ -103,11 +103,35 @@ msgid "Retrieve memberships"
 msgstr ""
 
 #: ./CRM/Itemmanager/Form/RenewItemperiods.php
-msgid "Retrieve Contributions"
+msgid "Membership \"%1\": No contributions found. The membership payment records may be incomplete."
 msgstr ""
 
-#: ./CRM/Itemmanager/Form/RenewItemperiods.php ./CRM/Itemmanager/Form/RepairMissingContribution.php ./CRM/Itemmanager/Page/DashboardStub.php
-msgid "Retrieve line items"
+#: ./CRM/Itemmanager/Form/RenewItemperiods.php
+msgid "Membership \"%1\": Could not determine the latest contribution."
+msgstr ""
+
+#: ./CRM/Itemmanager/Form/RenewItemperiods.php
+msgid "Membership \"%1\": Could not determine the earliest contribution."
+msgstr ""
+
+#: ./CRM/Itemmanager/Form/RenewItemperiods.php
+msgid "Membership \"%1\": Could not retrieve line items for contribution %2."
+msgstr ""
+
+#: ./CRM/Itemmanager/Form/RenewItemperiods.php
+msgid "Membership \"%1\": No line items found for the latest contribution %2."
+msgstr ""
+
+#: ./CRM/Itemmanager/Form/RenewItemperiods.php
+msgid "Membership \"%1\": No period configuration found for price field value %2 (\"%3\"). Check the Itemmanager settings."
+msgstr ""
+
+#: ./CRM/Itemmanager/Form/RenewItemperiods.php
+msgid "Membership \"%1\": No period configuration found for successor item \"%2\" (price field value %3). Check the Itemmanager settings."
+msgstr ""
+
+#: ./CRM/Itemmanager/Form/RenewItemperiods.php
+msgid "Membership \"%1\": %2"
 msgstr ""
 
 #: ./CRM/Itemmanager/Form/RenewItemperiods.php
@@ -146,6 +170,10 @@ msgstr ""
 msgid "Please specify a contribution to clone."
 msgstr ""
 
+#: ./CRM/Itemmanager/Form/RepairMissingContribution.php ./CRM/Itemmanager/Page/DashboardStub.php
+msgid "Retrieve line items"
+msgstr ""
+
 #: ./CRM/Itemmanager/Form/RepairMissingContribution.php
 msgid "Retrieve related membership"
 msgstr ""
@@ -167,11 +195,19 @@ msgid "Membership not found"
 msgstr ""
 
 #: ./CRM/Itemmanager/Page/DashboardStub.php
-msgid "Missing contribution relation to membership"
+msgid "Invalid contribution date"
+msgstr ""
+
+#: ./CRM/Itemmanager/Page/DashboardStub.php
+msgid "Contribution %1 has no valid date"
 msgstr ""
 
 #: ./CRM/Itemmanager/Page/DashboardStub.php
 msgid "Combine line items"
+msgstr ""
+
+#: ./CRM/Itemmanager/Page/DashboardStub.php ./CRM/Itemmanager/Page/UpdateItems.php
+msgid "Deleted %1 orphaned membership payment relation(s)."
 msgstr ""
 
 #: ./CRM/Itemmanager/Page/FutureContributionScan.php
@@ -238,6 +274,10 @@ msgstr ""
 msgid "Item Maintenance"
 msgstr ""
 
+#: ./CRM/Itemmanager/Page/ItemMaintenanceStub.php ./CRM/Itemmanager/Page/UpdateItems.php
+msgid "Membership contribution relation %1 is missing"
+msgstr ""
+
 #: ./CRM/Itemmanager/Page/ItemmanagerSettingStub.php ./templates/CRM/Itemmanager/Page/ItemmanagerSettingStub.tpl
 msgid "Active"
 msgstr ""
@@ -252,6 +292,10 @@ msgstr ""
 
 #: ./CRM/Itemmanager/Page/UpdateItems.php ./templates/CRM/Itemmanager/Page/Dashboard.tpl ./templates/CRM/Itemmanager/Page/FutureContributionScan.tpl ./templates/CRM/Itemmanager/Page/ItemMaintenance.tpl ./templates/CRM/Itemmanager/Page/UpdateItems.tpl
 msgid "Update Items"
+msgstr ""
+
+#: ./CRM/Itemmanager/Page/UpdateItems.php
+msgid "Couldn't find contact #%1"
 msgstr ""
 
 #: ./CRM/Itemmanager/Page/UpdateItems.php
@@ -280,10 +324,6 @@ msgstr ""
 
 #: ./CRM/Itemmanager/Page/UpdateItems.php
 msgid "Nothing to be done"
-msgstr ""
-
-#: ./CRM/Itemmanager/Page/UpdateItems.php
-msgid "Deleted %1 orphaned membership payment relation(s)."
 msgstr ""
 
 #: ./CRM/Itemmanager/Upgrader.php
@@ -867,6 +907,10 @@ msgid "Status"
 msgstr ""
 
 #: ./templates/CRM/Itemmanager/Form/RenewItemperiods.tpl
+msgid "Skip"
+msgstr ""
+
+#: ./templates/CRM/Itemmanager/Form/RenewItemperiods.tpl
 msgid "Start"
 msgstr ""
 
@@ -900,6 +944,18 @@ msgstr ""
 
 #: ./templates/CRM/Itemmanager/Form/RenewItemperiods.tpl
 msgid "Bidding round"
+msgstr ""
+
+#: ./templates/CRM/Itemmanager/Form/RenewItemperiods.tpl
+msgid "Unskip"
+msgstr ""
+
+#: ./templates/CRM/Itemmanager/Form/RenewItemperiods.tpl
+msgid "Processing renewals, please wait..."
+msgstr ""
+
+#: ./templates/CRM/Itemmanager/Form/RenewItemperiods.tpl
+msgid "membership(s) to process. This may take a while."
 msgstr ""
 
 #: ./templates/CRM/Itemmanager/Form/RepairMissingContribution.tpl
@@ -943,11 +999,31 @@ msgid "This contact has no recorded line items."
 msgstr ""
 
 #: ./templates/CRM/Itemmanager/Page/DashboardStub.tpl
+msgid "Found %1 orphaned membership payment relation(s) pointing to deleted contributions."
+msgstr ""
+
+#: ./templates/CRM/Itemmanager/Page/DashboardStub.tpl
+msgid "Payment relation"
+msgstr ""
+
+#: ./templates/CRM/Itemmanager/Page/DashboardStub.tpl ./templates/CRM/Itemmanager/Page/FutureContributionScan.tpl ./templates/CRM/Itemmanager/Page/ItemMaintenance.tpl ./templates/CRM/Itemmanager/Page/UpdateItems.tpl
+msgid "Cleanup orphaned relations"
+msgstr ""
+
+#: ./templates/CRM/Itemmanager/Page/DashboardStub.tpl
 msgid "Booked"
 msgstr ""
 
 #: ./templates/CRM/Itemmanager/Page/DashboardStub.tpl
 msgid "No line items found for this membership."
+msgstr ""
+
+#: ./templates/CRM/Itemmanager/Page/DashboardStub.tpl
+msgid "This will permanently delete the orphaned membership payment records. Continue?"
+msgstr ""
+
+#: ./templates/CRM/Itemmanager/Page/DashboardStub.tpl
+msgid "Cleanup failed. Please try again."
 msgstr ""
 
 #: ./templates/CRM/Itemmanager/Page/FutureContributionScan.tpl
@@ -968,10 +1044,6 @@ msgstr ""
 
 #: ./templates/CRM/Itemmanager/Page/FutureContributionScan.tpl ./templates/CRM/Itemmanager/Page/ItemMaintenance.tpl ./templates/CRM/Itemmanager/Page/UpdateItems.tpl
 msgid "Harmonize date"
-msgstr ""
-
-#: ./templates/CRM/Itemmanager/Page/FutureContributionScan.tpl ./templates/CRM/Itemmanager/Page/ItemMaintenance.tpl ./templates/CRM/Itemmanager/Page/UpdateItems.tpl
-msgid "Cleanup orphaned relations"
 msgstr ""
 
 #: ./templates/CRM/Itemmanager/Page/FutureContributionScan.tpl

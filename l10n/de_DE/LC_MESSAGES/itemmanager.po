@@ -82,6 +82,7 @@ msgstr "Gespeichert"
 #: CRM/Itemmanager/Form/LinkSepaWrapper.php
 #: CRM/Itemmanager/Form/RenewItemperiods.php
 #: CRM/Itemmanager/Form/RepairMissingContribution.php
+#: CRM/Itemmanager/Page/DashboardStub.php
 #: CRM/Itemmanager/Page/LinkSepaPaymentsStub.php
 #: CRM/Itemmanager/Page/UpdateItems.php js/futureContributionScanProgress.js
 #: js/itemMaintenanceProgress.js
@@ -120,7 +121,6 @@ msgid "Please enter a whole number for quantity"
 msgstr "Bitte eine ganze Zahl für die Menge eingeben"
 
 #: CRM/Itemmanager/Form/LinkSepaWrapper.php
-#: CRM/Itemmanager/Page/UpdateItems.php
 msgid "Couldn't find contact #%s"
 msgstr "Konnte den Kontakt #%s nicht finden"
 
@@ -131,6 +131,7 @@ msgstr "Konnte den Kontakt #%s nicht finden"
 #: CRM/Itemmanager/Page/LinkSepaPaymentsStub.php
 #: CRM/Itemmanager/Page/UpdateItems.php js/futureContributionScanProgress.js
 #: js/itemMaintenanceProgress.js js/syncProgress.js
+#: templates/CRM/Itemmanager/Page/DashboardStub.tpl
 #: templates/CRM/Itemmanager/Page/FutureContributionScan.tpl
 #: templates/CRM/Itemmanager/Page/ItemMaintenance.tpl
 #: templates/CRM/Itemmanager/Page/UpdateItems.tpl
@@ -162,14 +163,48 @@ msgid "Retrieve memberships"
 msgstr "Mitgliedschaften abrufen"
 
 #: CRM/Itemmanager/Form/RenewItemperiods.php
-msgid "Retrieve Contributions"
-msgstr "Zuwendungen abrufen"
+msgid ""
+"Membership \"%1\": No contributions found. The membership payment records "
+"may be incomplete."
+msgstr ""
+"Mitgliedschaft \"%1\": Keine Zuwendungen gefunden. Die Zahlungszuordnungen "
+"sind möglicherweise unvollständig."
 
 #: CRM/Itemmanager/Form/RenewItemperiods.php
-#: CRM/Itemmanager/Form/RepairMissingContribution.php
-#: CRM/Itemmanager/Page/DashboardStub.php
-msgid "Retrieve line items"
-msgstr "Posten abrufen"
+msgid "Membership \"%1\": Could not determine the latest contribution."
+msgstr "Mitgliedschaft \"%1\": Letzte Zuwendung konnte nicht ermittelt werden."
+
+#: CRM/Itemmanager/Form/RenewItemperiods.php
+msgid "Membership \"%1\": Could not determine the earliest contribution."
+msgstr "Mitgliedschaft \"%1\": Erste Zuwendung konnte nicht ermittelt werden."
+
+#: CRM/Itemmanager/Form/RenewItemperiods.php
+msgid "Membership \"%1\": Could not retrieve line items for contribution %2."
+msgstr "Mitgliedschaft \"%1\": Posten der Zuwendung %2 konnten nicht abgerufen werden."
+
+#: CRM/Itemmanager/Form/RenewItemperiods.php
+msgid "Membership \"%1\": No line items found for the latest contribution %2."
+msgstr "Mitgliedschaft \"%1\": Keine Posten in der letzten Zuwendung %2 gefunden."
+
+#: CRM/Itemmanager/Form/RenewItemperiods.php
+msgid ""
+"Membership \"%1\": No period configuration found for price field value %2 "
+"(\"%3\"). Check the Itemmanager settings."
+msgstr ""
+"Mitgliedschaft \"%1\": Keine Periodenkonfiguration für Preisfeld %2 "
+"(\"%3\") gefunden. Bitte die Itemmanager-Einstellungen prüfen."
+
+#: CRM/Itemmanager/Form/RenewItemperiods.php
+msgid ""
+"Membership \"%1\": No period configuration found for successor item "
+"\"%2\" (price field value %3). Check the Itemmanager settings."
+msgstr ""
+"Mitgliedschaft \"%1\": Keine Periodenkonfiguration für Nachfolger-Posten "
+"\"%2\" (Preisfeld %3) gefunden. Bitte die Itemmanager-Einstellungen prüfen."
+
+#: CRM/Itemmanager/Form/RenewItemperiods.php
+msgid "Membership \"%1\": %2"
+msgstr "Mitgliedschaft \"%1\": %2"
 
 #: CRM/Itemmanager/Form/RenewItemperiods.php
 msgid "Renew periods for booked items for contact "
@@ -221,6 +256,11 @@ msgid "Please specify a contribution to clone."
 msgstr "Bitte eine Zuwendung zum Klonen angeben."
 
 #: CRM/Itemmanager/Form/RepairMissingContribution.php
+#: CRM/Itemmanager/Page/DashboardStub.php
+msgid "Retrieve line items"
+msgstr "Posten abrufen"
+
+#: CRM/Itemmanager/Form/RepairMissingContribution.php
 msgid "Retrieve related membership"
 msgstr "Zugehörige Mitgliedschaft abrufen"
 
@@ -241,12 +281,20 @@ msgid "Membership not found"
 msgstr "Mitgliedschaft nicht gefunden"
 
 #: CRM/Itemmanager/Page/DashboardStub.php
-msgid "Missing contribution relation to membership"
-msgstr "Fehlende Zuwendungszuordnung zur Mitgliedschaft"
+msgid "Invalid contribution date"
+msgstr "Ungültiges Zuwendungsdatum"
+
+#: CRM/Itemmanager/Page/DashboardStub.php
+msgid "Contribution %1 has no valid date"
+msgstr "Zuwendung %1 hat kein gültiges Datum"
 
 #: CRM/Itemmanager/Page/DashboardStub.php
 msgid "Combine line items"
 msgstr "Posten zusammenfassen"
+
+#: CRM/Itemmanager/Page/DashboardStub.php CRM/Itemmanager/Page/UpdateItems.php
+msgid "Deleted %1 orphaned membership payment relation(s)."
+msgstr "%1 verwaiste Zahlungszuordnung(en) gelöscht."
 
 #: CRM/Itemmanager/Page/FutureContributionScan.php
 msgid "Future Item Scan: %1"
@@ -320,6 +368,11 @@ msgstr "Fehler beim Stornieren von Posten %1: %2"
 msgid "Item Maintenance"
 msgstr "Postenpflege"
 
+#: CRM/Itemmanager/Page/ItemMaintenanceStub.php
+#: CRM/Itemmanager/Page/UpdateItems.php
+msgid "Membership contribution relation %1 is missing"
+msgstr "Zuwendungszuordnung %1 zur Mitgliedschaft fehlt"
+
 #: CRM/Itemmanager/Page/ItemmanagerSettingStub.php
 #: templates/CRM/Itemmanager/Page/ItemmanagerSettingStub.tpl
 msgid "Active"
@@ -340,6 +393,10 @@ msgstr "SEPA-Mandat abrufen"
 #: templates/CRM/Itemmanager/Page/UpdateItems.tpl
 msgid "Update Items"
 msgstr "Posten aktualisieren"
+
+#: CRM/Itemmanager/Page/UpdateItems.php
+msgid "Couldn't find contact #%1"
+msgstr "Kontakt #%1 konnte nicht gefunden werden"
 
 #: CRM/Itemmanager/Page/UpdateItems.php
 msgid "Error for updating line items"
@@ -368,10 +425,6 @@ msgstr "Posten aktualisiert"
 #: CRM/Itemmanager/Page/UpdateItems.php
 msgid "Nothing to be done"
 msgstr "Keine Änderungen nötig"
-
-#: CRM/Itemmanager/Page/UpdateItems.php
-msgid "Deleted %1 orphaned membership payment relation(s)."
-msgstr "%1 verwaiste Zahlungszuordnung(en) gelöscht."
 
 #: CRM/Itemmanager/Upgrader.php
 msgid "Migrate managed entities from lineitemedit"
@@ -441,8 +494,7 @@ msgstr "Itemmanager: Posten hinzufügen"
 #: itemmanager.php
 msgid ""
 "Allows non-admin users to add line item(s) associated to a contribution."
-msgstr ""
-"Erlaubt Nicht-Admin-Benutzern, Posten zu einer Zuwendung hinzuzufügen."
+msgstr "Erlaubt Nicht-Admin-Benutzern, Posten zu einer Zuwendung hinzuzufügen."
 
 #: itemmanager.php
 msgid "Itemmanager: edit line item"
@@ -451,8 +503,7 @@ msgstr "Itemmanager: Posten bearbeiten"
 #: itemmanager.php
 msgid ""
 "Allows non-admin users to edit line item(s) associated to a contribution."
-msgstr ""
-"Erlaubt Nicht-Admin-Benutzern, Posten einer Zuwendung zu bearbeiten."
+msgstr "Erlaubt Nicht-Admin-Benutzern, Posten einer Zuwendung zu bearbeiten."
 
 #: itemmanager.php
 msgid "Itemmanager: cancel line item"
@@ -461,8 +512,7 @@ msgstr "Itemmanager: Posten stornieren"
 #: itemmanager.php
 msgid ""
 "Allows non-admin users to cancel line item(s) associated to a contribution."
-msgstr ""
-"Erlaubt Nicht-Admin-Benutzern, Posten einer Zuwendung zu stornieren."
+msgstr "Erlaubt Nicht-Admin-Benutzern, Posten einer Zuwendung zu stornieren."
 
 #: itemmanager.php
 msgid "Warning"
@@ -648,7 +698,9 @@ msgstr "Betroffene Kontakte"
 
 #: js/itemMaintenanceProgress.js
 msgid "No items found that need updating. Try different filter options."
-msgstr "Keine zu aktualisierenden Posten gefunden. Versuchen Sie andere Filteroptionen."
+msgstr ""
+"Keine zu aktualisierenden Posten gefunden. Versuchen Sie andere "
+"Filteroptionen."
 
 #: js/syncProgress.js
 msgid "Synchronizing..."
@@ -658,7 +710,7 @@ msgstr "Synchronisiere..."
 #: templates/CRM/Itemmanager/Form/LinkSepaWrapper.tpl
 #: templates/CRM/Itemmanager/Page/Dashboard.tpl
 msgid "Please wait..."
-msgstr "Bitte warten.."
+msgstr "Bitte warten..."
 
 #: js/syncProgress.js
 msgid "Errors occurred"
@@ -978,7 +1030,8 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"        Verknüpfen Sie hier die SEPA-Zahlungen mit den Zahlungsplan-Zuwendungen.\n"
+"        Verknüpfen Sie hier die SEPA-Zahlungen mit den Zahlungsplan-"
+"Zuwendungen.\n"
 "        Sie können Zuwendungen auch manuell als bezahlt markieren.\n"
 "    "
 
@@ -1003,6 +1056,10 @@ msgstr "Mitgliedschaft"
 #: templates/CRM/Itemmanager/Page/Dashboard.tpl
 msgid "Status"
 msgstr "Status"
+
+#: templates/CRM/Itemmanager/Form/RenewItemperiods.tpl
+msgid "Skip"
+msgstr "Überspringen"
 
 #: templates/CRM/Itemmanager/Form/RenewItemperiods.tpl
 msgid "Start"
@@ -1040,6 +1097,18 @@ msgstr "Neu"
 msgid "Bidding round"
 msgstr "Bieterrunde"
 
+#: templates/CRM/Itemmanager/Form/RenewItemperiods.tpl
+msgid "Unskip"
+msgstr "Nicht überspringen"
+
+#: templates/CRM/Itemmanager/Form/RenewItemperiods.tpl
+msgid "Processing renewals, please wait..."
+msgstr "Verlängerungen werden verarbeitet, bitte warten..."
+
+#: templates/CRM/Itemmanager/Form/RenewItemperiods.tpl
+msgid "membership(s) to process. This may take a while."
+msgstr "Mitgliedschaft(en) zu verarbeiten. Dies kann etwas dauern."
+
 #: templates/CRM/Itemmanager/Form/RepairMissingContribution.tpl
 msgid "Are you sure, create a clone of this contribution?"
 msgstr "Sind Sie sicher, dass Sie diese Zuwendung klonen möchten?"
@@ -1051,7 +1120,8 @@ msgid ""
 "  "
 msgstr ""
 "\n"
-"    Ändern Sie den gewünschten Zuwendungsstatus für den geklonten Datensatz.\n"
+"    Ändern Sie den gewünschten Zuwendungsstatus für den geklonten "
+"Datensatz.\n"
 "  "
 
 #: templates/CRM/Itemmanager/Form/RepairMissingContribution.tpl
@@ -1079,17 +1149,36 @@ msgstr "SEPA-Zahlungen verknüpfen"
 
 #: templates/CRM/Itemmanager/Page/Dashboard.tpl
 msgid "Refresh"
-msgstr "Neu Laden"
+msgstr "Neu laden"
 
 #: templates/CRM/Itemmanager/Page/Dashboard.tpl
 msgid "To start with a new set of monthly contributions click Renew Periods"
 msgstr ""
-"Um mit eine neue Mitgliedschaftsperiode zu beginnen, bitte 'Solawi "
-"Verlängern' klicken"
+"Um eine neue Mitgliedschaftsperiode zu beginnen, bitte 'Solawi "
+"Verlängerung' klicken"
 
 #: templates/CRM/Itemmanager/Page/Dashboard.tpl
 msgid "This contact has no recorded line items."
 msgstr "Für diesen Kontakt sind keine Posten erfasst."
+
+#: templates/CRM/Itemmanager/Page/DashboardStub.tpl
+msgid ""
+"Found %1 orphaned membership payment relation(s) pointing to deleted "
+"contributions."
+msgstr ""
+"%1 verwaiste Zahlungszuordnung(en) gefunden, die auf gelöschte Zuwendungen "
+"verweisen."
+
+#: templates/CRM/Itemmanager/Page/DashboardStub.tpl
+msgid "Payment relation"
+msgstr "Zahlungszuordnung"
+
+#: templates/CRM/Itemmanager/Page/DashboardStub.tpl
+#: templates/CRM/Itemmanager/Page/FutureContributionScan.tpl
+#: templates/CRM/Itemmanager/Page/ItemMaintenance.tpl
+#: templates/CRM/Itemmanager/Page/UpdateItems.tpl
+msgid "Cleanup orphaned relations"
+msgstr "Verwaiste Zuordnungen bereinigen"
 
 #: templates/CRM/Itemmanager/Page/DashboardStub.tpl
 msgid "Booked"
@@ -1098,6 +1187,17 @@ msgstr "Gebucht"
 #: templates/CRM/Itemmanager/Page/DashboardStub.tpl
 msgid "No line items found for this membership."
 msgstr "Keine Posten für diese Mitgliedschaft gefunden."
+
+#: templates/CRM/Itemmanager/Page/DashboardStub.tpl
+msgid ""
+"This will permanently delete the orphaned membership payment records. "
+"Continue?"
+msgstr ""
+"Die verwaisten Zahlungszuordnungen werden endgültig gelöscht. Fortfahren?"
+
+#: templates/CRM/Itemmanager/Page/DashboardStub.tpl
+msgid "Cleanup failed. Please try again."
+msgstr "Bereinigung fehlgeschlagen. Bitte erneut versuchen."
 
 #: templates/CRM/Itemmanager/Page/FutureContributionScan.tpl
 msgid "Future Item Scan"
@@ -1108,8 +1208,8 @@ msgid ""
 "Scan future contributions for this contact and check line items for "
 "inconsistencies (label, price, date). Select filters and start the scan."
 msgstr ""
-"Zukünftige Zuwendungen für diesen Kontakt prüfen und Posten auf "
-"Abweichungen (Bezeichnung, Preis, Datum) untersuchen. Filter wählen und Scan starten."
+"Zukünftige Zuwendungen für diesen Kontakt prüfen und Posten auf Abweichungen "
+"(Bezeichnung, Preis, Datum) untersuchen. Filter wählen und Scan starten."
 
 #: templates/CRM/Itemmanager/Page/FutureContributionScan.tpl
 #: templates/CRM/Itemmanager/Page/ItemMaintenance.tpl
@@ -1127,12 +1227,6 @@ msgstr "Preise abgleichen"
 #: templates/CRM/Itemmanager/Page/UpdateItems.tpl
 msgid "Harmonize date"
 msgstr "Datum angleichen"
-
-#: templates/CRM/Itemmanager/Page/FutureContributionScan.tpl
-#: templates/CRM/Itemmanager/Page/ItemMaintenance.tpl
-#: templates/CRM/Itemmanager/Page/UpdateItems.tpl
-msgid "Cleanup orphaned relations"
-msgstr "Verwaiste Zuordnungen bereinigen"
 
 #: templates/CRM/Itemmanager/Page/FutureContributionScan.tpl
 msgid "Check composition"
@@ -1245,3 +1339,9 @@ msgstr "Vorschau"
 #: templates/CRM/Itemmanager/Page/UpdateItems.tpl
 msgid "Nothing there for updating. Please use filter options to see more."
 msgstr "Keine Einträge zum Aktualisieren. Bitte Filteroptionen verwenden."
+
+#~ msgid "Retrieve Contributions"
+#~ msgstr "Zuwendungen abrufen"
+
+#~ msgid "Missing contribution relation to membership"
+#~ msgstr "Fehlende Zuwendungszuordnung zur Mitgliedschaft"
